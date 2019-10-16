@@ -1,0 +1,8 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <description>Serialization logic used by OBC assets, provides both Binary and String serialization in a string/string dictionary.</description>
+    <tags>serialization dictionary propertybag</tags>
+    <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.PropertyBag/nuget-icon.png</iconUrl>
+  </metadata>
+</package>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>OBeautifulCode.Serialization.Recipes.Factory</id>
+    <description>Serialization logic used by OBC assets, references all serialization types to provide a universal factory to build serializers.</description>
+    <tags>serialization factory</tags>
+    <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.Recipes/nuget-icon.png</iconUrl>
+    <dependencies>
+      <dependency id="OBeautifulCode.Assertion.Recipes.Must" version="1.0.9" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src=".analyzers\SuppressBecause.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SuppressBecause.cs" />
+    <file src="Class1.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\Class1.cs" />
+  </files>
+</package>

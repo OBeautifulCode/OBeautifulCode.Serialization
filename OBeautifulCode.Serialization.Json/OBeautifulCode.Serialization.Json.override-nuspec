@@ -1,0 +1,8 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <description>Serialization logic used by OBC assets, provides both Binary and String serialization in JSON using Newtonsoft as the underlying work.</description>
+    <tags>serialization json</tags>
+    <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.Json/nuget-icon.png</iconUrl>
+  </metadata>
+</package>

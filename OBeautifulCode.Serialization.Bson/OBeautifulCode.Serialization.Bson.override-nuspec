@@ -1,0 +1,8 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <description>Serialization logic used by OBC assets, provides both Binary and String serialization in BSON using Mongo.  It includes auto configuration logic and various helper methods that can be used independently.</description>
+    <tags>serialization bson</tags>
+    <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization/nuget-icon.png</iconUrl>
+  </metadata>
+</package>

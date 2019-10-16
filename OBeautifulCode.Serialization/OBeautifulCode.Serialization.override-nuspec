@@ -1,0 +1,8 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <description>Serialization logic used by OBC assets, provides generic interfaces as well as a DateTimeStringSerializer that will work with all DateTimeKinds.</description>
+    <tags>serialization</tags>
+    <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.Bson/nuget-icon.png</iconUrl>
+  </metadata>
+</package>
