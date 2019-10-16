@@ -99,7 +99,7 @@
     <Compile Include="SerializerFactory.cs" />
     <None Include=".analyzers\release.ruleset" />
     <None Include="packages.config" />
-    <None Include="RecipeName.recipe-nuspec" />
+    <None Include="Factory.recipe-nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
