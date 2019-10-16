@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" ?>
+<package>
+  <metadata>
+    <id>Obc.Serialization.Recipes.RoundTripTest</id>
+    <description>Obc.Serialization.Recipes.RoundTripTest</description>
+    <dependencies>
+      <dependency id="Obc.Serialization.Domain" version="[$version$,)" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="RoundtripSerializationExtensions.cs" target="content\net45\.recipes\Obc.Serialization\RoundtripSerializationExtensions.cs" />
+  </files>
+</package>

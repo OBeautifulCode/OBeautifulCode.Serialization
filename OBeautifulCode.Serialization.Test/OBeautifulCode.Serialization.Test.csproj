@@ -49,12 +49,37 @@
     <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
       <HintPath>..\packages\Fare.2.1.2\lib\net35\Fare.dll</HintPath>
     </Reference>
+    <Reference Include="FluentAssertions, Version=5.9.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.5.9.0\lib\net45\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson, Version=2.9.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MongoDB.Bson.2.9.2\lib\net452\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="OBeautifulCode.AutoFakeItEasy, Version=1.0.118.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OBeautifulCode.AutoFakeItEasy.1.0.118\lib\net462\OBeautifulCode.AutoFakeItEasy.dll</HintPath>
+    </Reference>
+    <Reference Include="OBeautifulCode.Compression, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OBeautifulCode.Compression.1.0.3\lib\net462\OBeautifulCode.Compression.dll</HintPath>
+    </Reference>
+    <Reference Include="OBeautifulCode.Representation.System, Version=1.0.31.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OBeautifulCode.Representation.System.1.0.31\lib\net462\OBeautifulCode.Representation.System.dll</HintPath>
+    </Reference>
+    <Reference Include="OBeautifulCode.Type, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OBeautifulCode.Type.1.0.25\lib\net462\OBeautifulCode.Type.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\packages\xunit.abstractions.2.0.3\lib\net35\xunit.abstractions.dll</HintPath>
     </Reference>
@@ -94,6 +119,10 @@
     <Compile Include=".recipes\OBeautifulCode.Assertion\Verifications.Workflow.cs" />
     <Compile Include=".recipes\OBeautifulCode.Assertion\WorkflowExtensions\WorkflowExtensions.cs" />
     <Compile Include=".recipes\OBeautifulCode.AutoFakeItEasy\AutoFakeItEasyBootstrapper.cs" />
+    <Compile Include=".recipes\OBeautifulCode.Compression\CompressorFactory.cs" />
+    <Compile Include=".recipes\OBeautifulCode.Compression\DotNetZipCompressor.cs" />
+    <Compile Include=".recipes\OBeautifulCode.Compression\NullCompressor.cs" />
+    <Compile Include=".recipes\OBeautifulCode.Compression\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Equality\DictionaryEqualityComparer.cs" />
     <Compile Include=".recipes\OBeautifulCode.Equality\EnumerableEqualityComparer.cs" />
     <Compile Include=".recipes\OBeautifulCode.Equality\EnumerableEqualityComparerStrategy.cs" />
@@ -105,12 +134,48 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="ConfigurationTests\BsonConfigurationAutoRegisterType.cs" />
+    <Compile Include="ConfigurationTests\BsonConfigurationBaseTest.cs" />
+    <Compile Include="ConfigurationTests\JsonConfigurationBaseTest.cs" />
+    <Compile Include="ConfigurationTests\SerializationConfigurationManagerTest.cs" />
+    <Compile Include="DateTimeConverterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="RoundTripSerializationExtensions.cs" />
+    <Compile Include="SerializationDummyFactory.cs" />
+    <Compile Include="SerializerTests\ObcBsonSerializerTest.cs" />
+    <Compile Include="SerializerTests\ObcDateTimeStringSerializerTest.cs" />
+    <Compile Include="SerializerTests\ObcJsonSerializerTest.cs" />
+    <Compile Include="SerializerTests\ObcLambdaBackedSerializerTest.cs" />
+    <Compile Include="SerializerTests\ObcPropertyBagSerializerTest.cs" />
+    <Compile Include="SpecificModels\Animal.cs" />
+    <Compile Include="SpecificModels\ITopInterface.cs" />
+    <Compile Include="SpecificModels\Lighting.cs" />
+    <Compile Include="SpecificModels\TestMapping.cs" />
+    <Compile Include="SpecificModelTests\ArrayElementTypeIsDiscovered.cs" />
+    <Compile Include="SpecificModelTests\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />
+    <Compile Include="SpecificModelTests\ConfirmSameInheritorsUsedForDependencies.cs" />
+    <Compile Include="SpecificModelTests\DependentConfigurationsHandledCorrectly.cs" />
+    <Compile Include="SpecificModelTests\DictionaryFlavorSupportTest.cs" />
+    <Compile Include="SpecificModelTests\DirectStringSerializationIsSupported.cs" />
+    <Compile Include="SpecificModelTests\JsonConfigurationTest.cs" />
+    <Compile Include="SpecificModelTests\MultilevelDependencyTest.cs" />
+    <Compile Include="SpecificModelTests\MultipleConstructorScenarioTest.cs" />
+    <Compile Include="SpecificModelTests\NetDrawingTypeTests.cs" />
+    <Compile Include="SpecificModelTests\ParallelSerializationTest.cs" />
+    <Compile Include="SpecificModelTests\ParamsConstructorCollectionProperty.cs" />
+    <Compile Include="SpecificModelTests\RoundtripSerializationTest.cs" />
+    <Compile Include="SpecificModelTests\SerializingAndDeserializingBehaviorOfNull.cs" />
+    <Compile Include="SupportLogicTests\DescribedSerializationTest.cs" />
+    <Compile Include="SupportLogicTests\ExtensionsTest.cs" />
+    <Compile Include="SupportLogicTests\FactoryTest.cs" />
+    <Compile Include="SupportLogicTests\SerializerDescriptionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include=".analyzers\stylecop.json" />
     <None Include=".analyzers\test.ruleset" />
+    <None Include="Naos.Serialization.Recipes.DummyFactory.recipe-nuspec" />
+    <None Include="Naos.Serialization.Recipes.RoundTripTest.recipe-nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +208,7 @@
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

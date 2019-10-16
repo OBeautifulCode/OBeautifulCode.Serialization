@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" ?>
+<package>
+  <metadata>
+    <id>Obc.Serialization.Recipes.DummyFactory</id>
+    <description>Obc.Serialization.Recipes.DummyFactory</description>
+    <dependencies>
+      <dependency id="Obc.Serialization.Domain" version="[$version$,)" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="SerializationDummyFactory.cs" target="content\net45\.recipes\Obc.Serialization\SerializationDummyFactory.cs" />
+  </files>
+</package>
