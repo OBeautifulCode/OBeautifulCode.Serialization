@@ -20,8 +20,10 @@ namespace OBeautifulCode.Serialization.Test
 
     using static System.FormattableString;
 
-    public static class RoundtripSerializationExtensions
+    public static class RoundtripSerializationExtensions1
     {
+        public delegate void RoundtripSerializationCallback<in T>(DescribedSerialization yieldedDescribedSerialization, T deserializedObject);
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Want parameters this way.")]
         public static void RoundtripSerializeWithEquatableAssertion<T>(
             this T expected,
@@ -114,6 +116,4 @@ namespace OBeautifulCode.Serialization.Test
             }
         }
     }
-
-    public delegate void RoundtripSerializationCallback<in T>(DescribedSerialization yieldedDescribedSerialization, T deserializedObject);
 }

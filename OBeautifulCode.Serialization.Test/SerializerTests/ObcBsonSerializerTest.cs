@@ -32,7 +32,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Parameter 'typeMustBeSubclassOfObc.Serialization.Domain.SerializationConfigurationBase' is not true.  Parameter value is 'False'.");
+            exception.Message.Should().Be("Parameter 'typeMustBeSubclassOfOBeautifulCode.Serialization.SerializationConfigurationBase' is not true.  Parameter value is 'False'.");
         }
 
         [Fact]

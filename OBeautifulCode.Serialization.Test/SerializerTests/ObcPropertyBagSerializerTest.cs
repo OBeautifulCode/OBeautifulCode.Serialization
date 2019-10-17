@@ -41,7 +41,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Parameter 'typeMustBeSubclassOfObc.Serialization.Domain.SerializationConfigurationBase' is not true.  Parameter value is 'False'.");
+            exception.Message.Should().Be("Parameter 'typeMustBeSubclassOfOBeautifulCode.Serialization.SerializationConfigurationBase' is not true.  Parameter value is 'False'.");
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "RoundTrip", Justification = "Name/spelling is correct.")]
@@ -193,7 +193,7 @@ namespace OBeautifulCode.Serialization.Test
 
             // Act
             exception.Should().NotBeNull();
-            exception.Message.Should().Be("Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: Obc.Serialization.Test.ObcPropertyBagSerializerTest+ConstructorWithoutProperties, properties: Property,ToString,GetType.");
+            exception.Message.Should().Be("Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: OBeautifulCode.Serialization.Test.ObcPropertyBagSerializerTest+ConstructorWithoutProperties, properties: Property,ToString,GetType.");
         }
 
         [Fact]
