@@ -6,10 +6,10 @@
     <tags>serialization factory</tags>
     <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.Recipes/nuget-icon.png</iconUrl>
     <dependencies>
-      <dependency id="OBeautifulCode.Serialization" version="1.0.4" />
-      <dependency id="OBeautifulCode.Serialization.Bson" version="1.0.4" />
-      <dependency id="OBeautifulCode.Serialization.Json" version="1.0.4" />
-      <dependency id="OBeautifulCode.Serialization.PropertyBag" version="1.0.4" />
+      <dependency id="OBeautifulCode.Serialization" version="1.0.5" />
+      <dependency id="OBeautifulCode.Serialization.Bson" version="1.0.5" />
+      <dependency id="OBeautifulCode.Serialization.Json" version="1.0.5" />
+      <dependency id="OBeautifulCode.Serialization.PropertyBag" version="1.0.5" />
       <dependency id="OBeautifulCode.Assertion.Recipes.Must" version="1.0.9" />
       <dependency id="OBeautifulCode.Representation.System" version="1.0.34" />
       <dependency id="OBeautifulCode.Compression.Recipes.CompressionHelper" version="1.0.6" />
