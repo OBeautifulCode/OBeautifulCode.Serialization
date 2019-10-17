@@ -20,7 +20,7 @@ namespace OBeautifulCode.Serialization.Test
 
     using static System.FormattableString;
 
-    public static class RoundtripSerializationExtensions1
+    public static class RoundtripSerializationExtensions
     {
         public delegate void RoundtripSerializationCallback<in T>(DescribedSerialization yieldedDescribedSerialization, T deserializedObject);
 

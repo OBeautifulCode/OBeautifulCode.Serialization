@@ -725,8 +725,11 @@ namespace OBeautifulCode.Serialization.Test
         [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Class is used by code external to test")]
         private class SecureStringTest
         {
+#pragma warning disable CS0649
             [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Justification = "Field is used by code external to test")]
             public SecureString Secure;
+
+#pragma warning restore CS0649
         }
 
         private class InheritedTypeBase
