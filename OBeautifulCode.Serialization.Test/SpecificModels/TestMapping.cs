@@ -12,6 +12,7 @@ namespace OBeautifulCode.Serialization.Test
 
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Serialization.Bson;
+    using OBeautifulCode.Type;
 
 #pragma warning disable SA1201 // Elements should appear in the correct order
 

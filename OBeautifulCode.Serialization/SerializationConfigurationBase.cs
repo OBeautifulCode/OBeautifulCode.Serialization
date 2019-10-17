@@ -17,6 +17,7 @@ namespace OBeautifulCode.Serialization
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
+    using OBeautifulCode.Type;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -59,6 +60,7 @@ namespace OBeautifulCode.Serialization
             typeof(SerializationDescription),
             typeof(DescribedSerialization),
             typeof(DynamicTypePlaceholder),
+            typeof(UtcDateTimeRangeInclusive),
         };
 
         private readonly object syncConfigure = new object();

@@ -138,12 +138,14 @@
     <Compile Include=".recipes\OBeautifulCode.String\StringExtensions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
+    <Compile Include=".recipes\OBeautifulCode.Type\TypeDummyFactory.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
     <Compile Include="ConfigurationTests\BsonConfigurationAutoRegisterType.cs" />
     <Compile Include="ConfigurationTests\BsonConfigurationBaseTest.cs" />
     <Compile Include="ConfigurationTests\JsonConfigurationBaseTest.cs" />
     <Compile Include="ConfigurationTests\SerializationConfigurationManagerTest.cs" />
     <Compile Include="DateTimeConverterTest.cs" />
+    <Compile Include="InternallyRegisteredTypesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="RoundtripSerializationExtensions.cs" />
