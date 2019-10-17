@@ -95,37 +95,5 @@ namespace OBeautifulCode.Serialization.Test
             actual.Kind.Should().Be(expected.Kind);
             actual.Should().Be(expected);
         }
-
-        [Fact]
-        public static void Serialize___Not_date_time___Throws()
-        {
-            // Arrange
-            var serializer = new ObcJsonSerializer();
-            Action action = () => serializer.SerializeToString("not a datetime");
-
-            // Act
-            var exception = Record.Exception(action);
-
-            // Assert
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Provided value (name: 'typeMustBeDateTimeOrNullableDateTime-System.String') is not true.  Provided value is 'False'.");
-        }
-
-        [Fact]
-        public static void Deserialize___Null_type___Throws()
-        {
-            // Arrange
-            var serializer = new ObcJsonSerializer();
-            Action action = () => serializer.Deserialize(string.Empty, null);
-
-            // Act
-            var exception = Record.Exception(action);
-
-            // Assert
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Provided value (name: 'type') is null.");
-        }
     }
 }

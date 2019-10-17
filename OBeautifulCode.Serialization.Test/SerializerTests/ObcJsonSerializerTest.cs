@@ -15,7 +15,6 @@ namespace OBeautifulCode.Serialization.Test
 
     using Newtonsoft.Json.Linq;
 
-    using OBeautifulCode.Reflection;
     using OBeautifulCode.Serialization.Json;
 
     using Xunit;
@@ -24,6 +23,22 @@ namespace OBeautifulCode.Serialization.Test
 
     public static class ObcJsonSerializerTest
     {
+        [Fact]
+        public static void Deserialize___Null_type___Throws()
+        {
+            // Arrange
+            var serializer = new ObcJsonSerializer();
+            Action action = () => serializer.Deserialize(string.Empty, null);
+
+            // Act
+            var exception = Record.Exception(action);
+
+            // Assert
+            exception.Should().NotBeNull();
+            exception.Should().BeOfType<ArgumentNullException>();
+            exception.Message.Should().Be("Provided value (name: 'type') is null.");
+        }
+
         [Fact]
         public static void ObcJsonSerializer___With_type_Default___Uses_default()
         {
