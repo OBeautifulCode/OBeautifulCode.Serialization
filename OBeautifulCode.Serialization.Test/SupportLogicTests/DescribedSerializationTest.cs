@@ -34,7 +34,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Parameter 'payloadTypeRepresentation' is null.");
+            exception.Message.Should().Be("Provided value (name: 'payloadTypeRepresentation') is null.");
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Parameter 'serializationDescription' is null.");
+            exception.Message.Should().Be("Provided value (name: 'serializationDescription') is null.");
         }
 
         [Fact]

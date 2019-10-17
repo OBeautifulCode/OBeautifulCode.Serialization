@@ -28,7 +28,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Parameter 'typeMustBeSubclassOfSerializationConfigurationBase' is not true.  Parameter value is 'False'.");
+            exception.Message.Should().Be("Provided value (name: 'typeMustBeSubclassOfSerializationConfigurationBase') is not true.  Provided value is 'False'.");
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Parameter 'typeHasParameterLessConstructor' is not true.  Parameter value is 'False'.");
+            exception.Message.Should().Be("Provided value (name: 'typeHasParameterLessConstructor') is not true.  Provided value is 'False'.");
         }
 
         [Fact]

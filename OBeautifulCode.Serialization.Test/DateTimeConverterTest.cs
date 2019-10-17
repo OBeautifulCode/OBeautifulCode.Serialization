@@ -109,7 +109,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Parameter 'typeMustBeDateTimeOrNullableDateTime-System.String' is not true.  Parameter value is 'False'.");
+            exception.Message.Should().Be("Provided value (name: 'typeMustBeDateTimeOrNullableDateTime-System.String') is not true.  Provided value is 'False'.");
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Parameter 'type' is null.");
+            exception.Message.Should().Be("Provided value (name: 'type') is null.");
         }
     }
 }

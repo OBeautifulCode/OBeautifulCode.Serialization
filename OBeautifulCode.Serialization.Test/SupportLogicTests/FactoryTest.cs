@@ -34,10 +34,10 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Parameter 'serializationDescription' is null.");
+            exception.Message.Should().Be("Provided value (name: 'serializationDescription') is null.");
             jsonException.Should().NotBeNull();
             jsonException.Should().BeOfType<ArgumentNullException>();
-            jsonException.Message.Should().Be("Parameter 'serializationDescription' is null.");
+            jsonException.Message.Should().Be("Provided value (name: 'serializationDescription') is null.");
         }
 
         [Fact]
@@ -75,10 +75,10 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Parameter 'serializationDescription' is null.");
+            exception.Message.Should().Be("Provided value (name: 'serializationDescription') is null.");
             bsonException.Should().NotBeNull();
             bsonException.Should().BeOfType<ArgumentNullException>();
-            bsonException.Message.Should().Be("Parameter 'serializationDescription' is null.");
+            bsonException.Message.Should().Be("Provided value (name: 'serializationDescription') is null.");
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<NotSupportedException>();
-            exception.Message.Should().StartWith("Supplied 'serializationDescription' (SerializationDescription: SerializationKind=Bson, SerializationFormat=Binary, CompressionKind=None, ConfigurationTypeRepresentation=, Metadata=,) does not match 'supportedSerializationDescription' (SerializationDescription: SerializationKind=Json, SerializationFormat=String, CompressionKind=None, ConfigurationTypeRepresentation=Representation.TypeRepresentation: Namespace = OBeautifulCode.Serialization.Json, Name = GenericDiscoveryJsonConfiguration`1, AssemblyQualifiedName = Obc.Serialization.Json.GenericDiscoveryJsonConfiguration`1, Obc.Serialization.Json");
+            exception.Message.Should().StartWith("Supplied 'serializationDescription' (SerializationDescription: SerializationKind=Bson, SerializationFormat=Binary, CompressionKind=None, ConfigurationTypeRepresentation=, Metadata=,) does not match 'supportedSerializationDescription' (SerializationDescription: SerializationKind=Json, SerializationFormat=String, CompressionKind=None, ConfigurationTypeRepresentation=Representation.TypeRepresentation: Namespace = OBeautifulCode.Serialization.Json, Name = GenericDiscoveryJsonConfiguration`1, AssemblyQualifiedName = OBeautifulCode.Serialization.Json.GenericDiscoveryJsonConfiguration`1, OBeautifulCode.Serialization.Json");
         }
     }
 }

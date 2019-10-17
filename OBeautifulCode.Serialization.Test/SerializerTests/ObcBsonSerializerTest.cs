@@ -32,7 +32,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Parameter 'typeMustBeSubclassOfOBeautifulCode.Serialization.SerializationConfigurationBase' is not true.  Parameter value is 'False'.");
+            exception.Message.Should().Be("Provided value (name: 'typeMustBeSubclassOfOBeautifulCode.Serialization.SerializationConfigurationBase') is not true.  Provided value is 'False'.");
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Parameter 'typeHasParameterLessConstructor' is not true.  Parameter value is 'False'.");
+            exception.Message.Should().Be("Provided value (name: 'typeHasParameterLessConstructor') is not true.  Provided value is 'False'.");
         }
     }
 }

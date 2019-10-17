@@ -41,7 +41,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Parameter 'typeMustBeSubclassOfOBeautifulCode.Serialization.SerializationConfigurationBase' is not true.  Parameter value is 'False'.");
+            exception.Message.Should().Be("Provided value (name: 'typeMustBeSubclassOfOBeautifulCode.Serialization.SerializationConfigurationBase') is not true.  Provided value is 'False'.");
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "RoundTrip", Justification = "Name/spelling is correct.")]

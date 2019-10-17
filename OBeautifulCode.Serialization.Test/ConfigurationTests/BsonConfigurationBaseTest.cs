@@ -99,7 +99,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Parameter 'constrainedPropertyDoesNotExistOnType' is not false.  Parameter value is 'True'.");
+            exception.Message.Should().Be("Provided value (name: 'constrainedPropertyDoesNotExistOnType') is not false.  Provided value is 'True'.");
         }
 
         [Fact]
@@ -115,7 +115,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Parameter 'type' is null.");
+            exception.Message.Should().Be("Provided value (name: 'type') is null.");
         }
 
         [Fact]
@@ -131,7 +131,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Parameter 'type' is null.");
+            exception.Message.Should().Be("Provided value (name: 'type') is null.");
         }
 
         [Fact]

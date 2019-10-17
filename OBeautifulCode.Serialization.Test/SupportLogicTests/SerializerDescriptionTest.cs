@@ -38,7 +38,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
-            exception.Message.Should().Be("Parameter 'serializationKind' is equal to the comparison value using EqualityComparer<T>.Default, where T: SerializationKind.  Specified 'comparisonValue' is 'Invalid'.");
+            exception.Message.Should().Be("Provided value (name: 'serializationKind') is equal to the comparison value using EqualityExtensions.IsEqualTo<T>, where T: SerializationKind.  Specified 'comparisonValue' is 'Invalid'.");
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
-            exception.Message.Should().Be("Parameter 'serializationFormat' is equal to the comparison value using EqualityComparer<T>.Default, where T: SerializationFormat.  Specified 'comparisonValue' is 'Invalid'.");
+            exception.Message.Should().Be("Provided value (name: 'serializationFormat') is equal to the comparison value using EqualityExtensions.IsEqualTo<T>, where T: SerializationFormat.  Specified 'comparisonValue' is 'Invalid'.");
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentOutOfRangeException>();
-            exception.Message.Should().Be("Parameter 'compressionKind' is equal to the comparison value using EqualityComparer<T>.Default, where T: CompressionKind.  Specified 'comparisonValue' is 'Invalid'.");
+            exception.Message.Should().Be("Provided value (name: 'compressionKind') is equal to the comparison value using EqualityExtensions.IsEqualTo<T>, where T: CompressionKind.  Specified 'comparisonValue' is 'Invalid'.");
         }
 
         [Fact]

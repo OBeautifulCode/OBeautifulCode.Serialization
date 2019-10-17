@@ -38,7 +38,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Parameter 'serializationDescription' is null.");
+            exception.Message.Should().Be("Provided value (name: 'serializationDescription') is null.");
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Parameter 'serializerFactory' is null.");
+            exception.Message.Should().Be("Provided value (name: 'serializerFactory') is null.");
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Parameter 'compressorFactory' is null.");
+            exception.Message.Should().Be("Provided value (name: 'compressorFactory') is null.");
         }
 
         [Fact]
