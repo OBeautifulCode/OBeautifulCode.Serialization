@@ -88,6 +88,12 @@ namespace OBeautifulCode.Serialization.Test
                 deserialized.IReadOnlyDictionaryEnumBase.Should().Equal(expected.IReadOnlyDictionaryEnumBase);
                 deserialized.ConcurrentDictionaryEnumBase.Should().Equal(expected.ConcurrentDictionaryEnumBase);
 
+                deserialized.DictionaryNullableEnumBase.Should().Equal(expected.DictionaryNullableEnumBase);
+                deserialized.IDictionaryNullableEnumBase.Should().Equal(expected.IDictionaryNullableEnumBase);
+                deserialized.ReadOnlyDictionaryNullableEnumBase.Should().Equal(expected.ReadOnlyDictionaryNullableEnumBase);
+                deserialized.IReadOnlyDictionaryNullableEnumBase.Should().Equal(expected.IReadOnlyDictionaryNullableEnumBase);
+                deserialized.ConcurrentDictionaryNullableEnumBase.Should().Equal(expected.ConcurrentDictionaryNullableEnumBase);
+
                 deserialized.DictionaryIntPoco.Should().Equal(expected.DictionaryIntPoco);
                 deserialized.IDictionaryIntPoco.Should().Equal(expected.IDictionaryIntPoco);
                 deserialized.ReadOnlyDictionaryIntPoco.Should().Equal(expected.ReadOnlyDictionaryIntPoco);
@@ -99,6 +105,12 @@ namespace OBeautifulCode.Serialization.Test
                 deserialized.ReadOnlyDictionaryPocoInt.Should().Equal(expected.ReadOnlyDictionaryPocoInt);
                 deserialized.IReadOnlyDictionaryPocoInt.Should().Equal(expected.IReadOnlyDictionaryPocoInt);
                 deserialized.ConcurrentDictionaryPocoInt.Should().Equal(expected.ConcurrentDictionaryPocoInt);
+
+                deserialized.DictionaryDateTime.Should().Equal(expected.DictionaryDateTime);
+                deserialized.IDictionaryDateTime.Should().Equal(expected.IDictionaryDateTime);
+                deserialized.ReadOnlyDictionaryDateTime.Should().Equal(expected.ReadOnlyDictionaryDateTime);
+                deserialized.IReadOnlyDictionaryDateTime.Should().Equal(expected.IReadOnlyDictionaryDateTime);
+                deserialized.ConcurrentDictionaryDateTime.Should().Equal(expected.ConcurrentDictionaryDateTime);
             }
 
             // Act & Assert
@@ -226,6 +238,12 @@ namespace OBeautifulCode.Serialization.Test
                 deserialized.IReadOnlyDictionaryEnumBase.Should().BeNull();
                 deserialized.ConcurrentDictionaryEnumBase.Should().BeNull();
 
+                deserialized.DictionaryNullableEnumBase.Should().BeNull();
+                deserialized.IDictionaryNullableEnumBase.Should().BeNull();
+                deserialized.ReadOnlyDictionaryNullableEnumBase.Should().BeNull();
+                deserialized.IReadOnlyDictionaryNullableEnumBase.Should().BeNull();
+                deserialized.ConcurrentDictionaryNullableEnumBase.Should().BeNull();
+
                 deserialized.DictionaryIntPoco.Should().BeNull();
                 deserialized.IDictionaryIntPoco.Should().BeNull();
                 deserialized.ReadOnlyDictionaryIntPoco.Should().BeNull();
@@ -237,6 +255,12 @@ namespace OBeautifulCode.Serialization.Test
                 deserialized.ReadOnlyDictionaryPocoInt.Should().BeNull();
                 deserialized.IReadOnlyDictionaryPocoInt.Should().BeNull();
                 deserialized.ConcurrentDictionaryPocoInt.Should().BeNull();
+
+                deserialized.DictionaryDateTime.Should().BeNull();
+                deserialized.IDictionaryDateTime.Should().BeNull();
+                deserialized.ReadOnlyDictionaryDateTime.Should().BeNull();
+                deserialized.IReadOnlyDictionaryDateTime.Should().BeNull();
+                deserialized.ConcurrentDictionaryDateTime.Should().BeNull();
             }
 
             // Act & Assert
@@ -345,6 +369,20 @@ namespace OBeautifulCode.Serialization.Test
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
         public ConcurrentDictionary<AnotherEnumeration, KeyOrValueObjectHierarchyBase> ConcurrentDictionaryEnumBase { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
+        public Dictionary<AnotherEnumeration?, KeyOrValueObjectHierarchyBase> DictionaryNullableEnumBase { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
+        public IDictionary<AnotherEnumeration?, KeyOrValueObjectHierarchyBase> IDictionaryNullableEnumBase { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
+        public ReadOnlyDictionary<AnotherEnumeration?, KeyOrValueObjectHierarchyBase> ReadOnlyDictionaryNullableEnumBase { get; set; }
+
+        public IReadOnlyDictionary<AnotherEnumeration?, KeyOrValueObjectHierarchyBase> IReadOnlyDictionaryNullableEnumBase { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
+        public ConcurrentDictionary<AnotherEnumeration?, KeyOrValueObjectHierarchyBase> ConcurrentDictionaryNullableEnumBase { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]

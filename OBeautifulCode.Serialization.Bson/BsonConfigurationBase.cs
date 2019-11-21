@@ -20,7 +20,7 @@ namespace OBeautifulCode.Serialization.Bson
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
-
+    using OBeautifulCode.Type.Recipes;
     using static System.FormattableString;
 
 #pragma warning disable SA1201 // Elements should appear in the correct order
@@ -240,37 +240,48 @@ namespace OBeautifulCode.Serialization.Bson
             {
                 result = typeof(ObcBsonEnumStringSerializer<>).MakeGenericType(type).Construct<IBsonSerializer>();
             }
+            else if (type.IsNullableType())
+            {
+                result = typeof(ObcBsonNullableSerializer<>).MakeGenericType(Nullable.GetUnderlyingType(type)).Construct<IBsonSerializer>();
+            }
             else if (type == typeof(DateTime))
             {
                 result = new ObcBsonDateTimeSerializer();
             }
-            else if (type == typeof(DateTime?))
-            {
-                result = new ObcBsonNullableDateTimeSerializer();
-            }
             else if (type.IsArray)
             {
                 var elementType = type.GetElementType();
+
+                // Don't default to object serializer because if there is no element serializer we want to let the ArraySerializer decide what to do.
                 var elementSerializer = GetAppropriateSerializer(elementType, defaultToObjectSerializer: false);
+
                 result = elementSerializer == null
                     ? typeof(ArraySerializer<>).MakeGenericType(elementType).Construct<IBsonSerializer>()
-                    : typeof(ArraySerializer<>).MakeGenericType(elementType)
-                        .Construct<IBsonSerializer>(elementSerializer);
+                    : typeof(ArraySerializer<>).MakeGenericType(elementType).Construct<IBsonSerializer>(elementSerializer);
             }
             else if (type.IsGenericType && NullObcDictionarySerializer.IsSupportedUnboundedGenericDictionaryType(type.GetGenericTypeDefinition()))
             {
                 var arguments = type.GetGenericArguments();
+
                 var keyType = arguments[0];
+
                 var valueType = arguments[1];
+
                 var keySerializer = GetAppropriateSerializer(keyType);
+
                 var valueSerializer = GetAppropriateSerializer(valueType);
+
                 result = typeof(ObcDictionarySerializer<,,>).MakeGenericType(type, keyType, valueType).Construct<IBsonSerializer>(DictionaryRepresentation.ArrayOfDocuments, keySerializer, valueSerializer);
             }
             else if (type.IsGenericType && NullObcCollectionSerializer.IsSupportedUnboundedGenericCollectionType(type.GetGenericTypeDefinition()))
             {
                 var arguments = type.GetGenericArguments();
+
                 var elementType = arguments[0];
+
+                // Don't default to object serializer because if there is no element serializer we want to let the ObcCollectionSerializer decide what to do.
                 var elementSerializer = GetAppropriateSerializer(elementType, defaultToObjectSerializer: false);
+
                 result = typeof(ObcCollectionSerializer<,>).MakeGenericType(type, elementType).Construct<IBsonSerializer>(elementSerializer);
             }
             else
