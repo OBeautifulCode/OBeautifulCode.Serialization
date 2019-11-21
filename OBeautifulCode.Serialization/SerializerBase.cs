@@ -107,12 +107,12 @@ namespace OBeautifulCode.Serialization
             }
             else
             {
-                if (this.unregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Throw &&
-                    !this.configuration.RegisteredTypeToDetailsMap.ContainsKey(type))
+                if (this.unregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Throw)
                 {
-                    throw new UnregisteredTypeAttemptException(
-                        Invariant($"Attempted to perform operation on unregistered type '{type.FullName}'"),
-                        type);
+                    if (!this.configuration.RegisteredTypeToDetailsMap.ContainsKey(type))
+                    {
+                        throw new UnregisteredTypeAttemptException(Invariant($"Attempted to perform operation on unregistered type '{type.FullName}'"), type);
+                    }
                 }
             }
         }

@@ -269,12 +269,12 @@ namespace OBeautifulCode.Serialization
 
             var allTypesToConsiderForRegistration = GetAllTypesToConsiderForRegistration();
 
-            var classTypesToRegister = allTypesToConsiderForRegistration
+            var result = allTypesToConsiderForRegistration
                 .Where(_ => types.Any(typeToAutoRegister => IsAssignableToOrFrom(_, typeToAutoRegister)))
                 .Concat(types.Where(_ => _.IsInterface)) // add interfaces back as they were explicitly provided.
                 .ToList();
 
-            return classTypesToRegister;
+            return result;
         }
 
         /// <summary>
