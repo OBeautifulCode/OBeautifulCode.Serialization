@@ -111,6 +111,12 @@ namespace OBeautifulCode.Serialization.Test
                 deserialized.ReadOnlyDictionaryDateTime.Should().Equal(expected.ReadOnlyDictionaryDateTime);
                 deserialized.IReadOnlyDictionaryDateTime.Should().Equal(expected.IReadOnlyDictionaryDateTime);
                 deserialized.ConcurrentDictionaryDateTime.Should().Equal(expected.ConcurrentDictionaryDateTime);
+
+                deserialized.DictionaryNullableDateTime.Should().Equal(expected.DictionaryNullableDateTime);
+                deserialized.IDictionaryNullableDateTime.Should().Equal(expected.IDictionaryNullableDateTime);
+                deserialized.ReadOnlyDictionaryNullableDateTime.Should().Equal(expected.ReadOnlyDictionaryNullableDateTime);
+                deserialized.IReadOnlyDictionaryNullableDateTime.Should().Equal(expected.IReadOnlyDictionaryNullableDateTime);
+                deserialized.ConcurrentDictionaryNullableDateTime.Should().Equal(expected.ConcurrentDictionaryNullableDateTime);
             }
 
             // Act & Assert
@@ -261,6 +267,12 @@ namespace OBeautifulCode.Serialization.Test
                 deserialized.ReadOnlyDictionaryDateTime.Should().BeNull();
                 deserialized.IReadOnlyDictionaryDateTime.Should().BeNull();
                 deserialized.ConcurrentDictionaryDateTime.Should().BeNull();
+
+                deserialized.DictionaryNullableDateTime.Should().BeNull();
+                deserialized.IDictionaryNullableDateTime.Should().BeNull();
+                deserialized.ReadOnlyDictionaryNullableDateTime.Should().BeNull();
+                deserialized.IReadOnlyDictionaryNullableDateTime.Should().BeNull();
+                deserialized.ConcurrentDictionaryNullableDateTime.Should().BeNull();
             }
 
             // Act & Assert
@@ -440,6 +452,25 @@ namespace OBeautifulCode.Serialization.Test
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
         public ConcurrentDictionary<DateTime, int> ConcurrentDictionaryDateTime { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
+        public Dictionary<DateTime?, int> DictionaryNullableDateTime { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
+        public IDictionary<DateTime?, int> IDictionaryNullableDateTime { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
+        public ReadOnlyDictionary<DateTime?, int> ReadOnlyDictionaryNullableDateTime { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
+        public IReadOnlyDictionary<DateTime?, int> IReadOnlyDictionaryNullableDateTime { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
+        public ConcurrentDictionary<DateTime?, int> ConcurrentDictionaryNullableDateTime { get; set; }
     }
 
     public class KeyOrValueObjectWithPrivateSetter

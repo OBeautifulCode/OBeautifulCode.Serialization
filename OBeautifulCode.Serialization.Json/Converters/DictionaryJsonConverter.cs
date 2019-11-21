@@ -153,7 +153,7 @@ namespace OBeautifulCode.Serialization.Json
             // picked-up by our own DateTime converter).  This is problematic because this converter
             // CanWrite, and when it attempts to deserialize a DateTime, our DateTime converter
             // throws because the format of the serialized string is not recognized.
-            var result = (keyType != typeof(DateTime))
+            var result = ((keyType != typeof(DateTime)) && (keyType != typeof(DateTime?)))
                          &&  ((keyType == typeof(string)) ||
                               keyType.IsValueType ||
                               this.typesThatSerializeToString.Contains(keyType));

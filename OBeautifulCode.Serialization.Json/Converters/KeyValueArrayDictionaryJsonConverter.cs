@@ -128,7 +128,7 @@ namespace OBeautifulCode.Serialization.Json
         {
             // see comment in DictionaryJsonConverter about DateTime.
             var result =
-                (keyType == typeof(DateTime)) ||
+                ((keyType == typeof(DateTime)) || (keyType == typeof(DateTime?))) ||
                     ((keyType != typeof(string)) &&
                      (!keyType.IsValueType) &&
                      (!this.typesThatSerializeToString.Contains(keyType)));
