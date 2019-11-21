@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ObcDictionarySerializer.cs" company="OBeautifulCode">
+// <copyright file="ObcBsonDictionarySerializer.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ namespace OBeautifulCode.Serialization.Bson
     [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "All of these generic parameters are required.")]
 
     // ReSharper disable once InheritdocConsiderUsage
-    public class ObcDictionarySerializer<TDictionary, TKey, TValue> : SerializerBase<TDictionary>
+    public class ObcBsonDictionarySerializer<TDictionary, TKey, TValue> : SerializerBase<TDictionary>
         where TDictionary : class, IEnumerable<KeyValuePair<TKey, TValue>>
     {
 #pragma warning disable SA1201 // Elements should appear in the correct order
@@ -69,12 +69,12 @@ namespace OBeautifulCode.Serialization.Bson
         private readonly DictionaryInterfaceImplementerSerializer<Dictionary<TKey, TValue>> underlyingSerializer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObcDictionarySerializer{T, TKey,TValue}"/> class.
+        /// Initializes a new instance of the <see cref="ObcBsonDictionarySerializer{TDictionary,TKey,TValue}"/> class.
         /// </summary>
         /// <param name="dictionaryRepresentation">The dictionary representation.</param>
         /// <param name="keySerializer">The key serializer.</param>
         /// <param name="valueSerializer">The value serializer.</param>
-        public ObcDictionarySerializer(DictionaryRepresentation dictionaryRepresentation, IBsonSerializer keySerializer, IBsonSerializer valueSerializer)
+        public ObcBsonDictionarySerializer(DictionaryRepresentation dictionaryRepresentation, IBsonSerializer keySerializer, IBsonSerializer valueSerializer)
         {
             DeserializationConverterFuncBySerializedType.ContainsKey(typeof(TDictionary)).AsArg(Invariant($"{typeof(TDictionary)}-mustBeSupportedDictionaryType")).Must().BeTrue();
 
@@ -126,16 +126,16 @@ namespace OBeautifulCode.Serialization.Bson
     /// A dictionary serializer that does nothing.
     /// </summary>
     // ReSharper disable once InheritdocConsiderUsage
-    public class NullObcDictionarySerializer : ObcDictionarySerializer<IDictionary<string, string>, string, string>
+    public class NullObcBsonDictionarySerializer : ObcBsonDictionarySerializer<IDictionary<string, string>, string, string>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NullObcDictionarySerializer"/> class.
+        /// Initializes a new instance of the <see cref="NullObcBsonDictionarySerializer"/> class.
         /// </summary>
         /// <param name="dictionaryRepresentation">The dictionary representation.</param>
         /// <param name="keySerializer">The key serializer.</param>
         /// <param name="valueSerializer">The value serializer.</param>
         // ReSharper disable once InheritdocConsiderUsage
-        public NullObcDictionarySerializer(DictionaryRepresentation dictionaryRepresentation, IBsonSerializer keySerializer, IBsonSerializer valueSerializer)
+        public NullObcBsonDictionarySerializer(DictionaryRepresentation dictionaryRepresentation, IBsonSerializer keySerializer, IBsonSerializer valueSerializer)
             : base(dictionaryRepresentation, keySerializer, valueSerializer)
         {
             throw new NotSupportedException("The null dictionary serializer is not intended for use.");

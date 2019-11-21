@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ObcCollectionSerializer.cs" company="OBeautifulCode">
+// <copyright file="ObcBsonCollectionSerializer.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ namespace OBeautifulCode.Serialization.Bson
     [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "All of these generic parameters are required.")]
 
     // ReSharper disable once InheritdocConsiderUsage
-    public class ObcCollectionSerializer<TCollection, TElement> : SerializerBase<TCollection>
+    public class ObcBsonCollectionSerializer<TCollection, TElement> : SerializerBase<TCollection>
         where TCollection : class, IEnumerable<TElement>
     {
 #pragma warning disable SA1201 // Elements should appear in the correct order
@@ -70,10 +70,10 @@ namespace OBeautifulCode.Serialization.Bson
         private readonly ReadOnlyCollectionSerializer<TElement> underlyingSerializer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObcCollectionSerializer{TCollection, TElement}"/> class.
+        /// Initializes a new instance of the <see cref="ObcBsonCollectionSerializer{TCollection,TElement}"/> class.
         /// </summary>
         /// <param name="elementSerializer">The element serializer.</param>
-        public ObcCollectionSerializer(IBsonSerializer<TElement> elementSerializer)
+        public ObcBsonCollectionSerializer(IBsonSerializer<TElement> elementSerializer)
         {
             DeserializationConverterFuncBySerializedType.ContainsKey(typeof(TCollection)).AsArg(Invariant($"{typeof(TCollection)}-mustBeSupportedCollectionType")).Must().BeTrue();
 
@@ -134,14 +134,14 @@ namespace OBeautifulCode.Serialization.Bson
     /// A collection serializer that does nothing.
     /// </summary>
     // ReSharper disable once InheritdocConsiderUsage
-    public class NullObcCollectionSerializer : ObcCollectionSerializer<ICollection<string>, string>
+    public class NullObcBsonCollectionSerializer : ObcBsonCollectionSerializer<ICollection<string>, string>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NullObcCollectionSerializer"/> class.
+        /// Initializes a new instance of the <see cref="NullObcBsonCollectionSerializer"/> class.
         /// </summary>
         /// <param name="elementSerializer">The element serializer.</param>
         // ReSharper disable once InheritdocConsiderUsage
-        public NullObcCollectionSerializer(IBsonSerializer<string> elementSerializer)
+        public NullObcBsonCollectionSerializer(IBsonSerializer<string> elementSerializer)
             : base(elementSerializer)
         {
             throw new NotSupportedException("The null collection serializer is not intended for use.");

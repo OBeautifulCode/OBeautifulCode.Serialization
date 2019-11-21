@@ -259,7 +259,7 @@ namespace OBeautifulCode.Serialization.Bson
                     ? typeof(ArraySerializer<>).MakeGenericType(elementType).Construct<IBsonSerializer>()
                     : typeof(ArraySerializer<>).MakeGenericType(elementType).Construct<IBsonSerializer>(elementSerializer);
             }
-            else if (type.IsGenericType && NullObcDictionarySerializer.IsSupportedUnboundedGenericDictionaryType(type.GetGenericTypeDefinition()))
+            else if (type.IsGenericType && NullObcBsonDictionarySerializer.IsSupportedUnboundedGenericDictionaryType(type.GetGenericTypeDefinition()))
             {
                 var arguments = type.GetGenericArguments();
 
@@ -271,9 +271,9 @@ namespace OBeautifulCode.Serialization.Bson
 
                 var valueSerializer = GetAppropriateSerializer(valueType);
 
-                result = typeof(ObcDictionarySerializer<,,>).MakeGenericType(type, keyType, valueType).Construct<IBsonSerializer>(DictionaryRepresentation.ArrayOfDocuments, keySerializer, valueSerializer);
+                result = typeof(ObcBsonDictionarySerializer<,,>).MakeGenericType(type, keyType, valueType).Construct<IBsonSerializer>(DictionaryRepresentation.ArrayOfDocuments, keySerializer, valueSerializer);
             }
-            else if (type.IsGenericType && NullObcCollectionSerializer.IsSupportedUnboundedGenericCollectionType(type.GetGenericTypeDefinition()))
+            else if (type.IsGenericType && NullObcBsonCollectionSerializer.IsSupportedUnboundedGenericCollectionType(type.GetGenericTypeDefinition()))
             {
                 var arguments = type.GetGenericArguments();
 
@@ -282,7 +282,7 @@ namespace OBeautifulCode.Serialization.Bson
                 // Don't default to object serializer because if there is no element serializer we want to let the ObcCollectionSerializer decide what to do.
                 var elementSerializer = GetAppropriateSerializer(elementType, defaultToObjectSerializer: false);
 
-                result = typeof(ObcCollectionSerializer<,>).MakeGenericType(type, elementType).Construct<IBsonSerializer>(elementSerializer);
+                result = typeof(ObcBsonCollectionSerializer<,>).MakeGenericType(type, elementType).Construct<IBsonSerializer>(elementSerializer);
             }
             else
             {
@@ -339,8 +339,7 @@ namespace OBeautifulCode.Serialization.Bson
         /// <inheritdoc />
         protected override IReadOnlyCollection<RegisteredBsonSerializer> SerializersToRegister => new[]
         {
-            new RegisteredBsonSerializer(() => new ColorSerializer(), new[] { typeof(Color) }),
-            new RegisteredBsonSerializer(() => new NullableColorSerializer(), new[] { typeof(Color?) }),
+            new RegisteredBsonSerializer(() => new ObcBsonColorSerializer(), new[] { typeof(Color) }),
         };
     }
 
