@@ -126,9 +126,13 @@ namespace OBeautifulCode.Serialization.Json
         /// <inheritdoc />
         protected override bool ShouldConsiderKeyType(Type keyType)
         {
-            var result = keyType != typeof(string)
-                         && !keyType.IsValueType
-                         && !this.typesThatSerializeToString.Contains(keyType);
+            // see comment in DictionaryJsonConverter about DateTime.
+            var result =
+                (keyType == typeof(DateTime)) ||
+                    ((keyType != typeof(string)) &&
+                     (!keyType.IsValueType) &&
+                     (!this.typesThatSerializeToString.Contains(keyType)));
+
             return result;
         }
     }

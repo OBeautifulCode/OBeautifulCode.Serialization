@@ -145,9 +145,19 @@ namespace OBeautifulCode.Serialization.Json
         /// <inheritdoc />
         protected override bool ShouldConsiderKeyType(Type keyType)
         {
-            var result = keyType == typeof(string)
-                         || keyType.IsValueType
-                         || this.typesThatSerializeToString.Contains(keyType);
+            // We exclude DateTime because if not, then it gets picked-up as a Value type
+            // and activates this converter.  However, this converter doesn't support writing
+            // (see above CanWrite = false), so it falls thru the converter stack and Newtonsoft
+            // picks it up and seeing that the key is DateTime, Newtonsoft handles the serialization
+            // instead of sending the request back to the converter stack (which would then get
+            // picked-up by our own DateTime converter).  This is problematic because this converter
+            // CanWrite, and when it attempts to deserialize a DateTime, our DateTime converter
+            // throws because the format of the serialized string is not recognized.
+            var result = (keyType != typeof(DateTime))
+                         &&  ((keyType == typeof(string)) ||
+                              keyType.IsValueType ||
+                              this.typesThatSerializeToString.Contains(keyType));
+
             return result;
         }
     }

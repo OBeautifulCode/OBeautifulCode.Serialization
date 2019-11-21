@@ -30,6 +30,7 @@ namespace OBeautifulCode.Serialization.Json
             var payload = value == null ? null : UnderlyingSerializer.SerializeToString(value);
 
             var payloadObject = new JValue(payload);
+
             payloadObject.WriteTo(writer);
         }
 
