@@ -158,6 +158,7 @@
     <Compile Include="SpecificModels\Animal.cs" />
     <Compile Include="SpecificModels\ITopInterface.cs" />
     <Compile Include="SpecificModels\Lighting.cs" />
+    <Compile Include="SpecificModels\ModelWithNullableProperties.cs" />
     <Compile Include="SpecificModels\TestMapping.cs" />
     <Compile Include="SpecificModelTests\ArrayElementTypeIsDiscovered.cs" />
     <Compile Include="SpecificModelTests\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />

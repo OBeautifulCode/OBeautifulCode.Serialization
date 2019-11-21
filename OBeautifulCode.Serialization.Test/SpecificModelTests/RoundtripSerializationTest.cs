@@ -457,5 +457,54 @@ namespace OBeautifulCode.Serialization.Test
             expected1.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer1, jsonConfigType, bsonConfigType);
             expected2.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer2, jsonConfigType, bsonConfigType);
         }
+
+        [Fact]
+        public static void RoundtripSerializeDeserialize___Using_ModelWithNullableProperties_with_nulls___Works()
+        {
+            // Arrange
+            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ModelWithNullableProperties>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ModelWithNullableProperties>);
+
+            var expected = new ModelWithNullableProperties
+            {
+            };
+
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, ModelWithNullableProperties deserialized)
+            {
+                deserialized.Should().NotBeNull();
+                deserialized.NullableDateTime.Should().BeNull();
+                deserialized.NullableGuid.Should().BeNull();
+                deserialized.NullableInt.Should().BeNull();
+            }
+
+            // Act & Assert
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+        }
+
+        [Fact]
+        public static void RoundtripSerializeDeserialize___Using_ModelWithNullableProperties_with_non_nulls___Works()
+        {
+            // Arrange
+            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ModelWithNullableProperties>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ModelWithNullableProperties>);
+
+            var expected = new ModelWithNullableProperties
+            {
+                NullableDateTime = A.Dummy<DateTime>(),
+                NullableGuid = A.Dummy<Guid>(),
+                NullableInt = A.Dummy<int>(),
+            };
+
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, ModelWithNullableProperties deserialized)
+            {
+                deserialized.Should().NotBeNull();
+                deserialized.NullableDateTime.Should().Be(expected.NullableDateTime);
+                deserialized.NullableGuid.Should().Be(expected.NullableGuid);
+                deserialized.NullableInt.Should().Be(expected.NullableInt);
+            }
+
+            // Act & Assert
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+        }
     }
 }
