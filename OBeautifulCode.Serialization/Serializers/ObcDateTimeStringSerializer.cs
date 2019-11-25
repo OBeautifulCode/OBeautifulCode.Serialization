@@ -146,8 +146,6 @@ namespace OBeautifulCode.Serialization
 
         private static readonly IFormatProvider FormatProvider = CultureInfo.InvariantCulture;
 
-        private static readonly StringComparison StringComparisonType = StringComparison.InvariantCultureIgnoreCase;
-
         /// <inheritdoc />
         public Type ConfigurationType => null;
 
@@ -244,7 +242,7 @@ namespace OBeautifulCode.Serialization
         {
             SerializedDateTimeKind result;
 
-            if (serializedString.EndsWith("Z", StringComparisonType))
+            if (serializedString.EndsWith("Z", StringComparison.InvariantCultureIgnoreCase))
             {
                 if (serializedString.Length == SerializedDateTimeKindToParsingSettingsMap[SerializedDateTimeKind.Utc].FormatString.Count(_ => _ != '\''))
                 {
