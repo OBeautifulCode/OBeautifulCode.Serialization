@@ -130,6 +130,8 @@
     <Compile Include="SerializationFormat.cs" />
     <Compile Include="SerializationKind.cs" />
     <Compile Include="SerializerBase.cs" />
+    <Compile Include="Serializers\DateTime\DateTimeParsingSettings.cs" />
+    <Compile Include="Serializers\DateTime\SerializedDateTimeKind.cs" />
     <Compile Include="Serializers\ObcDateTimeStringSerializer.cs" />
     <Compile Include="Serializers\ObcDictionaryStringStringSerializer.cs" />
     <Compile Include="Serializers\ObcLambdaBackedSerializer.cs" />

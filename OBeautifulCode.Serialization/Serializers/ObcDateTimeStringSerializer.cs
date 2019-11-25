@@ -8,8 +8,8 @@ namespace OBeautifulCode.Serialization
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Globalization;
+    using System.Linq;
     using System.Text.RegularExpressions;
 
     using OBeautifulCode.Assertion.Recipes;
@@ -21,369 +21,278 @@ namespace OBeautifulCode.Serialization
     /// </summary>
     public class ObcDateTimeStringSerializer : IStringSerializeAndDeserialize
     {
-#pragma warning disable SA1201 // Elements should appear in the correct order
-#pragma warning disable SA1202 // Public members should come before protected members
-#pragma warning disable SA1203 // Constant fields should appear before non-constant fields
-#pragma warning disable SA1204 // Static members should appear before non-static members
+        private const string LocalDateTimeKindRegexPattern = @"[-+]\d\d:\d\d$";
 
-        private enum StringEncodingPattern
-        {
-            /// <summary>
-            /// Universal kind.
-            /// </summary>
-            Utc,
+        private static readonly Regex MatchLocalRegex = new Regex(LocalDateTimeKindRegexPattern, RegexOptions.Compiled);
 
-            /// <summary>
-            /// Utc with only six (not seven) decimal places after seconds.
-            /// </summary>
-            Utc_Six_Fs,
+        private static readonly IReadOnlyDictionary<DateTimeKind, string> DateTimeKindToFormatStringMap =
+            new Dictionary<DateTimeKind, string>
+            {
+                // ReSharper disable once StringLiteralTypo
+                { DateTimeKind.Utc, "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffff'Z'" },
 
-            /// <summary>
-            /// Utc with only five (not seven) decimal places after seconds.
-            /// </summary>
-            Utc_Five_Fs,
+                // ReSharper disable once StringLiteralTypo
+                { DateTimeKind.Unspecified, "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffff''" },
 
-            /// <summary>
-            /// Utc with only four (not seven) decimal places after seconds.
-            /// </summary>
-            Utc_Four_Fs,
+                // ReSharper disable once StringLiteralTypo
+                // note that the K here expands to the offset (e.g. "-05:00")
+                { DateTimeKind.Local, "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffffK" },
+            };
 
-            /// <summary>
-            /// Utc with only three (not seven) decimal places after seconds.
-            /// </summary>
-            Utc_Three_Fs,
+        private static readonly IReadOnlyDictionary<DateTimeKind, DateTimeStyles> DateTimeKindToStylesMap =
+            new Dictionary<DateTimeKind, DateTimeStyles>
+            {
+                { DateTimeKind.Utc, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal },
+                { DateTimeKind.Unspecified, DateTimeStyles.None },
+                { DateTimeKind.Local, DateTimeStyles.AssumeLocal },
+            };
 
-            /// <summary>
-            /// Utc with only two (not seven) decimal places after seconds.
-            /// </summary>
-            Utc_Two_Fs,
+        private static readonly IReadOnlyDictionary<SerializedDateTimeKind, DateTimeParsingSettings> SerializedDateTimeKindToParsingSettingsMap =
+            new Dictionary<SerializedDateTimeKind, DateTimeParsingSettings>
+            {
+                {
+                    SerializedDateTimeKind.Unspecified, new DateTimeParsingSettings
+                    {
+                        DateTimeKind = DateTimeKind.Unspecified,
+                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Unspecified],
+                        FormatString = DateTimeKindToFormatStringMap[DateTimeKind.Unspecified],
+                    }
+                },
+                {
+                    SerializedDateTimeKind.Local, new DateTimeParsingSettings
+                    {
+                        DateTimeKind = DateTimeKind.Local,
+                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Local],
+                        FormatString = DateTimeKindToFormatStringMap[DateTimeKind.Local],
+                    }
+                },
+                {
+                    SerializedDateTimeKind.Utc, new DateTimeParsingSettings
+                    {
+                        DateTimeKind = DateTimeKind.Utc,
+                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
+                        FormatString = DateTimeKindToFormatStringMap[DateTimeKind.Utc],
+                    }
+                },
+                {
+                    SerializedDateTimeKind.UtcSixFs, new DateTimeParsingSettings
+                    {
+                        DateTimeKind = DateTimeKind.Utc,
+                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
 
-            /// <summary>
-            /// Utc with only one (not seven) decimal places after seconds.
-            /// </summary>
-            Utc_One_Fs,
+                        // ReSharper disable once StringLiteralTypo
+                        FormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'ffffff'Z'",
+                    }
+                },
+                {
+                    SerializedDateTimeKind.UtcFiveFs, new DateTimeParsingSettings
+                    {
+                        DateTimeKind = DateTimeKind.Utc,
+                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
 
-            /// <summary>
-            /// Utc with zero (not seven) decimal places after seconds.
-            /// </summary>
-            Utc_Zero_Fs,
+                        // ReSharper disable once StringLiteralTypo
+                        FormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffff'Z'",
+                    }
+                },
+                {
+                    SerializedDateTimeKind.UtcFourFs, new DateTimeParsingSettings
+                    {
+                        DateTimeKind = DateTimeKind.Utc,
+                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
 
-            /// <summary>
-            /// Unspecified kind.
-            /// </summary>
-            Unspecified,
+                        // ReSharper disable once StringLiteralTypo
+                        FormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'ffff'Z'",
+                    }
+                },
+                {
+                    SerializedDateTimeKind.UtcThreeFs, new DateTimeParsingSettings
+                    {
+                        DateTimeKind = DateTimeKind.Utc,
+                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
 
-            /// <summary>
-            /// Local kind.
-            /// </summary>
-            Local,
-        }
+                        // ReSharper disable once StringLiteralTypo
+                        FormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'",
+                    }
+                },
+                {
+                    SerializedDateTimeKind.UtcTwoFs, new DateTimeParsingSettings
+                    {
+                        DateTimeKind = DateTimeKind.Utc,
+                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
 
-        private class PatternParserSettings
-        {
-            public DateTimeKind DateTimeKind { get; set; }
+                        // ReSharper disable once StringLiteralTypo
+                        FormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'ff'Z'",
+                    }
+                },
+                {
+                    SerializedDateTimeKind.UtcOneFs, new DateTimeParsingSettings
+                    {
+                        DateTimeKind = DateTimeKind.Utc,
+                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
+                        FormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'f'Z'",
+                    }
+                },
+                {
+                    SerializedDateTimeKind.UtcZeroFs, new DateTimeParsingSettings
+                    {
+                        DateTimeKind = DateTimeKind.Utc,
+                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
 
-            public DateTimeStyles DateTimeStyles { get; set; }
+                        // ReSharper disable once StringLiteralTypo
+                        FormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'",
+                    }
+                },
+            };
 
-            public string FormatString { get; set; }
+        private static readonly IFormatProvider FormatProvider = CultureInfo.InvariantCulture;
 
-            public DateTimeParseMethod DateTimeParseMethod { get; set; }
-        }
+        private static readonly StringComparison StringComparisonType = StringComparison.InvariantCultureIgnoreCase;
 
         /// <inheritdoc />
         public Type ConfigurationType => null;
 
         /// <summary>
-        /// Map of <see cref="DateTimeKind"/> to a format string used for serialization.
+        /// Serializes a <see cref="DateTime"/> to a string.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Is immutable.")]
-        public static readonly IReadOnlyDictionary<DateTimeKind, string> DateTimeKindToFormatStringMap =
-            new ReadOnlyDictionary<DateTimeKind, string>(
-                new Dictionary<DateTimeKind, string>
-                    {
-                        { DateTimeKind.Utc, "yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'" }, // Need some regexes here, need to also support Utc with "yyyy-MM-dd'T'HH:mm:ss'Z'"
-                        { DateTimeKind.Unspecified, "yyyy-MM-dd'T'HH:mm:ss.fffffff''" }, // maybe also fall back on generic DateTime.TryParse if all else fails...
-                        { DateTimeKind.Local, "yyyy-MM-dd'T'HH:mm:ss.fffffffK" },
-                    });
-
-        /// <summary>
-        /// Map of <see cref="DateTimeKind"/> to <see cref="DateTimeStyles"/> used for serialization.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Is immutable.")]
-        public static readonly IReadOnlyDictionary<DateTimeKind, DateTimeStyles> DateTimeKindToStylesMap = new ReadOnlyDictionary<DateTimeKind, DateTimeStyles>(
-            new Dictionary<DateTimeKind, DateTimeStyles>
-                {
-                    { DateTimeKind.Utc, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal },
-                    { DateTimeKind.Unspecified, DateTimeStyles.None },
-                    { DateTimeKind.Local, DateTimeStyles.AssumeLocal },
-                });
-
-        private static readonly IReadOnlyDictionary<DateTimeKind, DateTimeParseMethod> DateTimeKindToParseMethodMap =
-            new ReadOnlyDictionary<DateTimeKind, DateTimeParseMethod>(
-                new Dictionary<DateTimeKind, DateTimeParseMethod>
-                    {
-                        {
-                            DateTimeKind.Utc,
-                            (parse, formatString, provider, styles) => DateTime.ParseExact(parse, formatString, provider, styles)
-                        },
-                        {
-                            DateTimeKind.Unspecified,
-                            (parse, formatString, provider, styles) => DateTime.ParseExact(parse, formatString, provider, styles)
-                        },
-                        {
-                            DateTimeKind.Local,
-                            (parse, formatString, provider, styles) => DateTime.ParseExact(parse, formatString, provider, styles)
-                        },
-                    });
-
-        /// <summary>
-        /// Format provider used for serialization.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Is immutable.")]
-        private static readonly IFormatProvider FormatProvider = CultureInfo.InvariantCulture;
-
-        private static readonly StringComparison StringComparisonType = StringComparison.InvariantCultureIgnoreCase;
-
-        private delegate DateTime DateTimeParseMethod(string valueToParse, string formatString, IFormatProvider formatProvider, DateTimeStyles styles);
-
-        private static readonly IReadOnlyDictionary<StringEncodingPattern, PatternParserSettings> PatternToSettingsMap =
-            new Dictionary<StringEncodingPattern, PatternParserSettings>
-            {
-                {
-                    StringEncodingPattern.Utc, new PatternParserSettings
-                    {
-                        DateTimeKind = DateTimeKind.Utc,
-                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
-                        FormatString = DateTimeKindToFormatStringMap[DateTimeKind.Utc],
-                        DateTimeParseMethod = DateTimeKindToParseMethodMap[DateTimeKind.Utc],
-                    }
-                },
-                {
-                    StringEncodingPattern.Utc_Six_Fs, new PatternParserSettings
-                    {
-                        DateTimeKind = DateTimeKind.Utc,
-                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
-                        FormatString = "yyyy-MM-dd'T'HH:mm:ss.ffffff'Z'",
-                        DateTimeParseMethod = DateTimeKindToParseMethodMap[DateTimeKind.Utc],
-                    }
-                },
-                {
-                    StringEncodingPattern.Utc_Five_Fs, new PatternParserSettings
-                    {
-                        DateTimeKind = DateTimeKind.Utc,
-                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
-                        FormatString = "yyyy-MM-dd'T'HH:mm:ss.fffff'Z'",
-                        DateTimeParseMethod = DateTimeKindToParseMethodMap[DateTimeKind.Utc],
-                    }
-                },
-                {
-                    StringEncodingPattern.Utc_Four_Fs, new PatternParserSettings
-                    {
-                        DateTimeKind = DateTimeKind.Utc,
-                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
-                        FormatString = "yyyy-MM-dd'T'HH:mm:ss.ffff'Z'",
-                        DateTimeParseMethod = DateTimeKindToParseMethodMap[DateTimeKind.Utc],
-                    }
-                },
-                {
-                    StringEncodingPattern.Utc_Three_Fs, new PatternParserSettings
-                    {
-                        DateTimeKind = DateTimeKind.Utc,
-                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
-                        FormatString = "yyyy-MM-dd'T'HH:mm:ss.fff'Z'",
-                        DateTimeParseMethod = DateTimeKindToParseMethodMap[DateTimeKind.Utc],
-                    }
-                },
-                {
-                    StringEncodingPattern.Utc_Two_Fs, new PatternParserSettings
-                    {
-                        DateTimeKind = DateTimeKind.Utc,
-                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
-                        FormatString = "yyyy-MM-dd'T'HH:mm:ss.ff'Z'",
-                        DateTimeParseMethod = DateTimeKindToParseMethodMap[DateTimeKind.Utc],
-                    }
-                },
-                {
-                    StringEncodingPattern.Utc_One_Fs, new PatternParserSettings
-                    {
-                        DateTimeKind = DateTimeKind.Utc,
-                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
-                        FormatString = "yyyy-MM-dd'T'HH:mm:ss.f'Z'",
-                        DateTimeParseMethod = DateTimeKindToParseMethodMap[DateTimeKind.Utc],
-                    }
-                },
-                {
-                    StringEncodingPattern.Utc_Zero_Fs, new PatternParserSettings
-                    {
-                        DateTimeKind = DateTimeKind.Utc,
-                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
-                        FormatString = "yyyy-MM-dd'T'HH:mm:ss'Z'",
-                        DateTimeParseMethod = DateTimeKindToParseMethodMap[DateTimeKind.Utc],
-                    }
-                },
-                {
-                    StringEncodingPattern.Unspecified, new PatternParserSettings
-                    {
-                        DateTimeKind = DateTimeKind.Unspecified,
-                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Unspecified],
-                        FormatString = DateTimeKindToFormatStringMap[DateTimeKind.Unspecified],
-                        DateTimeParseMethod = DateTimeKindToParseMethodMap[DateTimeKind.Unspecified],
-                    }
-                },
-                {
-                    StringEncodingPattern.Local, new PatternParserSettings
-                    {
-                        DateTimeKind = DateTimeKind.Local,
-                        DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Local],
-                        FormatString = DateTimeKindToFormatStringMap[DateTimeKind.Local],
-                        DateTimeParseMethod = DateTimeKindToParseMethodMap[DateTimeKind.Local],
-                    }
-                },
-            };
-
-        /// <inheritdoc />
-        public string SerializeToString(object objectToSerialize)
+        /// <param name="value">The value to serialize.</param>
+        /// <returns>
+        /// The serialized string.
+        /// </returns>
+        public static string SerializeToString(
+            DateTime value)
         {
-            var type = (objectToSerialize ?? default(DateTime)).GetType();
-            (type == typeof(DateTime) || type == typeof(DateTime?)).AsArg(Invariant($"typeMustBeDateTimeOrNullableDateTime-{type}")).Must().BeTrue();
+            var formatString = DateTimeKindToFormatStringMap[value.Kind];
 
-            if (objectToSerialize == null)
-            {
-                /* support for DateTime? */
-                return null;
-            }
+            var result = value.ToString(formatString, FormatProvider);
 
-            return SerializeDateTimeToString((DateTime)objectToSerialize);
+            return result;
         }
 
         /// <summary>
-        /// Serializes a <see cref="DateTime" /> to a string.
-        /// </summary>
-        /// <param name="dateTimeToSerialize"><see cref="DateTime" /> to serialize.</param>
-        /// <returns>Serialized string.</returns>
-        public static string SerializeDateTimeToString(DateTime dateTimeToSerialize)
-        {
-            DateTimeKindToFormatStringMap.TryGetValue(dateTimeToSerialize.Kind, out string formatString).AsArg(
-                Invariant($"DidNotFindValueIn{nameof(DateTimeKindToFormatStringMap)}ForKind{dateTimeToSerialize.Kind}")).Must().BeTrue();
-
-            return dateTimeToSerialize.ToString(formatString, FormatProvider);
-        }
-
-        /// <inheritdoc />
-        public T Deserialize<T>(string serializedString)
-        {
-            return (T)this.Deserialize(serializedString, typeof(T));
-        }
-
-        /// <inheritdoc />
-        public object Deserialize(string serializedString, Type type)
-        {
-            new { type }.AsArg().Must().NotBeNull();
-
-            (type == typeof(DateTime) || type == typeof(DateTime?)).AsArg("typeMustBeDateTimeOrNullableDateTime").Must().BeTrue();
-
-            if (serializedString == null)
-            {
-                /* support for DateTime? */
-                return null;
-            }
-
-            return DeserializeToDateTime(serializedString);
-        }
-
-        /// <summary>
-        /// Deserializes to a <see cref="DateTime" />.
+        /// Deserializes a string into a <see cref="DateTime"/>.
         /// </summary>
         /// <param name="serializedString">Serialized string.</param>
-        /// <returns><see cref="DateTime" /> from string.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string", Justification = "Name/spelling is correct.")]
-        public static DateTime DeserializeToDateTime(string serializedString)
-        {
-            if (string.IsNullOrEmpty(serializedString))
-            {
-                return default(DateTime);
-            }
-
-            try
-            {
-                var kind = DiscoverKindInSerializedString(serializedString);
-                var settings = PatternToSettingsMap[kind];
-                settings.AsArg(Invariant($"{nameof(settings)}For{kind}")).Must().NotBeNull();
-
-                var ret = settings.DateTimeParseMethod(serializedString, settings.FormatString, FormatProvider, settings.DateTimeStyles);
-                ret.Kind.AsArg(Invariant($"ReturnKind-{ret.Kind}-MustBeSameAsDiscovered-{kind}")).Must().BeEqualTo(settings.DateTimeKind);
-
-                return ret;
-            }
-            catch (Exception ex)
-            {
-                throw new ObcSerializationException(Invariant($"Failed to deserialize '{serializedString}'"), ex);
-            }
-        }
-
-        private const string MatchLocalRegexPattern = @"[-+]\d\d:\d\d$";
-
-        private static readonly Regex MatchLocalRegex = new Regex(MatchLocalRegexPattern, RegexOptions.Compiled);
-
-        private static StringEncodingPattern DiscoverKindInSerializedString(string serializedString)
+        /// <returns>
+        /// The deserialized <see cref="DateTime"/>.
+        /// </returns>
+        public static DateTime DeserializeToDateTime(
+            string serializedString)
         {
             new { serializedString }.AsArg().Must().NotBeNullNorWhiteSpace();
 
+            var exceptionMessage = Invariant($"Provided {nameof(serializedString)}: {serializedString} is malformed; it's not in a supported format and cannot be deserialized.");
+
+            var serializedDateTimeKind = DetermineSerializedDateTimeKind(serializedString);
+
+            serializedDateTimeKind.AsOp().Must().NotBeEqualTo(SerializedDateTimeKind.Unknown, exceptionMessage, ApplyBecause.InLieuOfDefaultMessage);
+
+            var parsingSettings = SerializedDateTimeKindToParsingSettingsMap[serializedDateTimeKind];
+
+            DateTime result;
+
+            try
+            {
+                result = DateTime.ParseExact(serializedString, parsingSettings.FormatString, FormatProvider, parsingSettings.DateTimeStyles);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(exceptionMessage, ex);
+            }
+
+            result.Kind.AsOp().Must().BeEqualTo(parsingSettings.DateTimeKind, Invariant($"Provided {nameof(serializedString)}: {serializedString} deserialized into a {nameof(DateTime)} who's {nameof(DateTimeKind)} is {nameof(DateTimeKind)}.{result.Kind}, however {nameof(DateTimeKind)}.{parsingSettings.DateTimeKind} was expected based on the format of the string."), ApplyBecause.InLieuOfDefaultMessage);
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public string SerializeToString(
+            object objectToSerialize)
+        {
+            new { objectToSerialize }.AsArg().Must().BeOfType<DateTime>();
+
+            var result = SerializeToString((DateTime)objectToSerialize);
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public T Deserialize<T>(
+            string serializedString)
+        {
+            new { serializedString }.AsArg().Must().NotBeNullNorWhiteSpace();
+
+            var result = (T)this.Deserialize(serializedString, typeof(T));
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public object Deserialize(
+            string serializedString,
+            Type type)
+        {
+            new { serializedString }.AsArg().Must().NotBeNullNorWhiteSpace();
+            new { type }.AsArg().Must().NotBeNull().And().BeEqualTo(typeof(DateTime));
+
+            var result = DeserializeToDateTime(serializedString);
+
+            return result;
+        }
+
+        private static SerializedDateTimeKind DetermineSerializedDateTimeKind(
+            string serializedString)
+        {
+            SerializedDateTimeKind result;
+
             if (serializedString.EndsWith("Z", StringComparisonType))
             {
-                if (serializedString.Length == PatternToSettingsMap[StringEncodingPattern.Utc].FormatString.Length - 4)
+                if (serializedString.Length == SerializedDateTimeKindToParsingSettingsMap[SerializedDateTimeKind.Utc].FormatString.Count(_ => _ != '\''))
                 {
-                    return StringEncodingPattern.Utc;
+                    result = SerializedDateTimeKind.Utc;
                 }
-                else if (serializedString.Length == PatternToSettingsMap[StringEncodingPattern.Utc_Six_Fs].FormatString.Length - 4)
+                else if (serializedString.Length == SerializedDateTimeKindToParsingSettingsMap[SerializedDateTimeKind.UtcSixFs].FormatString.Count(_ => _ != '\''))
                 {
-                    return StringEncodingPattern.Utc_Six_Fs;
+                    result = SerializedDateTimeKind.UtcSixFs;
                 }
-                else if (serializedString.Length == PatternToSettingsMap[StringEncodingPattern.Utc_Five_Fs].FormatString.Length - 4)
+                else if (serializedString.Length == SerializedDateTimeKindToParsingSettingsMap[SerializedDateTimeKind.UtcFiveFs].FormatString.Count(_ => _ != '\''))
                 {
-                    return StringEncodingPattern.Utc_Five_Fs;
+                    result = SerializedDateTimeKind.UtcFiveFs;
                 }
-                else if (serializedString.Length == PatternToSettingsMap[StringEncodingPattern.Utc_Four_Fs].FormatString.Length - 4)
+                else if (serializedString.Length == SerializedDateTimeKindToParsingSettingsMap[SerializedDateTimeKind.UtcFourFs].FormatString.Count(_ => _ != '\''))
                 {
-                    return StringEncodingPattern.Utc_Four_Fs;
+                    result = SerializedDateTimeKind.UtcFourFs;
                 }
-                else if (serializedString.Length == PatternToSettingsMap[StringEncodingPattern.Utc_Three_Fs].FormatString.Length - 4)
+                else if (serializedString.Length == SerializedDateTimeKindToParsingSettingsMap[SerializedDateTimeKind.UtcThreeFs].FormatString.Count(_ => _ != '\''))
                 {
-                    return StringEncodingPattern.Utc_Three_Fs;
+                    result = SerializedDateTimeKind.UtcThreeFs;
                 }
-                else if (serializedString.Length == PatternToSettingsMap[StringEncodingPattern.Utc_Two_Fs].FormatString.Length - 4)
+                else if (serializedString.Length == SerializedDateTimeKindToParsingSettingsMap[SerializedDateTimeKind.UtcTwoFs].FormatString.Count(_ => _ != '\''))
                 {
-                    return StringEncodingPattern.Utc_Two_Fs;
+                    result = SerializedDateTimeKind.UtcTwoFs;
                 }
-                else if (serializedString.Length == PatternToSettingsMap[StringEncodingPattern.Utc_One_Fs].FormatString.Length - 4)
+                else if (serializedString.Length == SerializedDateTimeKindToParsingSettingsMap[SerializedDateTimeKind.UtcOneFs].FormatString.Count(_ => _ != '\''))
                 {
-                    return StringEncodingPattern.Utc_One_Fs;
+                    result = SerializedDateTimeKind.UtcOneFs;
                 }
-                else if (serializedString.Length == PatternToSettingsMap[StringEncodingPattern.Utc_Zero_Fs].FormatString.Length - 4)
+                else if (serializedString.Length == SerializedDateTimeKindToParsingSettingsMap[SerializedDateTimeKind.UtcZeroFs].FormatString.Count(_ => _ != '\''))
                 {
-                    return StringEncodingPattern.Utc_Zero_Fs;
+                    result = SerializedDateTimeKind.UtcZeroFs;
                 }
                 else
                 {
-                    throw new NotSupportedException(Invariant($"Provided {nameof(serializedString)}: {serializedString} is not a supported UTC format."));
+                    result = SerializedDateTimeKind.Unknown;
                 }
             }
-
-            // ends in timezone info (like -03:00 or +03:00)
-            // no ending is considered unspecified kind
-            if (MatchLocalRegex.Match(serializedString).Success)
+            else if (MatchLocalRegex.Match(serializedString).Success)
             {
-                return StringEncodingPattern.Local;
+                result = SerializedDateTimeKind.Local;
             }
             else
             {
-                return StringEncodingPattern.Unspecified;
+                result = SerializedDateTimeKind.Unspecified;
             }
-        }
 
-#pragma warning restore SA1204 // Static members should appear before non-static members
-#pragma warning restore SA1203 // Constant fields should appear before non-constant fields
-#pragma warning restore SA1202 // Public members should come before protected members
-#pragma warning restore SA1201 // Elements should appear in the correct order
+            return result;
+        }
     }
 }

@@ -37,7 +37,6 @@ namespace OBeautifulCode.Serialization.Bson
     /// <typeparam name="TValue">The type of the value of the dictionary.</typeparam>
     [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "All of these generic parameters are required.")]
 
-    // ReSharper disable once InheritdocConsiderUsage
     public class ObcBsonDictionarySerializer<TDictionary, TKey, TValue> : SerializerBase<TDictionary>
         where TDictionary : class, IEnumerable<KeyValuePair<TKey, TValue>>
     {
@@ -111,11 +110,14 @@ namespace OBeautifulCode.Serialization.Bson
             if (context.Reader.State != BsonReaderState.Type && context.Reader.CurrentBsonType == BsonType.Null)
             {
                 context.Reader.ReadNull();
+
                 return null;
             }
 
             var dictionary = this.underlyingSerializer.Deserialize(context, args);
+
             var result = DeserializationConverterFuncBySerializedType[typeof(TDictionary)](dictionary);
+
             return result;
         }
 
@@ -125,7 +127,6 @@ namespace OBeautifulCode.Serialization.Bson
     /// <summary>
     /// A dictionary serializer that does nothing.
     /// </summary>
-    // ReSharper disable once InheritdocConsiderUsage
     public class NullObcBsonDictionarySerializer : ObcBsonDictionarySerializer<IDictionary<string, string>, string, string>
     {
         /// <summary>
@@ -134,7 +135,6 @@ namespace OBeautifulCode.Serialization.Bson
         /// <param name="dictionaryRepresentation">The dictionary representation.</param>
         /// <param name="keySerializer">The key serializer.</param>
         /// <param name="valueSerializer">The value serializer.</param>
-        // ReSharper disable once InheritdocConsiderUsage
         public NullObcBsonDictionarySerializer(DictionaryRepresentation dictionaryRepresentation, IBsonSerializer keySerializer, IBsonSerializer valueSerializer)
             : base(dictionaryRepresentation, keySerializer, valueSerializer)
         {
@@ -157,6 +157,7 @@ namespace OBeautifulCode.Serialization.Bson
             new { type }.AsArg().Must().NotBeNull();
 
             var result = SupportedUnboundedGenericDictionaryTypes.Contains(type);
+
             return result;
         }
     }

@@ -466,9 +466,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 var ret = attributeOnClassSerializer.SerializeToString(propertyValue);
                 return ret;
             }
-            else if (propertyValue is DateTime)
+            else if (propertyValue is DateTime propertyValueAsDateTime)
             {
-                return ObcDateTimeStringSerializer.SerializeDateTimeToString((DateTime)propertyValue);
+                return ObcDateTimeStringSerializer.SerializeToString(propertyValueAsDateTime);
             }
             else
             {
