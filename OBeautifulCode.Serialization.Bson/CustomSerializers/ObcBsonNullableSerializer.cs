@@ -1,6 +1,8 @@
-﻿// <copyright file="ObcBsonNullableSerializer.cs" company="OBeautifulCode">
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ObcBsonNullableSerializer.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace OBeautifulCode.Serialization.Bson
 {
@@ -14,14 +16,17 @@ namespace OBeautifulCode.Serialization.Bson
     using OBeautifulCode.Assertion.Recipes;
 
     /// <summary>
-    /// Represents a serializer for enums, including support for <see cref="FlagsAttribute"/> ones.
+    /// Represents a serializer for <see cref="Nullable{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of the enum.</typeparam>
     public class ObcBsonNullableSerializer<T> : SerializerBase<T?>
         where T : struct
     {
         /// <inheritdoc />
-        public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, T? value)
+        public override void Serialize(
+            BsonSerializationContext context,
+            BsonSerializationArgs args,
+            T? value)
         {
             new { context }.AsArg().Must().NotBeNull();
 
@@ -43,25 +48,31 @@ namespace OBeautifulCode.Serialization.Bson
             new { context }.AsArg().Must().NotBeNull();
             new { context.Reader }.AsArg().Must().NotBeNull();
 
-            if (context.Reader.State != BsonReaderState.Type && context.Reader.CurrentBsonType == BsonType.Null)
+            T? result;
+
+            if ((context.Reader.State != BsonReaderState.Type) && (context.Reader.CurrentBsonType == BsonType.Null))
             {
                 context.Reader.ReadNull();
 
-                return null;
+                result = null;
             }
-
-            var type = context.Reader.GetCurrentBsonType();
-
-            if (type == BsonType.Null)
+            else
             {
-                return null;
+                var bsonType = context.Reader.GetCurrentBsonType();
+
+                if (bsonType == BsonType.Null)
+                {
+                    result = null;
+                }
+                else
+                {
+                    var serializer = BsonConfigurationBase.GetAppropriateSerializer(typeof(T));
+
+                    result = (T?)serializer.Deserialize(context, args);
+                }
             }
 
-            var serializer = BsonConfigurationBase.GetAppropriateSerializer(typeof(T));
-
-            var result = serializer.Deserialize(context, args);
-
-            return (T?)result;
+            return result;
         }
     }
 }

@@ -35,8 +35,6 @@ namespace OBeautifulCode.Serialization.Bson
     /// <typeparam name="TCollection">The type of the collection.</typeparam>
     /// <typeparam name="TElement">The type of the elements in the collection.</typeparam>
     [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "All of these generic parameters are required.")]
-
-    // ReSharper disable once InheritdocConsiderUsage
     public class ObcBsonCollectionSerializer<TCollection, TElement> : SerializerBase<TCollection>
         where TCollection : class, IEnumerable<TElement>
     {
@@ -73,7 +71,8 @@ namespace OBeautifulCode.Serialization.Bson
         /// Initializes a new instance of the <see cref="ObcBsonCollectionSerializer{TCollection,TElement}"/> class.
         /// </summary>
         /// <param name="elementSerializer">The element serializer.</param>
-        public ObcBsonCollectionSerializer(IBsonSerializer<TElement> elementSerializer)
+        public ObcBsonCollectionSerializer(
+            IBsonSerializer<TElement> elementSerializer)
         {
             DeserializationConverterFuncBySerializedType.ContainsKey(typeof(TCollection)).AsArg(Invariant($"{typeof(TCollection)}-mustBeSupportedCollectionType")).Must().BeTrue();
 
@@ -133,14 +132,12 @@ namespace OBeautifulCode.Serialization.Bson
     /// <summary>
     /// A collection serializer that does nothing.
     /// </summary>
-    // ReSharper disable once InheritdocConsiderUsage
     public class NullObcBsonCollectionSerializer : ObcBsonCollectionSerializer<ICollection<string>, string>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NullObcBsonCollectionSerializer"/> class.
         /// </summary>
         /// <param name="elementSerializer">The element serializer.</param>
-        // ReSharper disable once InheritdocConsiderUsage
         public NullObcBsonCollectionSerializer(IBsonSerializer<string> elementSerializer)
             : base(elementSerializer)
         {
@@ -163,6 +160,7 @@ namespace OBeautifulCode.Serialization.Bson
             new { type }.AsArg().Must().NotBeNull();
 
             var result = SupportedUnboundedGenericCollectionTypes.Contains(type);
+
             return result;
         }
     }

@@ -1,13 +1,14 @@
-﻿// <copyright file="ObcBsonDateTimeSerializer.cs" company="OBeautifulCode">
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ObcBsonDateTimeSerializer.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace OBeautifulCode.Serialization.Bson
 {
     using System;
 
     using MongoDB.Bson;
-    using MongoDB.Bson.IO;
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Serializers;
 
@@ -23,7 +24,10 @@ namespace OBeautifulCode.Serialization.Bson
         private static readonly IStringSerializeAndDeserialize StringSerializer = new ObcDateTimeStringSerializer();
 
         /// <inheritdoc />
-        public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, DateTime value)
+        public override void Serialize(
+            BsonSerializationContext context,
+            BsonSerializationArgs args,
+            DateTime value)
         {
             new { context }.AsArg().Must().NotBeNull();
 
@@ -31,18 +35,26 @@ namespace OBeautifulCode.Serialization.Bson
         }
 
         /// <inheritdoc />
-        public override DateTime Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
+        public override DateTime Deserialize(
+            BsonDeserializationContext context,
+            BsonDeserializationArgs args)
         {
             new { context }.AsArg().Must().NotBeNull();
 
-            var type = context.Reader.GetCurrentBsonType();
-            switch (type)
+            DateTime result;
+
+            var bsonType = context.Reader.GetCurrentBsonType();
+
+            switch (bsonType)
             {
                 case BsonType.String:
-                    return StringSerializer.Deserialize<DateTime>(context.Reader.ReadString());
+                    result = StringSerializer.Deserialize<DateTime>(context.Reader.ReadString());
+                    break;
                 default:
-                    throw new NotSupportedException(Invariant($"Cannot convert a {type} to a {nameof(DateTime)}."));
+                    throw new NotSupportedException(Invariant($"Cannot convert a {bsonType} to a {nameof(DateTime)}."));
             }
+
+            return result;
         }
     }
 }

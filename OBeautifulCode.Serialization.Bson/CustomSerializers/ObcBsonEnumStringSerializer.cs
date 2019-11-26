@@ -1,6 +1,8 @@
-﻿// <copyright file="ObcBsonEnumStringSerializer.cs" company="OBeautifulCode">
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ObcBsonEnumStringSerializer.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace OBeautifulCode.Serialization.Bson
 {
@@ -19,7 +21,9 @@ namespace OBeautifulCode.Serialization.Bson
         where TEnum : struct
     {
         /// <inheritdoc />
-        public override TEnum Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
+        public override TEnum Deserialize(
+            BsonDeserializationContext context,
+            BsonDeserializationArgs args)
         {
             new { context }.AsArg().Must().NotBeNull();
 
@@ -27,11 +31,16 @@ namespace OBeautifulCode.Serialization.Bson
 
             var stringValue = bsonReader.ReadString();
 
-            return (TEnum)Enum.Parse(typeof(TEnum), stringValue);
+            var result = (TEnum)Enum.Parse(typeof(TEnum), stringValue);
+
+            return result;
         }
 
         /// <inheritdoc />
-        public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, TEnum value)
+        public override void Serialize(
+            BsonSerializationContext context,
+            BsonSerializationArgs args,
+            TEnum value)
         {
             new { context }.AsArg().Must().NotBeNull();
 

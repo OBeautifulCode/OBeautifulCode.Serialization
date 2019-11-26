@@ -30,6 +30,7 @@ namespace OBeautifulCode.Serialization.Bson
             var type = context.Reader.GetCurrentBsonType();
 
             Color result;
+
             switch (type)
             {
                 case BsonType.String:
@@ -51,6 +52,7 @@ namespace OBeautifulCode.Serialization.Bson
             new { context }.AsArg().Must().NotBeNull();
 
             var colorHtml = ColorTranslator.ToHtml(value);
+
             context.Writer.WriteString(colorHtml);
         }
     }
