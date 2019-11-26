@@ -248,18 +248,7 @@ namespace OBeautifulCode.Serialization.Bson
             {
                 result = new ObcBsonDateTimeSerializer();
             }
-            else if (type.IsArray)
-            {
-                var elementType = type.GetElementType();
-
-                // Don't default to object serializer because if there is no element serializer we want to let the ArraySerializer decide what to do.
-                var elementSerializer = GetAppropriateSerializer(elementType, defaultToObjectSerializer: false);
-
-                result = elementSerializer == null
-                    ? typeof(ArraySerializer<>).MakeGenericType(elementType).Construct<IBsonSerializer>()
-                    : typeof(ArraySerializer<>).MakeGenericType(elementType).Construct<IBsonSerializer>(elementSerializer);
-            }
-            else if (type.IsGenericType && NullObcBsonDictionarySerializer.IsSupportedUnboundedGenericDictionaryType(type.GetGenericTypeDefinition()))
+            else if (type.IsSystemDictionaryType())
             {
                 var arguments = type.GetGenericArguments();
 
@@ -272,6 +261,17 @@ namespace OBeautifulCode.Serialization.Bson
                 var valueSerializer = GetAppropriateSerializer(valueType);
 
                 result = typeof(ObcBsonDictionarySerializer<,,>).MakeGenericType(type, keyType, valueType).Construct<IBsonSerializer>(DictionaryRepresentation.ArrayOfDocuments, keySerializer, valueSerializer);
+            }
+            else if (type.IsArray)
+            {
+                var elementType = type.GetElementType();
+
+                // Don't default to object serializer because if there is no element serializer we want to let the ArraySerializer decide what to do.
+                var elementSerializer = GetAppropriateSerializer(elementType, defaultToObjectSerializer: false);
+
+                result = elementSerializer == null
+                    ? typeof(ArraySerializer<>).MakeGenericType(elementType).Construct<IBsonSerializer>()
+                    : typeof(ArraySerializer<>).MakeGenericType(elementType).Construct<IBsonSerializer>(elementSerializer);
             }
             else if (type.IsSystemCollectionType())
             {

@@ -44,7 +44,10 @@ namespace OBeautifulCode.Serialization.Bson
         }
 
         /// <inheritdoc />
-        public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, TCollection value)
+        public override void Serialize(
+            BsonSerializationContext context,
+            BsonSerializationArgs args,
+            TCollection value)
         {
             new { context }.AsArg().Must().NotBeNull();
 
@@ -68,14 +71,20 @@ namespace OBeautifulCode.Serialization.Bson
                 // We HAVE to set the NominalType to ReadOnlyCollection<TElement>,
                 // otherwise the BSON framework serializes in a way that, upon deserialization,
                 // doesn't used the specified elementSerializer.
+                var argsNominalType = args.NominalType;
                 args.NominalType = typeof(ReadOnlyCollection<TElement>);
 
                 this.underlyingSerializer.Serialize(context, args, wrappedValue);
+
+                // restore the NominalType
+                args.NominalType = argsNominalType;
             }
         }
 
         /// <inheritdoc />
-        public override TCollection Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
+        public override TCollection Deserialize(
+            BsonDeserializationContext context,
+            BsonDeserializationArgs args)
         {
             new { context }.AsArg().Must().NotBeNull();
 
@@ -89,7 +98,14 @@ namespace OBeautifulCode.Serialization.Bson
             }
             else
             {
+                // set Nominal Type
+                var argsNominalType = args.NominalType;
+                args.NominalType = typeof(ReadOnlyCollection<TElement>);
+
                 var readOnlyCollection = this.underlyingSerializer.Deserialize(context, args);
+
+                // restore nominal type
+                args.NominalType = argsNominalType;
 
                 var deserializedType = typeof(TCollection);
 
