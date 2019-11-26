@@ -70,6 +70,10 @@ namespace OBeautifulCode.Serialization.Bson
                 var argsNominalType = args.NominalType;
                 args.NominalType = typeof(Dictionary<TKey, TValue>);
 
+                // Note that the Key Comparer embedded in the dictionary is NOT being persisted
+                // and as such, upon de-serialization, it's possible to get a dictionary that
+                // that behaves differently from the one that was serialized if the dictionary
+                // being serialized specified a key comparer and didn't use the default one.
                 this.underlyingSerializer.Serialize(context, args, valueAsDictionary);
 
                 // restore NominalType
@@ -98,6 +102,7 @@ namespace OBeautifulCode.Serialization.Bson
                 var argsNominalType = args.NominalType;
                 args.NominalType = typeof(Dictionary<TKey, TValue>);
 
+                // see the note in Serialize() about the key comparer
                 var dictionary = this.underlyingSerializer.Deserialize(context, args);
 
                 // restore NominalType
