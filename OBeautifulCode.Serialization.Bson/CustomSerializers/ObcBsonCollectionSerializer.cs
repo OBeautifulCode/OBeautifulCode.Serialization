@@ -6,10 +6,8 @@
 
 namespace OBeautifulCode.Serialization.Bson
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     using MongoDB.Bson;
@@ -18,53 +16,17 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization.Serializers;
 
     using OBeautifulCode.Assertion.Recipes;
-
-    using static System.FormattableString;
+    using OBeautifulCode.Type.Recipes;
 
     /// <summary>
-    /// Custom collection serializer to do the right thing.
-    /// Supports:
-    /// - <see cref="ReadOnlyCollection{TElement}"/>
-    /// - <see cref="ICollection{TElement}"/>
-    /// - <see cref="IList{TElement}"/>
-    /// - <see cref="IReadOnlyList{TElement}"/>
-    /// - <see cref="IReadOnlyCollection{TElement}"/>
-    /// - <see cref="List{TElement}"/>
-    /// - <see cref="Collection{TElement}"/>.
+    /// Custom collection serializer to do the right thing for all System collection types.
+    /// See: <see cref="TypeExtensions.IsSystemCollectionType(System.Type)"/>.
     /// </summary>
     /// <typeparam name="TCollection">The type of the collection.</typeparam>
     /// <typeparam name="TElement">The type of the elements in the collection.</typeparam>
-    [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "All of these generic parameters are required.")]
     public class ObcBsonCollectionSerializer<TCollection, TElement> : SerializerBase<TCollection>
         where TCollection : class, IEnumerable<TElement>
     {
-#pragma warning disable SA1201 // Elements should appear in the correct order
-
-        /// <summary>
-        /// Converts a read-only collection returned by the underlying serializer into the type of collection of this serializer.
-        /// </summary>
-        /// <param name="collection">The read-only collection returned by the underlying serializer.</param>
-        /// <returns>
-        /// The type of the collection to return.
-        /// </returns>
-        protected delegate TCollection ConvertToUnderlyingSerializerType(ReadOnlyCollection<TElement> collection);
-
-        /// <summary>
-        /// Maps a supported collection type to a func that creates that type from a collection returned by the underlying serializer.
-        /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "This is already an immutable type.")]
-        protected static readonly IReadOnlyDictionary<Type, ConvertToUnderlyingSerializerType>
-            DeserializationConverterFuncBySerializedType = new Dictionary<Type, ConvertToUnderlyingSerializerType>
-            {
-                { typeof(ReadOnlyCollection<TElement>), collection => collection as TCollection },
-                { typeof(ICollection<TElement>), collection => collection.ToList() as TCollection },
-                { typeof(IList<TElement>), collection => collection.ToList() as TCollection },
-                { typeof(IReadOnlyList<TElement>), collection => collection.ToList() as TCollection },
-                { typeof(IReadOnlyCollection<TElement>), collection => collection.ToList() as TCollection },
-                { typeof(List<TElement>), collection => collection.ToList() as TCollection },
-                { typeof(Collection<TElement>), collection => new Collection<TElement>(collection) as TCollection },
-            };
-
         private readonly ReadOnlyCollectionSerializer<TElement> underlyingSerializer;
 
         /// <summary>
@@ -74,7 +36,7 @@ namespace OBeautifulCode.Serialization.Bson
         public ObcBsonCollectionSerializer(
             IBsonSerializer<TElement> elementSerializer)
         {
-            DeserializationConverterFuncBySerializedType.ContainsKey(typeof(TCollection)).AsArg(Invariant($"{typeof(TCollection)}-mustBeSupportedCollectionType")).Must().BeTrue();
+            typeof(TCollection).IsSystemCollectionType().AsArg("typeof(TCollection).IsSystemCollectionType()").Must().BeTrue();
 
             this.underlyingSerializer = elementSerializer == null
                 ? new ReadOnlyCollectionSerializer<TElement>()
@@ -89,24 +51,26 @@ namespace OBeautifulCode.Serialization.Bson
             if (value == null)
             {
                 context.Writer.WriteNull();
-                return;
-            }
-
-            var valueAsReadOnlyCollection = value as ReadOnlyCollection<TElement>;
-            if (valueAsReadOnlyCollection != null)
-            {
-                this.underlyingSerializer.Serialize(context, args, valueAsReadOnlyCollection);
             }
             else
             {
+                ReadOnlyCollection<TElement> wrappedValue;
+
                 if (value is IList<TElement> valueAsIList)
                 {
-                    this.underlyingSerializer.Serialize(context, args, new ReadOnlyCollection<TElement>(valueAsIList));
+                    wrappedValue = new ReadOnlyCollection<TElement>(valueAsIList);
                 }
                 else
                 {
-                    this.underlyingSerializer.Serialize(context, args, new ReadOnlyCollection<TElement>(value.ToList()));
+                    wrappedValue = new ReadOnlyCollection<TElement>(value.ToList());
                 }
+
+                // We HAVE to set the NominalType to ReadOnlyCollection<TElement>,
+                // otherwise the BSON framework serializes in a way that, upon deserialization,
+                // doesn't used the specified elementSerializer.
+                args.NominalType = typeof(ReadOnlyCollection<TElement>);
+
+                this.underlyingSerializer.Serialize(context, args, wrappedValue);
             }
         }
 
@@ -115,51 +79,33 @@ namespace OBeautifulCode.Serialization.Bson
         {
             new { context }.AsArg().Must().NotBeNull();
 
-            if (context.Reader.State != BsonReaderState.Type && context.Reader.CurrentBsonType == BsonType.Null)
+            TCollection result;
+
+            if ((context.Reader.State != BsonReaderState.Type) && (context.Reader.CurrentBsonType == BsonType.Null))
             {
                 context.Reader.ReadNull();
-                return null;
+
+                result = null;
             }
+            else
+            {
+                var readOnlyCollection = this.underlyingSerializer.Deserialize(context, args);
 
-            var collection = this.underlyingSerializer.Deserialize(context, args);
-            var result = DeserializationConverterFuncBySerializedType[typeof(TCollection)](collection);
-            return result;
-        }
+                var deserializedType = typeof(TCollection);
 
-#pragma warning restore SA1201 // Elements should appear in the correct order
-    }
-
-    /// <summary>
-    /// A collection serializer that does nothing.
-    /// </summary>
-    public class NullObcBsonCollectionSerializer : ObcBsonCollectionSerializer<ICollection<string>, string>
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NullObcBsonCollectionSerializer"/> class.
-        /// </summary>
-        /// <param name="elementSerializer">The element serializer.</param>
-        public NullObcBsonCollectionSerializer(IBsonSerializer<string> elementSerializer)
-            : base(elementSerializer)
-        {
-            throw new NotSupportedException("The null collection serializer is not intended for use.");
-        }
-
-        /// <summary>
-        /// Gets the supported unbounded generic collection types.
-        /// </summary>
-        public static IReadOnlyCollection<Type> SupportedUnboundedGenericCollectionTypes =>
-            DeserializationConverterFuncBySerializedType.Keys.Select(_ => _.GetGenericTypeDefinition()).ToList();
-
-        /// <summary>
-        /// Determines if the specified type is a supported unbounded generic collection type.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>true if the specified type is supported; otherwise, false.</returns>
-        public static bool IsSupportedUnboundedGenericCollectionType(Type type)
-        {
-            new { type }.AsArg().Must().NotBeNull();
-
-            var result = SupportedUnboundedGenericCollectionTypes.Contains(type);
+                if (deserializedType == typeof(List<TElement>))
+                {
+                    result = readOnlyCollection.ToList() as TCollection;
+                }
+                else if (deserializedType == typeof(Collection<TElement>))
+                {
+                    result = new Collection<TElement>(readOnlyCollection) as TCollection;
+                }
+                else
+                {
+                    result = readOnlyCollection as TCollection;
+                }
+            }
 
             return result;
         }

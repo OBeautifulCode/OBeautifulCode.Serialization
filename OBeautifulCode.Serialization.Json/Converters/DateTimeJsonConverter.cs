@@ -7,18 +7,17 @@
 namespace OBeautifulCode.Serialization.Json
 {
     using System;
-    using System.Linq;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+
+    using OBeautifulCode.Assertion.Recipes;
 
     /// <summary>
     /// Custom <see cref="DateTime"/> converter to do the right thing.
     /// </summary>
     internal class DateTimeJsonConverter : JsonConverter
     {
-        private static readonly Type[] SupportedDateTimeTypes = new[] { typeof(DateTime), typeof(DateTime?) };
-
         private static readonly IStringSerializeAndDeserialize UnderlyingSerializer = new ObcDateTimeStringSerializer();
 
         /// <inheritdoc />
@@ -27,7 +26,7 @@ namespace OBeautifulCode.Serialization.Json
             object value,
             JsonSerializer serializer)
         {
-            var payload = value == null ? null : UnderlyingSerializer.SerializeToString(value);
+            var payload = value == null ? null : UnderlyingSerializer.SerializeToString((DateTime)value);
 
             var payloadObject = new JValue(payload);
 
@@ -41,23 +40,21 @@ namespace OBeautifulCode.Serialization.Json
             object existingValue,
             JsonSerializer serializer)
         {
-            if (reader == null)
-            {
-                throw new ArgumentNullException(nameof(reader));
-            }
+            new { reader }.AsArg().Must().NotBeNull();
+            new { serializer }.AsArg().Must().NotBeNull();
 
-            if (serializer == null)
-            {
-                throw new ArgumentNullException(nameof(serializer));
-            }
+            object result;
 
             if (reader.TokenType == JsonToken.Null)
             {
-                return null;
+                result = null;
             }
+            else
+            {
+                var payload = reader.Value;
 
-            var payload = reader.Value;
-            var result = payload == null ? null : UnderlyingSerializer.Deserialize(payload.ToString(), objectType);
+                result = payload == null ? null : UnderlyingSerializer.Deserialize(payload.ToString(), typeof(DateTime));
+            }
 
             return result;
         }
@@ -66,16 +63,7 @@ namespace OBeautifulCode.Serialization.Json
         public override bool CanConvert(
             Type objectType)
         {
-            bool result;
-
-            if (objectType == null)
-            {
-                result = false;
-            }
-            else
-            {
-                result = SupportedDateTimeTypes.Contains(objectType);
-            }
+            var result = (objectType != null) && ((objectType == typeof(DateTime)) || (objectType == typeof(DateTime?)));
 
             return result;
         }

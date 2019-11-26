@@ -88,6 +88,7 @@ namespace OBeautifulCode.Serialization.Bson
             if (value == null)
             {
                 context.Writer.WriteNull();
+
                 return;
             }
 

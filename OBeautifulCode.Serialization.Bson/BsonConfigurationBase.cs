@@ -273,7 +273,7 @@ namespace OBeautifulCode.Serialization.Bson
 
                 result = typeof(ObcBsonDictionarySerializer<,,>).MakeGenericType(type, keyType, valueType).Construct<IBsonSerializer>(DictionaryRepresentation.ArrayOfDocuments, keySerializer, valueSerializer);
             }
-            else if (type.IsGenericType && NullObcBsonCollectionSerializer.IsSupportedUnboundedGenericCollectionType(type.GetGenericTypeDefinition()))
+            else if (type.IsSystemCollectionType())
             {
                 var arguments = type.GetGenericArguments();
 
