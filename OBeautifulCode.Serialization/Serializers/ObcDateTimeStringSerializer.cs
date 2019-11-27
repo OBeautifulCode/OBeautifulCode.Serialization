@@ -171,18 +171,19 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Deserializes a string into a <see cref="DateTime"/>.
         /// </summary>
-        /// <param name="value">Serialized string.</param>
+        /// <param name="serializedString">Serialized string.</param>
         /// <returns>
         /// The deserialized <see cref="DateTime"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
         public static DateTime DeserializeToDateTime(
-            string value)
+            string serializedString)
         {
-            new { value }.AsArg().Must().NotBeNullNorWhiteSpace();
+            new { serializedString }.AsArg().Must().NotBeNullNorWhiteSpace();
 
-            var exceptionMessage = Invariant($"Provided {nameof(value)}: {value} is malformed; it's not in a supported format and cannot be deserialized.");
+            var exceptionMessage = Invariant($"Provided {nameof(serializedString)}: {serializedString} is malformed; it's not in a supported format and cannot be deserialized.");
 
-            var serializedDateTimeKind = DetermineSerializedDateTimeKind(value);
+            var serializedDateTimeKind = DetermineSerializedDateTimeKind(serializedString);
 
             serializedDateTimeKind.AsOp().Must().NotBeEqualTo(SerializedDateTimeKind.Unknown, exceptionMessage, ApplyBecause.InLieuOfDefaultMessage);
 
@@ -192,14 +193,14 @@ namespace OBeautifulCode.Serialization
 
             try
             {
-                result = DateTime.ParseExact(value, parsingSettings.FormatString, FormatProvider, parsingSettings.DateTimeStyles);
+                result = DateTime.ParseExact(serializedString, parsingSettings.FormatString, FormatProvider, parsingSettings.DateTimeStyles);
             }
             catch (Exception ex)
             {
                 throw new InvalidOperationException(exceptionMessage, ex);
             }
 
-            result.Kind.AsOp().Must().BeEqualTo(parsingSettings.DateTimeKind, Invariant($"Provided {nameof(value)}: {value} deserialized into a {nameof(DateTime)} who's {nameof(DateTimeKind)} is {nameof(DateTimeKind)}.{result.Kind}, however {nameof(DateTimeKind)}.{parsingSettings.DateTimeKind} was expected based on the format of the string."), ApplyBecause.InLieuOfDefaultMessage);
+            result.Kind.AsOp().Must().BeEqualTo(parsingSettings.DateTimeKind, Invariant($"Provided {nameof(serializedString)}: {serializedString} deserialized into a {nameof(DateTime)} who's {nameof(DateTimeKind)} is {nameof(DateTimeKind)}.{result.Kind}, however {nameof(DateTimeKind)}.{parsingSettings.DateTimeKind} was expected based on the format of the string."), ApplyBecause.InLieuOfDefaultMessage);
 
             return result;
         }
