@@ -141,6 +141,9 @@
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeDummyFactory.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="Bson\CustomSerializers\ObcBsonDictionarySerializerTest.cs" />
+    <Compile Include="Bson\CustomSerializers\ObcBsonCollectionSerializerTest.cs" />
+    <Compile Include="Bson\ObcConfigurationBaseTest.cs" />
     <Compile Include="ConfigurationTests\BsonConfigurationAutoRegisterType.cs" />
     <Compile Include="ConfigurationTests\BsonConfigurationBaseTest.cs" />
     <Compile Include="ConfigurationTests\JsonConfigurationBaseTest.cs" />
