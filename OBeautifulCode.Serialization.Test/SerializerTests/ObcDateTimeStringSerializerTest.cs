@@ -144,7 +144,7 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
-        public static void Deserialize_T___Should_throw_ArgumentException___When_type_parameter_T_is_not_DateTime()
+        public static void Deserialize_T___Should_throw_ArgumentException___When_type_parameter_is_not_DateTime()
         {
             // Arrange
             var systemUnderTest = new ObcDateTimeStringSerializer();

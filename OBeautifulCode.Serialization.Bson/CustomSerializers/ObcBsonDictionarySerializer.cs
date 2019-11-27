@@ -9,6 +9,7 @@ namespace OBeautifulCode.Serialization.Bson
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     using MongoDB.Bson;
@@ -18,6 +19,7 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization.Serializers;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Serialization.Bson.Internal;
     using OBeautifulCode.Type.Recipes;
 
     /// <summary>
@@ -27,6 +29,7 @@ namespace OBeautifulCode.Serialization.Bson
     /// <typeparam name="TDictionary">The type of the dictionary.</typeparam>
     /// <typeparam name="TKey">The type of the key of the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of the value of the dictionary.</typeparam>
+    [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = ObcSuppressBecause.CA1005_AvoidExcessiveParametersOnGenericTypes_SpecifiedParametersRequiredForNeededFunctionality)]
     public class ObcBsonDictionarySerializer<TDictionary, TKey, TValue> : SerializerBase<TDictionary>
         where TDictionary : class, IEnumerable<KeyValuePair<TKey, TValue>>
     {
