@@ -15,6 +15,7 @@ namespace OBeautifulCode.Serialization
     using System.Runtime.CompilerServices;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Type;
@@ -212,7 +213,7 @@ namespace OBeautifulCode.Serialization
 
                 if (type.IsGenericType)
                 {
-                    type.GetGenericArguments().ToList().ForEach(_ => typesToInspect.Add(_));
+                    typesToInspect.AddRange(type.GenericTypeArguments);
                 }
 
                 if (type.IsArray)
@@ -252,7 +253,7 @@ namespace OBeautifulCode.Serialization
                 newTypes.Distinct().ToList().ForEach(_ => typesToInspect.Add(_));
             }
 
-            var result = typeHashSet.Where(_ => _.IsNonAnonymousClosedClassType()).ToList();
+            var result = typeHashSet.Where(_ => _.IsClosedNonAnonymousClassType()).ToList();
 
             return result;
         }
@@ -294,7 +295,7 @@ namespace OBeautifulCode.Serialization
                             .GetTypesFromAssemblies()
                             .Where(_ =>
                                 _.IsClass &&
-                                (!_.IsAnonymous()) &&
+                                (!_.IsClosedAnonymousType()) &&
                                 (!DiscoverAssignableTypesBlackList.Contains(_)) &&
                                 (!_.IsGenericTypeDefinition)) // can't do an IsAssignableTo check on generic type definitions
                             .ToList();

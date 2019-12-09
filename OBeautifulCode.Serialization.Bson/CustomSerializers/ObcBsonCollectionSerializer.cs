@@ -20,7 +20,7 @@ namespace OBeautifulCode.Serialization.Bson
 
     /// <summary>
     /// Custom collection serializer to do the right thing for all System collection types.
-    /// See: <see cref="TypeExtensions.IsSystemCollectionType(System.Type)"/>.
+    /// See: <see cref="TypeExtensions.IsClosedSystemCollectionType(System.Type)"/>.
     /// </summary>
     /// <typeparam name="TCollection">The type of the collection.</typeparam>
     /// <typeparam name="TElement">The type of the elements in the collection.</typeparam>
@@ -36,7 +36,7 @@ namespace OBeautifulCode.Serialization.Bson
         public ObcBsonCollectionSerializer(
             IBsonSerializer<TElement> elementSerializer)
         {
-            typeof(TCollection).IsSystemCollectionType().AsArg("typeof(TCollection).IsSystemCollectionType()").Must().BeTrue();
+            typeof(TCollection).IsClosedSystemCollectionType().AsArg("typeof(TCollection).IsSystemCollectionType()").Must().BeTrue();
 
             this.underlyingSerializer = elementSerializer == null
                 ? new ReadOnlyCollectionSerializer<TElement>()

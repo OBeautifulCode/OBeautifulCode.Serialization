@@ -6,14 +6,15 @@
     <tags>serialization dummy factory</tags>
     <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.Test/nuget-icon.png</iconUrl>
     <dependencies>
-      <dependency id="OBeautifulCode.Serialization" version="1.0.12" />
-      <dependency id="OBeautifulCode.Serialization.Json" version="1.0.12" />
-      <dependency id="OBeautifulCode.Compression.Recipes.DummyFactory" version="1.0.7" />
-      <dependency id="OBeautifulCode.Representation.Recipes.DummyFactory" version="1.0.36" />
-      <dependency id="OBeautifulCode.Representation.System" version="1.0.36" />
+      <dependency id="OBeautifulCode.Serialization" version="$version$" />
+      <dependency id="OBeautifulCode.Serialization.Json" version="$version$" />
+      <dependency id="OBeautifulCode.Compression.Recipes.DummyFactory" version="1.0.8" />
+      <dependency id="OBeautifulCode.Representation.Recipes.DummyFactory" version="1.0.37" />
+      <dependency id="OBeautifulCode.Representation.System" version="1.0.37" />
     </dependencies>
   </metadata>
   <files>
+    <file src=".analyzers\SuppressBecause.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SuppressBecause.cs" />
     <file src="SerializationDummyFactory.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SerializationDummyFactory.cs" />
   </files>
 </package>

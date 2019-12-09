@@ -100,7 +100,7 @@ namespace OBeautifulCode.Serialization
             else if (type.IsGenericType && (type.Namespace?.StartsWith(nameof(System), StringComparison.Ordinal) ?? false))
             {
                 // this is for lists, dictionaries, and such.
-                foreach (var genericArgumentType in type.GetGenericArguments())
+                foreach (var genericArgumentType in type.GenericTypeArguments)
                 {
                     this.ThrowOnUnregisteredTypeIfAppropriate(genericArgumentType);
                 }

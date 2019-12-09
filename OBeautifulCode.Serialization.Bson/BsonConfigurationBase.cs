@@ -240,7 +240,7 @@ namespace OBeautifulCode.Serialization.Bson
             {
                 result = typeof(ObcBsonEnumStringSerializer<>).MakeGenericType(type).Construct<IBsonSerializer>();
             }
-            else if (type.IsNullableType())
+            else if (type.IsClosedNullableType())
             {
                 result = typeof(ObcBsonNullableSerializer<>).MakeGenericType(Nullable.GetUnderlyingType(type)).Construct<IBsonSerializer>();
             }
@@ -248,13 +248,11 @@ namespace OBeautifulCode.Serialization.Bson
             {
                 result = new ObcBsonDateTimeSerializer();
             }
-            else if (type.IsSystemDictionaryType())
+            else if (type.IsClosedSystemDictionaryType())
             {
-                var arguments = type.GetGenericArguments();
+                var keyType = type.GetClosedSystemDictionaryKeyType();
 
-                var keyType = arguments[0];
-
-                var valueType = arguments[1];
+                var valueType = type.GetClosedSystemDictionaryValueType();
 
                 var keySerializer = GetAppropriateSerializer(keyType);
 
@@ -273,11 +271,9 @@ namespace OBeautifulCode.Serialization.Bson
                     ? typeof(ArraySerializer<>).MakeGenericType(elementType).Construct<IBsonSerializer>()
                     : typeof(ArraySerializer<>).MakeGenericType(elementType).Construct<IBsonSerializer>(elementSerializer);
             }
-            else if (type.IsSystemCollectionType())
+            else if (type.IsClosedSystemCollectionType())
             {
-                var arguments = type.GetGenericArguments();
-
-                var elementType = arguments[0];
+                var elementType = type.GetClosedSystemCollectionElementType();
 
                 // Don't default to object serializer because if there is no element serializer we want to let the ObcCollectionSerializer decide what to do.
                 var elementSerializer = GetAppropriateSerializer(elementType, defaultToObjectSerializer: false);

@@ -24,7 +24,7 @@ namespace OBeautifulCode.Serialization.Bson
 
     /// <summary>
     /// Custom dictionary serializer to do the right thing for System dictionary types.
-    /// See <see cref="TypeExtensions.IsSystemDictionaryType(System.Type)"/>.
+    /// See <see cref="TypeExtensions.IsClosedSystemDictionaryType(System.Type)"/>.
     /// </summary>
     /// <typeparam name="TDictionary">The type of the dictionary.</typeparam>
     /// <typeparam name="TKey">The type of the key of the dictionary.</typeparam>
@@ -46,7 +46,7 @@ namespace OBeautifulCode.Serialization.Bson
             IBsonSerializer keySerializer,
             IBsonSerializer valueSerializer)
         {
-            typeof(TDictionary).IsSystemDictionaryType().AsArg("typeof(TDictionary).IsSystemDictionaryType()").Must().BeTrue();
+            typeof(TDictionary).IsClosedSystemDictionaryType().AsArg("typeof(TDictionary).IsSystemDictionaryType()").Must().BeTrue();
 
             this.underlyingSerializer = new DictionaryInterfaceImplementerSerializer<Dictionary<TKey, TValue>>(dictionaryRepresentation, keySerializer, valueSerializer);
         }

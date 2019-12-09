@@ -75,7 +75,7 @@ namespace OBeautifulCode.Serialization.Json
                 {
                     var memberType = matchingMemberProperty.PropertyType;
                     var memberTypeIsGeneric = memberType.IsGenericType;
-                    var memberGenericArguments = memberType.GetGenericArguments();
+                    var memberGenericArguments = memberType.GenericTypeArguments;
                     var parameterTypeIsArray = parameterInfo.ParameterType.IsArray;
                     var parameterElementType = parameterInfo.ParameterType.GetElementType();
                     if (parameterTypeIsArray

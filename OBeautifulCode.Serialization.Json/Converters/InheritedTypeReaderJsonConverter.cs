@@ -273,7 +273,7 @@ namespace OBeautifulCode.Serialization.Json
             if (!this.assignableTypesCache.ContainsKey(type))
             {
                 var assignableTypes = allTypes
-                    .Where(_ => _.IsNonAnonymousClosedClassType() && _ != type && _.IsAssignableTo(type))
+                    .Where(_ => _.IsClosedNonAnonymousClassType() && _ != type && _.IsAssignableTo(type))
                     .ToList();
 
                 this.assignableTypesCache.AddOrUpdate(type, assignableTypes, (t, cts) => assignableTypes);

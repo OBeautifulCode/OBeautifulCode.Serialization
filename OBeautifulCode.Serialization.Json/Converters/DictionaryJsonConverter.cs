@@ -62,7 +62,7 @@ namespace OBeautifulCode.Serialization.Json
             const JsonToken propertyNameToken = JsonToken.PropertyName;
             const string jsonReaderUnderlyingTokenFieldName = "_tokenType";
 
-            var genericArguments = objectType.GetGenericArguments();
+            var genericArguments = objectType.GenericTypeArguments;
             new { genericArguments.Length }.AsArg().Must().BeEqualTo(2, "More ore less than 2 generic arguments means this cannot be a dictionary type that should supported.");
 
             var keyType = genericArguments.First();

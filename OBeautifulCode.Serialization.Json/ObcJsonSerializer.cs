@@ -122,7 +122,7 @@ namespace OBeautifulCode.Serialization.Json
 
             this.InternalJsonThrowOnUnregisteredTypeIfAppropriate(objectType);
 
-            var jsonSerializerSettings = objectToSerialize != null && objectType.IsAnonymous()
+            var jsonSerializerSettings = objectToSerialize != null && objectType.IsClosedAnonymousType()
                 ? this.anonymousWriteSerializationSettings
                 : this.jsonConfiguration.BuildJsonSerializerSettings(SerializationDirection.Serialize, this.formattingKind);
 

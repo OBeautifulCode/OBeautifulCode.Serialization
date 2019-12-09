@@ -87,7 +87,7 @@ namespace OBeautifulCode.Serialization.Json
 
             // create a List<KeyValuePair<K,V>> where K and V are the generic type parameters of the dictionary we are deserializing into
             // Get the .Add() method so that we can add elements to that list
-            var genericArguments = objectType.GetGenericArguments();
+            var genericArguments = objectType.GenericTypeArguments;
             var keyValuePairType = typeof(KeyValuePair<,>).MakeGenericType(genericArguments);
             var listOfKeyValuePairType = typeof(List<>).MakeGenericType(keyValuePairType);
             var listOfKeyValuePairs = listOfKeyValuePairType.Construct();

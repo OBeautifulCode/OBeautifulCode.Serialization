@@ -104,7 +104,7 @@ namespace OBeautifulCode.Serialization
             }
 
             var payloadType = objectToPackageIntoDescribedSerialization?.GetType() ?? typeof(T);
-            if (payloadType.IsAnonymous())
+            if (payloadType.IsClosedAnonymousType())
             {
                 payloadType = typeof(DynamicTypePlaceholder);
             }

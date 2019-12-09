@@ -396,7 +396,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
             }
             else if (type != typeof(string) && typeof(IEnumerable).IsAssignableFrom(type))
             {
-                var itemType = type.GetGenericArguments().SingleOrDefault() ?? throw new ArgumentException(Invariant($"Found {typeof(IEnumerable)} type that cannot extract element type: {type}"));
+                var itemType = type.GenericTypeArguments.SingleOrDefault() ?? throw new ArgumentException(Invariant($"Found {typeof(IEnumerable)} type that cannot extract element type: {type}"));
                 var stringValues = serializedString.FromCsv(this.dictionaryStringSerializer.NullValueEncoding);
                 IList values = (IList)typeof(List<>).MakeGenericType(itemType).Construct();
                 foreach (var stringValue in stringValues)
@@ -419,7 +419,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 var typeToSearchForParse = type;
                 if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
-                    typeToSearchForParse = type.GetGenericArguments().Single();
+                    typeToSearchForParse = type.GenericTypeArguments.Single();
                 }
 
                 var parseMethod = typeToSearchForParse.GetMethods(bindingFlags).SingleOrDefault(
