@@ -16,6 +16,7 @@ namespace OBeautifulCode.Serialization
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Collection.Recipes;
+    using OBeautifulCode.Compression;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Type;
@@ -50,18 +51,27 @@ namespace OBeautifulCode.Serialization
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Is immutable and want a field.")]
         public static readonly IReadOnlyCollection<Type> InternallyRequiredTypes = new[]
         {
-            typeof(ExpressionRepresentationBase),
-            typeof(MemberBindingRepresentationBase),
-            typeof(ElementInitRepresentation),
-            typeof(ConstructorInfoRepresentation),
-            typeof(MethodInfoRepresentation),
-            typeof(MemberInfoRepresentation),
+            // OBC.Type
+            typeof(UtcDateTimeRangeInclusive),
+
+            // OBC.Compression
+            typeof(CompressionKind),
+
+            // OBC.Representation
             typeof(AssemblyRepresentation),
+            typeof(ElementInitRepresentation),
+            typeof(MemberBindingRepresentationBase),
+            typeof(ExpressionRepresentationBase),
             typeof(TypeRepresentation),
+            typeof(TypeRepresentationCacheKey),
+            typeof(ConstructorInfoRepresentation),
+            typeof(MemberInfoRepresentation),
+            typeof(MethodInfoRepresentation),
+
+            // OBC.Serialization:
             typeof(SerializationDescription),
             typeof(DescribedSerialization),
             typeof(DynamicTypePlaceholder),
-            typeof(UtcDateTimeRangeInclusive),
         };
 
         private readonly object syncConfigure = new object();
