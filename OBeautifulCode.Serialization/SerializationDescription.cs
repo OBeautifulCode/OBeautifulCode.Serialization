@@ -19,7 +19,7 @@ namespace OBeautifulCode.Serialization
     using static System.FormattableString;
 
     /// <summary>
-    /// Model object to desribe a serializer so you can persist and share the definition and rehydrate the serializer later.
+    /// Model object to describe a serializer so you can persist and share the definition and rehydrate the serializer later.
     /// </summary>
     public class SerializationDescription : IEquatable<SerializationDescription>
     {
