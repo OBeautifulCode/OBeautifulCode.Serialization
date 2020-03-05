@@ -110,6 +110,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
     <Compile Include="CamelStrictConstructorContractResolver.cs" />
+    <Compile Include="Delegates.cs" />
     <Compile Include="Converters\DateTimeJsonConverter.cs" />
     <Compile Include="Converters\DictionaryJsonConverter.cs" />
     <Compile Include="Converters\DictionaryJsonConverterBase.cs" />

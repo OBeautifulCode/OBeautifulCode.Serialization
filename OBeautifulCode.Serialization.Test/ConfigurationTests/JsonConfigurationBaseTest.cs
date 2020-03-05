@@ -49,8 +49,8 @@ namespace OBeautifulCode.Serialization.Test
         protected override IReadOnlyDictionary<SerializationDirection, RegisteredContractResolver> OverrideContractResolver =>
             new Dictionary<SerializationDirection, RegisteredContractResolver>
             {
-                { SerializationDirection.Serialize, new RegisteredContractResolver(() => new DefaultContractResolver()) },
-                { SerializationDirection.Deserialize, new RegisteredContractResolver(() => new DefaultContractResolver()) },
+                { SerializationDirection.Serialize, new RegisteredContractResolver(_ => new DefaultContractResolver()) },
+                { SerializationDirection.Deserialize, new RegisteredContractResolver(_ => new DefaultContractResolver()) },
             };
     }
 }

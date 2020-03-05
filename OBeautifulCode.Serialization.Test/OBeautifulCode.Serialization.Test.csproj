@@ -169,6 +169,7 @@
     <Compile Include="SpecificModels\Lighting.cs" />
     <Compile Include="SpecificModels\ModelWithNullableProperties.cs" />
     <Compile Include="SpecificModels\TestMapping.cs" />
+    <Compile Include="SpecificModelTests\MultipleConstructors.cs" />
     <Compile Include="SpecificModelTests\ArrayElementTypeIsDiscovered.cs" />
     <Compile Include="SpecificModelTests\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />
     <Compile Include="SpecificModelTests\ConfirmSameInheritorsUsedForDependencies.cs" />
@@ -177,7 +178,6 @@
     <Compile Include="SpecificModelTests\DirectStringSerializationIsSupported.cs" />
     <Compile Include="SpecificModelTests\JsonConfigurationTest.cs" />
     <Compile Include="SpecificModelTests\MultilevelDependencyTest.cs" />
-    <Compile Include="SpecificModelTests\MultipleConstructorScenarioTest.cs" />
     <Compile Include="SpecificModelTests\NetDrawingTypeTests.cs" />
     <Compile Include="SpecificModelTests\ParallelSerializationTest.cs" />
     <Compile Include="SpecificModelTests\ParamsConstructorCollectionProperty.cs" />

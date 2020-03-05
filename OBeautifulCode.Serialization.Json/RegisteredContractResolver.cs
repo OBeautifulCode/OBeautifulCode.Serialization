@@ -6,10 +6,6 @@
 
 namespace OBeautifulCode.Serialization.Json
 {
-    using System;
-
-    using Newtonsoft.Json.Serialization;
-
     using OBeautifulCode.Assertion.Recipes;
 
     /// <summary>
@@ -20,17 +16,17 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Initializes a new instance of the <see cref="RegisteredContractResolver"/> class.
         /// </summary>
-        /// <param name="contractResolverBuilderFunction">Builder function.</param>
-        public RegisteredContractResolver(Func<IContractResolver> contractResolverBuilderFunction)
+        /// <param name="contractResolverBuilder">A contract resolver builder.</param>
+        public RegisteredContractResolver(ContractResolverBuilder contractResolverBuilder)
         {
-            new { contractResolverBuilderFunction }.AsArg().Must().NotBeNull();
+            new { contractResolverBuilder }.AsArg().Must().NotBeNull();
 
-            this.ContractResolverBuilderFunction = contractResolverBuilderFunction;
+            this.ContractResolverBuilder = contractResolverBuilder;
         }
 
         /// <summary>
         /// Gets the builder function.
         /// </summary>
-        public Func<IContractResolver> ContractResolverBuilderFunction { get; private set; }
+        public ContractResolverBuilder ContractResolverBuilder { get; private set; }
     }
 }

@@ -26,9 +26,9 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Map of <see cref="JsonFormattingKind" /> to a <see cref="Func{T1,T2,T3,T4,T5,T6,T7,T8,T9,TResult}" /> that will take a <see cref="SerializationDirection" /> and return the correct <see cref="JsonSerializerSettings" />.
         /// </summary>
-        internal static readonly Dictionary<JsonFormattingKind, Func<SerializationDirection, JsonSerializerSettings>>
+        internal static readonly Dictionary<JsonFormattingKind, Func<SerializationDirection, JsonSerializerSettingsBuilder>>
             SerializationKindToSettingsSelectorByDirection =
-                new Dictionary<JsonFormattingKind, Func<SerializationDirection, JsonSerializerSettings>>
+                new Dictionary<JsonFormattingKind, Func<SerializationDirection, JsonSerializerSettingsBuilder>>
                 {
                     {
                         JsonFormattingKind.Default, direction =>
@@ -36,9 +36,9 @@ namespace OBeautifulCode.Serialization.Json
                             switch (direction)
                             {
                                 case SerializationDirection.Serialize:
-                                    return DefaultSerializingSettings;
+                                    return DefaultSerializingSettingsBuilder;
                                 case SerializationDirection.Deserialize:
-                                    return DefaultDeserializingSettings;
+                                    return DefaultDeserializingSettingsBuilder;
                                 default:
                                     throw new NotSupportedException(Invariant($"Value of {nameof(direction)} - {direction} is not currently supported."));
                             }
@@ -50,9 +50,9 @@ namespace OBeautifulCode.Serialization.Json
                             switch (direction)
                             {
                                 case SerializationDirection.Serialize:
-                                    return CompactSerializingSettings;
+                                    return CompactSerializingSettingsBuilder;
                                 case SerializationDirection.Deserialize:
-                                    return CompactDeserializingSettings;
+                                    return CompactDeserializingSettingsBuilder;
                                 default:
                                     throw new NotSupportedException(Invariant($"Value of {nameof(direction)} - {direction} is not currently supported."));
                             }
@@ -64,9 +64,9 @@ namespace OBeautifulCode.Serialization.Json
                             switch (direction)
                             {
                                 case SerializationDirection.Serialize:
-                                    return MinimalSerializingSettings;
+                                    return MinimalSerializingSettingsBuilder;
                                 case SerializationDirection.Deserialize:
-                                    return MinimalDeserializingSettings;
+                                    return MinimalDeserializingSettingsBuilder;
                                 default:
                                     throw new NotSupportedException(Invariant($"Value of {nameof(direction)} - {direction} is not currently supported."));
                             }
@@ -74,62 +74,62 @@ namespace OBeautifulCode.Serialization.Json
                     },
                 };
 
-        private static JsonSerializerSettings DefaultDeserializingSettings =>
+        private static readonly JsonSerializerSettingsBuilder DefaultDeserializingSettingsBuilder = registeredTypes =>
             new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
                 NullValueHandling = NullValueHandling.Include,
-                ContractResolver = CamelStrictConstructorContractResolver.Instance,
+                ContractResolver = new CamelStrictConstructorContractResolver(registeredTypes),
                 DateParseHandling = DateParseHandling.None,
                 FloatParseHandling = FloatParseHandling.Decimal,
             };
 
-        private static JsonSerializerSettings DefaultSerializingSettings =>
+        private static readonly JsonSerializerSettingsBuilder DefaultSerializingSettingsBuilder = registeredTypes =>
             new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
                 NullValueHandling = NullValueHandling.Include,
-                ContractResolver = CamelStrictConstructorContractResolver.Instance,
+                ContractResolver = new CamelStrictConstructorContractResolver(registeredTypes),
                 DateParseHandling = DateParseHandling.None,
                 FloatParseHandling = FloatParseHandling.Decimal,
             };
 
-        private static JsonSerializerSettings CompactDeserializingSettings =>
+        private static readonly JsonSerializerSettingsBuilder CompactDeserializingSettingsBuilder = registeredTypes =>
             new JsonSerializerSettings
             {
                 Formatting = Formatting.None,
                 NullValueHandling = NullValueHandling.Include,
-                ContractResolver = CamelStrictConstructorContractResolver.Instance,
+                ContractResolver = new CamelStrictConstructorContractResolver(registeredTypes),
                 DateParseHandling = DateParseHandling.None,
                 FloatParseHandling = FloatParseHandling.Decimal,
             };
 
-        private static JsonSerializerSettings CompactSerializingSettings =>
+        private static readonly JsonSerializerSettingsBuilder CompactSerializingSettingsBuilder = registeredTypes =>
             new JsonSerializerSettings
             {
                 Formatting = Formatting.None,
                 NullValueHandling = NullValueHandling.Include,
-                ContractResolver = CamelStrictConstructorContractResolver.Instance,
+                ContractResolver = new CamelStrictConstructorContractResolver(registeredTypes),
                 DateParseHandling = DateParseHandling.None,
                 FloatParseHandling = FloatParseHandling.Decimal,
             };
 
-        private static JsonSerializerSettings MinimalDeserializingSettings =>
+        private static readonly JsonSerializerSettingsBuilder MinimalDeserializingSettingsBuilder = registeredTypes =>
             new JsonSerializerSettings
             {
                 Formatting = Formatting.None,
                 NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = CamelStrictConstructorContractResolver.Instance,
+                ContractResolver = new CamelStrictConstructorContractResolver(registeredTypes),
                 DateParseHandling = DateParseHandling.None,
                 FloatParseHandling = FloatParseHandling.Decimal,
             };
 
-        private static JsonSerializerSettings MinimalSerializingSettings =>
+        private static readonly JsonSerializerSettingsBuilder MinimalSerializingSettingsBuilder = registeredTypes =>
             new JsonSerializerSettings
             {
                 Formatting = Formatting.None,
                 NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = CamelStrictConstructorContractResolver.Instance,
+                ContractResolver = new CamelStrictConstructorContractResolver(registeredTypes),
                 DateParseHandling = DateParseHandling.None,
                 FloatParseHandling = FloatParseHandling.Decimal,
             };
@@ -148,7 +148,9 @@ namespace OBeautifulCode.Serialization.Json
                 .AsArg(Invariant($"{nameof(serializationDirection)}-must-be-{nameof(SerializationDirection.Serialize)}-or{nameof(SerializationDirection.Serialize)}"))
                 .Must().BeTrue();
 
-            var result = SerializationKindToSettingsSelectorByDirection[formattingKind](SerializationDirection.Serialize);
+            var resultBuilder = SerializationKindToSettingsSelectorByDirection[formattingKind](SerializationDirection.Serialize);
+
+            var result = resultBuilder(this.RegisteredTypeToDetailsMap.Keys.ToList());
 
             var specifiedConverters = this.RegisteredConverters.Select(_ =>
                 serializationDirection == SerializationDirection.Serialize
@@ -169,7 +171,7 @@ namespace OBeautifulCode.Serialization.Json
             {
                 var overrideResolver = this.OverrideContractResolver[serializationDirection];
                 new { overrideResolver }.AsArg().Must().NotBeNull();
-                result.ContractResolver = overrideResolver.ContractResolverBuilderFunction();
+                result.ContractResolver = overrideResolver.ContractResolverBuilder(this.RegisteredTypeToDetailsMap.Keys.ToList());
             }
 
             return result;
@@ -187,9 +189,14 @@ namespace OBeautifulCode.Serialization.Json
             JsonFormattingKind formattingKind = JsonFormattingKind.Default)
         {
             // this is a hack to not mess with casing since the case must match for dynamic deserialization...
-            var result = SerializationKindToSettingsSelectorByDirection[formattingKind](serializationDirection);
+            var resultBuilder = SerializationKindToSettingsSelectorByDirection[formattingKind](serializationDirection);
+
+            var result = resultBuilder(this.RegisteredTypeToDetailsMap.Keys.ToList());
+
             result.ContractResolver = new DefaultContractResolver();
+
             result.Converters = this.GetDefaultConverters(serializationDirection, formattingKind);
+
             return result;
         }
 
