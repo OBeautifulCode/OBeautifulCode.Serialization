@@ -74,6 +74,11 @@ namespace OBeautifulCode.Serialization.Json
         protected override JsonObjectContract CreateObjectContract(
             Type objectType)
         {
+            if (objectType == null)
+            {
+                throw new ArgumentNullException(nameof(objectType));
+            }
+
             var result = base.CreateObjectContract(objectType);
 
             // only apply the heuristic on registered types
