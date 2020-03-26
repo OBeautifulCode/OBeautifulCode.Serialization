@@ -37,7 +37,7 @@ namespace OBeautifulCode.Serialization.Json
     /// "Use the parameter-less constructor and cache instances of the contract resolver within your application for optimal performance."
     /// Also. <a href="https://stackoverflow.com/questions/33557737/does-json-net-cache-types-serialization-information"/>
     /// </remarks>
-    internal class CamelStrictConstructorContractResolver
+    public class CamelStrictConstructorContractResolver
         : CamelCasePropertyNamesContractResolver
     {
         /// <summary>
