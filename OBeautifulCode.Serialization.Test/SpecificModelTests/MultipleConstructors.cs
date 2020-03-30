@@ -13,6 +13,7 @@ namespace OBeautifulCode.Serialization.Test
     using Newtonsoft.Json;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
     using OBeautifulCode.Type;
@@ -22,20 +23,21 @@ namespace OBeautifulCode.Serialization.Test
     public static class MultipleConstructors
     {
         [Fact]
-        public static void Deserialize___Should_roundtrip_a_serialized_UnchainedNoDefaultConstructorModel___When_called()
+        public static void Deserialize___Should_roundtrip_a_serialized_UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<UnchainedNoDefaultConstructorModel>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<UnchainedNoDefaultConstructorModel>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel>);
 
-            var expected = A.Dummy<UnchainedNoDefaultConstructorModel>();
+            var expected = A.Dummy<UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel>();
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, UnchainedNoDefaultConstructorModel deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel deserialized)
             {
                 deserialized.AsTest().Must().NotBeNull();
 
                 deserialized.StartDateTimeInUtc.AsTest().Must().BeEqualTo(expected.StartDateTimeInUtc);
                 deserialized.EndDateTimeInUtc.AsTest().Must().BeEqualTo(expected.EndDateTimeInUtc);
+                deserialized.ExpressionBodiedProperty.AsTest().Must().BeEqualTo(expected.ExpressionBodiedProperty);
             }
 
             // Act & Assert
@@ -43,20 +45,21 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
-        public static void Deserialize___Should_roundtrip_a_serialized_ChainedNoDefaultConstructorModel___When_called()
+        public static void Deserialize___Should_roundtrip_a_serialized_ChainedNoDefaultConstructorWithExpressionBodyPropertyModel___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ChainedNoDefaultConstructorModel>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ChainedNoDefaultConstructorModel>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ChainedNoDefaultConstructorWithExpressionBodyPropertyModel>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ChainedNoDefaultConstructorWithExpressionBodyPropertyModel>);
 
-            var expected = A.Dummy<ChainedNoDefaultConstructorModel>();
+            var expected = A.Dummy<ChainedNoDefaultConstructorWithExpressionBodyPropertyModel>();
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, ChainedNoDefaultConstructorModel deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, ChainedNoDefaultConstructorWithExpressionBodyPropertyModel deserialized)
             {
                 deserialized.AsTest().Must().NotBeNull();
 
                 deserialized.StartDateTimeInUtc.AsTest().Must().BeEqualTo(expected.StartDateTimeInUtc);
                 deserialized.EndDateTimeInUtc.AsTest().Must().BeEqualTo(expected.EndDateTimeInUtc);
+                deserialized.ExpressionBodiedProperty.AsTest().Must().BeEqualTo(expected.ExpressionBodiedProperty);
             }
 
             // Act & Assert
@@ -64,11 +67,11 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
-        public static void Deserialize___Should_roundtrip_a_serialized_UnchainedDefaultConstructorModel___When_called()
+        public static void Deserialize___Should_roundtrip_a_serialized_UnchainedDefaultConstructorWithExpressionBodyPropertyModel___When_called()
         {
             // Arrange
-            var expectedParameterless = new UnchainedDefaultConstructorModel();
-            var expectedParameter = new UnchainedDefaultConstructorModel(A.Dummy<string>());
+            var expectedParameterless = new UnchainedDefaultConstructorWithExpressionBodyPropertyModel();
+            var expectedParameter = new UnchainedDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>());
 
             // Act & Assert
             expectedParameter.RoundtripSerializeWithEquatableAssertion();
@@ -76,28 +79,82 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
-        public static void Deserialize___Should_roundtrip_a_serialized_AttributedConstructorModel___When_called()
+        public static void Deserialize___Should_roundtrip_a_serialized_ChainedDefaultConstructorWithExpressionBodyPropertyModel___When_called()
         {
             // Arrange
-            var expectedParameterless = new AttributedConstructorModel();
-            var expectedParameter = new AttributedConstructorModel(A.Dummy<string>());
+            var expectedParameterless = new ChainedDefaultConstructorWithExpressionBodyPropertyModel();
+            var expectedParameter = new ChainedDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>());
 
             // Act & Assert
             expectedParameter.RoundtripSerializeWithEquatableAssertion();
             expectedParameterless.RoundtripSerializeWithEquatableAssertion();
+        }
+
+        [Fact]
+        public static void Deserialize___Should_roundtrip_a_serialized_AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel___When_called()
+        {
+            // Arrange
+            var expectedParameterless = new AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel();
+            var expectedParameter = new AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>());
+
+            // Act & Assert
+            expectedParameter.RoundtripSerializeWithEquatableAssertion();
+            expectedParameterless.RoundtripSerializeWithEquatableAssertion();
+        }
+
+        [Fact]
+        public static void Deserialize___Should_roundtrip_a_serialized_AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel___When_called()
+        {
+            // Arrange
+            var expectedParameter1 = new AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>());
+            var expectedParameter2 = new AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>(), A.Dummy<string>());
+
+            // Act & Assert
+            expectedParameter1.RoundtripSerializeWithEquatableAssertion();
+            expectedParameter2.RoundtripSerializeWithEquatableAssertion();
+        }
+
+        [Fact(Skip = "Some models with initialized getter-only properties (e.g. public DateTime MyProperty { get; } = DateTime.Now) do not roundtrip to/from BSON. JSON seems to work just fine.  In BSON, the issue is specifically with models that do not have a default constructor (regardless of whether there are multiple constructors or a single parameterized constructor).  If there is no default constructor the initialized property is not initialized.")]
+        public static void Deserialize___Should_roundtrip_a_serialized_UnchainedNoDefaultConstructorWithInitializedGetterOnlyPropertyModel___When_called()
+        {
+        }
+
+        [Fact(Skip = "Some models with initialized getter-only properties (e.g. public DateTime MyProperty { get; } = DateTime.Now) do not roundtrip to/from BSON. JSON seems to work just fine.  In BSON, the issue is specifically with models that do not have a default constructor (regardless of whether there are multiple constructors or a single parameterized constructor).  If there is no default constructor the initialized property is not initialized.")]
+        public static void Deserialize___Should_roundtrip_a_serialized_ChainedNoDefaultConstructorWithInitializedGetterOnlyPropertyModel___When_called()
+        {
+        }
+
+        [Fact(Skip = "Some models with initialized getter-only properties (e.g. public DateTime MyProperty { get; } = DateTime.Now) do not roundtrip to/from BSON. JSON seems to work just fine.  In BSON, the issue is specifically with models that do not have a default constructor (regardless of whether there are multiple constructors or a single parameterized constructor).  If there is no default constructor the initialized property is not initialized.")]
+        public static void Deserialize___Should_roundtrip_a_serialized_UnchainedDefaultConstructorWithInitializedGetterOnlyPropertyModel___When_called()
+        {
+        }
+
+        [Fact(Skip = "Some models with initialized getter-only properties (e.g. public DateTime MyProperty { get; } = DateTime.Now) do not roundtrip to/from BSON. JSON seems to work just fine.  In BSON, the issue is specifically with models that do not have a default constructor (regardless of whether there are multiple constructors or a single parameterized constructor).  If there is no default constructor the initialized property is not initialized.")]
+        public static void Deserialize___Should_roundtrip_a_serialized_ChainedDefaultConstructorWithInitializedGetterOnlyPropertyModel___When_called()
+        {
+        }
+
+        [Fact(Skip = "Some models with initialized getter-only properties (e.g. public DateTime MyProperty { get; } = DateTime.Now) do not roundtrip to/from BSON. JSON seems to work just fine.  In BSON, the issue is specifically with models that do not have a default constructor (regardless of whether there are multiple constructors or a single parameterized constructor).  If there is no default constructor the initialized property is not initialized.")]
+        public static void Deserialize___Should_roundtrip_a_serialized_AttributedUnchainedDefaultConstructorWithInitializedGetterOnlyPropertyModel___When_called()
+        {
+        }
+
+        [Fact(Skip = "Some models with initialized getter-only properties (e.g. public DateTime MyProperty { get; } = DateTime.Now) do not roundtrip to/from BSON. JSON seems to work just fine.  In BSON, the issue is specifically with models that do not have a default constructor (regardless of whether there are multiple constructors or a single parameterized constructor).  If there is no default constructor the initialized property is not initialized.")]
+        public static void Deserialize___Should_roundtrip_a_serialized_AttributedChainedNoDefaultConstructorWithInitializedGetterOnlyPropertyModel___When_called()
+        {
         }
     }
 
-    public class UnchainedNoDefaultConstructorModel
+    public class UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel
     {
-        public UnchainedNoDefaultConstructorModel(
+        public UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel(
             UtcDateTimeRangeInclusive utcDateTimeRangeInclusive)
         {
             this.StartDateTimeInUtc = utcDateTimeRangeInclusive.StartDateTimeInUtc;
             this.EndDateTimeInUtc = utcDateTimeRangeInclusive.EndDateTimeInUtc;
         }
 
-        public UnchainedNoDefaultConstructorModel(
+        public UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel(
             DateTime startDateTimeInUtc,
             DateTime endDateTimeInUtc)
         {
@@ -108,17 +165,19 @@ namespace OBeautifulCode.Serialization.Test
         public DateTime EndDateTimeInUtc { get; set; }
 
         public DateTime StartDateTimeInUtc { get; set; }
+
+        public DateTime ExpressionBodiedProperty => new DateTime(2020, 1, 5, 3, 4, 9, DateTimeKind.Utc);
     }
 
-    public class ChainedNoDefaultConstructorModel
+    public class ChainedNoDefaultConstructorWithExpressionBodyPropertyModel
     {
-        public ChainedNoDefaultConstructorModel(
+        public ChainedNoDefaultConstructorWithExpressionBodyPropertyModel(
             UtcDateTimeRangeInclusive utcDateTimeRangeInclusive)
             : this(utcDateTimeRangeInclusive.StartDateTimeInUtc, utcDateTimeRangeInclusive.EndDateTimeInUtc)
         {
         }
 
-        public ChainedNoDefaultConstructorModel(
+        public ChainedNoDefaultConstructorWithExpressionBodyPropertyModel(
             DateTime startDateTimeInUtc,
             DateTime endDateTimeInUtc)
         {
@@ -129,27 +188,31 @@ namespace OBeautifulCode.Serialization.Test
         public DateTime EndDateTimeInUtc { get; set; }
 
         public DateTime StartDateTimeInUtc { get; set; }
+
+        public DateTime ExpressionBodiedProperty => new DateTime(2020, 1, 5, 3, 4, 9, DateTimeKind.Utc);
     }
 
-    public class UnchainedDefaultConstructorModel : IEquatable<UnchainedDefaultConstructorModel>
+    public class UnchainedDefaultConstructorWithExpressionBodyPropertyModel : IEquatable<UnchainedDefaultConstructorWithExpressionBodyPropertyModel>
     {
         private const string ParameterlessConstructorValue = "OhNos";
 
         private const string ParameterConstructorValue = "OhYes";
 
-        public UnchainedDefaultConstructorModel()
+        public UnchainedDefaultConstructorWithExpressionBodyPropertyModel()
         {
             this.SomeValue = ParameterlessConstructorValue;
         }
 
-        public UnchainedDefaultConstructorModel(string someValue)
+        public UnchainedDefaultConstructorWithExpressionBodyPropertyModel(string someValue)
         {
             this.SomeValue = someValue; // ParameterConstructorValue;
         }
 
         public string SomeValue { get; private set; }
 
-        public bool Equals(UnchainedDefaultConstructorModel other)
+        public DateTime ExpressionBodiedProperty => new DateTime(2020, 1, 5, 3, 4, 9, DateTimeKind.Utc);
+
+        public bool Equals(UnchainedDefaultConstructorWithExpressionBodyPropertyModel other)
         {
             if (ReferenceEquals(null, other))
             {
@@ -161,7 +224,10 @@ namespace OBeautifulCode.Serialization.Test
                 return true;
             }
 
-            return string.Equals(this.SomeValue, other.SomeValue);
+            var result = string.Equals(this.SomeValue, other.SomeValue)
+                         && this.ExpressionBodiedProperty.IsEqualTo(other.ExpressionBodiedProperty);
+
+            return result;
         }
 
         public override bool Equals(object obj)
@@ -181,35 +247,105 @@ namespace OBeautifulCode.Serialization.Test
                 return false;
             }
 
-            return this.Equals((UnchainedDefaultConstructorModel)obj);
+            return this.Equals((UnchainedDefaultConstructorWithExpressionBodyPropertyModel)obj);
         }
 
         public override int GetHashCode()
         {
-            return this.SomeValue != null ? this.SomeValue.GetHashCode() : 0;
+            var result = HashCodeHelper.Initialize().Hash(this.SomeValue).Hash(this.ExpressionBodiedProperty).Value;
+
+            return result;
         }
     }
 
-    public class AttributedConstructorModel : IEquatable<AttributedConstructorModel>
+    public class ChainedDefaultConstructorWithExpressionBodyPropertyModel : IEquatable<ChainedDefaultConstructorWithExpressionBodyPropertyModel>
     {
         private const string ParameterlessConstructorValue = "OhNos";
 
         private const string ParameterConstructorValue = "OhYes";
 
-        public AttributedConstructorModel()
+        public ChainedDefaultConstructorWithExpressionBodyPropertyModel()
+            : this(ParameterlessConstructorValue)
+        {
+        }
+
+        public ChainedDefaultConstructorWithExpressionBodyPropertyModel(string someValue)
+        {
+            this.SomeValue = someValue; // ParameterConstructorValue;
+        }
+
+        public string SomeValue { get; private set; }
+
+        public DateTime ExpressionBodiedProperty => new DateTime(2020, 1, 5, 3, 4, 9, DateTimeKind.Utc);
+
+        public bool Equals(ChainedDefaultConstructorWithExpressionBodyPropertyModel other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            var result = string.Equals(this.SomeValue, other.SomeValue)
+                         && this.ExpressionBodiedProperty.IsEqualTo(other.ExpressionBodiedProperty);
+
+            return result;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((ChainedDefaultConstructorWithExpressionBodyPropertyModel)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            var result = HashCodeHelper.Initialize().Hash(this.SomeValue).Hash(this.ExpressionBodiedProperty).Value;
+
+            return result;
+        }
+    }
+
+    public class AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel : IEquatable<AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel>
+    {
+        private const string ParameterlessConstructorValue = "OhNos";
+
+        private const string ParameterConstructorValue = "OhYes";
+
+        public AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel()
         {
             this.SomeValue = ParameterlessConstructorValue;
         }
 
         [JsonConstructor]
-        public AttributedConstructorModel(string someValue)
+        public AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel(string someValue)
         {
             this.SomeValue = someValue; // ParameterConstructorValue;
         }
 
         public string SomeValue { get; private set; }
 
-        public bool Equals(AttributedConstructorModel other)
+        public DateTime ExpressionBodiedProperty => new DateTime(2020, 1, 5, 3, 4, 9, DateTimeKind.Utc);
+
+        public bool Equals(AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel other)
         {
             if (ReferenceEquals(null, other))
             {
@@ -221,7 +357,10 @@ namespace OBeautifulCode.Serialization.Test
                 return true;
             }
 
-            return string.Equals(this.SomeValue, other.SomeValue);
+            var result = string.Equals(this.SomeValue, other.SomeValue)
+                         && (this.ExpressionBodiedProperty == other.ExpressionBodiedProperty);
+
+            return result;
         }
 
         public override bool Equals(object obj)
@@ -241,12 +380,85 @@ namespace OBeautifulCode.Serialization.Test
                 return false;
             }
 
-            return this.Equals((AttributedConstructorModel)obj);
+            return this.Equals((AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel)obj);
         }
 
         public override int GetHashCode()
         {
-            return this.SomeValue != null ? this.SomeValue.GetHashCode() : 0;
+            var result = HashCodeHelper.Initialize().Hash(this.SomeValue).Hash(this.ExpressionBodiedProperty).Value;
+
+            return result;
+        }
+    }
+
+    public class AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel : IEquatable<AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel>
+    {
+        private const string ParameterlessConstructorValue = "OhNos";
+
+        private const string ParameterConstructorValue = "OhYes";
+
+        public AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel(string someValue)
+            : this(someValue, ParameterlessConstructorValue)
+        {
+        }
+
+        [JsonConstructor]
+        public AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel(string someValue, string someValue2)
+        {
+            this.SomeValue = someValue;
+            this.SomeValue2 = someValue2;
+        }
+
+        public string SomeValue { get; private set; }
+
+        public string SomeValue2 { get; private set; }
+
+        public DateTime ExpressionBodiedProperty => new DateTime(2020, 1, 5, 3, 4, 9, DateTimeKind.Utc);
+
+        public bool Equals(AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            var result = string.Equals(this.SomeValue, other.SomeValue)
+                         && string.Equals(this.SomeValue2, other.SomeValue2)
+                         && (this.ExpressionBodiedProperty == other.ExpressionBodiedProperty);
+
+            return result;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            var result = HashCodeHelper.Initialize().Hash(this.SomeValue).Hash(this.SomeValue2).Hash(this.ExpressionBodiedProperty).Value;
+
+            return result;
         }
     }
 }

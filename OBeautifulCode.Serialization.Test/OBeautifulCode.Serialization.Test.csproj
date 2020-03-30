@@ -169,6 +169,7 @@
     <Compile Include="SpecificModels\Lighting.cs" />
     <Compile Include="SpecificModels\ModelWithNullableProperties.cs" />
     <Compile Include="SpecificModels\TestMapping.cs" />
+    <Compile Include="SpecificModelTests\CannotBeDeserializedGetterOnlyPropertyTest.cs" />
     <Compile Include="SpecificModelTests\MultipleConstructors.cs" />
     <Compile Include="SpecificModelTests\ArrayElementTypeIsDiscovered.cs" />
     <Compile Include="SpecificModelTests\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />

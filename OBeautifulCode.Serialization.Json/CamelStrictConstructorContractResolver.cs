@@ -62,14 +62,31 @@ namespace OBeautifulCode.Serialization.Json
 
         /// <inheritdoc />
         /// <remarks>
-        /// We are overriding this method to support objects with multiple constructors.
+        /// We are overriding this method to provide better support for objects with non-default constructors.
+        ///
         /// Out-of-the-box, Newtonsoft throws when deserializing an object with multiple constructors.
         /// The solution is to add the [JsonConstructor] attribute on the constructor to use, but that
         /// pollutes the model and requires a reference to Newtonsoft in the project.
-        /// The RIGHT way to do this is to do what BSON does - find the constructor that matches
-        /// the properties in the payload.  This would be very cumbersome (not possible?) in Newtonsoft
-        /// so we are using a less optimal but totally sufficient heuristic: we choose the constructor
-        /// with the maximum number of parameters.
+        /// The RIGHT way to do this is to do what BSON does - find the constructor with the maximum number
+        /// of parameters having a corresponding property.  This a little cumbersome so we are using a less optimal
+        /// but totally sufficient heuristic: we choose the constructor with the maximum number of parameters.
+        /// However we could fix this up in the future.
+        ///
+        /// Another deficiency is support for models containing
+        /// (a) initialized getter-only (e.g. public string MyProperty { get; } = "whatever") or
+        /// (b) expression bodied getter-only (e.g. public string MyProperty => "whatever) properties.
+        ///
+        /// These properties are serialized and so, upon deserialization, Newtonsoft attempts to serialize
+        /// them and throws if it can't, despite the fact that these properties cannot be set and thus
+        /// should just be ignored.  WE HAVE NOT BEEN ABLE TO FIX-UP THIS DEFICIENCY.  We tried two approaches:
+        /// 1. In the call to result.CreatorParameters.AddRange(...) only add properties that correspond to constructor
+        ///    parameters.  This effectively does nothing because CreateConstructorParameters already filters-out unused
+        ///    properties.  Newtonsoft still attempts to deserialize these properties before calling the constructor and throws.
+        /// 2. Remove the getter-only properties from result.Properties.  In this case Newtonsoft does not throw, however
+        ///    only models with expression-bodied properties would roundtrip.  Models with initialized getter-only properties
+        ///    didn't call the initializer and thus those properties were set to null.  Also, in all cases the property
+        ///    was NOT written to the payload upon serialization, which was a non-starter for us.  We expect all properties
+        ///    to be written to the JSON payload, regardless of whether they are required for deserialization.
         /// </remarks>
         protected override JsonObjectContract CreateObjectContract(
             Type objectType)
@@ -88,16 +105,18 @@ namespace OBeautifulCode.Serialization.Json
 
                 var isInstantiable = (!createdType.IsInterface) && (!createdType.IsAbstract);
 
-                // this is reverse engineered from DefaultContractResolver.CreateObjectContract
+                // this is somewhat reverse engineered from DefaultContractResolver.CreateObjectContract
                 // the object must be instantiable, and Newtonsoft did not find a constructor attributed with [JsonConstructor] (OverrideConstructor)
-                // nor did it find a single constructor (ParametrizedConstructor)
+                // nor did it find a single parameterized constructor (ParametrizedConstructor)
                 #pragma warning disable 618
-                if (isInstantiable && (result.ParametrizedConstructor == null) && (result.OverrideConstructor == null))
+                if (isInstantiable && (result.OverrideConstructor == null) && (result.ParametrizedConstructor == null))
                 #pragma warning restore 618
                 {
                     var constructors = objectType.GetConstructors(BindingFlags.Instance | BindingFlags.Public).ToList();
 
-                    if (constructors.Any())
+                    // if constructors.Count == 1 then it must be the default constructor because we ruled-out
+                    // a single parameterized constructor.  we don't think constructors.Count == 0 is possible.
+                    if (constructors.Count > 1)
                     {
                         var maxParameterCount = constructors.Max(_ => _.GetParameters().Length);
 
@@ -114,10 +133,14 @@ namespace OBeautifulCode.Serialization.Json
                         result.ParametrizedConstructor = parameterizedConstructor;
                         #pragma warning restore 618
 
+                        // CreatorParameters is empty regardless of whether one of the constructors is the default constructor
+                        // We do not need to scope the properties down to just the constructor properties because CreateConstructorParameters will handle that.
+                        result.CreatorParameters.Clear();
                         result.CreatorParameters.AddRange(this.CreateConstructorParameters(parameterizedConstructor, result.Properties));
 
-                        // DefaultCreator is != null when an object has a default constructor
-                        // so we need to clear it out here.
+                        // DefaultCreator is != null when an object has a default constructor,
+                        // but also has one or more parameterized constructors, so we need to clear it out here
+                        // so that it doesn't get used.
                         result.DefaultCreator = null;
                     }
                 }
