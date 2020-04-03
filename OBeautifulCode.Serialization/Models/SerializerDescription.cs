@@ -6,21 +6,17 @@
 
 namespace OBeautifulCode.Serialization
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Compression;
-    using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Representation.System;
-
-    using static System.FormattableString;
+    using OBeautifulCode.Type;
 
     /// <summary>
     /// Model object to describe a serializer so you can persist and share the definition and rehydrate the serializer later.
     /// </summary>
-    public class SerializerDescription : IEquatable<SerializerDescription>
+    public partial class SerializerDescription : IModelViaCodeGen
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializerDescription"/> class.
@@ -30,7 +26,12 @@ namespace OBeautifulCode.Serialization
         /// <param name="compressionKind">Optional <see cref="CompressionKind" /> to use; DEFAULT is None.</param>
         /// <param name="configurationTypeRepresentation">Optional configuration to use; DEFAULT is null.</param>
         /// <param name="metadata">Optional metadata to put, especially useful for customer serializer factory; DEFAULT is empty.</param>
-        public SerializerDescription(SerializationKind serializationKind, SerializationFormat serializationFormat, TypeRepresentation configurationTypeRepresentation = null, CompressionKind compressionKind = CompressionKind.None, IReadOnlyDictionary<string, string> metadata = null)
+        public SerializerDescription(
+            SerializationKind serializationKind,
+            SerializationFormat serializationFormat,
+            TypeRepresentation configurationTypeRepresentation = null,
+            CompressionKind compressionKind = CompressionKind.None,
+            IReadOnlyDictionary<string, string> metadata = null)
         {
             new { serializationKind }.AsArg().Must().NotBeEqualTo(SerializationKind.Invalid);
             new { serializationFormat }.AsArg().Must().NotBeEqualTo(SerializationFormat.Invalid);
@@ -67,61 +68,5 @@ namespace OBeautifulCode.Serialization
         /// Gets a map of metadata for custom use.
         /// </summary>
         public IReadOnlyDictionary<string, string> Metadata { get; private set; }
-
-        /// <summary>
-        /// Equality operator.
-        /// </summary>
-        /// <param name="first">First parameter.</param>
-        /// <param name="second">Second parameter.</param>
-        /// <returns>A value indicating whether or not the two items are equal.</returns>
-        public static bool operator ==(SerializerDescription first, SerializerDescription second)
-        {
-            if (ReferenceEquals(first, second))
-            {
-                return true;
-            }
-
-            if (ReferenceEquals(first, null) || ReferenceEquals(second, null))
-            {
-                return false;
-            }
-
-            var metadataEqual = first.Metadata.IsEqualTo(second.Metadata);
-
-            return first.SerializationKind == second.SerializationKind && first.SerializationFormat == second.SerializationFormat
-                                                                       && first.CompressionKind == second.CompressionKind
-                                                                       && first.ConfigurationTypeRepresentation == second.ConfigurationTypeRepresentation
-                                                                       && metadataEqual;
-        }
-
-        /// <summary>
-        /// Inequality operator.
-        /// </summary>
-        /// <param name="first">First parameter.</param>
-        /// <param name="second">Second parameter.</param>
-        /// <returns>A value indicating whether or not the two items are inequal.</returns>
-        public static bool operator !=(SerializerDescription first, SerializerDescription second) => !(first == second);
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            var metadataString = string.Join(",", this.Metadata.Select(_ => Invariant($"[{_.Key}={_.Value}]")));
-            var result = Invariant($"{nameof(SerializerDescription)}: {nameof(this.SerializationKind)}={this.SerializationKind}, {nameof(this.SerializationFormat)}={this.SerializationFormat}, {nameof(this.CompressionKind)}={this.CompressionKind}, {nameof(this.ConfigurationTypeRepresentation)}={this.ConfigurationTypeRepresentation}, {nameof(this.Metadata)}={metadataString},");
-            return result;
-        }
-
-        /// <inheritdoc />
-        public bool Equals(SerializerDescription other) => this == other;
-
-        /// <inheritdoc />
-        public override bool Equals(object obj) => this == (obj as SerializerDescription);
-
-        /// <inheritdoc />
-        public override int GetHashCode() => HashCodeHelper.Initialize()
-            .Hash(this.SerializationKind)
-            .Hash(this.SerializationFormat)
-            .Hash(this.CompressionKind)
-            .Hash(this.ConfigurationTypeRepresentation)
-            .Hash(this.Metadata).Value;
     }
 }

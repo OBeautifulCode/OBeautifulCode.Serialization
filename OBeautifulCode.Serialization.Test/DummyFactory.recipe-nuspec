@@ -2,19 +2,18 @@
 <package>
   <metadata>
     <id>OBeautifulCode.Serialization.Recipes.DummyFactory</id>
-    <description>Dummy factory for serialization types.</description>
-    <tags>serialization dummy factory</tags>
+    <description>A Dummy Factory for types in OBeautifulCode.Serialization.</description>
+    <tags>dummyfactory dummy factory fakeiteasy autofixture snippet codeinclude utility shared recipe Serialization</tags>
     <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.Test/nuget-icon.png</iconUrl>
     <dependencies>
       <dependency id="OBeautifulCode.Serialization" version="$version$" />
-      <dependency id="OBeautifulCode.Serialization.Json" version="$version$" />
       <dependency id="OBeautifulCode.Compression.Recipes.DummyFactory" version="1.0.9" />
-      <dependency id="OBeautifulCode.Representation.Recipes.DummyFactory" version="1.0.37" />
-      <dependency id="OBeautifulCode.Representation.System" version="1.0.37" />
+      <dependency id="OBeautifulCode.Representation.System.Recipes.DummyFactory" version="1.0.40" />
     </dependencies>
   </metadata>
   <files>
     <file src=".analyzers\SuppressBecause.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SuppressBecause.cs" />
     <file src="SerializationDummyFactory.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SerializationDummyFactory.cs" />
+    <file src="SerializationDummyFactory.designer.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SerializationDummyFactory.designer.cs" />
   </files>
 </package>

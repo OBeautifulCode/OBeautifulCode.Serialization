@@ -120,6 +120,28 @@
     <Compile Include=".recipes\OBeautifulCode.Assertion\Verifications.Workflow.cs" />
     <Compile Include=".recipes\OBeautifulCode.Assertion\WorkflowExtensions.cs" />
     <Compile Include=".recipes\OBeautifulCode.AutoFakeItEasy\AutoFakeItEasyBootstrapper.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\Comparable\ComparableTestScenarios{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\Comparable\ComparableTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\Comparable\ValidatedComparableTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorArgumentValidation\ConstructorArgumentValidationTestScenarios{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorArgumentValidation\ConstructorArgumentValidationTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorArgumentValidation\ValidatedConstructorArgumentValidationTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorPropertyAssignment\ConstructorPropertyAssignmentTestScenarios{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorPropertyAssignment\ConstructorPropertyAssignmentTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorPropertyAssignment\SystemUnderTestExpectedPropertyValue{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorPropertyAssignment\ValidatedConstructorPropertyAssignmentTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\DeepCloneWith\DeepCloneWithTestScenarios{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\DeepCloneWith\DeepCloneWithTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\DeepCloneWith\SystemUnderTestDeepCloneWithValue{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\DeepCloneWith\ValidatedDeepCloneWithTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\Equatable\EquatableTestScenarios{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\Equatable\EquatableTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\Equatable\ValidatedEquatableTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\StringRepresentation\StringRepresentationTestScenarios{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\StringRepresentation\StringRepresentationTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\StringRepresentation\SystemUnderTestExpectedStringRepresentation{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\StringRepresentation\ValidatedStringRepresentationTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Collection\EnumerableExtensions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Collection\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Compression\CompressionDummyFactory.cs" />
@@ -162,11 +184,28 @@
     <Compile Include="ConfigurationTests\JsonSerializationConfigurationBaseTest.cs" />
     <Compile Include="ConfigurationTests\SerializationConfigurationManagerTest.cs" />
     <Compile Include="DateTimeConverterTest.cs" />
+    <Compile Include="Models\DynamicTypePlaceholderTest.cs" />
+    <Compile Include="Models\DynamicTypePlaceholderTest.designer.cs">
+      <DependentUpon>DynamicTypePlaceholderTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="InternallyRegisteredTypesTest.cs" />
+    <Compile Include="Models\DescribedSerializationTest.designer.cs">
+      <DependentUpon>DescribedSerializationTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SerializerDescriptionTest.designer.cs">
+      <DependentUpon>SerializerDescriptionTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="RoundtripSerializationExtensions.cs" />
     <Compile Include="SerializationDummyFactory.cs" />
+    <Compile Include="SerializationDummyFactory.designer.cs">
+      <DependentUpon>SerializationDummyFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SerializationDummyFactoryTest.cs" />
+    <Compile Include="SerializationDummyFactoryTest.designer.cs">
+      <DependentUpon>SerializationDummyFactoryTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Serializers\ObcBsonSerializerTest.cs" />
     <Compile Include="Serializers\ObcDateTimeStringSerializerTest.cs" />
     <Compile Include="Serializers\ObcJsonSerializerTest.cs" />

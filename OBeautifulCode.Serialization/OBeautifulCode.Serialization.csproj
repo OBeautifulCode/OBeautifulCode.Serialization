@@ -124,6 +124,9 @@
     <Compile Include="Models\DescribedSerialization.cs" />
     <Compile Include="DomainExtensions.cs" />
     <Compile Include="DuplicateRegistrationException.cs" />
+    <Compile Include="Models\DescribedSerialization.designer.cs">
+      <DependentUpon>DescribedSerialization.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\DynamicTypePlaceholder.cs" />
     <Compile Include="Interfaces\IBinarySerializeAndDeserialize.cs" />
     <Compile Include="Interfaces\IPropertyBagSerializeAndDeserialize.cs" />
@@ -131,6 +134,12 @@
     <Compile Include="Interfaces\ISerializerFactory.cs" />
     <Compile Include="Interfaces\ISerializeToString.cs" />
     <Compile Include="Interfaces\IStringSerializeAndDeserialize.cs" />
+    <Compile Include="Models\DynamicTypePlaceholder.designer.cs">
+      <DependentUpon>DynamicTypePlaceholder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SerializerDescription.designer.cs">
+      <DependentUpon>SerializerDescription.cs</DependentUpon>
+    </Compile>
     <Compile Include="ObcSerializationException.cs" />
     <Compile Include="ObcStringSerializerAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

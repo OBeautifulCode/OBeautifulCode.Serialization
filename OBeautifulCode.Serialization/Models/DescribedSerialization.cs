@@ -9,13 +9,13 @@ namespace OBeautifulCode.Serialization
     using System;
 
     using OBeautifulCode.Assertion.Recipes;
-    using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Representation.System;
+    using OBeautifulCode.Type;
 
     /// <summary>
     /// Represents a serialized object along with a description of the type of the object.
     /// </summary>
-    public class DescribedSerialization : IEquatable<DescribedSerialization>
+    public partial class DescribedSerialization : IModelViaCodeGen
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DescribedSerialization"/> class.
@@ -28,7 +28,10 @@ namespace OBeautifulCode.Serialization
         /// <exception cref="ArgumentException"><paramref name="serializedPayload"/> is whitespace.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="serializerDescription"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="serializerDescription"/> is whitespace.</exception>
-        public DescribedSerialization(TypeRepresentation payloadTypeRepresentation, string serializedPayload, SerializerDescription serializerDescription)
+        public DescribedSerialization(
+            TypeRepresentation payloadTypeRepresentation,
+            string serializedPayload,
+            SerializerDescription serializerDescription)
         {
             new { payloadTypeRepresentation }.AsArg().Must().NotBeNull();
             new { serializerDescription }.AsArg().Must().NotBeNull();
@@ -52,45 +55,5 @@ namespace OBeautifulCode.Serialization
         /// Gets the description of the serializer used to generate the payload.
         /// </summary>
         public SerializerDescription SerializerDescription { get; private set; }
-
-        /// <summary>
-        /// Equality operator.
-        /// </summary>
-        /// <param name="first">First parameter.</param>
-        /// <param name="second">Second parameter.</param>
-        /// <returns>A value indicating whether or not the two items are equal.</returns>
-        public static bool operator ==(DescribedSerialization first, DescribedSerialization second)
-        {
-            if (ReferenceEquals(first, second))
-            {
-                return true;
-            }
-
-            if (ReferenceEquals(first, null) || ReferenceEquals(second, null))
-            {
-                return false;
-            }
-
-            return first.PayloadTypeRepresentation == second.PayloadTypeRepresentation
-                   && first.SerializedPayload == second.SerializedPayload
-                   && first.SerializerDescription == second.SerializerDescription;
-        }
-
-        /// <summary>
-        /// Inequality operator.
-        /// </summary>
-        /// <param name="first">First parameter.</param>
-        /// <param name="second">Second parameter.</param>
-        /// <returns>A value indicating whether or not the two items are inequal.</returns>
-        public static bool operator !=(DescribedSerialization first, DescribedSerialization second) => !(first == second);
-
-        /// <inheritdoc />
-        public bool Equals(DescribedSerialization other) => this == other;
-
-        /// <inheritdoc />
-        public override bool Equals(object obj) => this == (obj as DescribedSerialization);
-
-        /// <inheritdoc />
-        public override int GetHashCode() => HashCodeHelper.Initialize().Hash(this.PayloadTypeRepresentation).Hash(this.SerializedPayload).Hash(this.SerializerDescription).Value;
     }
 }

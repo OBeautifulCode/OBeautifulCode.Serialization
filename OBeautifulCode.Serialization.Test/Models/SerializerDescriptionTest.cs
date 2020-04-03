@@ -22,7 +22,7 @@ namespace OBeautifulCode.Serialization.Test
 
     using static System.FormattableString;
 
-    public static class SerializerDescriptionTest
+    public static partial class SerializerDescriptionTest
     {
         [Fact]
         public static void Constructor___Invalid_SerializationKind___Throws()

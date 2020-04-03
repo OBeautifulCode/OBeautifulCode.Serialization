@@ -20,7 +20,7 @@ namespace OBeautifulCode.Serialization.Test
 
     using static System.FormattableString;
 
-    public static class DescribedSerializationTest
+    public static partial class DescribedSerializationTest
     {
         [Fact]
         public static void Constructor__Should_throw_ArgumentNullException___When_parameter_TypeRepresentation_is_null()

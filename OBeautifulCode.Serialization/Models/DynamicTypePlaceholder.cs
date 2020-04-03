@@ -6,10 +6,12 @@
 
 namespace OBeautifulCode.Serialization
 {
+    using OBeautifulCode.Type;
+
     /// <summary>
     /// Type to use as a placeholder to control dynamic serialization/de-serialization.
     /// </summary>
-    public sealed class DynamicTypePlaceholder
+    public sealed partial class DynamicTypePlaceholder : IModelViaCodeGen
     {
     }
 }
