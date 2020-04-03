@@ -26,8 +26,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel>);
 
             var expected = A.Dummy<UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel>();
 
@@ -48,8 +48,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_ChainedNoDefaultConstructorWithExpressionBodyPropertyModel___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ChainedNoDefaultConstructorWithExpressionBodyPropertyModel>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ChainedNoDefaultConstructorWithExpressionBodyPropertyModel>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<ChainedNoDefaultConstructorWithExpressionBodyPropertyModel>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<ChainedNoDefaultConstructorWithExpressionBodyPropertyModel>);
 
             var expected = A.Dummy<ChainedNoDefaultConstructorWithExpressionBodyPropertyModel>();
 

@@ -33,7 +33,7 @@ namespace OBeautifulCode.Serialization.Json
         /// </summary>
         private readonly JsonSerializerSettings anonymousWriteSerializationSettings;
 
-        private readonly JsonConfigurationBase jsonConfiguration;
+        private readonly JsonSerializationConfigurationBase jsonConfiguration;
 
         private readonly JsonFormattingKind formattingKind;
 
@@ -47,21 +47,21 @@ namespace OBeautifulCode.Serialization.Json
             Type configurationType = null,
             UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default,
             JsonFormattingKind formattingKind = JsonFormattingKind.Default)
-            : base(configurationType ?? typeof(NullJsonConfiguration), unregisteredTypeEncounteredStrategy)
+            : base(configurationType ?? typeof(NullJsonSerializationConfiguration), unregisteredTypeEncounteredStrategy)
         {
             new { formattingKind }.AsArg().Must().NotBeEqualTo(JsonFormattingKind.Invalid);
             this.formattingKind = formattingKind;
 
             if (configurationType != null)
             {
-                configurationType.IsSubclassOf(typeof(JsonConfigurationBase)).AsArg(
-                    Invariant($"Configuration type - {configurationType.FullName} - must derive from {nameof(JsonConfigurationBase)}.")).Must().BeTrue();
+                configurationType.IsSubclassOf(typeof(JsonSerializationConfigurationBase)).AsArg(
+                    Invariant($"Configuration type - {configurationType.FullName} - must derive from {nameof(JsonSerializationConfigurationBase)}.")).Must().BeTrue();
 
                 configurationType.HasParameterlessConstructor().AsArg(
                     Invariant($"{nameof(configurationType)} must contain a default constructor to use in {nameof(ObcJsonSerializer)}.")).Must().BeTrue();
             }
 
-            this.jsonConfiguration = (JsonConfigurationBase)this.configuration;
+            this.jsonConfiguration = (JsonSerializationConfigurationBase)this.configuration;
             this.anonymousWriteSerializationSettings = this.jsonConfiguration.BuildAnonymousJsonSerializerSettings(SerializationDirection.Serialize, this.formattingKind);
         }
 
@@ -182,14 +182,14 @@ namespace OBeautifulCode.Serialization.Json
     }
 
     /// <inheritdoc />
-    public sealed class ObcJsonSerializer<TJsonConfiguration> : ObcJsonSerializer
-        where TJsonConfiguration : JsonConfigurationBase, new()
+    public sealed class ObcJsonSerializer<TJsonSerializationConfiguration> : ObcJsonSerializer
+        where TJsonSerializationConfiguration : JsonSerializationConfigurationBase, new()
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObcJsonSerializer{TJsonConfiguration}"/> class.
+        /// Initializes a new instance of the <see cref="ObcJsonSerializer{TJsonSerializationConfiguration}"/> class.
         /// </summary>
         public ObcJsonSerializer()
-            : base(typeof(TJsonConfiguration))
+            : base(typeof(TJsonSerializationConfiguration))
         {
         }
     }

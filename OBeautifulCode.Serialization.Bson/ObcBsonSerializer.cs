@@ -20,28 +20,28 @@ namespace OBeautifulCode.Serialization.Bson
     public class ObcBsonSerializer : SerializerBase
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Justification = "Keeping for easy extension.")]
-        private readonly BsonConfigurationBase bsonConfiguration;
+        private readonly BsonSerializationConfigurationBase bsonConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcBsonSerializer"/> class.
         /// </summary>
-        /// <param name="configurationType">Optional <see cref="BsonConfigurationBase"/> implementation to use; default is <see cref="NullBsonConfiguration"/>.</param>
+        /// <param name="configurationType">Optional <see cref="BsonSerializationConfigurationBase"/> implementation to use; default is <see cref="NullBsonSerializationConfiguration"/>.</param>
         /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
         public ObcBsonSerializer(
             Type configurationType = null,
             UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
-            : base(configurationType ?? typeof(NullBsonConfiguration), unregisteredTypeEncounteredStrategy)
+            : base(configurationType ?? typeof(NullBsonSerializationConfiguration), unregisteredTypeEncounteredStrategy)
         {
             if (configurationType != null)
             {
-                configurationType.IsSubclassOf(typeof(BsonConfigurationBase)).AsArg(
-                    Invariant($"Configuration type - {configurationType.FullName} - must derive from {nameof(BsonConfigurationBase)}.")).Must().BeTrue();
+                configurationType.IsSubclassOf(typeof(BsonSerializationConfigurationBase)).AsArg(
+                    Invariant($"Configuration type - {configurationType.FullName} - must derive from {nameof(BsonSerializationConfigurationBase)}.")).Must().BeTrue();
 
                 configurationType.HasParameterlessConstructor().AsArg(
                     Invariant($"{nameof(configurationType)} must contain a default constructor to use in {nameof(ObcBsonSerializer)}.")).Must().BeTrue();
             }
 
-            this.bsonConfiguration = (BsonConfigurationBase)this.configuration;
+            this.bsonConfiguration = (BsonSerializationConfigurationBase)this.configuration;
         }
 
         /// <inheritdoc />
@@ -153,14 +153,14 @@ namespace OBeautifulCode.Serialization.Bson
     }
 
     /// <inheritdoc />
-    public sealed class ObcBsonSerializer<TBsonConfiguration> : ObcBsonSerializer
-        where TBsonConfiguration : BsonConfigurationBase, new()
+    public sealed class ObcBsonSerializer<TBsonSerializationConfiguration> : ObcBsonSerializer
+        where TBsonSerializationConfiguration : BsonSerializationConfigurationBase, new()
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObcBsonSerializer{TBsonConfiguration}"/> class.
+        /// Initializes a new instance of the <see cref="ObcBsonSerializer{TBsonSerializationConfiguration}"/> class.
         /// </summary>
         public ObcBsonSerializer()
-            : base(typeof(TBsonConfiguration))
+            : base(typeof(TBsonSerializationConfiguration))
         {
         }
     }

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="JsonConfigurationTest.cs" company="OBeautifulCode">
+// <copyright file="JsonSerializationConfigurationTest.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ namespace OBeautifulCode.Serialization.Test
 
     using Xunit;
 
-    public static class JsonConfigurationTest
+    public static class JsonSerializationConfigurationTest
     {
 #pragma warning disable SA1201 // Elements should appear in the correct order
 #pragma warning disable SA1401 // Fields should be private
@@ -117,9 +117,9 @@ namespace OBeautifulCode.Serialization.Test
                 },
             };
 
-            var result = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<InheritedTypeBase>), unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt).SerializeToString(value);
+            var result = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<InheritedTypeBase>), unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt).SerializeToString(value);
 
-            var serializedValue = "[\r\n  {\r\n    \"child1\": \"Child1\",\r\n    \"base\": \"Base\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+InheritedType1, OBeautifulCode.Serialization.Test\"\r\n  },\r\n  {\r\n    \"child2\": \"my child 2\",\r\n    \"base\": \"my base\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+InheritedType2, OBeautifulCode.Serialization.Test\"\r\n  }\r\n]";
+            var serializedValue = "[\r\n  {\r\n    \"child1\": \"Child1\",\r\n    \"base\": \"Base\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+InheritedType1, OBeautifulCode.Serialization.Test\"\r\n  },\r\n  {\r\n    \"child2\": \"my child 2\",\r\n    \"base\": \"my base\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+InheritedType2, OBeautifulCode.Serialization.Test\"\r\n  }\r\n]";
 
             result.Should().Be(serializedValue);
         }
@@ -138,7 +138,7 @@ namespace OBeautifulCode.Serialization.Test
                                   "  }" + Environment.NewLine +
                                   "]";
 
-            var result = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<InheritedTypeBase>), UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<InheritedTypeBase[]>(serializedValue);
+            var result = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<InheritedTypeBase>), UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<InheritedTypeBase[]>(serializedValue);
 
             result.Length.Should().Be(2);
             result[0].Base.Should().Be("My base");
@@ -154,7 +154,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var serializedValue = "[" + Environment.NewLine +
                                   "  {" + Environment.NewLine +
-                                  "    \"diet\": {\r\n    \"maxCalories\": 50000,\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+LowCalorie, OBeautifulCode.Serialization.Test\"\r\n  }," + Environment.NewLine +
+                                  "    \"diet\": {\r\n    \"maxCalories\": 50000,\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+LowCalorie, OBeautifulCode.Serialization.Test\"\r\n  }," + Environment.NewLine +
                                   "    \"int32\": 5" + Environment.NewLine +
                                   "  }," + Environment.NewLine +
                                   "  {" + Environment.NewLine +
@@ -163,7 +163,7 @@ namespace OBeautifulCode.Serialization.Test
                                   "  }" + Environment.NewLine +
                                   "]";
 
-            var result = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<IBaseInterface>), UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<IBaseInterface[]>(serializedValue);
+            var result = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<IBaseInterface>), UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<IBaseInterface[]>(serializedValue);
 
             result.Length.Should().Be(2);
 
@@ -186,7 +186,7 @@ namespace OBeautifulCode.Serialization.Test
             var tigerJson = "{\"tailLength\":2,\"name\":\"Ronny\",\"numberOfTeeth\":50,\"age\":5}";
             var mouseJson = "{\"tailLength\":8,\"name\":\"Missy\",\"furColor\":\"black\",\"age\":7}";
 
-            var jsonSerializer = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Animal>));
+            var jsonSerializer = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Animal>));
 
             var dog = jsonSerializer.Deserialize<Animal>(dogJson) as Dog;
             var cat = jsonSerializer.Deserialize<Animal>(catJson) as Cat;
@@ -222,7 +222,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var dogJson = "{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}";
 
-            var dog = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Animal>)).Deserialize<Animal>(dogJson) as Dog;
+            var dog = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Animal>)).Deserialize<Animal>(dogJson) as Dog;
 
             dog.Should().NotBeNull();
             dog.Name.Should().Be("Barney");
@@ -236,7 +236,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var inheritedTypeJson = "{\"base\":\"my base string\"}";
 
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<InheritedTypeBase>)).Deserialize<InheritedTypeBase>(inheritedTypeJson));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<InheritedTypeBase>)).Deserialize<InheritedTypeBase>(inheritedTypeJson));
             ex.Message.Should().Contain("InheritedType1");
             ex.Message.Should().Contain("InheritedType2");
         }
@@ -247,7 +247,7 @@ namespace OBeautifulCode.Serialization.Test
             var lightingJson = "{\"watts\":10, \"wattageEquivalent\":60}";
 
             // smart LED has features and it doesn't check for members that are missing in the JSON in FilterCandidateUsingStrictMemberMatching
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Lighting>)).Deserialize<Lighting>(lightingJson));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Lighting>)).Deserialize<Lighting>(lightingJson));
 
             ex.Message.Should().Contain("CompactFluorescent");
             ex.Message.Should().Contain("Led");
@@ -260,7 +260,7 @@ namespace OBeautifulCode.Serialization.Test
             var noLightingJson = "{}";
             var incandescentJson = "{\"watts\":60}";
 
-            var jsonSerializer = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Lighting>));
+            var jsonSerializer = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Lighting>));
 
             var noLighting = jsonSerializer.Deserialize<Lighting>(noLightingJson) as NoLighting;
             var incandescent = jsonSerializer.Deserialize<Lighting>(incandescentJson) as Incandescent;
@@ -276,7 +276,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var json = "{\"none\":\"none\"}";
 
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Animal>)).Deserialize<Animal>(json));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Animal>)).Deserialize<Animal>(json));
 
             ex.Message.Should().StartWith("The json payload could not be deserialized into any of the candidate types.");
         }
@@ -286,7 +286,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var json = "{\"float\":.2,\"int32\":50}";
 
-            var inheritedType3 = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<IBaseInterface>)).Deserialize<IBaseInterface>(json) as InheritedType3;
+            var inheritedType3 = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<IBaseInterface>)).Deserialize<IBaseInterface>(json) as InheritedType3;
 
             inheritedType3.Should().NotBeNull();
             inheritedType3.Int32.Should().Be(50);
@@ -299,7 +299,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var tigerJson = "{\"tailLength\":2,\"name\":\"Ronny\",\"numberOfTeeth\":50,\"age\":5, \"newProperty\":66}";
 
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Animal>)).Deserialize<Animal>(tigerJson));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Animal>)).Deserialize<Animal>(tigerJson));
 
             ex.Message.Should().StartWith("The json payload could not be deserialized into any of the candidate types.");
         }
@@ -310,7 +310,7 @@ namespace OBeautifulCode.Serialization.Test
             // name was changed from string to object
             var tigerJson = "{\"tailLength\":2,\"name\":{ \"first\":\"Ronny\",\"last\":\"Ronnerson\" },\"numberOfTeeth\":50,\"age\":5}";
 
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Animal>)).Deserialize<Animal>(tigerJson));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Animal>)).Deserialize<Animal>(tigerJson));
 
             ex.Message.Should().StartWith("The json payload could not be deserialized into any of the candidate types.");
         }
@@ -320,7 +320,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var atkinsJson = "{}";
 
-            var atkins = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Diet>)).Deserialize<Diet>(atkinsJson) as Atkins;
+            var atkins = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Diet>)).Deserialize<Diet>(atkinsJson) as Atkins;
 
             atkins.Should().NotBeNull();
         }
@@ -331,7 +331,7 @@ namespace OBeautifulCode.Serialization.Test
             var catJson1 = "{\"numberOfLives\":9,\"name\":\"Cleo\"}";
             var catJson2 = "{\"numberOfLives\":9,\"age\":3}";
 
-            var jsonSerializer = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Animal>));
+            var jsonSerializer = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Animal>));
 
             var ex1 = Assert.Throws<JsonSerializationException>(() => jsonSerializer.Deserialize<Animal>(catJson1));
             var ex2 = Assert.Throws<JsonSerializationException>(() => jsonSerializer.Deserialize<Animal>(catJson2));
@@ -345,7 +345,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var fructoseJson = "{\"minOuncesOfFructose\":5}";
 
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Diet>)).Deserialize<Diet>(fructoseJson));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Diet>)).Deserialize<Diet>(fructoseJson));
 
             ex.Message.Should().StartWith("The json payload could not be deserialized into any of the candidate types.");
         }
@@ -355,7 +355,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var fructoseJson = "{\"minGramsOfFructose\":5}";
 
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Diet>)).Deserialize<Diet>(fructoseJson));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Diet>)).Deserialize<Diet>(fructoseJson));
 
             ex.Message.Should().StartWith("The json payload could not be deserialized into any of the candidate types.");
         }
@@ -365,7 +365,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var dogDietJson = "{\"dog\":{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}, \"diet\":{}}";
 
-            var dogDiet = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Diet>), unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<DogDiet>(dogDietJson);
+            var dogDiet = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Diet>), unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<DogDiet>(dogDietJson);
 
             dogDiet.Should().NotBeNull();
 
@@ -383,7 +383,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var dogDietJson = "{\"dog\":{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}, \"diet\":null}";
 
-            var dogDiet = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Diet>), UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<DogDiet>(dogDietJson);
+            var dogDiet = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Diet>), UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<DogDiet>(dogDietJson);
 
             dogDiet.Should().NotBeNull();
 
@@ -401,7 +401,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var catDietJson = "{\"cat\":{\"numberOfLives\":9,\"name\":\"Cleo\",\"age\":3}, \"diet\":{}}";
 
-            var catDiet = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Diet>), UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<CatDiet>(catDietJson);
+            var catDiet = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Diet>), UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<CatDiet>(catDietJson);
 
             catDiet.Should().NotBeNull();
             catDiet.Cat.Should().NotBeNull();
@@ -417,7 +417,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var catDietJson = "{\"cat\":{\"numberOfLives\":9,\"name\":\"Cleo\",\"age\":3}, \"diet\":null}";
 
-            var catDiet = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Diet>), unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<CatDiet>(catDietJson);
+            var catDiet = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Diet>), unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<CatDiet>(catDietJson);
 
             catDiet.Should().NotBeNull();
             catDiet.Cat.Should().NotBeNull();
@@ -433,7 +433,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var familyJson = "{\"firstNames\": [\"joe\",\"jane\",\"jackie\"]}";
 
-            var family = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Family>)).Deserialize<Family>(familyJson);
+            var family = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Family>)).Deserialize<Family>(familyJson);
             var expectedFirstNames = new[] { "joe", "jane", "jackie" };
 
             family.Should().NotBeNull();
@@ -445,7 +445,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var friendsJson = "{\"firstNames\": [\"betty\",\"bob\",\"bailey\"]}";
 
-            Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Friends>)).Deserialize<Friends>(friendsJson));
+            Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Friends>)).Deserialize<Friends>(friendsJson));
         }
 
         [Fact]
@@ -454,7 +454,7 @@ namespace OBeautifulCode.Serialization.Test
             var family = new Family(new List<string> { "joe", "jane", "jackie" });
             var expectedFamilyJson = "{\r\n  \"firstNames\": [\r\n    \"joe\",\r\n    \"jane\",\r\n    \"jackie\"\r\n  ]\r\n}";
 
-            var actualFamilyJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Family>)).SerializeToString(family);
+            var actualFamilyJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Family>)).SerializeToString(family);
 
             expectedFamilyJson.Should().Be(actualFamilyJson);
         }
@@ -464,7 +464,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var friends = new Friends(new List<string> { "betty", "bob", "bailey" });
 
-            Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Friends>)).SerializeToString(friends));
+            Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Friends>)).SerializeToString(friends));
         }
 
         [Fact]
@@ -473,7 +473,7 @@ namespace OBeautifulCode.Serialization.Test
             var sometimesThrowsJson = "{\"triggerNumber\":123456}";
 
             var doesNotThrow =
-                new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SometimesThrows>)).Deserialize<SometimesThrows>(sometimesThrowsJson) as DoesNotThrow;
+                new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SometimesThrows>)).Deserialize<SometimesThrows>(sometimesThrowsJson) as DoesNotThrow;
 
             doesNotThrow.Should().NotBeNull();
             doesNotThrow.TriggerNumber.Should().Be(123456);
@@ -487,13 +487,13 @@ namespace OBeautifulCode.Serialization.Test
             var crab = new Crab(SeaCreatureSize.Large);
             var salmon = new Salmon(SeaCreatureSize.Medium, "brown");
 
-            var expectedStarfishJson = "{\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Starfish, OBeautifulCode.Serialization.Test\"\r\n}";
-            var expectedCrabJson = "{\r\n  \"size\": \"large\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Crab, OBeautifulCode.Serialization.Test\"\r\n}";
-            var expectedSalmonJson = "{\r\n  \"color\": \"brown\",\r\n  \"size\": \"medium\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Salmon, OBeautifulCode.Serialization.Test\"\r\n}";
+            var expectedStarfishJson = "{\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Starfish, OBeautifulCode.Serialization.Test\"\r\n}";
+            var expectedCrabJson = "{\r\n  \"size\": \"large\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Crab, OBeautifulCode.Serialization.Test\"\r\n}";
+            var expectedSalmonJson = "{\r\n  \"color\": \"brown\",\r\n  \"size\": \"medium\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Salmon, OBeautifulCode.Serialization.Test\"\r\n}";
 
-            var actualStarfishJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SeaCreature>)).SerializeToString(starfish);
-            var actualCrabJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SeaCreature>)).SerializeToString(crab);
-            var actualSalmonJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SeaCreature>)).SerializeToString(salmon);
+            var actualStarfishJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SeaCreature>)).SerializeToString(starfish);
+            var actualCrabJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SeaCreature>)).SerializeToString(crab);
+            var actualSalmonJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SeaCreature>)).SerializeToString(salmon);
 
             expectedStarfishJson.Should().Be(actualStarfishJson);
             expectedCrabJson.Should().Be(actualCrabJson);
@@ -503,9 +503,9 @@ namespace OBeautifulCode.Serialization.Test
         [Fact]
         public static void Serializer_deserialize_into_concrete_type_where_multiple_inherited_types_have_the_same_properties_and_abstract_type_is_marked_TwoWay_bindable()
         {
-            var salmonJson = "{\r\n  \"color\": \"brown\",\r\n  \"size\": \"medium\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Salmon, OBeautifulCode.Serialization.Test\"\r\n}";
+            var salmonJson = "{\r\n  \"color\": \"brown\",\r\n  \"size\": \"medium\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Salmon, OBeautifulCode.Serialization.Test\"\r\n}";
 
-            var salmon = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SeaCreature>)).Deserialize<Salmon>(salmonJson);
+            var salmon = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SeaCreature>)).Deserialize<Salmon>(salmonJson);
 
             salmon.Should().NotBeNull();
             salmon.Color.Should().Be("brown");
@@ -515,10 +515,10 @@ namespace OBeautifulCode.Serialization.Test
         [Fact]
         public static void Serializer_deserialize_into_abstract_type_where_multiple_inherited_types_have_the_same_properties_using_type_information_written_into_json()
         {
-            var salmonJson = "{\r\n  \"color\": \"brown\",\r\n  \"size\": \"medium\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Salmon, OBeautifulCode.Serialization.Test\"\r\n}";
+            var salmonJson = "{\r\n  \"color\": \"brown\",\r\n  \"size\": \"medium\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Salmon, OBeautifulCode.Serialization.Test\"\r\n}";
 
-            var salmon1 = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SeaCreature>)).Deserialize<SeaCreature>(salmonJson) as Salmon;
-            var salmon2 = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SeaCreature>)).Deserialize<Fish>(salmonJson) as Salmon;
+            var salmon1 = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SeaCreature>)).Deserialize<SeaCreature>(salmonJson) as Salmon;
+            var salmon2 = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SeaCreature>)).Deserialize<Fish>(salmonJson) as Salmon;
 
             salmon1.Should().NotBeNull();
             salmon1.Color.Should().Be("brown");
@@ -534,9 +534,9 @@ namespace OBeautifulCode.Serialization.Test
         {
             var whale = new Whale("willy", new LowCalorie(50000));
 
-            var expectedWhaleJson = "{\r\n  \"name\": \"willy\",\r\n  \"diet\": {\r\n    \"maxCalories\": 50000,\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+LowCalorie, OBeautifulCode.Serialization.Test\"\r\n  },\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Whale, OBeautifulCode.Serialization.Test\"\r\n}";
+            var expectedWhaleJson = "{\r\n  \"name\": \"willy\",\r\n  \"diet\": {\r\n    \"maxCalories\": 50000,\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+LowCalorie, OBeautifulCode.Serialization.Test\"\r\n  },\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Whale, OBeautifulCode.Serialization.Test\"\r\n}";
 
-            var actualWhaleJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SeaCreature, Diet>)).SerializeToString(whale);
+            var actualWhaleJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SeaCreature, Diet>)).SerializeToString(whale);
 
             actualWhaleJson.Should().Be(expectedWhaleJson);
         }
@@ -544,9 +544,9 @@ namespace OBeautifulCode.Serialization.Test
         [Fact]
         public static void Serializer_deserialize_TwoWay_bindable_type_into_abstract_type_when_concrete_type_embeds_a_OneWay_bindable_type_using_specified_serializer()
         {
-            var whaleJson = "{\r\n  \"name\": \"willy\",\r\n  \"diet\": {\r\n    \"maxCalories\": 50000\r\n  },\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Whale, OBeautifulCode.Serialization.Test\"\r\n}";
+            var whaleJson = "{\r\n  \"name\": \"willy\",\r\n  \"diet\": {\r\n    \"maxCalories\": 50000\r\n  },\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Whale, OBeautifulCode.Serialization.Test\"\r\n}";
 
-            var whale = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SeaCreature, Diet>)).Deserialize<SeaCreature>(whaleJson) as Whale;
+            var whale = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SeaCreature, Diet>)).Deserialize<SeaCreature>(whaleJson) as Whale;
 
             whale.Should().NotBeNull();
             whale.Name.Should().Be("willy");
@@ -561,9 +561,9 @@ namespace OBeautifulCode.Serialization.Test
             var tuna = new Tuna(SeaCreatureSize.Medium, "black");
             var shark = new Shark("sammy", tuna);
 
-            var expectedSharkJson = "{\r\n  \"name\": \"sammy\",\r\n  \"likesToEat\": {\r\n    \"color\": \"black\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Tuna, OBeautifulCode.Serialization.Test\"\r\n  },\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Shark, OBeautifulCode.Serialization.Test\"\r\n}";
+            var expectedSharkJson = "{\r\n  \"name\": \"sammy\",\r\n  \"likesToEat\": {\r\n    \"color\": \"black\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Tuna, OBeautifulCode.Serialization.Test\"\r\n  },\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Shark, OBeautifulCode.Serialization.Test\"\r\n}";
 
-            var actualSharkJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SeaCreature>)).SerializeToString(shark);
+            var actualSharkJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SeaCreature>)).SerializeToString(shark);
 
             actualSharkJson.Should().Be(expectedSharkJson);
         }
@@ -571,9 +571,9 @@ namespace OBeautifulCode.Serialization.Test
         [Fact]
         public static void Serializer_deserialize_TwoWay_bindable_type_into_abstract_type_when_concrete_type_embeds_a_TwoWay_bindable_type_using_specified_serializer()
         {
-            var sharkJson = "{\r\n  \"name\": \"sammy\",\r\n  \"likesToEat\": {\r\n    \"color\": \"black\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Tuna, OBeautifulCode.Serialization.Test\"\r\n  },\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Shark, OBeautifulCode.Serialization.Test\"\r\n}";
+            var sharkJson = "{\r\n  \"name\": \"sammy\",\r\n  \"likesToEat\": {\r\n    \"color\": \"black\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Tuna, OBeautifulCode.Serialization.Test\"\r\n  },\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Shark, OBeautifulCode.Serialization.Test\"\r\n}";
 
-            var shark = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SeaCreature>)).Deserialize<SeaCreature>(sharkJson) as Shark;
+            var shark = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SeaCreature>)).Deserialize<SeaCreature>(sharkJson) as Shark;
 
             shark.Should().NotBeNull();
             shark.Name.Should().Be("sammy");
@@ -588,9 +588,9 @@ namespace OBeautifulCode.Serialization.Test
         {
             var seafoodDiet = new SeafoodDiet(new Salmon(SeaCreatureSize.Medium, "red"), 345);
 
-            var expectedSeafoodDietJson = "{\r\n  \"seaCreature\": {\r\n    \"color\": \"red\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Salmon, OBeautifulCode.Serialization.Test\"\r\n  },\r\n  \"amount\": 345,\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+SeafoodDiet, OBeautifulCode.Serialization.Test\"\r\n}";
+            var expectedSeafoodDietJson = "{\r\n  \"seaCreature\": {\r\n    \"color\": \"red\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Salmon, OBeautifulCode.Serialization.Test\"\r\n  },\r\n  \"amount\": 345,\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+SeafoodDiet, OBeautifulCode.Serialization.Test\"\r\n}";
 
-            var actualSeafoodDietJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SeaCreature>)).SerializeToString(seafoodDiet);
+            var actualSeafoodDietJson = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SeaCreature>)).SerializeToString(seafoodDiet);
 
             actualSeafoodDietJson.Should().Be(expectedSeafoodDietJson);
         }
@@ -598,9 +598,9 @@ namespace OBeautifulCode.Serialization.Test
         [Fact]
         public static void Serializer_deserialize_OneWay_bindable_type_into_abstract_type_when_concrete_type_embeds_a_TwoWay_bindable_type_using_specified_serializer()
         {
-            var seafoodDietJson = "{\r\n  \"seaCreature\": {\r\n    \"color\": \"red\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonConfigurationTest+Salmon, OBeautifulCode.Serialization.Test\"\r\n  },\r\n  \"amount\": 345\r\n}";
+            var seafoodDietJson = "{\r\n  \"seaCreature\": {\r\n    \"color\": \"red\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Salmon, OBeautifulCode.Serialization.Test\"\r\n  },\r\n  \"amount\": 345\r\n}";
 
-            var seafoodDiet = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<SeaCreature, Diet>)).Deserialize<Diet>(seafoodDietJson) as SeafoodDiet;
+            var seafoodDiet = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<SeaCreature, Diet>)).Deserialize<Diet>(seafoodDietJson) as SeafoodDiet;
 
             seafoodDiet.Should().NotBeNull();
             seafoodDiet.Amount.Should().Be(345);
@@ -663,11 +663,11 @@ namespace OBeautifulCode.Serialization.Test
                 Title = expectedTitle,
             };
 
-            var serializer = new ObcJsonSerializer(typeof(GenericDiscoveryJsonConfiguration<Field>));
+            var serializer = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Field>));
 
             var jsonWithConcreteType = serializer.SerializeToString(year);
 
-            var settings = new NullJsonConfiguration().BuildJsonSerializerSettings(SerializationDirection.Deserialize);
+            var settings = new NullJsonSerializationConfiguration().BuildJsonSerializerSettings(SerializationDirection.Deserialize);
             settings.Converters = new JsonConverter[0];
 
             // Act

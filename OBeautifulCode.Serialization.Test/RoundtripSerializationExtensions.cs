@@ -34,8 +34,8 @@ namespace OBeautifulCode.Serialization.Test
             RoundtripSerializeWithCallback(
                 expected,
                 (yieldedDescribedSerialization, deserializedObject) => deserializedObject.Should().Be(expected),
-                shouldUseConfiguration ? typeof(GenericDiscoveryJsonConfiguration<T>) : null,
-                shouldUseConfiguration ? typeof(GenericDiscoveryBsonConfiguration<T>) : null);
+                shouldUseConfiguration ? typeof(GenericDiscoveryJsonSerializationConfiguration<T>) : null,
+                shouldUseConfiguration ? typeof(GenericDiscoveryBsonSerializationConfiguration<T>) : null);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Want parameters this way.")]

@@ -120,11 +120,11 @@
     <Compile Include="Converters\InheritedTypeWriterJsonConverter.cs" />
     <Compile Include="Converters\KeyValueArrayDictionaryJsonConverter.cs" />
     <Compile Include="Converters\SecureStringJsonConverter.cs" />
-    <Compile Include="JsonConfigurationBase.cs" />
-    <Compile Include="JsonConfigurationBase.Newtonsoft.cs" />
-    <Compile Include="JsonConfigurationBase.Override.cs" />
-    <Compile Include="JsonConfigurationBase.Virtual.cs" />
-    <Compile Include="JsonConfigurationException.cs" />
+    <Compile Include="JsonSerializationConfigurationBase.cs" />
+    <Compile Include="JsonSerializationConfigurationBase.Newtonsoft.cs" />
+    <Compile Include="JsonSerializationConfigurationBase.Override.cs" />
+    <Compile Include="JsonSerializationConfigurationBase.Virtual.cs" />
+    <Compile Include="JsonSerializationConfigurationException.cs" />
     <Compile Include="JsonFormattingKind.cs" />
     <Compile Include="JsonSerializerFactory.cs" />
     <Compile Include="ObcJsonSerializer.cs" />

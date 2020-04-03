@@ -26,21 +26,21 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
-    public class ConfigTop : JsonConfigurationBase
+    public class ConfigTop : JsonSerializationConfigurationBase
     {
         public override IReadOnlyCollection<Type> DependentConfigurationTypes => new[] { typeof(ConfigMiddle) };
     }
 
-    public class ConfigMiddle : JsonConfigurationBase
+    public class ConfigMiddle : JsonSerializationConfigurationBase
     {
         public override IReadOnlyCollection<Type> DependentConfigurationTypes => new[] { typeof(ConfigBottom1), typeof(ConfigBottom2), };
     }
 
-    public class ConfigBottom1 : JsonConfigurationBase
+    public class ConfigBottom1 : JsonSerializationConfigurationBase
     {
     }
 
-    public class ConfigBottom2 : JsonConfigurationBase
+    public class ConfigBottom2 : JsonSerializationConfigurationBase
     {
     }
 }

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BsonConfigurationBase.cs" company="OBeautifulCode">
+// <copyright file="BsonSerializationConfigurationBase.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ namespace OBeautifulCode.Serialization.Bson
     /// Base class to use for creating <see cref="ObcBsonSerializer" /> configuration.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "This class is not excessively coupled for the nature of the problem.")]
-    public abstract class BsonConfigurationBase : SerializationConfigurationBase
+    public abstract class BsonSerializationConfigurationBase : SerializationConfigurationBase
     {
         /// <summary>
         /// Binding flags used in <see cref="GetMembersToAutomap"/> to reflect on a type.
@@ -55,7 +55,7 @@ namespace OBeautifulCode.Serialization.Bson
         protected virtual IReadOnlyCollection<RegisteredBsonSerializer> SerializersToRegister => new List<RegisteredBsonSerializer>();
 
         /// <inheritdoc />
-        public sealed override IReadOnlyCollection<Type> InternalDependentConfigurationTypes => new[] { typeof(InternalBsonConfiguration), typeof(NetDrawingBsonConfiguration) };
+        public sealed override IReadOnlyCollection<Type> InternalDependentConfigurationTypes => new[] { typeof(InternalBsonSerializationConfiguration), typeof(NetDrawingBsonSerializationConfiguration) };
 
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
@@ -105,7 +105,7 @@ namespace OBeautifulCode.Serialization.Bson
             }
             catch (Exception ex)
             {
-                throw new BsonConfigurationException(Invariant($"Failed to run {nameof(BsonClassMap.RegisterClassMap)} on {type.FullName}"), ex);
+                throw new BsonSerializationConfigurationException(Invariant($"Failed to run {nameof(BsonClassMap.RegisterClassMap)} on {type.FullName}"), ex);
             }
         }
 
@@ -150,7 +150,7 @@ namespace OBeautifulCode.Serialization.Bson
             }
             catch (Exception ex)
             {
-                throw new BsonConfigurationException(Invariant($"Failed to run {nameof(BsonClassMap.RegisterClassMap)} on {type.FullName}"), ex);
+                throw new BsonSerializationConfigurationException(Invariant($"Failed to run {nameof(BsonClassMap.RegisterClassMap)} on {type.FullName}"), ex);
             }
         }
 
@@ -197,7 +197,7 @@ namespace OBeautifulCode.Serialization.Bson
                 }
                 catch (Exception ex)
                 {
-                    throw new BsonConfigurationException(Invariant($"Error automatically mapping; type: {type}, member: {member}"), ex);
+                    throw new BsonSerializationConfigurationException(Invariant($"Error automatically mapping; type: {type}, member: {member}"), ex);
                 }
             }
 
@@ -319,18 +319,18 @@ namespace OBeautifulCode.Serialization.Bson
     }
 
     /// <summary>
-    /// Internal implementation of <see cref="BsonConfigurationBase" /> that will auto register necessary internal types.
+    /// Internal implementation of <see cref="BsonSerializationConfigurationBase" /> that will auto register necessary internal types.
     /// </summary>
-    public sealed class InternalBsonConfiguration : BsonConfigurationBase, IDoNotNeedInternalDependencies
+    public sealed class InternalBsonSerializationConfiguration : BsonSerializationConfigurationBase, IDoNotNeedInternalDependencies
     {
         /// <inheritdoc />
         protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => InternallyRequiredTypes;
     }
 
     /// <summary>
-    /// Internal implementation of <see cref="BsonConfigurationBase" /> that will auto register necessary internal types.
+    /// Internal implementation of <see cref="BsonSerializationConfigurationBase" /> that will auto register necessary internal types.
     /// </summary>
-    public sealed class NetDrawingBsonConfiguration : BsonConfigurationBase, IDoNotNeedInternalDependencies
+    public sealed class NetDrawingBsonSerializationConfiguration : BsonSerializationConfigurationBase, IDoNotNeedInternalDependencies
     {
         /// <inheritdoc />
         protected override IReadOnlyCollection<RegisteredBsonSerializer> SerializersToRegister => new[]
@@ -340,30 +340,30 @@ namespace OBeautifulCode.Serialization.Bson
     }
 
     /// <summary>
-    /// Generic implementation of <see cref="BsonConfigurationBase" /> that will auto register with discovery using type <typeparamref name="T" />.
+    /// Generic implementation of <see cref="BsonSerializationConfigurationBase" /> that will auto register with discovery using type <typeparamref name="T" />.
     /// </summary>
     /// <typeparam name="T">Type to auto register with discovery.</typeparam>
-    public sealed class GenericDiscoveryBsonConfiguration<T> : BsonConfigurationBase
+    public sealed class GenericDiscoveryBsonSerializationConfiguration<T> : BsonSerializationConfigurationBase
     {
         /// <inheritdoc />
         protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => new[] { typeof(T) };
     }
 
     /// <summary>
-    /// Generic implementation of <see cref="BsonConfigurationBase" /> that will auto register with discovery using type <typeparamref name="T1" />, <typeparamref name="T2" />.
+    /// Generic implementation of <see cref="BsonSerializationConfigurationBase" /> that will auto register with discovery using type <typeparamref name="T1" />, <typeparamref name="T2" />.
     /// </summary>
     /// <typeparam name="T1">Type one to auto register with discovery.</typeparam>
     /// <typeparam name="T2">Type two to auto register with discovery.</typeparam>
-    public sealed class GenericDiscoveryBsonConfiguration<T1, T2> : BsonConfigurationBase
+    public sealed class GenericDiscoveryBsonSerializationConfiguration<T1, T2> : BsonSerializationConfigurationBase
     {
         /// <inheritdoc />
         protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => new[] { typeof(T1), typeof(T2) };
     }
 
     /// <summary>
-    /// Null implementation of <see cref="BsonConfigurationBase"/>.
+    /// Null implementation of <see cref="BsonSerializationConfigurationBase"/>.
     /// </summary>
-    public sealed class NullBsonConfiguration : BsonConfigurationBase, IImplementNullObjectPattern
+    public sealed class NullBsonSerializationConfiguration : BsonSerializationConfigurationBase, IImplementNullObjectPattern
     {
     }
 

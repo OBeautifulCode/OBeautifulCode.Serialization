@@ -22,10 +22,10 @@ namespace OBeautifulCode.Serialization.Test
         public static void ElementTypeOfArrayIsOnlyTypeDiscovered()
         {
             // Arrange
-            var bsonConfig = typeof(GenericDiscoveryBsonConfiguration<RegisteredKey, RegisteredValue>);
+            var bsonConfig = typeof(GenericDiscoveryBsonSerializationConfiguration<RegisteredKey, RegisteredValue>);
             var bsonSerializer = new ObcBsonSerializer(bsonConfig);
 
-            var jsonConfig = typeof(GenericDiscoveryJsonConfiguration<RegisteredKey, RegisteredValue>);
+            var jsonConfig = typeof(GenericDiscoveryJsonSerializationConfiguration<RegisteredKey, RegisteredValue>);
             var jsonSerializer = new ObcJsonSerializer(jsonConfig);
 
             var expectedKey = new RegisteredKey { Property = A.Dummy<string>() };

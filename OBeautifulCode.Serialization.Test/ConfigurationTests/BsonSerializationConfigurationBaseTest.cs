@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BsonConfigurationBaseTest.cs" company="OBeautifulCode">
+// <copyright file="BsonSerializationConfigurationBaseTest.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,11 +7,7 @@
 namespace OBeautifulCode.Serialization.Test
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.IO;
     using System.Linq;
-    using System.Net;
     using System.Reflection;
     using System.Runtime.ExceptionServices;
 
@@ -23,15 +19,15 @@ namespace OBeautifulCode.Serialization.Test
 
     using Xunit;
 
-    public static class BsonConfigurationBaseTest
+    public static class BsonSerializationConfigurationBaseTest
     {
         [Fact]
         public static void RegisterClassMapsTypeFullyAutomatic___Type_with_id_member___Works()
         {
             // Arrange
             var type = typeof(TestWithId);
-            var configuration = new BsonConfigurationTestAutoConstrainedType(type);
-            var expectedMemberNames = BsonConfigurationBase.GetMembersToAutomap(type).Select(_ => _.Name).OrderBy(_ => _).ToList();
+            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType(type);
+            var expectedMemberNames = BsonSerializationConfigurationBase.GetMembersToAutomap(type).Select(_ => _.Name).OrderBy(_ => _).ToList();
 
             // Act
             var classMap = RunTestCode(configuration);
@@ -51,8 +47,8 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var type = typeof(TestMapping);
-            var configuration = new BsonConfigurationTestAutoConstrainedType(type);
-            var expectedMemberNames = BsonConfigurationBase.GetMembersToAutomap(type).Select(_ => _.Name).OrderBy(_ => _).ToList();
+            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType(type);
+            var expectedMemberNames = BsonSerializationConfigurationBase.GetMembersToAutomap(type).Select(_ => _.Name).OrderBy(_ => _).ToList();
 
             // Act
             var classMap = RunTestCode(configuration);
@@ -72,7 +68,7 @@ namespace OBeautifulCode.Serialization.Test
             // Arrange
             var constraints = new[] { nameof(TestMapping.GuidProperty), nameof(TestMapping.StringIntMap) };
             var expectedMemberNames = constraints.ToList();
-            var configuration = new BsonConfigurationTestAutoConstrainedType(typeof(TestMapping), constraints);
+            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType(typeof(TestMapping), constraints);
 
             // Act
             var classMap = RunTestCode(configuration);
@@ -90,7 +86,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void RegisterClassMapsTypeFullyAutomatic___Type_with_invalid_constraints___Throws()
         {
             // Arrange
-            var configuration = new BsonConfigurationTestAutoConstrainedType(typeof(TestMapping), new[] { "monkey" });
+            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType(typeof(TestMapping), new[] { "monkey" });
             Action action = () => RunTestCode(configuration);
 
             // Act
@@ -106,7 +102,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void RegisterClassMapsTypeFullyAutomatic___All_null_type___Throws()
         {
             // Arrange
-            var configuration = new BsonConfigurationTestAutoConstrainedType(null);
+            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType(null);
             Action action = () => RunTestCode(configuration);
 
             // Act
@@ -122,7 +118,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void RegisterClassMapsTypeFullyAutomatic___Constrained_null_type___Throws()
         {
             // Arrange
-            var configuration = new BsonConfigurationTestAutoConstrainedType(null, new[] { "monkeys" });
+            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType(null, new[] { "monkeys" });
             Action action = () => RunTestCode(configuration);
 
             // Act
@@ -180,10 +176,10 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var testType = typeof(TestTracking);
-            var configType = typeof(GenericDiscoveryBsonConfiguration<TestTracking>);
+            var configType = typeof(GenericDiscoveryBsonSerializationConfiguration<TestTracking>);
 
             // Act
-            var config = SerializationConfigurationManager.ConfigureWithReturn<BsonConfigurationBase>(configType);
+            var config = SerializationConfigurationManager.ConfigureWithReturn<BsonSerializationConfigurationBase>(configType);
 
             // Assert
             config.RegisteredTypeToDetailsMap.Keys.Should().Contain(testType);

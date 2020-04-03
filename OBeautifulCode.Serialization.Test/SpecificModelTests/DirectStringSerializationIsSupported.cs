@@ -19,7 +19,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void BsonSerializeStringToString()
         {
             // Arrange
-            var bsonSerializer = new ObcBsonSerializer<GenericDiscoveryBsonConfiguration<string>>();
+            var bsonSerializer = new ObcBsonSerializer<GenericDiscoveryBsonSerializationConfiguration<string>>();
             var input = A.Dummy<string>();
 
             // Act
@@ -33,7 +33,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void BsonSerializeStringToBytes()
         {
             // Arrange
-            var bsonSerializer = new ObcBsonSerializer<GenericDiscoveryBsonConfiguration<string>>();
+            var bsonSerializer = new ObcBsonSerializer<GenericDiscoveryBsonSerializationConfiguration<string>>();
             var input = A.Dummy<string>();
 
             // Act
@@ -47,7 +47,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void JsonSerializeStringToString()
         {
             // Arrange
-            var jsonSerializer = new ObcJsonSerializer<GenericDiscoveryJsonConfiguration<string>>();
+            var jsonSerializer = new ObcJsonSerializer<GenericDiscoveryJsonSerializationConfiguration<string>>();
             var input = A.Dummy<string>();
 
             // Act
@@ -62,7 +62,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void JsonSerializeStringToBytes()
         {
             // Arrange
-            var jsonSerializer = new ObcJsonSerializer<GenericDiscoveryJsonConfiguration<string>>();
+            var jsonSerializer = new ObcJsonSerializer<GenericDiscoveryJsonSerializationConfiguration<string>>();
             var input = A.Dummy<string>();
 
             // Act

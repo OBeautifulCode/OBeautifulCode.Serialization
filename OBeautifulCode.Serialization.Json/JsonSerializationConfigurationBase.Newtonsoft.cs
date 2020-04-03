@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="JsonConfigurationBase.Newtonsoft.cs" company="OBeautifulCode">
+// <copyright file="JsonSerializationConfigurationBase.Newtonsoft.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ namespace OBeautifulCode.Serialization.Json
     /// <summary>
     /// Base class to use for creating <see cref="ObcJsonSerializer" /> configuration.
     /// </summary>
-    public abstract partial class JsonConfigurationBase
+    public abstract partial class JsonSerializationConfigurationBase
     {
         /// <summary>
         /// Map of <see cref="JsonFormattingKind" /> to a <see cref="Func{T1,T2,T3,T4,T5,T6,T7,T8,T9,TResult}" /> that will take a <see cref="SerializationDirection" /> and return the correct <see cref="JsonSerializerSettings" />.

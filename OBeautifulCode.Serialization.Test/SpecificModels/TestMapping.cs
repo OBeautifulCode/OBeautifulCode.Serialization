@@ -159,7 +159,7 @@ namespace OBeautifulCode.Serialization.Test
         public TestImplementationTwo RootTwo { get; set; }
     }
 
-    public class TestWithReadOnlyCollectionOfBaseClassConfig : BsonConfigurationBase
+    public class TestWithReadOnlyCollectionOfBaseClassConfig : BsonSerializationConfigurationBase
     {
         protected override IReadOnlyCollection<Type> ClassTypesToRegisterAlongWithInheritors => new[] { typeof(TestBase), typeof(TestWithReadOnlyCollectionOfBaseClass) };
     }

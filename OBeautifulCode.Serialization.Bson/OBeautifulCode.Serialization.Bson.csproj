@@ -107,8 +107,8 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
-    <Compile Include="BsonConfigurationBase.cs" />
-    <Compile Include="BsonConfigurationException.cs" />
+    <Compile Include="BsonSerializationConfigurationBase.cs" />
+    <Compile Include="BsonSerializationConfigurationException.cs" />
     <Compile Include="BsonSerializerFactory.cs" />
     <Compile Include="CustomSerializers\ObcBsonColorSerializer.cs" />
     <Compile Include="ExtensionMethods.cs" />

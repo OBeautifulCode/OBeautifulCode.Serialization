@@ -157,9 +157,9 @@
     <Compile Include="Bson\CustomSerializers\ObcBsonDictionarySerializerTest.cs" />
     <Compile Include="Bson\CustomSerializers\ObcBsonCollectionSerializerTest.cs" />
     <Compile Include="Bson\ObcConfigurationBaseTest.cs" />
-    <Compile Include="ConfigurationTests\BsonConfigurationAutoRegisterType.cs" />
-    <Compile Include="ConfigurationTests\BsonConfigurationBaseTest.cs" />
-    <Compile Include="ConfigurationTests\JsonConfigurationBaseTest.cs" />
+    <Compile Include="ConfigurationTests\BsonSerializationConfigurationAutoRegisterType.cs" />
+    <Compile Include="ConfigurationTests\BsonSerializationConfigurationBaseTest.cs" />
+    <Compile Include="ConfigurationTests\JsonSerializationConfigurationBaseTest.cs" />
     <Compile Include="ConfigurationTests\SerializationConfigurationManagerTest.cs" />
     <Compile Include="DateTimeConverterTest.cs" />
     <Compile Include="InternallyRegisteredTypesTest.cs" />
@@ -185,7 +185,7 @@
     <Compile Include="SpecificModelTests\DependentConfigurationsHandledCorrectly.cs" />
     <Compile Include="SpecificModelTests\DictionaryFlavorSupportTest.cs" />
     <Compile Include="SpecificModelTests\DirectStringSerializationIsSupported.cs" />
-    <Compile Include="SpecificModelTests\JsonConfigurationTest.cs" />
+    <Compile Include="SpecificModelTests\JsonSerializationConfigurationTest.cs" />
     <Compile Include="SpecificModelTests\MultilevelDependencyTest.cs" />
     <Compile Include="SpecificModelTests\NetDrawingTypeTests.cs" />
     <Compile Include="SpecificModelTests\ParallelSerializationTest.cs" />

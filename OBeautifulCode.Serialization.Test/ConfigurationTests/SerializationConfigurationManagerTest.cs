@@ -17,7 +17,7 @@ namespace OBeautifulCode.Serialization.Test
     public static class SerializationConfigurationManagerTest
     {
         [Fact]
-        public static void Configure___Type_not_BsonConfigurationBase___Throws()
+        public static void Configure___Type_not_BsonSerializationConfigurationBase___Throws()
         {
             // Arrange
             Action action = () => SerializationConfigurationManager.Configure(typeof(string));
@@ -54,14 +54,14 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
-    public class TestConfigure : BsonConfigurationBase
+    public class TestConfigure : BsonSerializationConfigurationBase
     {
         /// <summary>
         /// Gets a value indicating whether or not it has been configured.
         /// </summary>
         public static bool Configured { get; private set; }
 
-        /// <inheritdoc cref="BsonConfigurationBase" />
+        /// <inheritdoc cref="BsonSerializationConfigurationBase" />
         protected override void FinalConfiguration()
         {
             if (Configured)
@@ -73,7 +73,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
-    public class TestConfigureParameterConstructor : BsonConfigurationBase
+    public class TestConfigureParameterConstructor : BsonSerializationConfigurationBase
     {
         public TestConfigureParameterConstructor(string thingy)
         {
@@ -82,7 +82,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string Thingy { get; set; }
 
-        /// <inheritdoc cref="BsonConfigurationBase" />
+        /// <inheritdoc cref="BsonSerializationConfigurationBase" />
         protected override void FinalConfiguration()
         {
             /* no-op */

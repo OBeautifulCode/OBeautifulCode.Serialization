@@ -28,7 +28,7 @@ namespace OBeautifulCode.Serialization.Bson
         {
             new { map }.AsArg().Must().NotBeNull();
 
-            var serializer = BsonConfigurationBase.GetAppropriateSerializer(map.MemberType);
+            var serializer = BsonSerializationConfigurationBase.GetAppropriateSerializer(map.MemberType);
 
             return map.SetSerializer(serializer);
         }

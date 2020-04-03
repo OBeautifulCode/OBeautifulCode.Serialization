@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="JsonConfigurationBase.Virtual.cs" company="OBeautifulCode">
+// <copyright file="JsonSerializationConfigurationBase.Virtual.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ namespace OBeautifulCode.Serialization.Json
     /// <summary>
     /// Base class to use for creating <see cref="ObcJsonSerializer" /> configuration.
     /// </summary>
-    public abstract partial class JsonConfigurationBase
+    public abstract partial class JsonSerializationConfigurationBase
     {
         /// <summary>
         /// Gets the optional override to the contract resolver of the settings gotten from the provided kind for reading.

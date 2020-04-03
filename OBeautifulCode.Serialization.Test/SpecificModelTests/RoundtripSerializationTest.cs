@@ -29,8 +29,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_ClassWithGetterOnlysBase___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ClassWithGetterOnlys>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ClassWithGetterOnlys>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<ClassWithGetterOnlys>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<ClassWithGetterOnlys>);
 
             var expected = new ClassWithGetterOnlys();
 
@@ -51,8 +51,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_ClassWithPrivateSetter___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ClassWithPrivateSetter>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ClassWithPrivateSetter>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<ClassWithPrivateSetter>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<ClassWithPrivateSetter>);
 
             var privateValue = A.Dummy<string>();
             var expected = new ClassWithPrivateSetter(privateValue);
@@ -71,8 +71,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestWrappedFields___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<TestWrappedFields>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<TestWrappedFields>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<TestWrappedFields>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<TestWrappedFields>);
 
             var expected = new TestWrappedFields
             {
@@ -102,8 +102,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestWithInheritor___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<TestWithInheritorExtraProperty>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<TestWithInheritorExtraProperty>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<TestWithInheritorExtraProperty>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<TestWithInheritorExtraProperty>);
 
             var expected = new TestWithInheritorExtraProperty { Id = Guid.NewGuid().ToString(), Name = Guid.NewGuid().ToString(), AnotherName = Guid.NewGuid().ToString(), };
 
@@ -123,8 +123,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestWithId___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<TestWithId>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<TestWithId>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<TestWithId>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<TestWithId>);
 
             var expected = new TestWithId { Id = Guid.NewGuid().ToString(), };
 
@@ -142,8 +142,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestMapping_with_all_defaults___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<TestMapping>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<TestMapping>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<TestMapping>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<TestMapping>);
 
             var expected = new TestMapping();
 
@@ -173,8 +173,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestMapping___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<TestMapping>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<TestMapping>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<TestMapping>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<TestMapping>);
 
             var expected = new TestMapping
             {
@@ -223,8 +223,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestCollectionFields_with_all_nulls___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<TestCollectionFields>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<TestCollectionFields>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<TestCollectionFields>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<TestCollectionFields>);
 
             var expected = new TestCollectionFields();
 
@@ -248,8 +248,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestCollectionFields___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<TestCollectionFields>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<TestCollectionFields>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<TestCollectionFields>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<TestCollectionFields>);
 
             var expected = A.Dummy<TestCollectionFields>();
 
@@ -273,8 +273,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_collection_of_Interface_type___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<IDeduceWhoLetTheDogsOut>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<IDeduceWhoLetTheDogsOut>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<IDeduceWhoLetTheDogsOut>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<IDeduceWhoLetTheDogsOut>);
 
             IDeduceWhoLetTheDogsOut investigator1 = new NamedInvestigator("bob", 2);
             IDeduceWhoLetTheDogsOut investigator2 = new AnonymousInvestigator(4000);
@@ -318,8 +318,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_ClassWithFlagsEnums___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ClassWithFlagsEnums>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ClassWithFlagsEnums>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<ClassWithFlagsEnums>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<ClassWithFlagsEnums>);
 
             var expected = new ClassWithFlagsEnums { Flags = FlagsEnumeration.SecondValue | FlagsEnumeration.ThirdValue };
 
@@ -337,8 +337,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestWithEmptyReadOnlyCollectionOfBaseClass___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<TestWithReadOnlyCollectionOfBaseClass>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<TestWithReadOnlyCollectionOfBaseClass>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<TestWithReadOnlyCollectionOfBaseClass>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<TestWithReadOnlyCollectionOfBaseClass>);
 
             var expected = new TestWithReadOnlyCollectionOfBaseClass { TestCollection = new List<TestBase>() };
 
@@ -357,8 +357,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestWithReadOnlyCollectionOfBaseClass___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<TestWithReadOnlyCollectionOfBaseClass>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<TestWithReadOnlyCollectionOfBaseClass>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<TestWithReadOnlyCollectionOfBaseClass>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<TestWithReadOnlyCollectionOfBaseClass>);
 
             var expected = new TestWithReadOnlyCollectionOfBaseClass
                                {
@@ -388,8 +388,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void When_registering_a_top_level_interface___An_implementation_of_an_interface_that_implements_top_interface___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ITopInterface>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ITopInterface>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<ITopInterface>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<ITopInterface>);
 
             var expected = A.Dummy<BottomClass>();
 
@@ -409,8 +409,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_Field_NumberField_YearField__Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<Field>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<Field>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<Field>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<Field>);
 
             var expectedId1 = "my-field-1";
             var expectedId2 = "my-field-2";
@@ -462,8 +462,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_ModelWithNullableProperties_with_nulls___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ModelWithNullableProperties>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ModelWithNullableProperties>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<ModelWithNullableProperties>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<ModelWithNullableProperties>);
 
             var expected = new ModelWithNullableProperties
             {
@@ -485,8 +485,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_ModelWithNullableProperties_with_non_nulls___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ModelWithNullableProperties>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ModelWithNullableProperties>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<ModelWithNullableProperties>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<ModelWithNullableProperties>);
 
             var expected = new ModelWithNullableProperties
             {

@@ -1,10 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BsonConfigurationException.cs" company="OBeautifulCode">
+// <copyright file="JsonSerializationConfigurationException.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace OBeautifulCode.Serialization.Bson
+namespace OBeautifulCode.Serialization.Json
 {
     using System;
     using System.Runtime.Serialization;
@@ -13,40 +13,40 @@ namespace OBeautifulCode.Serialization.Bson
     /// Exception for issues configuring BSON.
     /// </summary>
     [Serializable]
-    public class BsonConfigurationException : Exception
+    public class JsonSerializationConfigurationException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BsonConfigurationException"/> class.
+        /// Initializes a new instance of the <see cref="JsonSerializationConfigurationException"/> class.
         /// </summary>
-        public BsonConfigurationException()
+        public JsonSerializationConfigurationException()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BsonConfigurationException"/> class.
+        /// Initializes a new instance of the <see cref="JsonSerializationConfigurationException"/> class.
         /// </summary>
         /// <param name="message">Message for exception.</param>
-        public BsonConfigurationException(string message)
+        public JsonSerializationConfigurationException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BsonConfigurationException"/> class.
+        /// Initializes a new instance of the <see cref="JsonSerializationConfigurationException"/> class.
         /// </summary>
         /// <param name="message">Message for exception.</param>
         /// <param name="innerException">Inner exception.</param>
-        public BsonConfigurationException(string message, Exception innerException)
+        public JsonSerializationConfigurationException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BsonConfigurationException"/> class.
+        /// Initializes a new instance of the <see cref="JsonSerializationConfigurationException"/> class.
         /// </summary>
         /// <param name="info">Serialization info.</param>
         /// <param name="context">Reading context.</param>
-        protected BsonConfigurationException(SerializationInfo info, StreamingContext context)
+        protected JsonSerializationConfigurationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

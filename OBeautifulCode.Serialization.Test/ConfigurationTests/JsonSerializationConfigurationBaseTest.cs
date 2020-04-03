@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="JsonConfigurationBaseTest.cs" company="OBeautifulCode">
+// <copyright file="JsonSerializationConfigurationBaseTest.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -16,10 +16,10 @@ namespace OBeautifulCode.Serialization.Test
 
     using Xunit;
 
-    public static class JsonConfigurationBaseTest
+    public static class JsonSerializationConfigurationBaseTest
     {
         [Fact]
-        public static void JsonConfigurationBase___With_contract_override___Works()
+        public static void JsonSerializationConfigurationBase___With_contract_override___Works()
         {
             // Arrange & Act
             var actual = SerializationConfigurationManager.ConfigureWithReturn<DefaultTestConfiguration>();
@@ -31,10 +31,10 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
-        public static void JsonConfigurationBase___With_null_implementation___Works()
+        public static void JsonSerializationConfigurationBase___With_null_implementation___Works()
         {
             // Arrange & Act
-            var actual = SerializationConfigurationManager.ConfigureWithReturn<NullJsonConfiguration>();
+            var actual = SerializationConfigurationManager.ConfigureWithReturn<NullJsonSerializationConfiguration>();
 
             // Assert
             actual.Should().NotBeNull();
@@ -44,7 +44,7 @@ namespace OBeautifulCode.Serialization.Test
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Called via reflection.")]
-    internal class DefaultTestConfiguration : JsonConfigurationBase
+    internal class DefaultTestConfiguration : JsonSerializationConfigurationBase
     {
         protected override IReadOnlyDictionary<SerializationDirection, RegisteredContractResolver> OverrideContractResolver =>
             new Dictionary<SerializationDirection, RegisteredContractResolver>

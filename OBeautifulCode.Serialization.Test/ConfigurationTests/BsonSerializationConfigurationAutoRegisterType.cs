@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BsonConfigurationAutoRegisterType.cs" company="OBeautifulCode">
+// <copyright file="BsonSerializationConfigurationAutoRegisterType.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -13,15 +13,15 @@ namespace OBeautifulCode.Serialization.Test
 
     using OBeautifulCode.Serialization.Bson;
 
-    public class BsonConfigurationAutoRegisterType<T> : BsonConfigurationBase
+    public class BsonSerializationConfigurationAutoRegisterType<T> : BsonSerializationConfigurationBase
     {
         protected override IReadOnlyCollection<Type> TypesToAutoRegister => new[] { typeof(T) };
     }
 
-    public class BsonConfigurationTestAutoConstrainedType : BsonConfigurationBase
+    public class BsonSerializationConfigurationTestAutoConstrainedType : BsonSerializationConfigurationBase
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Only used in testing.")]
-        public BsonConfigurationTestAutoConstrainedType(Type type, IReadOnlyCollection<string> constrainedProperties = null)
+        public BsonSerializationConfigurationTestAutoConstrainedType(Type type, IReadOnlyCollection<string> constrainedProperties = null)
         {
             this.TypeToRegister = type;
             this.ConstrainedProperties = constrainedProperties;
@@ -39,12 +39,12 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
-    public class DependsOnCustomThrowsConfig : BsonConfigurationBase
+    public class DependsOnCustomThrowsConfig : BsonSerializationConfigurationBase
     {
         public override IReadOnlyCollection<Type> DependentConfigurationTypes => new[] { typeof(CustomThrowsConfig) };
     }
 
-    public class CustomThrowsConfig : BsonConfigurationBase
+    public class CustomThrowsConfig : BsonSerializationConfigurationBase
     {
         /// <summary>
         /// Gets the exception message being thrown.
@@ -57,7 +57,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
-    public class CustomNoPublicConstructor : BsonConfigurationBase
+    public class CustomNoPublicConstructor : BsonSerializationConfigurationBase
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "notUsed", Justification = "Needed for testing.")]
         public CustomNoPublicConstructor(string notUsed)
@@ -65,7 +65,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
-    public class TestVariousTypeOverloadsConfig : BsonConfigurationBase
+    public class TestVariousTypeOverloadsConfig : BsonSerializationConfigurationBase
     {
         protected override IReadOnlyCollection<Type> ClassTypesToRegister => new[] { typeof(TestConfigureActionSingle) };
 
@@ -76,7 +76,7 @@ namespace OBeautifulCode.Serialization.Test
         protected override IReadOnlyCollection<Type> InterfaceTypesToRegisterImplementationOf => new[] { typeof(ITestConfigureActionFromInterface) };
     }
 
-    public class TestConfigWithSettableFields : BsonConfigurationBase
+    public class TestConfigWithSettableFields : BsonSerializationConfigurationBase
     {
 #pragma warning disable SA1401 // Fields should be private
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "For testing.")]
@@ -102,7 +102,7 @@ namespace OBeautifulCode.Serialization.Test
         protected override IReadOnlyCollection<Type> InterfaceTypesToRegisterImplementationOf => this.SettableInterfaceTypesToRegisterImplementationOf;
     }
 
-    public class InvestigationConfiguration : BsonConfigurationBase
+    public class InvestigationConfiguration : BsonSerializationConfigurationBase
     {
         protected override IReadOnlyCollection<Type> TypesToAutoRegister => new[] { typeof(IDeduceWhoLetTheDogsOut), typeof(NamedInvestigator), typeof(AnonymousInvestigator) };
     }

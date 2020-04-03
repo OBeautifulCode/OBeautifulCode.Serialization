@@ -23,8 +23,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_InitializedNoConstructor___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<InitializedNoConstructor>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<InitializedNoConstructor>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<InitializedNoConstructor>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<InitializedNoConstructor>);
 
             var expected = A.Dummy<InitializedNoConstructor>();
 
@@ -45,8 +45,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_ExpressionBodyNoConstructor___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ExpressionBodyNoConstructor>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ExpressionBodyNoConstructor>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<ExpressionBodyNoConstructor>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<ExpressionBodyNoConstructor>);
 
             var expected = A.Dummy<ExpressionBodyNoConstructor>();
 
@@ -67,8 +67,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_InitializedSingleParameterizedConstructor___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<InitializedSingleParameterizedConstructor>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<InitializedSingleParameterizedConstructor>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<InitializedSingleParameterizedConstructor>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<InitializedSingleParameterizedConstructor>);
 
             var expected = A.Dummy<InitializedSingleParameterizedConstructor>();
 
@@ -91,8 +91,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_ExpressionBodySingleParameterizedConstructor___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ExpressionBodySingleParameterizedConstructor>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ExpressionBodySingleParameterizedConstructor>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<ExpressionBodySingleParameterizedConstructor>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<ExpressionBodySingleParameterizedConstructor>);
 
             var expected = A.Dummy<ExpressionBodySingleParameterizedConstructor>();
 
@@ -115,8 +115,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_InitializedMultipleConstructorsWithDefault___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<InitializedMultipleConstructorsWithDefault>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<InitializedMultipleConstructorsWithDefault>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<InitializedMultipleConstructorsWithDefault>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<InitializedMultipleConstructorsWithDefault>);
 
             var expected = A.Dummy<InitializedMultipleConstructorsWithDefault>();
 
@@ -139,8 +139,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_ExpressionBodyMultipleConstructorsWithDefault___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ExpressionBodyMultipleConstructorsWithDefault>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ExpressionBodyMultipleConstructorsWithDefault>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithDefault>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithDefault>);
 
             var expected = A.Dummy<ExpressionBodyMultipleConstructorsWithDefault>();
 
@@ -163,8 +163,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_InitializedMultipleConstructorsWithoutDefault___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<InitializedMultipleConstructorsWithoutDefault>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<InitializedMultipleConstructorsWithoutDefault>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<InitializedMultipleConstructorsWithoutDefault>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<InitializedMultipleConstructorsWithoutDefault>);
 
             var expected = A.Dummy<InitializedMultipleConstructorsWithoutDefault>();
 
@@ -187,8 +187,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_ExpressionBodyMultipleConstructorsWithoutDefault___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(GenericDiscoveryBsonConfiguration<ExpressionBodyMultipleConstructorsWithoutDefault>);
-            var jsonConfigType = typeof(GenericDiscoveryJsonConfiguration<ExpressionBodyMultipleConstructorsWithoutDefault>);
+            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithoutDefault>);
+            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithoutDefault>);
 
             var expected = A.Dummy<ExpressionBodyMultipleConstructorsWithoutDefault>();
 

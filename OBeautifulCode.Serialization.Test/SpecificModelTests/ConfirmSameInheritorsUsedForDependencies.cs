@@ -8,9 +8,12 @@ namespace OBeautifulCode.Serialization.Test
 {
     using System;
     using System.Collections.Generic;
+
     using FluentAssertions;
+
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
+
     using Xunit;
 
     public static class ConfirmSameInheritorsUsedForDependencies
@@ -29,21 +32,21 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Be("Configuration OBeautifulCode.Serialization.Test.SameInheritorJsonConfig has DependentConfigurationTypes (OBeautifulCode.Serialization.Test.SameInheritorBsonConfigA) that do not share the same first layer of inheritance OBeautifulCode.Serialization.Json.JsonConfigurationBase.");
+            exception.Message.Should().Be("Configuration OBeautifulCode.Serialization.Test.SameInheritorJsonConfig has DependentConfigurationTypes (OBeautifulCode.Serialization.Test.SameInheritorBsonConfigA) that do not share the same first layer of inheritance OBeautifulCode.Serialization.Json.JsonSerializationConfigurationBase.");
         }
     }
 
-    public class SameInheritorJsonConfig : JsonConfigurationBase
+    public class SameInheritorJsonConfig : JsonSerializationConfigurationBase
     {
         public override IReadOnlyCollection<Type> DependentConfigurationTypes =>
             new[] { typeof(SameInheritorJsonConfigA), typeof(SameInheritorBsonConfigA) };
     }
 
-    public class SameInheritorBsonConfigA : BsonConfigurationBase
+    public class SameInheritorBsonConfigA : BsonSerializationConfigurationBase
     {
     }
 
-    public class SameInheritorJsonConfigA : JsonConfigurationBase
+    public class SameInheritorJsonConfigA : JsonSerializationConfigurationBase
     {
     }
 }

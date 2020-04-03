@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="JsonConfigurationBase.Override.cs" company="OBeautifulCode">
+// <copyright file="JsonSerializationConfigurationBase.Override.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ namespace OBeautifulCode.Serialization.Json
     /// <summary>
     /// Base class to use for creating <see cref="ObcJsonSerializer" /> configuration.
     /// </summary>
-    public abstract partial class JsonConfigurationBase
+    public abstract partial class JsonSerializationConfigurationBase
     {
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
@@ -30,7 +30,7 @@ namespace OBeautifulCode.Serialization.Json
                 var type = dependentConfigTypes.Last();
                 dependentConfigTypes.RemoveAt(dependentConfigTypes.Count - 1);
 
-                var dependentConfig = (JsonConfigurationBase)this.DependentConfigurationTypeToInstanceMap[type];
+                var dependentConfig = (JsonSerializationConfigurationBase)this.DependentConfigurationTypeToInstanceMap[type];
                 dependentConfigTypes.AddRange(dependentConfig.DependentConfigurationTypes);
 
                 this.ProcessConverter(dependentConfig.RegisteredConverters, false);

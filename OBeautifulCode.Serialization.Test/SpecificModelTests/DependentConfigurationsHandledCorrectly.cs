@@ -62,13 +62,13 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
-    public class JsonConfigA : JsonConfigurationBase
+    public class JsonConfigA : JsonSerializationConfigurationBase
     {
         public override IReadOnlyCollection<Type> DependentConfigurationTypes =>
             new[] { typeof(JsonConfigB), typeof(JsonConfigC) };
     }
 
-    public class BsonConfigA : BsonConfigurationBase
+    public class BsonConfigA : BsonSerializationConfigurationBase
     {
         public override IReadOnlyCollection<Type> DependentConfigurationTypes =>
             new[] { typeof(BsonConfigB), typeof(BsonConfigC) };
@@ -80,13 +80,13 @@ namespace OBeautifulCode.Serialization.Test
             new[] { typeof(PropBagConfigB), typeof(PropBagConfigC) };
     }
 
-    public class JsonConfigB : JsonConfigurationBase
+    public class JsonConfigB : JsonSerializationConfigurationBase
     {
         public override IReadOnlyCollection<Type> DependentConfigurationTypes =>
             new[] { typeof(JsonConfigC) };
     }
 
-    public class BsonConfigB : BsonConfigurationBase
+    public class BsonConfigB : BsonSerializationConfigurationBase
     {
         public override IReadOnlyCollection<Type> DependentConfigurationTypes =>
             new[] { typeof(BsonConfigC) };
@@ -98,7 +98,7 @@ namespace OBeautifulCode.Serialization.Test
             new[] { typeof(PropBagConfigC) };
     }
 
-    public class JsonConfigC : JsonConfigurationBase
+    public class JsonConfigC : JsonSerializationConfigurationBase
     {
         protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery =>
             new[] { typeof(TestingDependentConfigAbstractType) };
@@ -164,7 +164,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
-    public class BsonConfigC : BsonConfigurationBase
+    public class BsonConfigC : BsonSerializationConfigurationBase
     {
         protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery =>
             new[] { typeof(TestingDependentConfigAbstractType) };

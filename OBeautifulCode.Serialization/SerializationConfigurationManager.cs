@@ -120,7 +120,7 @@ namespace OBeautifulCode.Serialization
                     var configInheritor = configurationType.GetInheritorOfSerializationBase();
 
                     // TODO: test this throw.
-                    // This protects against a JsonConfiguration listing dependent types that are BsonConfiguration derivatives, and vice-versa.
+                    // This protects against a JsonSerializationConfiguration listing dependent types that are BsonSerializationConfiguration derivatives, and vice-versa.
                     var rogueDependents = allDependentConfigTypes.Where(_ => _.GetInheritorOfSerializationBase() != configInheritor).ToList();
                     if (rogueDependents.Any())
                     {

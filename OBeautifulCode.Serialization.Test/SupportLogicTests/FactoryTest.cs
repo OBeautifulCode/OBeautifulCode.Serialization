@@ -85,7 +85,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void BuildSerializer___Bson___Gets_Bson_serializer()
         {
             // Arrange
-            var expectedConfigType = typeof(NullBsonConfiguration);
+            var expectedConfigType = typeof(NullBsonSerializationConfiguration);
             var serializerDescription = new SerializationDescription(
                 SerializationKind.Bson,
                 SerializationFormat.String,
@@ -111,7 +111,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void SerializationDescriptionToSerializerFactory_BuildSerializer___Works_for_matching_description()
         {
             // Arrange
-            var configType = typeof(GenericDiscoveryJsonConfiguration<string>);
+            var configType = typeof(GenericDiscoveryJsonSerializationConfiguration<string>);
             var serializerDescription = new SerializationDescription(
                 SerializationKind.Json,
                 SerializationFormat.String,
@@ -132,7 +132,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void SerializationDescriptionToSerializerFactory_BuildSerializer___Throws_for_nonmatching_description()
         {
             // Arrange
-            var configType = typeof(GenericDiscoveryJsonConfiguration<string>);
+            var configType = typeof(GenericDiscoveryJsonSerializationConfiguration<string>);
             var serializerDescription = new SerializationDescription(
                 SerializationKind.Json,
                 SerializationFormat.String,
@@ -150,7 +150,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<NotSupportedException>();
-            exception.Message.Should().StartWith("Supplied 'serializationDescription' (SerializationDescription: SerializationKind=Bson, SerializationFormat=Binary, CompressionKind=None, ConfigurationTypeRepresentation=, Metadata=,) does not match 'supportedSerializationDescription' (SerializationDescription: SerializationKind=Json, SerializationFormat=String, CompressionKind=None, ConfigurationTypeRepresentation=Representation.TypeRepresentation: Namespace = OBeautifulCode.Serialization.Json, Name = GenericDiscoveryJsonConfiguration`1, AssemblyQualifiedName = OBeautifulCode.Serialization.Json.GenericDiscoveryJsonConfiguration`1, OBeautifulCode.Serialization.Json");
+            exception.Message.Should().StartWith("Supplied 'serializationDescription' (SerializationDescription: SerializationKind=Bson, SerializationFormat=Binary, CompressionKind=None, ConfigurationTypeRepresentation=, Metadata=,) does not match 'supportedSerializationDescription' (SerializationDescription: SerializationKind=Json, SerializationFormat=String, CompressionKind=None, ConfigurationTypeRepresentation=OBeautifulCode.Representation.System.TypeRepresentation: Namespace = OBeautifulCode.Serialization.Json, Name = GenericDiscoveryJsonSerializationConfiguration`1, AssemblyQualifiedName = OBeautifulCode.Serialization.Json.GenericDiscoveryJsonSerializationConfiguration`1, OBeautifulCode.Serialization.Json");
         }
     }
 }
