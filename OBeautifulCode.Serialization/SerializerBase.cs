@@ -54,12 +54,12 @@ namespace OBeautifulCode.Serialization
                     ? UnregisteredTypeEncounteredStrategy.Throw
                     : UnregisteredTypeEncounteredStrategy.Attempt;
 
-            this.ConfigurationType = configurationType;
-            this.configuration = SerializationConfigurationManager.ConfigureWithReturn<SerializationConfigurationBase>(this.ConfigurationType);
+            this.SerializationConfigurationType = configurationType;
+            this.configuration = SerializationConfigurationManager.ConfigureWithReturn<SerializationConfigurationBase>(this.SerializationConfigurationType);
         }
 
         /// <inheritdoc />
-        public Type ConfigurationType { get; private set; }
+        public Type SerializationConfigurationType { get; private set; }
 
         /// <inheritdoc />
         public abstract SerializationKind SerializationKind { get; }

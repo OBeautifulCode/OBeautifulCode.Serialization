@@ -64,37 +64,37 @@ namespace OBeautifulCode.Serialization.Test
 
     public class JsonConfigA : JsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentConfigurationTypes =>
+        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
             new[] { typeof(JsonConfigB), typeof(JsonConfigC) };
     }
 
     public class BsonConfigA : BsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentConfigurationTypes =>
+        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
             new[] { typeof(BsonConfigB), typeof(BsonConfigC) };
     }
 
     public class PropBagConfigA : PropertyBagConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentConfigurationTypes =>
+        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
             new[] { typeof(PropBagConfigB), typeof(PropBagConfigC) };
     }
 
     public class JsonConfigB : JsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentConfigurationTypes =>
+        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
             new[] { typeof(JsonConfigC) };
     }
 
     public class BsonConfigB : BsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentConfigurationTypes =>
+        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
             new[] { typeof(BsonConfigC) };
     }
 
     public class PropBagConfigB : PropertyBagConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentConfigurationTypes =>
+        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
             new[] { typeof(PropBagConfigC) };
     }
 
@@ -231,7 +231,7 @@ namespace OBeautifulCode.Serialization.Test
 
     public class TestingDependentPropBagSerializer : IStringSerializeAndDeserialize
     {
-        public Type ConfigurationType => typeof(NullPropertyBagConfiguration);
+        public Type SerializationConfigurationType => typeof(NullPropertyBagConfiguration);
 
         public string SerializeToString(object objectToSerialize)
         {

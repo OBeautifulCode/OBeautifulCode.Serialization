@@ -44,7 +44,7 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <inheritdoc />
-        public Type ConfigurationType => null;
+        public Type SerializationConfigurationType => null;
 
         /// <inheritdoc />
         public SerializationKind SerializationKind => SerializationKind.LambdaBacked;

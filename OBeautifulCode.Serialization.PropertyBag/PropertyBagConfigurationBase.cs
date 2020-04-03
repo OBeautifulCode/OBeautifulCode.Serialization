@@ -40,7 +40,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         }
 
         /// <inheritdoc />
-        public sealed override IReadOnlyCollection<Type> InternalDependentConfigurationTypes => new[] { typeof(InternalPropertyBagConfiguration) };
+        public sealed override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new[] { typeof(InternalPropertyBagConfiguration) };
 
         /// <summary>
         /// Gets the registered serializer set to use.
@@ -65,14 +65,14 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
         {
-            var dependentConfigTypes = new List<Type>(this.DependentConfigurationTypes.Reverse());
+            var dependentConfigTypes = new List<Type>(this.DependentSerializationConfigurationTypes.Reverse());
             while (dependentConfigTypes.Any())
             {
                 var type = dependentConfigTypes.Last();
                 dependentConfigTypes.RemoveAt(dependentConfigTypes.Count - 1);
 
-                var dependentConfig = (PropertyBagConfigurationBase)this.DependentConfigurationTypeToInstanceMap[type];
-                dependentConfigTypes.AddRange(dependentConfig.DependentConfigurationTypes);
+                var dependentConfig = (PropertyBagConfigurationBase)this.DependentSerializationConfigurationTypeToInstanceMap[type];
+                dependentConfigTypes.AddRange(dependentConfig.DependentSerializationConfigurationTypes);
 
                 this.ProcessSerializer(dependentConfig.RegisteredSerializers, false);
             }

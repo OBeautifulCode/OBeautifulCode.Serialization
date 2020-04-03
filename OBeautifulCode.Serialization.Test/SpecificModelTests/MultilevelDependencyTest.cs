@@ -28,12 +28,12 @@ namespace OBeautifulCode.Serialization.Test
 
     public class ConfigTop : JsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentConfigurationTypes => new[] { typeof(ConfigMiddle) };
+        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new[] { typeof(ConfigMiddle) };
     }
 
     public class ConfigMiddle : JsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentConfigurationTypes => new[] { typeof(ConfigBottom1), typeof(ConfigBottom2), };
+        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new[] { typeof(ConfigBottom1), typeof(ConfigBottom2), };
     }
 
     public class ConfigBottom1 : JsonSerializationConfigurationBase

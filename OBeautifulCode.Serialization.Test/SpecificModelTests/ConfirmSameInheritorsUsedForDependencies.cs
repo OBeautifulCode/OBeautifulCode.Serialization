@@ -32,13 +32,13 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<InvalidOperationException>();
-            exception.Message.Should().Be("Configuration OBeautifulCode.Serialization.Test.SameInheritorJsonConfig has DependentConfigurationTypes (OBeautifulCode.Serialization.Test.SameInheritorBsonConfigA) that do not share the same first layer of inheritance OBeautifulCode.Serialization.Json.JsonSerializationConfigurationBase.");
+            exception.Message.Should().Be("Configuration OBeautifulCode.Serialization.Test.SameInheritorJsonConfig has DependentSerializationConfigurationTypes (OBeautifulCode.Serialization.Test.SameInheritorBsonConfigA) that do not share the same first layer of inheritance OBeautifulCode.Serialization.Json.JsonSerializationConfigurationBase.");
         }
     }
 
     public class SameInheritorJsonConfig : JsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentConfigurationTypes =>
+        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
             new[] { typeof(SameInheritorJsonConfigA), typeof(SameInheritorBsonConfigA) };
     }
 

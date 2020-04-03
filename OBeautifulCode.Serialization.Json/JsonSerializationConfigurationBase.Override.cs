@@ -24,14 +24,14 @@ namespace OBeautifulCode.Serialization.Json
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
         {
-            var dependentConfigTypes = new List<Type>(this.DependentConfigurationTypes.Reverse());
+            var dependentConfigTypes = new List<Type>(this.DependentSerializationConfigurationTypes.Reverse());
             while (dependentConfigTypes.Any())
             {
                 var type = dependentConfigTypes.Last();
                 dependentConfigTypes.RemoveAt(dependentConfigTypes.Count - 1);
 
-                var dependentConfig = (JsonSerializationConfigurationBase)this.DependentConfigurationTypeToInstanceMap[type];
-                dependentConfigTypes.AddRange(dependentConfig.DependentConfigurationTypes);
+                var dependentConfig = (JsonSerializationConfigurationBase)this.DependentSerializationConfigurationTypeToInstanceMap[type];
+                dependentConfigTypes.AddRange(dependentConfig.DependentSerializationConfigurationTypes);
 
                 this.ProcessConverter(dependentConfig.RegisteredConverters, false);
                 this.ProcessInheritedTypeConverterTypes(dependentConfig.RegisteredTypeToDetailsMap.Keys.ToList());

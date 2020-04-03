@@ -99,7 +99,7 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Gets a map of the the dependent configuration type (and any ancestors) to their configured instance.
         /// </summary>
-        public IReadOnlyDictionary<Type, SerializationConfigurationBase> DependentConfigurationTypeToInstanceMap { get; private set; }
+        public IReadOnlyDictionary<Type, SerializationConfigurationBase> DependentSerializationConfigurationTypeToInstanceMap { get; private set; }
 
         /// <summary>
         /// Gets a map of registration details keyed on type registered.
@@ -109,10 +109,10 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Run configuration logic.
         /// </summary>
-        /// <param name="dependentConfigurationTypeToInstanceMap">Map of dependent configuration type to configured instance.</param>
-        public virtual void Configure(IReadOnlyDictionary<Type, SerializationConfigurationBase> dependentConfigurationTypeToInstanceMap)
+        /// <param name="dependentSerializationConfigurationTypeToInstanceMap">Map of dependent configuration type to configured instance.</param>
+        public virtual void Configure(IReadOnlyDictionary<Type, SerializationConfigurationBase> dependentSerializationConfigurationTypeToInstanceMap)
         {
-            new { dependentConfigurationTypeToInstanceMap }.AsArg().Must().NotBeNull();
+            new { dependentSerializationConfigurationTypeToInstanceMap }.AsArg().Must().NotBeNull();
 
             if (!this.configured)
             {
@@ -121,11 +121,11 @@ namespace OBeautifulCode.Serialization
                     if (!this.configured)
                     {
                         // Configure dependency map.
-                        this.DependentConfigurationTypeToInstanceMap = dependentConfigurationTypeToInstanceMap;
-                        foreach (var dependentConfigurationTypeToInstance in dependentConfigurationTypeToInstanceMap)
+                        this.DependentSerializationConfigurationTypeToInstanceMap = dependentSerializationConfigurationTypeToInstanceMap;
+                        foreach (var dependentSerializationConfigurationTypeToInstance in dependentSerializationConfigurationTypeToInstanceMap)
                         {
-                            var dependentConfigType = dependentConfigurationTypeToInstance.Key;
-                            var dependentConfigInstance = dependentConfigurationTypeToInstance.Value;
+                            var dependentConfigType = dependentSerializationConfigurationTypeToInstance.Key;
+                            var dependentConfigInstance = dependentSerializationConfigurationTypeToInstance.Value;
 
                             var registrationDetails = new RegistrationDetails(dependentConfigType);
 
@@ -149,7 +149,7 @@ namespace OBeautifulCode.Serialization
                         var localClassTypesToRegisterAlongWithInheritors = this.ClassTypesToRegisterAlongWithInheritors ?? new List<Type>();
 
                         // Basic assertions.
-                        this.DependentConfigurationTypeToInstanceMap.AsArg().Must().NotBeNull();
+                        this.DependentSerializationConfigurationTypeToInstanceMap.AsArg().Must().NotBeNull();
                         localInterfaceTypesToRegisterImplementationOf.AsArg().Must().NotContainAnyNullElements();
                         localTypesToAutoRegisterWithDiscovery.AsArg().Must().NotContainAnyNullElements();
                         localTypesToAutoRegister.AsArg().Must().NotContainAnyNullElements();
@@ -333,13 +333,13 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Gets a list of <see cref="SerializationConfigurationBase"/>'s that are needed for the current implementation of <see cref="SerializationConfigurationBase"/>.  Optionally overrideable, DEFAULT is empty collection.
         /// </summary>
-        public virtual IReadOnlyCollection<Type> DependentConfigurationTypes => new Type[0];
+        public virtual IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new Type[0];
 
         /// <summary>
         /// Gets the dependent configurations that encompasses any necessary internal types, this should be used by first level inheritor and sealed.
         /// </summary>
         /// <returns>Configurations necessary to accomodate internal types.</returns>
-        public abstract IReadOnlyCollection<Type> InternalDependentConfigurationTypes { get; }
+        public abstract IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes { get; }
 
         /// <summary>
         /// Gets a list of <see cref="Type"/>s to auto-register.
@@ -430,7 +430,7 @@ namespace OBeautifulCode.Serialization
         where T : SerializationConfigurationBase
     {
         /// <inheritdoc />
-        public override IReadOnlyCollection<Type> DependentConfigurationTypes => new[] { typeof(T) };
+        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new[] { typeof(T) };
 
         /// <inheritdoc />
         protected override void RegisterTypes(IReadOnlyCollection<Type> types)
@@ -443,7 +443,7 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <inheritdoc />
-        public sealed override IReadOnlyCollection<Type> InternalDependentConfigurationTypes => new Type[0];
+        public sealed override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new Type[0];
     }
 
     /// <summary>
@@ -456,7 +456,7 @@ namespace OBeautifulCode.Serialization
         where T2 : SerializationConfigurationBase
     {
         /// <inheritdoc />
-        public override IReadOnlyCollection<Type> DependentConfigurationTypes => new[] { typeof(T1), typeof(T2) };
+        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new[] { typeof(T1), typeof(T2) };
 
         /// <inheritdoc />
         protected override void RegisterTypes(IReadOnlyCollection<Type> types)
@@ -469,7 +469,7 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <inheritdoc />
-        public sealed override IReadOnlyCollection<Type> InternalDependentConfigurationTypes => new Type[0];
+        public sealed override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new Type[0];
     }
 
     /// <summary>
@@ -488,7 +488,7 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <inheritdoc />
-        public sealed override IReadOnlyCollection<Type> InternalDependentConfigurationTypes => new Type[0];
+        public sealed override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new Type[0];
     }
 
     /// <summary>
@@ -510,7 +510,7 @@ namespace OBeautifulCode.Serialization
         protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => InternallyRequiredTypes;
 
         /// <inheritdoc />
-        public override IReadOnlyCollection<Type> InternalDependentConfigurationTypes => new Type[0];
+        public override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new Type[0];
     }
 
     /// <summary>
@@ -533,7 +533,7 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <inheritdoc />
-        public override IReadOnlyCollection<Type> InternalDependentConfigurationTypes => new[] { typeof(InternalNullDiscoveryConfiguration) };
+        public override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new[] { typeof(InternalNullDiscoveryConfiguration) };
     }
 
     /// <summary>
@@ -557,7 +557,7 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <inheritdoc />
-        public override IReadOnlyCollection<Type> InternalDependentConfigurationTypes => new Type[0];
+        public override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new Type[0];
     }
 
     /// <summary>

@@ -79,7 +79,7 @@ namespace OBeautifulCode.Serialization.Test
 
             foreach (var serializer in serializers)
             {
-                var configurationTypeRepresentation = serializer.ConfigurationType.ToRepresentation();
+                var configurationTypeRepresentation = serializer.SerializationConfigurationType.ToRepresentation();
 
                 var stringDescription = new SerializationDescription(
                     serializer.SerializationKind,

@@ -98,13 +98,13 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             serializer.Should().NotBeNull();
             serializer.Should().BeOfType<ObcBsonSerializer>();
-            serializer.ConfigurationType.Should().NotBeNull();
-            serializer.ConfigurationType.Should().Be(expectedConfigType);
+            serializer.SerializationConfigurationType.Should().NotBeNull();
+            serializer.SerializationConfigurationType.Should().Be(expectedConfigType);
 
             bsonSerializer.Should().NotBeNull();
             bsonSerializer.Should().BeOfType<ObcBsonSerializer>();
-            bsonSerializer.ConfigurationType.Should().NotBeNull();
-            bsonSerializer.ConfigurationType.Should().Be(expectedConfigType);
+            bsonSerializer.SerializationConfigurationType.Should().NotBeNull();
+            bsonSerializer.SerializationConfigurationType.Should().Be(expectedConfigType);
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<NotSupportedException>();
-            exception.Message.Should().StartWith("Supplied 'serializationDescription' (SerializationDescription: SerializationKind=Bson, SerializationFormat=Binary, CompressionKind=None, ConfigurationTypeRepresentation=, Metadata=,) does not match 'supportedSerializationDescription' (SerializationDescription: SerializationKind=Json, SerializationFormat=String, CompressionKind=None, ConfigurationTypeRepresentation=OBeautifulCode.Representation.System.TypeRepresentation: Namespace = OBeautifulCode.Serialization.Json, Name = GenericDiscoveryJsonSerializationConfiguration`1, AssemblyQualifiedName = OBeautifulCode.Serialization.Json.GenericDiscoveryJsonSerializationConfiguration`1, OBeautifulCode.Serialization.Json");
+            exception.Message.Should().StartWith("Supplied 'serializationDescription' (SerializationDescription: SerializationKind=Bson, SerializationFormat=Binary, CompressionKind=None, SerializationConfigurationTypeRepresentation=, Metadata=,) does not match 'supportedSerializationDescription' (SerializationDescription: SerializationKind=Json, SerializationFormat=String, CompressionKind=None, SerializationConfigurationTypeRepresentation=OBeautifulCode.Representation.System.TypeRepresentation: Namespace = OBeautifulCode.Serialization.Json, Name = GenericDiscoveryJsonSerializationConfiguration`1, AssemblyQualifiedName = OBeautifulCode.Serialization.Json.GenericDiscoveryJsonSerializationConfiguration`1, OBeautifulCode.Serialization.Json");
         }
     }
 }

@@ -149,7 +149,7 @@ namespace OBeautifulCode.Serialization
         private static readonly IFormatProvider FormatProvider = CultureInfo.InvariantCulture;
 
         /// <inheritdoc />
-        public Type ConfigurationType => null;
+        public Type SerializationConfigurationType => null;
 
         /// <summary>
         /// Serializes a <see cref="DateTime"/> to a string.

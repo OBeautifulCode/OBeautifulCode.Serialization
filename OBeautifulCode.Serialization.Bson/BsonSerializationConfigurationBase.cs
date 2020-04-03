@@ -55,7 +55,7 @@ namespace OBeautifulCode.Serialization.Bson
         protected virtual IReadOnlyCollection<RegisteredBsonSerializer> SerializersToRegister => new List<RegisteredBsonSerializer>();
 
         /// <inheritdoc />
-        public sealed override IReadOnlyCollection<Type> InternalDependentConfigurationTypes => new[] { typeof(InternalBsonSerializationConfiguration), typeof(NetDrawingBsonSerializationConfiguration) };
+        public sealed override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new[] { typeof(InternalBsonSerializationConfiguration), typeof(NetDrawingBsonSerializationConfiguration) };
 
         /// <inheritdoc />
         protected sealed override void InternalConfigure()

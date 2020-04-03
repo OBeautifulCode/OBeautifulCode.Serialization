@@ -22,7 +22,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to serialize to a string.
     /// </summary>
-    public interface IPropertyBagSerialize : IHaveConfigurationType
+    public interface IPropertyBagSerialize : IHaveSerializationConfigurationType
     {
         /// <summary>
         /// Serializes an object into a string.
@@ -37,7 +37,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to deserialize from a string.
     /// </summary>
-    public interface IPropertyBagDeserialize : IHaveConfigurationType
+    public interface IPropertyBagDeserialize : IHaveSerializationConfigurationType
     {
         /// <summary>
         /// Deserializes the property bag into an object.

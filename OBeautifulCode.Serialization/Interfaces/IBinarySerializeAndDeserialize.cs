@@ -21,7 +21,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to serialize to a byte array.
     /// </summary>
-    public interface IBinarySerialize : IHaveConfigurationType
+    public interface IBinarySerialize : IHaveSerializationConfigurationType
     {
         /// <summary>
         /// Serializes an object into a byte array.
@@ -38,7 +38,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to deserialize from a byte array.
     /// </summary>
-    public interface IBinaryDeserialize : IHaveConfigurationType
+    public interface IBinaryDeserialize : IHaveSerializationConfigurationType
     {
         /// <summary>
         /// Deserializes the byte array into an object.

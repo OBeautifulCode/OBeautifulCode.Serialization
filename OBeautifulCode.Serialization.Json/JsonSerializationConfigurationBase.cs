@@ -22,7 +22,7 @@ namespace OBeautifulCode.Serialization.Json
             };
 
         /// <inheritdoc />
-        public sealed override IReadOnlyCollection<Type> InternalDependentConfigurationTypes => new[] { typeof(InternalJsonSerializationConfiguration) };
+        public sealed override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new[] { typeof(InternalJsonSerializationConfiguration) };
 
         /// <summary>
         /// Gets the types that have been registered with a converter.

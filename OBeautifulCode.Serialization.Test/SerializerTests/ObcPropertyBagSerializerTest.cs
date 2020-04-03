@@ -242,7 +242,7 @@ namespace OBeautifulCode.Serialization.Test
 
         private class PropertyBagConfig : PropertyBagConfigurationBase
         {
-            public override IReadOnlyCollection<Type> DependentConfigurationTypes => new[] { typeof(PropertyBagConfigDepend) };
+            public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new[] { typeof(PropertyBagConfigDepend) };
         }
 
         private class PropertyBagConfigDepend : PropertyBagConfigurationBase
@@ -380,7 +380,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             public const string CustomSerializedString = "We have a serializer attribute.";
 
-            public Type ConfigurationType => null;
+            public Type SerializationConfigurationType => null;
 
             public string SerializeToString(object objectToSerialize)
             {
@@ -407,7 +407,7 @@ namespace OBeautifulCode.Serialization.Test
 
             public const string CustomSerializedString = "We have a string overwriting serializer attribute.";
 
-            public Type ConfigurationType => null;
+            public Type SerializationConfigurationType => null;
 
             public string SerializeToString(object objectToSerialize)
             {
@@ -436,7 +436,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             public const string CustomSerializedString = "Array of these.";
 
-            public Type ConfigurationType => null;
+            public Type SerializationConfigurationType => null;
 
             public string SerializeToString(object objectToSerialize)
             {
@@ -461,7 +461,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             public const string CustomSerializedString = "Enum attribute.";
 
-            public Type ConfigurationType => null;
+            public Type SerializationConfigurationType => null;
 
             public string SerializeToString(object objectToSerialize)
             {
@@ -486,7 +486,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             public const string CustomSerializedString = "Enum attribute on property.";
 
-            public Type ConfigurationType => null;
+            public Type SerializationConfigurationType => null;
 
             public string SerializeToString(object objectToSerialize)
             {
@@ -591,7 +591,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             public const string CustomSerializedString = "We have a serializer inherited.";
 
-            public Type ConfigurationType => null;
+            public Type SerializationConfigurationType => null;
 
             public string SerializeToString(object objectToSerialize)
             {
