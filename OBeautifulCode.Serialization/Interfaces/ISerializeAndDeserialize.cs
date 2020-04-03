@@ -32,7 +32,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to expose the <see cref="Type" /> of configuration.
     /// </summary>
-    public interface IHaveSerializationConfigurationType
+    public interface IHaveConfigurationType
     {
         /// <summary>
         /// Gets the <see cref="Type" /> of configuration.
