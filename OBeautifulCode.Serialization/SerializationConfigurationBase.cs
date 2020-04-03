@@ -69,7 +69,7 @@ namespace OBeautifulCode.Serialization
             typeof(MethodInfoRepresentation),
 
             // OBC.Serialization:
-            typeof(SerializationDescription),
+            typeof(SerializerDescription),
             typeof(DescribedSerialization),
             typeof(DynamicTypePlaceholder),
         };

@@ -34,17 +34,17 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Provided value (name: 'serializationDescription') is null.");
+            exception.Message.Should().Be("Provided value (name: 'serializerDescription') is null.");
             jsonException.Should().NotBeNull();
             jsonException.Should().BeOfType<ArgumentNullException>();
-            jsonException.Message.Should().Be("Provided value (name: 'serializationDescription') is null.");
+            jsonException.Message.Should().Be("Provided value (name: 'serializerDescription') is null.");
         }
 
         [Fact]
         public static void BuildSerializer___Json___Gets_Json_serializer()
         {
             // Arrange
-            var serializerDescription = new SerializationDescription(
+            var serializerDescription = new SerializerDescription(
                 SerializationKind.Json,
                 SerializationFormat.String,
                 null,
@@ -75,10 +75,10 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Provided value (name: 'serializationDescription') is null.");
+            exception.Message.Should().Be("Provided value (name: 'serializerDescription') is null.");
             bsonException.Should().NotBeNull();
             bsonException.Should().BeOfType<ArgumentNullException>();
-            bsonException.Message.Should().Be("Provided value (name: 'serializationDescription') is null.");
+            bsonException.Message.Should().Be("Provided value (name: 'serializerDescription') is null.");
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var expectedConfigType = typeof(NullBsonSerializationConfiguration);
-            var serializerDescription = new SerializationDescription(
+            var serializerDescription = new SerializerDescription(
                 SerializationKind.Bson,
                 SerializationFormat.String,
                 expectedConfigType.ToRepresentation());
@@ -108,18 +108,18 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
-        public static void SerializationDescriptionToSerializerFactory_BuildSerializer___Works_for_matching_description()
+        public static void SerializerDescriptionToSerializerFactory_BuildSerializer___Works_for_matching_description()
         {
             // Arrange
             var configType = typeof(GenericDiscoveryJsonSerializationConfiguration<string>);
-            var serializerDescription = new SerializationDescription(
+            var serializerDescription = new SerializerDescription(
                 SerializationKind.Json,
                 SerializationFormat.String,
                 configType.ToRepresentation());
 
             var seededSerializer = new ObcJsonSerializer(configType);
 
-            var factory = new SerializationDescriptionToSerializerFactory(serializerDescription, seededSerializer);
+            var factory = new SerializerDescriptionToSerializerFactory(serializerDescription, seededSerializer);
 
             // Act
             var actualSerializer = factory.BuildSerializer(serializerDescription);
@@ -129,20 +129,20 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
-        public static void SerializationDescriptionToSerializerFactory_BuildSerializer___Throws_for_nonmatching_description()
+        public static void SerializerDescriptionToSerializerFactory_BuildSerializer___Throws_for_nonmatching_description()
         {
             // Arrange
             var configType = typeof(GenericDiscoveryJsonSerializationConfiguration<string>);
-            var serializerDescription = new SerializationDescription(
+            var serializerDescription = new SerializerDescription(
                 SerializationKind.Json,
                 SerializationFormat.String,
                 configType.ToRepresentation());
 
             var seededSerializer = new ObcJsonSerializer(configType);
 
-            var factory = new SerializationDescriptionToSerializerFactory(serializerDescription, seededSerializer);
+            var factory = new SerializerDescriptionToSerializerFactory(serializerDescription, seededSerializer);
 
-            var invalidDescription = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary);
+            var invalidDescription = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary);
 
             // Act
             var exception = Record.Exception(() => factory.BuildSerializer(invalidDescription));
@@ -150,7 +150,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<NotSupportedException>();
-            exception.Message.Should().StartWith("Supplied 'serializationDescription' (SerializationDescription: SerializationKind=Bson, SerializationFormat=Binary, CompressionKind=None, SerializationConfigurationTypeRepresentation=, Metadata=,) does not match 'supportedSerializationDescription' (SerializationDescription: SerializationKind=Json, SerializationFormat=String, CompressionKind=None, SerializationConfigurationTypeRepresentation=OBeautifulCode.Representation.System.TypeRepresentation: Namespace = OBeautifulCode.Serialization.Json, Name = GenericDiscoveryJsonSerializationConfiguration`1, AssemblyQualifiedName = OBeautifulCode.Serialization.Json.GenericDiscoveryJsonSerializationConfiguration`1, OBeautifulCode.Serialization.Json");
+            exception.Message.Should().StartWith("Supplied 'serializerDescription' (SerializerDescription: SerializationKind=Bson, SerializationFormat=Binary, CompressionKind=None, ConfigurationTypeRepresentation=, Metadata=,) does not match 'supportedSerializerDescription' (SerializerDescription: SerializationKind=Json, SerializationFormat=String, CompressionKind=None, ConfigurationTypeRepresentation=OBeautifulCode.Representation.System.TypeRepresentation: Namespace = OBeautifulCode.Serialization.Json, Name = GenericDiscoveryJsonSerializationConfiguration`1, AssemblyQualifiedName = OBeautifulCode.Serialization.Json.GenericDiscoveryJsonSerializationConfiguration`1, OBeautifulCode.Serialization.Json");
         }
     }
 }

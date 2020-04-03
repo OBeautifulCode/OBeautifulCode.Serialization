@@ -130,8 +130,8 @@
     <Compile Include="RegistrationDetails.cs" />
     <Compile Include="SerializationConfigurationBase.cs" />
     <Compile Include="SerializationConfigurationManager.cs" />
-    <Compile Include="Models\SerializationDescription.cs" />
-    <Compile Include="SerializationDescriptionToSerializerFactory.cs" />
+    <Compile Include="Models\SerializerDescription.cs" />
+    <Compile Include="SerializerDescriptionToSerializerFactory.cs" />
     <Compile Include="SerializationDirection.cs" />
     <Compile Include="SerializationFormat.cs" />
     <Compile Include="SerializationKind.cs" />

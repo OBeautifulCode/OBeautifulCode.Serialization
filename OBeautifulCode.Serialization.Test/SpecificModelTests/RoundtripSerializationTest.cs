@@ -304,10 +304,10 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
-        public static void RoundtripSerializeDeserialize___Using_SerializationDescription___Works()
+        public static void RoundtripSerializeDeserialize___Using_SerializerDescription___Works()
         {
             // Arrange
-            var expected = A.Dummy<SerializationDescription>();
+            var expected = A.Dummy<SerializerDescription>();
 
             // Act & Assert
             expected.RoundtripSerializeWithEquatableAssertion(false);

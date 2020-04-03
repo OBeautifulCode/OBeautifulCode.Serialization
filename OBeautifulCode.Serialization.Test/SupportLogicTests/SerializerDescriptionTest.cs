@@ -28,7 +28,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void Constructor___Invalid_SerializationKind___Throws()
         {
             // Arrange
-            Action action = () => new SerializationDescription(
+            Action action = () => new SerializerDescription(
                 SerializationKind.Invalid,
                 SerializationFormat.Binary);
 
@@ -45,7 +45,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void Constructor___Invalid_SerializationFormat___Throws()
         {
             // Arrange
-            Action action = () => new SerializationDescription(
+            Action action = () => new SerializerDescription(
                 SerializationKind.Bson,
                 SerializationFormat.Invalid);
 
@@ -62,7 +62,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void Constructor___Invalid_CompressionKind___Throws()
         {
             // Arrange
-            Action action = () => new SerializationDescription(
+            Action action = () => new SerializerDescription(
                 SerializationKind.Bson,
                 SerializationFormat.String,
                 null,
@@ -80,7 +80,7 @@ namespace OBeautifulCode.Serialization.Test
         [Fact]
         public static void Equality___Interface___Implemented()
         {
-            typeof(SerializationDescription).GetInterfaces().SingleOrDefault(_ => _ == typeof(IEquatable<SerializationDescription>)).Should().NotBeNull();
+            typeof(SerializerDescription).GetInterfaces().SingleOrDefault(_ => _ == typeof(IEquatable<SerializerDescription>)).Should().NotBeNull();
         }
 
         [Fact]
@@ -98,43 +98,43 @@ namespace OBeautifulCode.Serialization.Test
                                     {
                                         new
                                             {
-                                                First = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip, metadata1),
-                                                Second = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip, metadata1Plus),
+                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip, metadata1),
+                                                Second = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip, metadata1Plus),
                                             },
                                         new
                                             {
-                                                First = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip, metadata1),
-                                                Second = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip, metadata2),
+                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip, metadata1),
+                                                Second = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip, metadata2),
                                             },
                                         new
                                             {
-                                                First = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip),
-                                                Second = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.None),
+                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip),
+                                                Second = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.None),
                                             },
                                         new
                                             {
-                                                First = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1),
-                                                Second = new SerializationDescription(SerializationKind.Json, SerializationFormat.Binary, typeRepresentation1),
+                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1),
+                                                Second = new SerializerDescription(SerializationKind.Json, SerializationFormat.Binary, typeRepresentation1),
                                             },
                                         new
                                             {
-                                                First = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1),
-                                                Second = new SerializationDescription(SerializationKind.Bson, SerializationFormat.String, typeRepresentation1),
+                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1),
+                                                Second = new SerializerDescription(SerializationKind.Bson, SerializationFormat.String, typeRepresentation1),
                                             },
                                         new
                                             {
-                                                First = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1),
-                                                Second = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation2),
+                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1),
+                                                Second = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation2),
                                             },
                                         new
                                             {
-                                                First = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1),
-                                                Second = (SerializationDescription)null,
+                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1),
+                                                Second = (SerializerDescription)null,
                                             },
                                         new
                                             {
-                                                First = (SerializationDescription)null,
-                                                Second = new SerializationDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation2),
+                                                First = (SerializerDescription)null,
+                                                Second = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation2),
                                             },
                                     }.ToList();
 
@@ -165,13 +165,13 @@ namespace OBeautifulCode.Serialization.Test
                                     {
                                         new
                                             {
-                                                First = new SerializationDescription(serializationKind, serializationRepresentation, typeRepresentation),
-                                                Second = new SerializationDescription(serializationKind, serializationRepresentation, typeRepresentation),
+                                                First = new SerializerDescription(serializationKind, serializationRepresentation, typeRepresentation),
+                                                Second = new SerializerDescription(serializationKind, serializationRepresentation, typeRepresentation),
                                             },
                                         new
                                             {
-                                                First = (SerializationDescription)null,
-                                                Second = (SerializationDescription)null,
+                                                First = (SerializerDescription)null,
+                                                Second = (SerializerDescription)null,
                                             },
                                     }.ToList();
 

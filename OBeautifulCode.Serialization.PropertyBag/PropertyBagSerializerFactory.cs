@@ -33,18 +33,18 @@ namespace OBeautifulCode.Serialization.PropertyBag
         public static ISerializerFactory Instance => InternalInstance;
 
         /// <inheritdoc />
-        public ISerializeAndDeserialize BuildSerializer(SerializationDescription serializationDescription, TypeMatchStrategy typeMatchStrategy = TypeMatchStrategy.NamespaceAndName, MultipleMatchStrategy multipleMatchStrategy = MultipleMatchStrategy.ThrowOnMultiple, UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
+        public ISerializeAndDeserialize BuildSerializer(SerializerDescription serializerDescription, TypeMatchStrategy typeMatchStrategy = TypeMatchStrategy.NamespaceAndName, MultipleMatchStrategy multipleMatchStrategy = MultipleMatchStrategy.ThrowOnMultiple, UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
         {
-            new { serializationDescription }.AsArg().Must().NotBeNull();
+            new { serializerDescription }.AsArg().Must().NotBeNull();
 
             lock (this.sync)
             {
-                var configurationType = serializationDescription.ConfigurationTypeRepresentation?.ResolveFromLoadedTypes(typeMatchStrategy, multipleMatchStrategy);
+                var configurationType = serializerDescription.ConfigurationTypeRepresentation?.ResolveFromLoadedTypes(typeMatchStrategy, multipleMatchStrategy);
 
-                switch (serializationDescription.SerializationKind)
+                switch (serializerDescription.SerializationKind)
                 {
                     case SerializationKind.PropertyBag: return new ObcPropertyBagSerializer(configurationType, unregisteredTypeEncounteredStrategy);
-                    default: throw new NotSupportedException(Invariant($"{nameof(serializationDescription)} from enumeration {nameof(SerializationKind)} of {serializationDescription.SerializationKind} is not supported."));
+                    default: throw new NotSupportedException(Invariant($"{nameof(serializerDescription)} from enumeration {nameof(SerializationKind)} of {serializerDescription.SerializationKind} is not supported."));
                 }
             }
         }

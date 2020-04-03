@@ -26,7 +26,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void Constructor__Should_throw_ArgumentNullException___When_parameter_TypeRepresentation_is_null()
         {
             // Arrange
-            Action action = () => new DescribedSerialization(null, A.Dummy<string>(), A.Dummy<SerializationDescription>());
+            Action action = () => new DescribedSerialization(null, A.Dummy<string>(), A.Dummy<SerializerDescription>());
 
             // Act
             var exception = Record.Exception(action);
@@ -49,7 +49,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Provided value (name: 'serializationDescription') is null.");
+            exception.Message.Should().Be("Provided value (name: 'serializerDescription') is null.");
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace OBeautifulCode.Serialization.Test
             // Arrange
             var typeRepresentation = A.Dummy<TypeRepresentation>();
             var payload = A.Dummy<string>();
-            var serializer = A.Dummy<SerializationDescription>();
+            var serializer = A.Dummy<SerializerDescription>();
             var systemUnderTest = new DescribedSerialization(typeRepresentation, payload, serializer);
 
             // Act
@@ -74,7 +74,7 @@ namespace OBeautifulCode.Serialization.Test
             // Arrange
             var typeRepresentation = A.Dummy<TypeRepresentation>();
             var payload = A.Dummy<string>();
-            var serializer = A.Dummy<SerializationDescription>();
+            var serializer = A.Dummy<SerializerDescription>();
             var systemUnderTest = new DescribedSerialization(typeRepresentation, payload, serializer);
 
             // Act
@@ -90,11 +90,11 @@ namespace OBeautifulCode.Serialization.Test
             // Arrange
             var typeRepresentation = A.Dummy<TypeRepresentation>();
             var payload = A.Dummy<string>();
-            var serializer = A.Dummy<SerializationDescription>();
+            var serializer = A.Dummy<SerializerDescription>();
             var systemUnderTest = new DescribedSerialization(typeRepresentation, payload, serializer);
 
             // Act
-            var actual = systemUnderTest.SerializationDescription;
+            var actual = systemUnderTest.SerializerDescription;
 
             // Assert
             actual.Should().Be(serializer);
@@ -110,35 +110,35 @@ namespace OBeautifulCode.Serialization.Test
             var payload1 = A.Dummy<string>();
             var payload2 = A.Dummy<string>();
 
-            var serializationDescription1 = A.Dummy<SerializationDescription>();
-            var serializationDescription2 = A.Dummy<SerializationDescription>();
+            var serializerDescription1 = A.Dummy<SerializerDescription>();
+            var serializerDescription2 = A.Dummy<SerializerDescription>();
 
             var notEqualTests = new[]
                                     {
                                         new
                                             {
-                                                First = new DescribedSerialization(typeRepresentation1, payload1, serializationDescription1),
-                                                Second = new DescribedSerialization(typeRepresentation2, payload1, serializationDescription1),
+                                                First = new DescribedSerialization(typeRepresentation1, payload1, serializerDescription1),
+                                                Second = new DescribedSerialization(typeRepresentation2, payload1, serializerDescription1),
                                             },
                                         new
                                             {
-                                                First = new DescribedSerialization(typeRepresentation1, payload1, serializationDescription1),
-                                                Second = new DescribedSerialization(typeRepresentation1, payload2, serializationDescription1),
+                                                First = new DescribedSerialization(typeRepresentation1, payload1, serializerDescription1),
+                                                Second = new DescribedSerialization(typeRepresentation1, payload2, serializerDescription1),
                                             },
                                         new
                                             {
-                                                First = new DescribedSerialization(typeRepresentation1, payload1, serializationDescription1),
-                                                Second = new DescribedSerialization(typeRepresentation1, payload1, serializationDescription2),
+                                                First = new DescribedSerialization(typeRepresentation1, payload1, serializerDescription1),
+                                                Second = new DescribedSerialization(typeRepresentation1, payload1, serializerDescription2),
                                             },
                                         new
                                             {
-                                                First = new DescribedSerialization(typeRepresentation1, payload1, serializationDescription1),
+                                                First = new DescribedSerialization(typeRepresentation1, payload1, serializerDescription1),
                                                 Second = (DescribedSerialization)null,
                                             },
                                         new
                                             {
                                                 First = (DescribedSerialization)null,
-                                                Second = new DescribedSerialization(typeRepresentation1, payload1, serializationDescription1),
+                                                Second = new DescribedSerialization(typeRepresentation1, payload1, serializerDescription1),
                                             },
                                     }.ToList();
 
@@ -164,14 +164,14 @@ namespace OBeautifulCode.Serialization.Test
             // Arrange
             var typeRepresentation = typeof(string).ToRepresentation();
             var serializedPayload = A.Dummy<string>();
-            var serializationDescription = A.Dummy<SerializationDescription>();
+            var serializerDescription = A.Dummy<SerializerDescription>();
 
             var notEqualTests = new[]
                                     {
                                         new
                                             {
-                                                First = new DescribedSerialization(typeRepresentation, serializedPayload, serializationDescription),
-                                                Second = new DescribedSerialization(typeRepresentation, serializedPayload, serializationDescription),
+                                                First = new DescribedSerialization(typeRepresentation, serializedPayload, serializerDescription),
+                                                Second = new DescribedSerialization(typeRepresentation, serializedPayload, serializerDescription),
                                             },
                                         new
                                             {
@@ -201,14 +201,14 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var input = new { Item = "item", Items = new[] { "item1", "item2" } };
-            var serializationDescriptionJson = new SerializationDescription(SerializationKind.Json, SerializationFormat.String);
-            var serializationDescriptionBson = new SerializationDescription(SerializationKind.Bson, SerializationFormat.String);
+            var serializerDescriptionJson = new SerializerDescription(SerializationKind.Json, SerializationFormat.String);
+            var serializerDescriptionBson = new SerializerDescription(SerializationKind.Bson, SerializationFormat.String);
 
             // Act
-            var serializedJson = input.ToDescribedSerialization(serializationDescriptionJson);
+            var serializedJson = input.ToDescribedSerialization(serializerDescriptionJson);
             dynamic deserializedJson = serializedJson.DeserializePayload();
 
-            var serializedBson = input.ToDescribedSerialization(serializationDescriptionBson);
+            var serializedBson = input.ToDescribedSerialization(serializerDescriptionBson);
             dynamic deserializedBson = serializedBson.DeserializePayload();
 
             // Assert

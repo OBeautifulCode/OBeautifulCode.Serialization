@@ -81,12 +81,12 @@ namespace OBeautifulCode.Serialization.Test
             {
                 var configurationTypeRepresentation = serializer.SerializationConfigurationType.ToRepresentation();
 
-                var stringDescription = new SerializationDescription(
+                var stringDescription = new SerializerDescription(
                     serializer.SerializationKind,
                     SerializationFormat.String,
                     configurationTypeRepresentation);
 
-                var binaryDescription = new SerializationDescription(
+                var binaryDescription = new SerializerDescription(
                     serializer.SerializationKind,
                     SerializationFormat.Binary,
                     configurationTypeRepresentation);

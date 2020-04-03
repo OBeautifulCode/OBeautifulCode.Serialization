@@ -29,7 +29,7 @@ namespace OBeautifulCode.Serialization.Recipes
         /// </summary>
         /// <typeparam name="T">Type of object to serialize.</typeparam>
         /// <param name="objectToPackageIntoDescribedSerialization">Object to serialize.</param>
-        /// <param name="serializationDescription">Description of the serializer to use.</param>
+        /// <param name="serializerDescription">Description of the serializer to use.</param>
         /// <param name="typeMatchStrategy">Optional type match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="TypeMatchStrategy.NamespaceAndName" />.</param>
         /// <param name="multipleMatchStrategy">Optional multiple match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="MultipleMatchStrategy.ThrowOnMultiple" />.</param>
         /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
@@ -37,14 +37,14 @@ namespace OBeautifulCode.Serialization.Recipes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object", Justification = "Spelling/name is correct.")]
         public static DescribedSerialization ToDescribedSerialization<T>(
             this T objectToPackageIntoDescribedSerialization,
-            SerializationDescription serializationDescription,
+            SerializerDescription serializerDescription,
             TypeMatchStrategy typeMatchStrategy = TypeMatchStrategy.NamespaceAndName,
             MultipleMatchStrategy multipleMatchStrategy = MultipleMatchStrategy.ThrowOnMultiple,
             UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
         {
             return DomainExtensions.ToDescribedSerializationUsingSpecificFactory(
                 objectToPackageIntoDescribedSerialization,
-                serializationDescription,
+                serializerDescription,
                 SerializerFactory.Instance,
                 CompressorFactory.Instance,
                 typeMatchStrategy,

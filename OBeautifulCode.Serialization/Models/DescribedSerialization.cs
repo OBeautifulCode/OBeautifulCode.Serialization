@@ -22,20 +22,20 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="payloadTypeRepresentation">A description of the type of object serialized.</param>
         /// <param name="serializedPayload">The object serialized to a string.</param>
-        /// <param name="serializationDescription">The serializer used to generate the payload.</param>
+        /// <param name="serializerDescription">The serializer used to generate the payload.</param>
         /// <exception cref="ArgumentNullException"><paramref name="payloadTypeRepresentation"/> is null.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="serializedPayload"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="serializedPayload"/> is whitespace.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="serializationDescription"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="serializationDescription"/> is whitespace.</exception>
-        public DescribedSerialization(TypeRepresentation payloadTypeRepresentation, string serializedPayload, SerializationDescription serializationDescription)
+        /// <exception cref="ArgumentNullException"><paramref name="serializerDescription"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="serializerDescription"/> is whitespace.</exception>
+        public DescribedSerialization(TypeRepresentation payloadTypeRepresentation, string serializedPayload, SerializerDescription serializerDescription)
         {
             new { payloadTypeRepresentation }.AsArg().Must().NotBeNull();
-            new { serializationDescription }.AsArg().Must().NotBeNull();
+            new { serializerDescription }.AsArg().Must().NotBeNull();
 
             this.PayloadTypeRepresentation = payloadTypeRepresentation;
             this.SerializedPayload = serializedPayload;
-            this.SerializationDescription = serializationDescription;
+            this.SerializerDescription = serializerDescription;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Gets the description of the serializer used to generate the payload.
         /// </summary>
-        public SerializationDescription SerializationDescription { get; private set; }
+        public SerializerDescription SerializerDescription { get; private set; }
 
         /// <summary>
         /// Equality operator.
@@ -73,7 +73,7 @@ namespace OBeautifulCode.Serialization
 
             return first.PayloadTypeRepresentation == second.PayloadTypeRepresentation
                    && first.SerializedPayload == second.SerializedPayload
-                   && first.SerializationDescription == second.SerializationDescription;
+                   && first.SerializerDescription == second.SerializerDescription;
         }
 
         /// <summary>
@@ -91,6 +91,6 @@ namespace OBeautifulCode.Serialization
         public override bool Equals(object obj) => this == (obj as DescribedSerialization);
 
         /// <inheritdoc />
-        public override int GetHashCode() => HashCodeHelper.Initialize().Hash(this.PayloadTypeRepresentation).Hash(this.SerializedPayload).Hash(this.SerializationDescription).Value;
+        public override int GetHashCode() => HashCodeHelper.Initialize().Hash(this.PayloadTypeRepresentation).Hash(this.SerializedPayload).Hash(this.SerializerDescription).Value;
     }
 }
