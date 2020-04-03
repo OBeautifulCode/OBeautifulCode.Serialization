@@ -7,7 +7,7 @@
 // </auto-generated>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace OBeautifulCode.Type.Recipes
+namespace OBeautifulCode.Type.Test
 {
     using System;
 
@@ -15,14 +15,14 @@ namespace OBeautifulCode.Type.Recipes
 
     using OBeautifulCode.AutoFakeItEasy;
 
-    /// <inheritdoc />
+    /// <summary>
+    /// A Dummy Factory for types in <see cref="OBeautifulCode.Type"/>.
+    /// </summary>
 #if !OBeautifulCodeTypeRecipesProject
-    [System.Diagnostics.DebuggerStepThrough]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Type.Test", "See package version number")]
 #endif
-    // ReSharper disable once UnusedMember.Global
-    public class TypeDummyFactory : IDummyFactory
+    public class TypeDummyFactory : DefaultTypeDummyFactory
     {
         public TypeDummyFactory()
         {
@@ -36,21 +36,6 @@ namespace OBeautifulCode.Type.Recipes
 
                 return result;
             });
-        }
-
-        /// <inheritdoc />
-        public Priority Priority => new FakeItEasy.Priority(1);
-
-        /// <inheritdoc />
-        public bool CanCreate(Type type)
-        {
-            return false;
-        }
-
-        /// <inheritdoc />
-        public object Create(Type type)
-        {
-            return null;
         }
     }
 }
