@@ -21,7 +21,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to serialize to a string.
     /// </summary>
-    public interface IStringSerialize : IHaveConfigurationType
+    public interface IStringSerialize : IHaveSerializationConfigurationType
     {
         /// <summary>
         /// Serializes an object into a string.
@@ -38,7 +38,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to deserialize from a string.
     /// </summary>
-    public interface IStringDeserialize : IHaveConfigurationType
+    public interface IStringDeserialize : IHaveSerializationConfigurationType
     {
         /// <summary>
         /// Deserializes the string into an object.
