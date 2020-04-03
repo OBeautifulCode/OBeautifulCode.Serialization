@@ -167,11 +167,11 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="RoundtripSerializationExtensions.cs" />
     <Compile Include="SerializationDummyFactory.cs" />
-    <Compile Include="SerializerTests\ObcBsonSerializerTest.cs" />
-    <Compile Include="SerializerTests\ObcDateTimeStringSerializerTest.cs" />
-    <Compile Include="SerializerTests\ObcJsonSerializerTest.cs" />
-    <Compile Include="SerializerTests\ObcLambdaBackedSerializerTest.cs" />
-    <Compile Include="SerializerTests\ObcPropertyBagSerializerTest.cs" />
+    <Compile Include="Serializers\ObcBsonSerializerTest.cs" />
+    <Compile Include="Serializers\ObcDateTimeStringSerializerTest.cs" />
+    <Compile Include="Serializers\ObcJsonSerializerTest.cs" />
+    <Compile Include="Serializers\ObcLambdaBackedSerializerTest.cs" />
+    <Compile Include="Serializers\ObcPropertyBagSerializerTest.cs" />
     <Compile Include="SpecificModels\Animal.cs" />
     <Compile Include="SpecificModels\ITopInterface.cs" />
     <Compile Include="SpecificModels\Lighting.cs" />
@@ -192,10 +192,10 @@
     <Compile Include="SpecificModelTests\ParamsConstructorCollectionProperty.cs" />
     <Compile Include="SpecificModelTests\RoundtripSerializationTest.cs" />
     <Compile Include="SpecificModelTests\SerializingAndDeserializingBehaviorOfNull.cs" />
-    <Compile Include="SupportLogicTests\DescribedSerializationTest.cs" />
+    <Compile Include="Models\DescribedSerializationTest.cs" />
     <Compile Include="SupportLogicTests\ExtensionsTest.cs" />
     <Compile Include="SupportLogicTests\FactoryTest.cs" />
-    <Compile Include="SupportLogicTests\SerializerDescriptionTest.cs" />
+    <Compile Include="Models\SerializerDescriptionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include=".analyzers\stylecop.json" />
@@ -237,6 +237,7 @@
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
