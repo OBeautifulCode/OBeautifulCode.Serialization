@@ -18,14 +18,14 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to serialize to and from a byte array or string.
     /// </summary>
-    public interface ISerialize : IStringSerialize, IBinarySerialize, IHaveKind
+    public interface ISerialize : IStringSerialize, IBinarySerialize, IHaveSerializationKind
     {
     }
 
     /// <summary>
     /// Interface to deserialize to and from a byte array or string.
     /// </summary>
-    public interface IDeserialize : IStringDeserialize, IBinaryDeserialize, IHaveKind
+    public interface IDeserialize : IStringDeserialize, IBinaryDeserialize, IHaveSerializationKind
     {
     }
 
@@ -43,7 +43,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to expose the <see cref="SerializationKind" /> of serializer.
     /// </summary>
-    public interface IHaveKind
+    public interface IHaveSerializationKind
     {
         /// <summary>
         /// Gets the <see cref="SerializationKind" /> of the serializer.
