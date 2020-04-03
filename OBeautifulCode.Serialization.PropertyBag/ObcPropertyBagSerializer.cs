@@ -79,7 +79,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         }
 
         /// <inheritdoc />
-        public override SerializationKind Kind => SerializationKind.PropertyBag;
+        public override SerializationKind SerializationKind => SerializationKind.PropertyBag;
 
         /// <summary>
         /// Converts string into a byte array.

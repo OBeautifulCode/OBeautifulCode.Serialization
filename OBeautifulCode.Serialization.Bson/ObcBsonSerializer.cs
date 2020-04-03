@@ -45,7 +45,7 @@ namespace OBeautifulCode.Serialization.Bson
         }
 
         /// <inheritdoc />
-        public override SerializationKind Kind => SerializationKind.Bson;
+        public override SerializationKind SerializationKind => SerializationKind.Bson;
 
         /// <inheritdoc />
         public override byte[] SerializeToBytes(object objectToSerialize)

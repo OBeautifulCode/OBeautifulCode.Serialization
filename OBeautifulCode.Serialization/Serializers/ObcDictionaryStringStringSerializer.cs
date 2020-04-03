@@ -55,17 +55,17 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Gets the key value delimiter.
         /// </summary>
-        public string KeyValueDelimiter { get; private set; }
+        public string KeyValueDelimiter { get; }
 
         /// <summary>
         /// Gets the line delimiter.
         /// </summary>
-        public string LineDelimiter { get; private set; }
+        public string LineDelimiter { get; }
 
         /// <summary>
         /// Gets the null encoding.
         /// </summary>
-        public string NullValueEncoding { get; private set; }
+        public string NullValueEncoding { get; }
 
         /// <inheritdoc />
         public Type ConfigurationType => null;
@@ -79,7 +79,7 @@ namespace OBeautifulCode.Serialization
             }
 
             var dictionary = objectToSerialize as IReadOnlyDictionary<string, string>;
-            dictionary.AsArg(Invariant($"typeMustBeConvertableTo-{nameof(IReadOnlyDictionary<string, string>)}-found-{objectToSerialize.GetType()}")).Must().NotBeNull();
+            dictionary.AsArg(Invariant($"typeMustBeConvertibleTo-{nameof(IReadOnlyDictionary<string, string>)}-found-{objectToSerialize.GetType()}")).Must().NotBeNull();
 
             return this.SerializeDictionaryToString(dictionary);
         }
@@ -131,7 +131,7 @@ namespace OBeautifulCode.Serialization
         {
             if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
             {
-                return default(T);
+                return default;
             }
 
             return (T)this.Deserialize(serializedString, typeof(T));
@@ -148,7 +148,7 @@ namespace OBeautifulCode.Serialization
             new { type }.AsArg().Must().NotBeNull();
 
             var dictionary = type.Construct() as IReadOnlyDictionary<string, string>;
-            dictionary.AsArg(Invariant($"typeMustBeConvertableTo-{nameof(IReadOnlyDictionary<string, string>)}-found-{type}")).Must().NotBeNull();
+            dictionary.AsArg(Invariant($"typeMustBeConvertibleTo-{nameof(IReadOnlyDictionary<string, string>)}-found-{type}")).Must().NotBeNull();
 
             return this.DeserializeToDictionary(serializedString);
         }

@@ -62,7 +62,7 @@ namespace OBeautifulCode.Serialization
         public Type ConfigurationType { get; private set; }
 
         /// <inheritdoc />
-        public abstract SerializationKind Kind { get; }
+        public abstract SerializationKind SerializationKind { get; }
 
         /// <inheritdoc />
         public abstract byte[] SerializeToBytes(object objectToSerialize);

@@ -6,10 +6,14 @@
 
 namespace OBeautifulCode.Serialization
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    using OBeautifulCode.Serialization.Internal;
+
     /// <summary>
     /// Interface to express usage of the Null Object Pattern (like an empty implementation of the contract it honors).
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces", Justification = "Prefer an interface.")]
+    [SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces", Justification = ObcSuppressBecause.CA1040_AvoidEmptyInterfaces_NeedToIdentifyGroupOfTypesAndPreferInterfaceOverAttribute)]
     public interface IImplementNullObjectPattern
     {
     }

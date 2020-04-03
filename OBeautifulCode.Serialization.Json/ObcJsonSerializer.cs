@@ -66,7 +66,7 @@ namespace OBeautifulCode.Serialization.Json
         }
 
         /// <inheritdoc />
-        public override SerializationKind Kind => SerializationKind.Json;
+        public override SerializationKind SerializationKind => SerializationKind.Json;
 
         /// <summary>
         /// Converts JSON string into a byte array.

@@ -48,6 +48,6 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Gets the <see cref="SerializationKind" /> of the serializer.
         /// </summary>
-        SerializationKind Kind { get; }
+        SerializationKind SerializationKind { get; }
     }
 }

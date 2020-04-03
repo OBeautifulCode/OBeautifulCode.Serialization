@@ -7,6 +7,9 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
+
+    using OBeautifulCode.Serialization.Internal;
 
     /// <summary>
     /// Interface to serialize and deserialize to and from a string.
@@ -24,9 +27,12 @@ namespace OBeautifulCode.Serialization
         /// Serializes an object into a string.
         /// </summary>
         /// <param name="objectToSerialize">Object to serialize.</param>
-        /// <returns>Serialized object into a string.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:Identifiers should not contain type names", Justification = "Spelling/name is correct.")]
-        string SerializeToString(object objectToSerialize);
+        /// <returns>
+        /// Serialized object into a string.
+        /// </returns>
+        [SuppressMessage("Microsoft.Naming", "CA1720:Identifiers should not contain type names", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
+        string SerializeToString(
+            object objectToSerialize);
     }
 
     /// <summary>
@@ -39,17 +45,24 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="serializedString">String to deserialize.</param>
         /// <typeparam name="T">Type of object to deserialize.</typeparam>
-        /// <returns>Deserialized string into object of specified type.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:Identifiers should not contain type names", Justification = "Spelling/name is correct.")]
-        T Deserialize<T>(string serializedString);
+        /// <returns>
+        /// Deserialized string into object of specified type.
+        /// </returns>
+        [SuppressMessage("Microsoft.Naming", "CA1720:Identifiers should not contain type names", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
+        T Deserialize<T>(
+            string serializedString);
 
         /// <summary>
         /// Deserializes the string into an object.
         /// </summary>
         /// <param name="serializedString">String to deserialize.</param>
         /// <param name="type">Type to deserialize into.</param>
-        /// <returns>Deserialized string into object of specified type.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:Identifiers should not contain type names", Justification = "Spelling/name is correct.")]
-        object Deserialize(string serializedString, Type type);
+        /// <returns>
+        /// Deserialized string into object of specified type.
+        /// </returns>
+        [SuppressMessage("Microsoft.Naming", "CA1720:Identifiers should not contain type names", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
+        object Deserialize(
+            string serializedString,
+            Type type);
     }
 }
