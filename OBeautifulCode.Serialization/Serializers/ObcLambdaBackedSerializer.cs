@@ -50,43 +50,63 @@ namespace OBeautifulCode.Serialization
         public SerializationKind SerializationKind => SerializationKind.LambdaBacked;
 
         /// <inheritdoc />
-        public byte[] SerializeToBytes(object objectToSerialize)
+        public byte[] SerializeToBytes(
+            object objectToSerialize)
         {
-            return this.serializeBytes(objectToSerialize);
+            var result = this.serializeBytes(objectToSerialize);
+
+            return result;
         }
 
         /// <inheritdoc />
-        public string SerializeToString(object objectToSerialize)
+        public string SerializeToString(
+            object objectToSerialize)
         {
-            return this.serializeString(objectToSerialize);
+            var result = this.serializeString(objectToSerialize);
+
+            return result;
         }
 
         /// <inheritdoc />
-        public T Deserialize<T>(string serializedString)
+        public T Deserialize<T>(
+            string serializedString)
         {
-            return (T)this.Deserialize(serializedString, typeof(T));
+            var result = (T)this.Deserialize(serializedString, typeof(T));
+
+            return result;
         }
 
         /// <inheritdoc />
-        public object Deserialize(string serializedString, Type type)
+        public object Deserialize(
+            string serializedString,
+            Type type)
         {
             new { type }.AsArg().Must().NotBeNull();
 
-            return this.deserializeString(serializedString, type);
+            var result = this.deserializeString(serializedString, type);
+
+            return result;
         }
 
         /// <inheritdoc />
-        public T Deserialize<T>(byte[] serializedBytes)
+        public T Deserialize<T>(
+            byte[] serializedBytes)
         {
-            return (T)this.Deserialize(serializedBytes, typeof(T));
+            var result = (T)this.Deserialize(serializedBytes, typeof(T));
+
+            return result;
         }
 
         /// <inheritdoc />
-        public object Deserialize(byte[] serializedBytes, Type type)
+        public object Deserialize(
+            byte[] serializedBytes,
+            Type type)
         {
             new { type }.AsArg().Must().NotBeNull();
 
-            return this.deserializeBytes(serializedBytes, type);
+            var result = this.deserializeBytes(serializedBytes, type);
+
+            return result;
         }
     }
 }
