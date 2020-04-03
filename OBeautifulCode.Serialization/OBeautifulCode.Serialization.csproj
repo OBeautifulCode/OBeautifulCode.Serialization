@@ -111,6 +111,16 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="Interfaces\IStringSerialize.cs" />
+    <Compile Include="Interfaces\IHaveSerializationKind.cs" />
+    <Compile Include="Interfaces\IStringDeserialize.cs" />
+    <Compile Include="Interfaces\IPropertyBagDeserialize.cs" />
+    <Compile Include="Interfaces\ISerialize.cs" />
+    <Compile Include="Interfaces\IDeserialize.cs" />
+    <Compile Include="Interfaces\IBinaryDeserialize.cs" />
+    <Compile Include="Interfaces\IBinarySerialize.cs" />
+    <Compile Include="Interfaces\IPropertyBagSerialize.cs" />
+    <Compile Include="Interfaces\IHaveSerializationConfigurationType.cs" />
     <Compile Include="Models\DescribedSerialization.cs" />
     <Compile Include="DomainExtensions.cs" />
     <Compile Include="DuplicateRegistrationException.cs" />

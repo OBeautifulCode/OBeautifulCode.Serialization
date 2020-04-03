@@ -7,6 +7,7 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
+
     using OBeautifulCode.Assertion.Recipes;
 
     /// <summary>

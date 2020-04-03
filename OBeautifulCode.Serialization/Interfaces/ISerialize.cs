@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IStringSerializeAndDeserialize.cs" company="OBeautifulCode">
+// <copyright file="ISerialize.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,9 +7,9 @@
 namespace OBeautifulCode.Serialization
 {
     /// <summary>
-    /// Interface to serialize and deserialize to and from a string.
+    /// Interface to serialize to and from a byte array or string.
     /// </summary>
-    public interface IStringSerializeAndDeserialize : IStringSerialize, IStringDeserialize
+    public interface ISerialize : IStringSerialize, IBinarySerialize, IHaveSerializationKind
     {
     }
 }

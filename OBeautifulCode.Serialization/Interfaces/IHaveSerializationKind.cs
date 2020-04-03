@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IStringSerializeAndDeserialize.cs" company="OBeautifulCode">
+// <copyright file="IHaveSerializationKind.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,9 +7,13 @@
 namespace OBeautifulCode.Serialization
 {
     /// <summary>
-    /// Interface to serialize and deserialize to and from a string.
+    /// Interface to expose the <see cref="SerializationKind" /> of serializer.
     /// </summary>
-    public interface IStringSerializeAndDeserialize : IStringSerialize, IStringDeserialize
+    public interface IHaveSerializationKind
     {
+        /// <summary>
+        /// Gets the <see cref="SerializationKind" /> of the serializer.
+        /// </summary>
+        SerializationKind SerializationKind { get; }
     }
 }

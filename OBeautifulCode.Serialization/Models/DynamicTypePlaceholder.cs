@@ -7,7 +7,7 @@
 namespace OBeautifulCode.Serialization
 {
     /// <summary>
-    /// Type to use as a placeholder to control dynamic serialization/deseriailzation.
+    /// Type to use as a placeholder to control dynamic serialization/de-serialization.
     /// </summary>
     public sealed class DynamicTypePlaceholder
     {

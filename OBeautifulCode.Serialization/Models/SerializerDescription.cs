@@ -11,7 +11,6 @@ namespace OBeautifulCode.Serialization
     using System.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
-    using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Compression;
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Representation.System;
