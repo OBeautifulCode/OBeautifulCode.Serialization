@@ -20,7 +20,9 @@ namespace OBeautifulCode.Serialization.Bson
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
+    using OBeautifulCode.Type;
     using OBeautifulCode.Type.Recipes;
+
     using static System.FormattableString;
 
 #pragma warning disable SA1201 // Elements should appear in the correct order

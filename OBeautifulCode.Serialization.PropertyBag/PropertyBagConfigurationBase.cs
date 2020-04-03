@@ -11,6 +11,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
     using System.Linq;
 
     using OBeautifulCode.Collection.Recipes;
+    using OBeautifulCode.Type;
 
     using static System.FormattableString;
 

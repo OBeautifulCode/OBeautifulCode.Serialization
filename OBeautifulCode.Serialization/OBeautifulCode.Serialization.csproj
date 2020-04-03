@@ -47,8 +47,8 @@
     <Reference Include="OBeautifulCode.Representation.System, Version=1.0.40.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OBeautifulCode.Representation.System.1.0.40\lib\net462\OBeautifulCode.Representation.System.dll</HintPath>
     </Reference>
-    <Reference Include="OBeautifulCode.Type, Version=1.0.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OBeautifulCode.Type.1.0.45\lib\net462\OBeautifulCode.Type.dll</HintPath>
+    <Reference Include="OBeautifulCode.Type, Version=1.0.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OBeautifulCode.Type.1.0.46\lib\net462\OBeautifulCode.Type.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
@@ -126,7 +126,6 @@
     <Compile Include="DuplicateRegistrationException.cs" />
     <Compile Include="Models\DynamicTypePlaceholder.cs" />
     <Compile Include="Interfaces\IBinarySerializeAndDeserialize.cs" />
-    <Compile Include="Interfaces\IImplementNullObjectPattern.cs" />
     <Compile Include="Interfaces\IPropertyBagSerializeAndDeserialize.cs" />
     <Compile Include="Interfaces\ISerializeAndDeserialize.cs" />
     <Compile Include="Interfaces\ISerializerFactory.cs" />

@@ -7,9 +7,9 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
-    using System.Collections.Generic;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Type;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;

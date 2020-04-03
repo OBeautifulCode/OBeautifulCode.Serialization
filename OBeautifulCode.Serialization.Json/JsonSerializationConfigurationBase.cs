@@ -9,6 +9,8 @@ namespace OBeautifulCode.Serialization.Json
     using System;
     using System.Collections.Generic;
 
+    using OBeautifulCode.Type;
+
     /// <summary>
     /// Base class to use for creating <see cref="ObcJsonSerializer" /> configuration.
     /// </summary>

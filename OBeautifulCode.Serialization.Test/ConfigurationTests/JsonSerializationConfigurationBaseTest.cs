@@ -13,6 +13,7 @@ namespace OBeautifulCode.Serialization.Test
     using Newtonsoft.Json.Serialization;
 
     using OBeautifulCode.Serialization.Json;
+    using OBeautifulCode.Type;
 
     using Xunit;
 
