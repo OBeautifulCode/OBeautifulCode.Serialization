@@ -126,6 +126,7 @@
     <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorArgumentValidation\ConstructorArgumentValidationTestScenarios{T}.cs" />
     <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorArgumentValidation\ConstructorArgumentValidationTestScenario{T}.cs" />
     <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorArgumentValidation\ValidatedConstructorArgumentValidationTestScenario{T}.cs" />
+    <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorPropertyAssignment\CompareActualToExpectedUsing.cs" />
     <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorPropertyAssignment\ConstructorPropertyAssignmentTestScenarios{T}.cs" />
     <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorPropertyAssignment\ConstructorPropertyAssignmentTestScenario{T}.cs" />
     <Compile Include=".recipes\OBeautifulCode.CodeGen\ConstructorPropertyAssignment\SystemUnderTestExpectedPropertyValue{T}.cs" />

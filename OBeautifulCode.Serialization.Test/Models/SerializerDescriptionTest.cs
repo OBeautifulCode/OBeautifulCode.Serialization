@@ -8,186 +8,127 @@ namespace OBeautifulCode.Serialization.Test
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using FakeItEasy;
 
-    using FluentAssertions;
-
+    using OBeautifulCode.CodeGen.ModelObject.Recipes;
     using OBeautifulCode.Compression;
     using OBeautifulCode.Representation.System;
-    using OBeautifulCode.Serialization.Json;
-
-    using Xunit;
-
-    using static System.FormattableString;
 
     public static partial class SerializerDescriptionTest
     {
-        [Fact]
-        public static void Constructor___Invalid_SerializationKind___Throws()
+        static SerializerDescriptionTest()
         {
-            // Arrange
-            Action action = () => new SerializerDescription(
-                SerializationKind.Invalid,
-                SerializationFormat.Binary);
-
-            // Act
-            var exception = Record.Exception(action);
-
-            // Assert
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<ArgumentOutOfRangeException>();
-            exception.Message.Should().Be("Provided value (name: 'serializationKind') is equal to the comparison value using EqualityExtensions.IsEqualTo<T>, where T: SerializationKind.  Specified 'comparisonValue' is 'Invalid'.");
-        }
-
-        [Fact]
-        public static void Constructor___Invalid_SerializationFormat___Throws()
-        {
-            // Arrange
-            Action action = () => new SerializerDescription(
-                SerializationKind.Bson,
-                SerializationFormat.Invalid);
-
-            // Act
-            var exception = Record.Exception(action);
-
-            // Assert
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<ArgumentOutOfRangeException>();
-            exception.Message.Should().Be("Provided value (name: 'serializationFormat') is equal to the comparison value using EqualityExtensions.IsEqualTo<T>, where T: SerializationFormat.  Specified 'comparisonValue' is 'Invalid'.");
-        }
-
-        [Fact]
-        public static void Constructor___Invalid_CompressionKind___Throws()
-        {
-            // Arrange
-            Action action = () => new SerializerDescription(
-                SerializationKind.Bson,
-                SerializationFormat.String,
-                null,
-                CompressionKind.Invalid);
-
-            // Act
-            var exception = Record.Exception(action);
-
-            // Assert
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<ArgumentOutOfRangeException>();
-            exception.Message.Should().Be("Provided value (name: 'compressionKind') is equal to the comparison value using EqualityExtensions.IsEqualTo<T>, where T: CompressionKind.  Specified 'comparisonValue' is 'Invalid'.");
-        }
-
-        [Fact]
-        public static void Equality___Interface___Implemented()
-        {
-            typeof(SerializerDescription).GetInterfaces().SingleOrDefault(_ => _ == typeof(IEquatable<SerializerDescription>)).Should().NotBeNull();
-        }
-
-        [Fact]
-        public static void EqualityLogic___Should_be_valid___When_different_data()
-        {
-            // Arrange
-            var typeRepresentation1 = typeof(string).ToRepresentation();
-            var typeRepresentation2 = typeof(decimal).ToRepresentation();
-
-            var metadata1 = new Dictionary<string, string> { { A.Dummy<string>(), A.Dummy<string>() } };
-            var metadata1Plus = new Dictionary<string, string> { { A.Dummy<string>(), A.Dummy<string>() } };
-            var metadata2 = new Dictionary<string, string> { { A.Dummy<string>(), A.Dummy<string>() } };
-
-            var notEqualTests = new[]
-                                    {
-                                        new
-                                            {
-                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip, metadata1),
-                                                Second = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip, metadata1Plus),
-                                            },
-                                        new
-                                            {
-                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip, metadata1),
-                                                Second = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip, metadata2),
-                                            },
-                                        new
-                                            {
-                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.DotNetZip),
-                                                Second = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1, CompressionKind.None),
-                                            },
-                                        new
-                                            {
-                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1),
-                                                Second = new SerializerDescription(SerializationKind.Json, SerializationFormat.Binary, typeRepresentation1),
-                                            },
-                                        new
-                                            {
-                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1),
-                                                Second = new SerializerDescription(SerializationKind.Bson, SerializationFormat.String, typeRepresentation1),
-                                            },
-                                        new
-                                            {
-                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1),
-                                                Second = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation2),
-                                            },
-                                        new
-                                            {
-                                                First = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation1),
-                                                Second = (SerializerDescription)null,
-                                            },
-                                        new
-                                            {
-                                                First = (SerializerDescription)null,
-                                                Second = new SerializerDescription(SerializationKind.Bson, SerializationFormat.Binary, typeRepresentation2),
-                                            },
-                                    }.ToList();
-
-            // Act & Assert
-            notEqualTests.ForEach(
-                _ =>
+            ConstructorArgumentValidationTestScenarios
+                .RemoveAllScenarios()
+                .AddScenario(() =>
+                    new ConstructorArgumentValidationTestScenario<SerializerDescription>
                     {
-                        if (_.First != null && _.Second != null)
+                        Name = "constructor should throw ArgumentException when parameter 'serializationKind' is SerializationKind.Invalid scenario",
+                        ConstructionFunc = () =>
                         {
-                            (_.First.GetHashCode() == _.Second.GetHashCode()).Should().BeFalse(Invariant($"First: {_.First}; Second: {_.Second}"));
-                            _.First.Equals(_.Second).Should().BeFalse(Invariant($"First: {_.First}; Second: {_.Second}"));
-                            _.First.Equals((object)_.Second).Should().BeFalse(Invariant($"First: {_.First}; Second: {_.Second}"));
-                        }
+                            var referenceObject = A.Dummy<SerializerDescription>();
 
-                        (_.First == _.Second).Should().BeFalse(Invariant($"First: {_.First}; Second: {_.Second}"));
-                        (_.First != _.Second).Should().BeTrue(Invariant($"First: {_.First}; Second: {_.Second}"));
+                            var result = new SerializerDescription(
+                                SerializationKind.Invalid,
+                                referenceObject.SerializationFormat,
+                                A.Dummy<TypeRepresentation>(),
+                                referenceObject.CompressionKind,
+                                referenceObject.Metadata);
+
+                            return result;
+                        },
+                        ExpectedExceptionType = typeof(ArgumentOutOfRangeException),
+                        ExpectedExceptionMessageContains = new[] { "serializationKind" },
+                    })
+                .AddScenario(() =>
+                    new ConstructorArgumentValidationTestScenario<SerializerDescription>
+                    {
+                        Name = "constructor should throw ArgumentException when parameter 'serializationFormat' is SerializationFormat.Invalid scenario",
+                        ConstructionFunc = () =>
+                        {
+                            var referenceObject = A.Dummy<SerializerDescription>();
+
+                            var result = new SerializerDescription(
+                                referenceObject.SerializationKind,
+                                SerializationFormat.Invalid,
+                                A.Dummy<TypeRepresentation>(),
+                                referenceObject.CompressionKind,
+                                referenceObject.Metadata);
+
+                            return result;
+                        },
+                        ExpectedExceptionType = typeof(ArgumentOutOfRangeException),
+                        ExpectedExceptionMessageContains = new[] { "serializationFormat" },
+                    })
+                .AddScenario(() =>
+                    new ConstructorArgumentValidationTestScenario<SerializerDescription>
+                    {
+                        Name = "constructor should throw ArgumentException when parameter 'compressionKind' is CompressionKind.Invalid scenario",
+                        ConstructionFunc = () =>
+                        {
+                            var referenceObject = A.Dummy<SerializerDescription>();
+
+                            var result = new SerializerDescription(
+                                referenceObject.SerializationKind,
+                                referenceObject.SerializationFormat,
+                                A.Dummy<TypeRepresentation>(),
+                                CompressionKind.Invalid,
+                                referenceObject.Metadata);
+
+                            return result;
+                        },
+                        ExpectedExceptionType = typeof(ArgumentOutOfRangeException),
+                        ExpectedExceptionMessageContains = new[] { "compressionKind" },
                     });
-        }
 
-        [Fact]
-        public static void EqualityLogic___Should_be_valid___When_same_data()
-        {
-            // Arrange
-            var typeRepresentation = typeof(string).ToRepresentation();
-            var serializationKind = SerializationKind.Bson;
-            var serializationRepresentation = SerializationFormat.Binary;
-            var notEqualTests = new[]
-                                    {
-                                        new
-                                            {
-                                                First = new SerializerDescription(serializationKind, serializationRepresentation, typeRepresentation),
-                                                Second = new SerializerDescription(serializationKind, serializationRepresentation, typeRepresentation),
-                                            },
-                                        new
-                                            {
-                                                First = (SerializerDescription)null,
-                                                Second = (SerializerDescription)null,
-                                            },
-                                    }.ToList();
-
-            // Act & Assert
-            notEqualTests.ForEach(
-                _ =>
+            ConstructorPropertyAssignmentTestScenarios
+                .AddScenario(() =>
+                    new ConstructorPropertyAssignmentTestScenario<SerializerDescription>
                     {
-                        if (_.First != null && _.Second != null)
+                        Name = "ConfigurationTypeRepresentation should return null passed to constructor parameter 'configurationTypeRepresentation' when getting",
+                        SystemUnderTestExpectedPropertyValueFunc = () =>
                         {
-                            _.First.Equals(_.Second).Should().BeTrue(Invariant($"First: {_.First}; Second: {_.Second}"));
-                            _.First.Equals((object)_.Second).Should().BeTrue(Invariant($"First: {_.First}; Second: {_.Second}"));
-                            (_.First.GetHashCode() == _.Second.GetHashCode()).Should().BeTrue(Invariant($"First: {_.First}; Second: {_.Second}"));
-                        }
+                            var referenceObject = A.Dummy<SerializerDescription>();
 
-                        (_.First == _.Second).Should().BeTrue(Invariant($"First: {_.First}; Second: {_.Second}"));
-                        (_.First != _.Second).Should().BeFalse(Invariant($"First: {_.First}; Second: {_.Second}"));
+                            var result = new SystemUnderTestExpectedPropertyValue<SerializerDescription>
+                            {
+                                SystemUnderTest = new SerializerDescription(
+                                    referenceObject.SerializationKind,
+                                    referenceObject.SerializationFormat,
+                                    null,
+                                    referenceObject.CompressionKind,
+                                    referenceObject.Metadata),
+                                ExpectedPropertyValue = null,
+                            };
+
+                            return result;
+                        },
+                        PropertyName = nameof(SerializerDescription.ConfigurationTypeRepresentation),
+                    })
+                .AddScenario(() =>
+                    new ConstructorPropertyAssignmentTestScenario<SerializerDescription>
+                    {
+                        Name = "Metadata should return empty Dictionary<string, string> when null is passed to constructor parameter 'metadata' when getting",
+                        SystemUnderTestExpectedPropertyValueFunc = () =>
+                        {
+                            var referenceObject = A.Dummy<SerializerDescription>();
+
+                            var result = new SystemUnderTestExpectedPropertyValue<SerializerDescription>
+                            {
+                                SystemUnderTest = new SerializerDescription(
+                                    referenceObject.SerializationKind,
+                                    referenceObject.SerializationFormat,
+                                    referenceObject.ConfigurationTypeRepresentation,
+                                    referenceObject.CompressionKind,
+                                    null),
+                                ExpectedPropertyValue = new Dictionary<string, string>(),
+                            };
+
+                            return result;
+                        },
+                        PropertyName = nameof(SerializerDescription.Metadata),
+                        CompareActualToExpectedUsing = CompareActualToExpectedUsing.ValueEquality,
                     });
         }
     }
