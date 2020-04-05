@@ -7,13 +7,16 @@
 namespace OBeautifulCode.Serialization.Test
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     using FakeItEasy;
 
     using OBeautifulCode.CodeGen.ModelObject.Recipes;
+    using OBeautifulCode.Serialization.Test.Internal;
 
     public static partial class DescribedSerializationTest
     {
+        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = ObcSuppressBecause.CA1810_InitializeReferenceTypeStaticFieldsInline_FieldsDeclaredInCodeGeneratedPartialTestClass)]
         static DescribedSerializationTest()
         {
             ConstructorArgumentValidationTestScenarios
