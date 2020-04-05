@@ -123,7 +123,7 @@
     <Compile Include="Interfaces\IHaveSerializationConfigurationType.cs" />
     <Compile Include="Models\DescribedSerialization.cs" />
     <Compile Include="DomainExtensions.cs" />
-    <Compile Include="DuplicateRegistrationException.cs" />
+    <Compile Include="Exceptions\DuplicateRegistrationException.cs" />
     <Compile Include="Models\DescribedSerialization.designer.cs">
       <DependentUpon>DescribedSerialization.cs</DependentUpon>
     </Compile>
@@ -140,7 +140,7 @@
     <Compile Include="Models\SerializerDescription.designer.cs">
       <DependentUpon>SerializerDescription.cs</DependentUpon>
     </Compile>
-    <Compile Include="ObcSerializationException.cs" />
+    <Compile Include="Exceptions\ObcSerializationException.cs" />
     <Compile Include="ObcStringSerializerAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -150,16 +150,16 @@
     <Compile Include="SerializationConfigurationManager.cs" />
     <Compile Include="Models\SerializerDescription.cs" />
     <Compile Include="SerializerDescriptionToSerializerFactory.cs" />
-    <Compile Include="SerializationDirection.cs" />
-    <Compile Include="SerializationFormat.cs" />
-    <Compile Include="SerializationKind.cs" />
+    <Compile Include="Enums\SerializationDirection.cs" />
+    <Compile Include="Enums\SerializationFormat.cs" />
+    <Compile Include="Enums\SerializationKind.cs" />
     <Compile Include="SerializerBase.cs" />
     <Compile Include="Serializers\DateTime\DateTimeParsingSettings.cs" />
     <Compile Include="Serializers\DateTime\SerializedDateTimeKind.cs" />
     <Compile Include="Serializers\ObcDateTimeStringSerializer.cs" />
     <Compile Include="Serializers\ObcDictionaryStringStringSerializer.cs" />
     <Compile Include="Serializers\ObcLambdaBackedSerializer.cs" />
-    <Compile Include="UnregisteredTypeAttemptException.cs" />
+    <Compile Include="Exceptions\UnregisteredTypeAttemptException.cs" />
     <Compile Include="UnregisteredTypeEncounteredStrategy.cs" />
     <AdditionalFiles Include=".analyzers\stylecop.json" />
     <None Include=".analyzers\release.ruleset" />

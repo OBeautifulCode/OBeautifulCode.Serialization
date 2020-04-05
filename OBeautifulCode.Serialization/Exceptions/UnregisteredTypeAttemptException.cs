@@ -12,7 +12,9 @@ namespace OBeautifulCode.Serialization
     using OBeautifulCode.Assertion.Recipes;
 
     /// <summary>
-    /// Exception for trying to perform an operation on a type that was never registered and a <see cref="UnregisteredTypeEncounteredStrategy" /> value of <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.
+    /// Exception for trying to perform an operation on a type that was never registered
+    /// and a <see cref="UnregisteredTypeEncounteredStrategy" /> value of
+    /// <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.
     /// </summary>
     [Serializable]
     public class UnregisteredTypeAttemptException : Exception
@@ -28,7 +30,8 @@ namespace OBeautifulCode.Serialization
         /// Initializes a new instance of the <see cref="UnregisteredTypeAttemptException"/> class.
         /// </summary>
         /// <param name="message">Message for exception.</param>
-        public UnregisteredTypeAttemptException(string message)
+        public UnregisteredTypeAttemptException(
+            string message)
             : base(message)
         {
         }
@@ -38,7 +41,9 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="message">Message for exception.</param>
         /// <param name="typeAttempted">The type that an operation was attempted on.</param>
-        public UnregisteredTypeAttemptException(string message, Type typeAttempted)
+        public UnregisteredTypeAttemptException(
+            string message,
+            Type typeAttempted)
             : base(message)
         {
             new { typeAttempted }.AsArg().Must().NotBeNull();
@@ -51,7 +56,9 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="message">Message for exception.</param>
         /// <param name="innerException">Inner exception.</param>
-        public UnregisteredTypeAttemptException(string message, Exception innerException)
+        public UnregisteredTypeAttemptException(
+            string message,
+            Exception innerException)
             : base(message, innerException)
         {
         }
@@ -61,7 +68,9 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="info">Serialization info.</param>
         /// <param name="context">Reading context.</param>
-        protected UnregisteredTypeAttemptException(SerializationInfo info, StreamingContext context)
+        protected UnregisteredTypeAttemptException(
+            SerializationInfo info,
+            StreamingContext context)
             : base(info, context)
         {
         }
@@ -72,7 +81,9 @@ namespace OBeautifulCode.Serialization
         public Type TypeAttempted { get; private set; }
 
         /// <inheritdoc />
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override void GetObjectData(
+            SerializationInfo info,
+            StreamingContext context)
         {
             base.GetObjectData(info, context);
 

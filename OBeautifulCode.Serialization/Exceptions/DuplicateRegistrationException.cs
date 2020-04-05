@@ -30,7 +30,8 @@ namespace OBeautifulCode.Serialization
         /// Initializes a new instance of the <see cref="DuplicateRegistrationException"/> class.
         /// </summary>
         /// <param name="message">Message for exception.</param>
-        public DuplicateRegistrationException(string message)
+        public DuplicateRegistrationException(
+            string message)
             : base(message)
         {
         }
@@ -40,7 +41,9 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="message">Message for exception.</param>
         /// <param name="typesAttempted">The types that were attempting to be registered that are already handled.</param>
-        public DuplicateRegistrationException(string message, ICollection<Type> typesAttempted)
+        public DuplicateRegistrationException(
+            string message,
+            ICollection<Type> typesAttempted)
             : base(message)
         {
             new { typesAttempted }.AsArg().Must().NotBeNull().And().NotBeEmptyEnumerable();
@@ -53,7 +56,9 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="message">Message for exception.</param>
         /// <param name="innerException">Inner exception.</param>
-        public DuplicateRegistrationException(string message, Exception innerException)
+        public DuplicateRegistrationException(
+            string message,
+            Exception innerException)
             : base(message, innerException)
         {
         }
@@ -63,7 +68,9 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="info">Serialization info.</param>
         /// <param name="context">Reading context.</param>
-        protected DuplicateRegistrationException(SerializationInfo info, StreamingContext context)
+        protected DuplicateRegistrationException(
+            SerializationInfo info,
+            StreamingContext context)
             : base(info, context)
         {
         }
@@ -74,7 +81,9 @@ namespace OBeautifulCode.Serialization
         public IReadOnlyCollection<Type> TypesAttempted { get; private set; }
 
         /// <inheritdoc />
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override void GetObjectData(
+            SerializationInfo info,
+            StreamingContext context)
         {
             base.GetObjectData(info, context);
 

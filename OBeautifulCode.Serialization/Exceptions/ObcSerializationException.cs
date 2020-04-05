@@ -26,7 +26,8 @@ namespace OBeautifulCode.Serialization
         /// Initializes a new instance of the <see cref="ObcSerializationException"/> class.
         /// </summary>
         /// <param name="message">Message for exception.</param>
-        public ObcSerializationException(string message)
+        public ObcSerializationException(
+            string message)
             : base(message)
         {
         }
@@ -36,7 +37,9 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="message">Message for exception.</param>
         /// <param name="innerException">Inner exception.</param>
-        public ObcSerializationException(string message, Exception innerException)
+        public ObcSerializationException(
+            string message,
+            Exception innerException)
             : base(message, innerException)
         {
         }
@@ -46,7 +49,9 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="info">Serialization info.</param>
         /// <param name="context">Reading context.</param>
-        protected ObcSerializationException(SerializationInfo info, StreamingContext context)
+        protected ObcSerializationException(
+            SerializationInfo info,
+            StreamingContext context)
             : base(info, context)
         {
         }
