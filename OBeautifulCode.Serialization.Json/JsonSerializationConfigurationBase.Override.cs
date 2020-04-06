@@ -34,7 +34,7 @@ namespace OBeautifulCode.Serialization.Json
                 dependentConfigTypes.AddRange(dependentConfig.GetDependentSerializationConfigurationTypesWithInternalIfApplicable());
 
                 this.ProcessConverter(dependentConfig.RegisteredConverters, false);
-                this.ProcessInheritedTypeConverterTypes(dependentConfig.RegisteredTypeToDetailsMap.Keys.ToList());
+                this.AddHierarchyParticipatingTypes(dependentConfig.RegisteredTypeToDetailsMap.Keys.ToList());
             }
 
             var converters = (this.ConvertersToRegister ?? new RegisteredJsonConverter[0]).ToList();
@@ -55,7 +55,7 @@ namespace OBeautifulCode.Serialization.Json
             var discoveredRegistrationDetails = new RegistrationDetails(this.GetType());
             this.MutableRegisteredTypeToDetailsMap.AddRange(types.ToDictionary(k => k, v => discoveredRegistrationDetails));
 
-            this.ProcessInheritedTypeConverterTypes(types);
+            this.AddHierarchyParticipatingTypes(types);
         }
 
         private IReadOnlyCollection<Type> ProcessConverter(IList<RegisteredJsonConverter> registeredConverters, bool checkForAlreadyRegistered = true)
@@ -79,14 +79,14 @@ namespace OBeautifulCode.Serialization.Json
             return handledTypes;
         }
 
-        private void ProcessInheritedTypeConverterTypes(IReadOnlyCollection<Type> types)
+        private void AddHierarchyParticipatingTypes(IReadOnlyCollection<Type> types)
         {
             var inheritedTypeConverterTypes = types.Where(t =>
                 (!InheritedTypeConverterBlackList.Contains(t)) &&
                 (t.IsAbstract || t.IsInterface || types.Any(a => (a != t) && (t.IsAssignableTo(a) || a.IsAssignableTo(t))))).Distinct().ToList();
 
             // TODO: what info do we want to capture here? should we give registration details?
-            this.InheritedTypesToHandle.AddRange(inheritedTypeConverterTypes.Except(this.TypesWithConverters));
+            this.HierarchyParticipatingTypes.AddRange(inheritedTypeConverterTypes.Except(this.TypesWithConverters));
         }
     }
 }

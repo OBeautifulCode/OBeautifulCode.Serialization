@@ -37,9 +37,9 @@ namespace OBeautifulCode.Serialization.Json
         protected IList<RegisteredJsonConverter> RegisteredConverters { get; } = new List<RegisteredJsonConverter>();
 
         /// <summary>
-        /// Gets the inherited types to handle.
+        /// Gets the types that participate in a hierarchy.
         /// </summary>
-        protected HashSet<Type> InheritedTypesToHandle { get; } = new HashSet<Type>();
+        protected HashSet<Type> HierarchyParticipatingTypes { get; } = new HashSet<Type>();
 
         /// <summary>
         /// Gets the types with registered converters that yield a string as the output (this allows for standard use as a key in a dictionary).

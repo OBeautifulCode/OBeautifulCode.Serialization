@@ -221,7 +221,7 @@ namespace OBeautifulCode.Serialization.Json
                     new DateTimeJsonConverter(),
                     new StringEnumConverter { CamelCaseText = true },
                     new SecureStringJsonConverter(),
-                    new InheritedTypeReaderJsonConverter(this.InheritedTypesToHandle),
+                    new InheritedTypeReaderJsonConverter(this.HierarchyParticipatingTypes),
                     new DictionaryJsonConverter(this.TypesWithStringConverters),
                     new KeyValueArrayDictionaryJsonConverter(this.TypesWithStringConverters),
                 }).ToList();
@@ -237,7 +237,7 @@ namespace OBeautifulCode.Serialization.Json
                         new SecureStringJsonConverter(),
                     }).Concat(formattingKind == JsonFormattingKind.Minimal
                     ? new JsonConverter[0]
-                    : new[] { new InheritedTypeWriterJsonConverter(this.InheritedTypesToHandle) })
+                    : new[] { new InheritedTypeWriterJsonConverter(this.HierarchyParticipatingTypes) })
                 .Concat(
                     new JsonConverter[]
                     {
