@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SerializerBase.cs" company="OBeautifulCode">
+// <copyright file="ConfiguredSerializerBase.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -15,9 +15,9 @@ namespace OBeautifulCode.Serialization
     using static System.FormattableString;
 
     /// <summary>
-    /// Represents a serialized object along with a description of the type of the object.
+    /// Base serializer to handle activation of configuration type.
     /// </summary>
-    public abstract class SerializerBase : ISerializeAndDeserialize
+    public abstract class ConfiguredSerializerBase : ISerializeAndDeserialize
     {
         /// <summary>
         /// Strategy on how to deal with unregistered types.
@@ -37,11 +37,11 @@ namespace OBeautifulCode.Serialization
 #pragma warning restore SA1401 // Fields should be private
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SerializerBase"/> class.
+        /// Initializes a new instance of the <see cref="ConfiguredSerializerBase"/> class.
         /// </summary>
         /// <param name="configurationType">Configuration type to use.</param>
         /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; if the type is a <see cref="IImplementNullObjectPattern" /> and value is default then <see cref="UnregisteredTypeEncounteredStrategy.Throw" /> is used.</param>
-        protected SerializerBase(
+        protected ConfiguredSerializerBase(
             Type configurationType,
             UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy)
         {

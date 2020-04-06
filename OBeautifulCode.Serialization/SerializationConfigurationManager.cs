@@ -108,12 +108,7 @@ namespace OBeautifulCode.Serialization
                 {
                     var instance = (SerializationConfigurationBase)configurationType.Construct();
 
-                    var allDependentConfigTypes = instance.DependentSerializationConfigurationTypes.ToList();
-
-                    if (!(instance is IDoNotNeedInternalDependencies))
-                    {
-                        allDependentConfigTypes.AddRange(instance.InternalDependentSerializationConfigurationTypes);
-                    }
+                    var allDependentConfigTypes = instance.GetDependentSerializationConfigurationTypesWithInternalIfApplicable().ToList();
 
                     allDependentConfigTypes = allDependentConfigTypes.Distinct().ToList();
 
@@ -124,7 +119,7 @@ namespace OBeautifulCode.Serialization
                     var rogueDependents = allDependentConfigTypes.Where(_ => _.GetInheritorOfSerializationBase() != configInheritor).ToList();
                     if (rogueDependents.Any())
                     {
-                        throw new InvalidOperationException(Invariant($"Configuration {configurationType} has {nameof(instance.DependentSerializationConfigurationTypes)} ({string.Join(",", rogueDependents)}) that do not share the same first layer of inheritance {configInheritor}."));
+                        throw new InvalidOperationException(Invariant($"Configuration {configurationType} has {nameof(instance.GetDependentSerializationConfigurationTypesWithInternalIfApplicable)} ({string.Join(",", rogueDependents)}) that do not share the same first layer of inheritance {configInheritor}."));
                     }
 
                     var dependentConfigTypeToConfigMap = new Dictionary<Type, SerializationConfigurationBase>();

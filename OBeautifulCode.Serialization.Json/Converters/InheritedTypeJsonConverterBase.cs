@@ -43,7 +43,9 @@ namespace OBeautifulCode.Serialization.Json
         protected bool ShouldBeHandledByThisConverter(
             Type objectType)
         {
-            return this.typesToHandle.Contains(objectType);
+            var result = this.typesToHandle.Contains(objectType);
+
+            return result;
         }
     }
 }

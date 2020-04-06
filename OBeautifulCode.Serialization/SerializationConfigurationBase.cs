@@ -336,6 +336,26 @@ namespace OBeautifulCode.Serialization
         public virtual IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new Type[0];
 
         /// <summary>
+        /// Gets all specified dependent configuration types, including all internal configuration types
+        /// unless this this configuration type is <see cref="IDoNotNeedInternalDependencies"/>.
+        /// </summary>
+        /// <returns>
+        /// All specified dependent configuration types, including all internal configuration types
+        /// unless this this configuration type is <see cref="IDoNotNeedInternalDependencies"/>.
+        /// </returns>
+        public IReadOnlyCollection<Type> GetDependentSerializationConfigurationTypesWithInternalIfApplicable()
+        {
+            var result = this.DependentSerializationConfigurationTypes.ToList();
+
+            if (!(this is IDoNotNeedInternalDependencies))
+            {
+                result.AddRange(this.InternalDependentSerializationConfigurationTypes);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Gets the dependent configurations that encompasses any necessary internal types, this should be used by first level inheritor and sealed.
         /// </summary>
         /// <returns>Configurations necessary to accomodate internal types.</returns>

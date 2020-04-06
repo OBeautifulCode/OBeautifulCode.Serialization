@@ -20,7 +20,7 @@ namespace OBeautifulCode.Serialization.Json
     /// <summary>
     /// JSON serializer.
     /// </summary>
-    public class ObcJsonSerializer : SerializerBase
+    public class ObcJsonSerializer : ConfiguredSerializerBase
     {
         /// <summary>
         /// Encoding to use for conversion in and out of bytes.

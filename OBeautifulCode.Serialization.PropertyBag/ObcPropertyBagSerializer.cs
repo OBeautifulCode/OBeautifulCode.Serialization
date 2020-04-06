@@ -25,7 +25,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
     /// Serializer for moving in and out of a <see cref="Dictionary{TKey,TValue} "/> for string, string.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "This is not a problem.")]
-    public class ObcPropertyBagSerializer : SerializerBase, IPropertyBagSerializeAndDeserialize
+    public class ObcPropertyBagSerializer : ConfiguredSerializerBase, IPropertyBagSerializeAndDeserialize
     {
         /// <summary>
         /// Reserved key for storing <see cref="Type.FullName" />.

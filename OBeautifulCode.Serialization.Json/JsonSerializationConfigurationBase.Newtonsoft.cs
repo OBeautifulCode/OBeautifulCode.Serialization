@@ -229,7 +229,7 @@ namespace OBeautifulCode.Serialization.Json
 
         private IList<JsonConverter> GetDefaultSerializingConverters(JsonFormattingKind formattingKind)
         {
-            return new JsonConverter[0].Concat(
+            var result = new JsonConverter[0].Concat(
                     new JsonConverter[]
                     {
                         new DateTimeJsonConverter(),
@@ -244,6 +244,8 @@ namespace OBeautifulCode.Serialization.Json
                         // new DictionaryJsonConverter(this.TypesWithStringConverters) - this converter cannot write (CanWrite => false)
                         new KeyValueArrayDictionaryJsonConverter(this.TypesWithStringConverters),
                     }).ToList();
+
+            return result;
         }
     }
 }

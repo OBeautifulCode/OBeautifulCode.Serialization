@@ -24,14 +24,14 @@ namespace OBeautifulCode.Serialization.Json
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
         {
-            var dependentConfigTypes = new List<Type>(this.DependentSerializationConfigurationTypes.Reverse());
+            var dependentConfigTypes = new List<Type>(this.GetDependentSerializationConfigurationTypesWithInternalIfApplicable().Reverse());
             while (dependentConfigTypes.Any())
             {
                 var type = dependentConfigTypes.Last();
                 dependentConfigTypes.RemoveAt(dependentConfigTypes.Count - 1);
 
                 var dependentConfig = (JsonSerializationConfigurationBase)this.DependentSerializationConfigurationTypeToInstanceMap[type];
-                dependentConfigTypes.AddRange(dependentConfig.DependentSerializationConfigurationTypes);
+                dependentConfigTypes.AddRange(dependentConfig.GetDependentSerializationConfigurationTypesWithInternalIfApplicable());
 
                 this.ProcessConverter(dependentConfig.RegisteredConverters, false);
                 this.ProcessInheritedTypeConverterTypes(dependentConfig.RegisteredTypeToDetailsMap.Keys.ToList());
@@ -82,8 +82,8 @@ namespace OBeautifulCode.Serialization.Json
         private void ProcessInheritedTypeConverterTypes(IReadOnlyCollection<Type> types)
         {
             var inheritedTypeConverterTypes = types.Where(t =>
-                !InheritedTypeConverterBlackList.Contains(t) &&
-                (t.IsAbstract || t.IsInterface || types.Any(a => a != t && (t.IsAssignableTo(a) || a.IsAssignableTo(t))))).Distinct().ToList();
+                (!InheritedTypeConverterBlackList.Contains(t)) &&
+                (t.IsAbstract || t.IsInterface || types.Any(a => (a != t) && (t.IsAssignableTo(a) || a.IsAssignableTo(t))))).Distinct().ToList();
 
             // TODO: what info do we want to capture here? should we give registration details?
             this.InheritedTypesToHandle.AddRange(inheritedTypeConverterTypes.Except(this.TypesWithConverters));

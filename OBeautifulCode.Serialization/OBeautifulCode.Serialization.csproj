@@ -153,7 +153,7 @@
     <Compile Include="Enums\SerializationDirection.cs" />
     <Compile Include="Enums\SerializationFormat.cs" />
     <Compile Include="Enums\SerializationKind.cs" />
-    <Compile Include="SerializerBase.cs" />
+    <Compile Include="ConfiguredSerializerBase.cs" />
     <Compile Include="Serializers\DateTime\DateTimeParsingSettings.cs" />
     <Compile Include="Serializers\DateTime\SerializedDateTimeKind.cs" />
     <Compile Include="Serializers\ObcDateTimeStringSerializer.cs" />

@@ -66,14 +66,14 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
         {
-            var dependentConfigTypes = new List<Type>(this.DependentSerializationConfigurationTypes.Reverse());
+            var dependentConfigTypes = new List<Type>(this.GetDependentSerializationConfigurationTypesWithInternalIfApplicable().Reverse());
             while (dependentConfigTypes.Any())
             {
                 var type = dependentConfigTypes.Last();
                 dependentConfigTypes.RemoveAt(dependentConfigTypes.Count - 1);
 
                 var dependentConfig = (PropertyBagConfigurationBase)this.DependentSerializationConfigurationTypeToInstanceMap[type];
-                dependentConfigTypes.AddRange(dependentConfig.DependentSerializationConfigurationTypes);
+                dependentConfigTypes.AddRange(dependentConfig.GetDependentSerializationConfigurationTypesWithInternalIfApplicable());
 
                 this.ProcessSerializer(dependentConfig.RegisteredSerializers, false);
             }

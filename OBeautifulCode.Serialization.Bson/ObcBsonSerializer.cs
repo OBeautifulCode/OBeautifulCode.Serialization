@@ -17,7 +17,7 @@ namespace OBeautifulCode.Serialization.Bson
     /// <summary>
     /// Mongo BSON serializer with optional configuration type.
     /// </summary>
-    public class ObcBsonSerializer : SerializerBase
+    public class ObcBsonSerializer : ConfiguredSerializerBase
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Justification = "Keeping for easy extension.")]
         private readonly BsonSerializationConfigurationBase bsonConfiguration;
