@@ -150,7 +150,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<NotSupportedException>();
-            exception.Message.Should().StartWith("Supplied 'serializerDescription' (OBeautifulCode.Serialization.SerializerDescription: SerializationKind = Bson, SerializationFormat = Binary, CompressionKind = None, ConfigurationTypeRepresentation = <null>, Metadata = System.Collections.Generic.Dictionary`2[System.String,System.String].) does not match 'supportedSerializerDescription' (OBeautifulCode.Serialization.SerializerDescription: SerializationKind = Json, SerializationFormat = String, CompressionKind = None, ConfigurationTypeRepresentation = OBeautifulCode.Representation.System.TypeRepresentation: Namespace = OBeautifulCode.Serialization.Json, Name = GenericDiscoveryJsonSerializationConfiguration`1, AssemblyQualifiedName = OBeautifulCode.Serialization.Json.GenericDiscoveryJsonSerializationConfiguration`1, OBeautifulCode.Serialization.Json,");
+            exception.Message.Should().StartWith("Supplied 'serializerDescription' (OBeautifulCode.Serialization.SerializerDescription: SerializationKind = Bson, SerializationFormat = Binary, CompressionKind = None, ConfigurationTypeRepresentation = <null>, Metadata = System.Collections.Generic.Dictionary`2[System.String,System.String].) does not match 'supportedSerializerDescription' (OBeautifulCode.Serialization.SerializerDescription: SerializationKind = Json, SerializationFormat = String, CompressionKind = None, ConfigurationTypeRepresentation = OBeautifulCode.Serialization.Json.GenericDiscoveryJsonSerializationConfiguration`1[[System.String, mscorlib,");
         }
     }
 }

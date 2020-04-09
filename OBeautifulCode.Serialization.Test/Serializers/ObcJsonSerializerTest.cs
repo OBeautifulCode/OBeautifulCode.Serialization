@@ -73,7 +73,11 @@ namespace OBeautifulCode.Serialization.Test
 
             var json = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Animal>)).SerializeToString(dog);
 
-            json.Should().Be("{\r\n  \"name\": \"spud\",\r\n  \"furColor\": \"brindle\",\r\n  \"dogTag\": \"my name is spud\",\r\n  \"nickname\": null,\r\n  \"age\": 5,\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.Dog, OBeautifulCode.Serialization.Test\"\r\n}");
+            var assemblyVersion = typeof(ObcJsonSerializerTest).Assembly.GetName().Version.ToString();
+
+            var expected = Invariant($"{{\r\n  \"name\": \"spud\",\r\n  \"furColor\": \"brindle\",\r\n  \"dogTag\": \"my name is spud\",\r\n  \"nickname\": null,\r\n  \"age\": 5,\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.Dog, OBeautifulCode.Serialization.Test, Version={assemblyVersion}\"\r\n}}");
+
+            json.Should().Be(expected);
         }
 
         [Fact]
@@ -153,7 +157,10 @@ namespace OBeautifulCode.Serialization.Test
 
             var json = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<Animal>), formattingKind: JsonFormattingKind.Compact).SerializeToString(dog);
 
-            var expected = "{\"name\":\"spud\",\"furColor\":\"brindle\",\"dogTag\":\"my name is spud\",\"nickname\":null,\"age\":5,\"$concreteType\":\"OBeautifulCode.Serialization.Test.Dog, OBeautifulCode.Serialization.Test\"}";
+            var assemblyVersion = typeof(ObcJsonSerializerTest).Assembly.GetName().Version.ToString();
+
+            var expected = Invariant($"{{\"name\":\"spud\",\"furColor\":\"brindle\",\"dogTag\":\"my name is spud\",\"nickname\":null,\"age\":5,\"$concreteType\":\"OBeautifulCode.Serialization.Test.Dog, OBeautifulCode.Serialization.Test, Version={assemblyVersion}\"}}");
+
             json.Should().Be(expected);
         }
 

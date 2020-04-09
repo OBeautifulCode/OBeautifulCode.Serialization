@@ -13,6 +13,7 @@ namespace OBeautifulCode.Serialization.Json
     using Newtonsoft.Json.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Representation.System;
 
     /// <summary>
     /// An <see cref="InheritedTypeJsonConverterBase"/> that handles writes/serialization.
@@ -49,6 +50,7 @@ namespace OBeautifulCode.Serialization.Json
             if (this.writeJsonCalled)
             {
                 this.writeJsonCalled = false;
+
                 return false;
             }
 
@@ -75,11 +77,14 @@ namespace OBeautifulCode.Serialization.Json
         {
             new { value }.AsArg().Must().NotBeNull();
 
-            var typeName = value.GetType().FullName + ", " + value.GetType().Assembly.GetName().Name;
+            var typeName = value.GetType().ToRepresentation().BuildAssemblyQualifiedName();
 
             this.writeJsonCalled = true;
+
             var jsonObject = JObject.FromObject(value, serializer);
+
             jsonObject.Add(ConcreteTypeTokenName, typeName);
+
             jsonObject.WriteTo(writer);
         }
     }

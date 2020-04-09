@@ -212,14 +212,14 @@ namespace OBeautifulCode.Serialization.Test
     {
         public string OtherProperty { get; set; }
 
-        public Enum Trigger { get; } = MultipleMatchStrategy.NewestVersion;
+        public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
     }
 
     public class ExpressionBodyNoConstructor
     {
         public string OtherProperty { get; set; }
 
-        public Enum Trigger => MultipleMatchStrategy.NewestVersion;
+        public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
     }
 
     public class InitializedSingleParameterizedConstructor
@@ -234,7 +234,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string OtherProperty2 { get; private set; }
 
-        public Enum Trigger { get; } = MultipleMatchStrategy.NewestVersion;
+        public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
     }
 
     public class ExpressionBodySingleParameterizedConstructor
@@ -249,7 +249,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string OtherProperty2 { get; private set; }
 
-        public Enum Trigger => MultipleMatchStrategy.NewestVersion;
+        public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
     }
 
     public class InitializedMultipleConstructorsWithDefault
@@ -270,7 +270,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string OtherProperty2 { get; private set; }
 
-        public Enum Trigger { get; } = MultipleMatchStrategy.NewestVersion;
+        public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
     }
 
     public class ExpressionBodyMultipleConstructorsWithDefault
@@ -291,7 +291,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string OtherProperty2 { get; private set; }
 
-        public Enum Trigger => MultipleMatchStrategy.NewestVersion;
+        public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
     }
 
     public class InitializedMultipleConstructorsWithoutDefault
@@ -314,7 +314,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string OtherProperty2 { get; private set; }
 
-        public Enum Trigger { get; } = MultipleMatchStrategy.NewestVersion;
+        public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
     }
 
     public class ExpressionBodyMultipleConstructorsWithoutDefault
@@ -337,7 +337,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string OtherProperty2 { get; private set; }
 
-        public Enum Trigger => MultipleMatchStrategy.NewestVersion;
+        public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
     }
 
     public class InitializedPublicSetProperty
@@ -356,7 +356,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string PublicSet { get; set; }
 
-        public Enum Trigger { get; } = MultipleMatchStrategy.NewestVersion;
+        public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
     }
 
     public class ExpressionBodyPublicSetProperty
@@ -381,6 +381,6 @@ namespace OBeautifulCode.Serialization.Test
 
         public string PublicSet { get; set; }
 
-        public Enum Trigger => MultipleMatchStrategy.NewestVersion;
+        public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
     }
 }

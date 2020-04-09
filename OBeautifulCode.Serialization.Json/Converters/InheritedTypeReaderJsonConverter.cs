@@ -16,6 +16,7 @@ namespace OBeautifulCode.Serialization.Json
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
+    using OBeautifulCode.Representation.System;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -34,7 +35,8 @@ namespace OBeautifulCode.Serialization.Json
         /// Initializes a new instance of the <see cref="InheritedTypeReaderJsonConverter"/> class.
         /// </summary>
         /// <param name="typesToHandle">Types that when encountered should trigger usage of the converter.</param>
-        public InheritedTypeReaderJsonConverter(IReadOnlyCollection<Type> typesToHandle)
+        public InheritedTypeReaderJsonConverter(
+            IReadOnlyCollection<Type> typesToHandle)
             : base(typesToHandle)
         {
         }
@@ -194,13 +196,14 @@ namespace OBeautifulCode.Serialization.Json
             HashSet<string> jsonProperties)
         {
             Type result;
+
             if (jsonProperties.Contains(ConcreteTypeTokenName))
             {
                 var concreteType = jsonObject[ConcreteTypeTokenName].ToString();
 
                 jsonObject.Remove(ConcreteTypeTokenName);
 
-                result = Type.GetType(concreteType);
+                result = concreteType.ToTypeRepresentationFromAssemblyQualifiedName().ResolveFromLoadedTypes();
             }
             else
             {
@@ -235,6 +238,7 @@ namespace OBeautifulCode.Serialization.Json
             foreach (var assignableType in assignableTypes)
             {
                 var typeProperties = assignableType.GetProperties().Select(t => t.Name).ToList();
+
                 var typeFields = assignableType.GetFields().Select(t => t.Name).ToList();
 
                 var typeMembers = new HashSet<string>(new string[0].Concat(typeProperties).Concat(typeFields), StringComparer.CurrentCultureIgnoreCase);
