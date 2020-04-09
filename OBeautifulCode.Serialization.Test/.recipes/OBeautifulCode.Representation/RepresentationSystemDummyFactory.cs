@@ -15,13 +15,10 @@ namespace OBeautifulCode.Representation.System.Test
 
     using global::System;
     using global::System.Collections.Generic;
-    using global::System.Linq;
     using global::System.Linq.Expressions;
 
     using OBeautifulCode.AutoFakeItEasy;
     using OBeautifulCode.Math.Recipes;
-    using OBeautifulCode.Reflection.Recipes;
-    using OBeautifulCode.Type.Recipes;
 
     /// <summary>
     /// A Dummy Factory for types in <see cref="OBeautifulCode.Representation.System"/>.
@@ -32,53 +29,12 @@ namespace OBeautifulCode.Representation.System.Test
 #endif
     public class RepresentationSystemDummyFactory : DefaultRepresentationSystemDummyFactory
     {
-        private static readonly IReadOnlyList<Type> AppDomainClosedTypes = AssemblyLoader
-            .GetLoadedAssemblies()
-            .GetTypesFromAssemblies()
-            .Where(_ => !_.ContainsGenericParameters)
-            .Where(_ => !_.IsClosedAnonymousType())
-            .Where(_=> !string.IsNullOrWhiteSpace(_.Namespace))
-            .ToList();
-
-        private static readonly IReadOnlyList<Type> AppDomainGenericTypeDefinitions = AssemblyLoader
-            .GetLoadedAssemblies()
-            .GetTypesFromAssemblies()
-            .Where(_ => _.IsGenericTypeDefinition)
-            .Where(_ => _.Namespace != null) // eliminate anonymous generic type definitions
-            .ToList();
-
         public RepresentationSystemDummyFactory()
         {
             AutoFixtureBackedDummyFactory.AddDummyCreator(
                 () =>
                 {
-                    Type type;
-
-                    if (ThreadSafeRandom.Next(0, 2) == 0)
-                    {
-                        type = GetRandomClosedTypeInAppDomain();
-                    }
-                    else
-                    {
-                        while (true)
-                        {
-                            var genericTypeDefinition = GetRandomGenericTypeDefinitionInAppDomain();
-
-                            var typeArguments = Enumerable.Range(0, genericTypeDefinition.GetGenericArguments().Length).Select(_=> GetRandomClosedTypeInAppDomain()).ToArray();
-
-                            try
-                            {
-                                type = genericTypeDefinition.MakeGenericType(typeArguments);
-
-                                break;
-                            }
-                            catch (Exception)
-                            {
-                            }
-                        }
-                    }
-
-                    var result = type.ToRepresentation();
+                    var result = A.Dummy<Type>().ToRepresentation();
 
                     return result;
                 });
@@ -133,24 +89,6 @@ namespace OBeautifulCode.Representation.System.Test
 
                     return result;
                 });
-        }
-
-        private Type GetRandomClosedTypeInAppDomain()
-        {
-            var randomIndex = ThreadSafeRandom.Next(0, AppDomainClosedTypes.Count);
-
-            var  result = AppDomainClosedTypes[randomIndex];
-
-            return result;
-        }
-
-        private Type GetRandomGenericTypeDefinitionInAppDomain()
-        {
-            var randomIndex = ThreadSafeRandom.Next(0, AppDomainGenericTypeDefinitions.Count);
-
-            var result = AppDomainGenericTypeDefinitions[randomIndex];
-
-            return result;
         }
     }
 }

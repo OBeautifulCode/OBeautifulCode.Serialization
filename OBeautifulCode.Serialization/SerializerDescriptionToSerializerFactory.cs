@@ -36,7 +36,10 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <inheritdoc />
-        public ISerializeAndDeserialize BuildSerializer(SerializerDescription serializerDescription, TypeMatchStrategy typeMatchStrategy = TypeMatchStrategy.NamespaceAndName, MultipleMatchStrategy multipleMatchStrategy = MultipleMatchStrategy.ThrowOnMultiple, UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
+        public ISerializeAndDeserialize BuildSerializer(
+            SerializerDescription serializerDescription,
+            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion,
+            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
         {
             new { serializerDescription }.AsArg().Must().NotBeNull();
 

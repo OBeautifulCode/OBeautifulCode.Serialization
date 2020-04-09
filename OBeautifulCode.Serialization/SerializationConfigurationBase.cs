@@ -63,7 +63,6 @@ namespace OBeautifulCode.Serialization
             typeof(MemberBindingRepresentationBase),
             typeof(ExpressionRepresentationBase),
             typeof(TypeRepresentation),
-            typeof(TypeRepresentationCacheKey),
             typeof(ConstructorInfoRepresentation),
             typeof(MemberInfoRepresentation),
             typeof(MethodInfoRepresentation),

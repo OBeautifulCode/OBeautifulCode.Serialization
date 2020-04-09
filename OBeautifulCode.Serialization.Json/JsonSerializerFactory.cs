@@ -33,18 +33,23 @@ namespace OBeautifulCode.Serialization.Json
         public static ISerializerFactory Instance => InternalInstance;
 
         /// <inheritdoc />
-        public ISerializeAndDeserialize BuildSerializer(SerializerDescription serializerDescription, TypeMatchStrategy typeMatchStrategy = TypeMatchStrategy.NamespaceAndName, MultipleMatchStrategy multipleMatchStrategy = MultipleMatchStrategy.ThrowOnMultiple, UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
+        public ISerializeAndDeserialize BuildSerializer(
+            SerializerDescription serializerDescription,
+            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion,
+            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
         {
             new { serializerDescription }.AsArg().Must().NotBeNull();
 
             lock (this.sync)
             {
-                var configurationType = serializerDescription.ConfigurationTypeRepresentation?.ResolveFromLoadedTypes(typeMatchStrategy, multipleMatchStrategy);
+                var configurationType = serializerDescription.ConfigurationTypeRepresentation?.ResolveFromLoadedTypes(assemblyMatchStrategy, throwIfCannotResolve: true);
 
                 switch (serializerDescription.SerializationKind)
                 {
-                    case SerializationKind.Json: return new ObcJsonSerializer(configurationType, unregisteredTypeEncounteredStrategy);
-                    default: throw new NotSupportedException(Invariant($"{nameof(serializerDescription)} from enumeration {nameof(SerializationKind)} of {serializerDescription.SerializationKind} is not supported."));
+                    case SerializationKind.Json:
+                        return new ObcJsonSerializer(configurationType, unregisteredTypeEncounteredStrategy);
+                    default:
+                        throw new NotSupportedException(Invariant($"{nameof(serializerDescription)} from enumeration {nameof(SerializationKind)} of {serializerDescription.SerializationKind} is not supported."));
                 }
             }
         }
