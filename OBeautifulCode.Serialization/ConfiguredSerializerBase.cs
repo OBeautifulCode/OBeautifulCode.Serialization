@@ -23,18 +23,18 @@ namespace OBeautifulCode.Serialization
         /// Strategy on how to deal with unregistered types.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "Prefer field here.")]
-#pragma warning disable SA1401 // Fields should be private
+        #pragma warning disable SA1401 // Fields should be private
         protected readonly UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy;
-#pragma warning restore SA1401 // Fields should be private
+        #pragma warning restore SA1401 // Fields should be private
 
         /// <summary>
         /// The initialized configuration provided or appropriate null implementation.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "It is not mutated.")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "Prefer field here.")]
-#pragma warning disable SA1401 // Fields should be private
+        #pragma warning disable SA1401 // Fields should be private
         protected readonly SerializationConfigurationBase configuration;
-#pragma warning restore SA1401 // Fields should be private
+        #pragma warning restore SA1401 // Fields should be private
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfiguredSerializerBase"/> class.

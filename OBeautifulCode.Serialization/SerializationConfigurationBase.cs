@@ -19,6 +19,7 @@ namespace OBeautifulCode.Serialization
     using OBeautifulCode.Compression;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
+    using OBeautifulCode.Serialization.Internal;
     using OBeautifulCode.Type;
     using OBeautifulCode.Type.Recipes;
 
@@ -42,13 +43,13 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Binding flags used in <see cref="DiscoverAllContainedAssignableTypes"/> to reflect on a type.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Name is correct.")]
+        [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = ObcSuppressBecause.CA1726_UsePreferredTerms_NameOfTypeOfIdentifierUsesTheTermFlags)]
         public const BindingFlags DiscoveryBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
         /// <summary>
         /// Types that will be added by default to the <see cref="RegisterTypes" />.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Is immutable and want a field.")]
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = ObcSuppressBecause.CA2104_DoNotDeclareReadOnlyMutableReferenceTypes_TypeIsImmutable)]
         public static readonly IReadOnlyCollection<Type> InternallyRequiredTypes = new[]
         {
             // OBC.Type
@@ -74,6 +75,7 @@ namespace OBeautifulCode.Serialization
         };
 
         private readonly object syncConfigure = new object();
+
         private bool configured;
 
         private static readonly HashSet<Type> DiscoverAssignableTypesBlackList =
@@ -130,7 +132,7 @@ namespace OBeautifulCode.Serialization
 
                             var dependentConfigRegisteredTypes = dependentConfigInstance
                                 .RegisteredTypeToDetailsMap
-                                .Where(_ => _.Value.RegisteringType == dependentConfigType).ToList();
+                                .Where(_ => _.Value.RegisteringSerializationConfigurationType == dependentConfigType).ToList();
 
                             foreach (var dependentConfigRegisteredType in dependentConfigRegisteredTypes)
                             {

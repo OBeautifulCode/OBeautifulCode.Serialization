@@ -16,15 +16,16 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Initializes a new instance of the <see cref="RegistrationDetails"/> class.
         /// </summary>
-        /// <param name="registeringType">The type that performed the registration.</param>
-        public RegistrationDetails(Type registeringType)
+        /// <param name="registeringSerializationConfigurationType">The type of the <see cref="SerializationConfigurationBase"/> that performed the registration.</param>
+        public RegistrationDetails(
+            Type registeringSerializationConfigurationType)
         {
-            this.RegisteringType = registeringType;
+            this.RegisteringSerializationConfigurationType = registeringSerializationConfigurationType;
         }
 
         /// <summary>
         /// Gets the type that performed the registration.
         /// </summary>
-        public Type RegisteringType { get; private set; }
+        public Type RegisteringSerializationConfigurationType { get; }
     }
 }
