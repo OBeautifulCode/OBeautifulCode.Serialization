@@ -15,8 +15,6 @@ namespace OBeautifulCode.Serialization.Json
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Type.Recipes;
 
-    using static System.FormattableString;
-
     /// <summary>
     /// JSON serializer.
     /// </summary>
@@ -40,28 +38,21 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcJsonSerializer"/> class.
         /// </summary>
-        /// <param name="configurationType">Optional type of configuration to use; DEFAULT is none.</param>
+        /// <param name="jsonSerializationConfigurationType">Optional type of configuration to use; DEFAULT is none.</param>
         /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
         /// <param name="formattingKind">Optional type of formatting to use; DEFAULT is <see cref="JsonFormattingKind.Default" />.</param>
         public ObcJsonSerializer(
-            Type configurationType = null,
+            JsonSerializationConfigurationType jsonSerializationConfigurationType = null,
             UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default,
             JsonFormattingKind formattingKind = JsonFormattingKind.Default)
-            : base(configurationType ?? typeof(NullJsonSerializationConfiguration), unregisteredTypeEncounteredStrategy)
+            : base(jsonSerializationConfigurationType ?? typeof(NullJsonSerializationConfiguration).ToJsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy)
         {
             new { formattingKind }.AsArg().Must().NotBeEqualTo(JsonFormattingKind.Invalid);
+
             this.formattingKind = formattingKind;
 
-            if (configurationType != null)
-            {
-                configurationType.IsSubclassOf(typeof(JsonSerializationConfigurationBase)).AsArg(
-                    Invariant($"Configuration type - {configurationType.FullName} - must derive from {nameof(JsonSerializationConfigurationBase)}.")).Must().BeTrue();
-
-                configurationType.HasParameterlessConstructor().AsArg(
-                    Invariant($"{nameof(configurationType)} must contain a default constructor to use in {nameof(ObcJsonSerializer)}.")).Must().BeTrue();
-            }
-
             this.jsonConfiguration = (JsonSerializationConfigurationBase)this.configuration;
+
             this.anonymousWriteSerializationSettings = this.jsonConfiguration.BuildAnonymousJsonSerializerSettings(SerializationDirection.Serialize, this.formattingKind);
         }
 
@@ -188,8 +179,12 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcJsonSerializer{TJsonSerializationConfiguration}"/> class.
         /// </summary>
-        public ObcJsonSerializer()
-            : base(typeof(TJsonSerializationConfiguration))
+        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
+        /// <param name="formattingKind">Optional type of formatting to use; DEFAULT is <see cref="JsonFormattingKind.Default" />.</param>
+        public ObcJsonSerializer(
+            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default,
+            JsonFormattingKind formattingKind = JsonFormattingKind.Default)
+            : base(typeof(TJsonSerializationConfiguration).ToJsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy, formattingKind)
         {
         }
     }

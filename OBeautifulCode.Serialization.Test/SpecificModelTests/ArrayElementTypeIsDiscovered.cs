@@ -24,9 +24,9 @@ namespace OBeautifulCode.Serialization.Test
             var configured = SerializationConfigurationManager.ConfigureWithReturn<NullDiscoverySerializationConfiguration<TypeWithObjectArray>>(config);
 
             // Assert
-            configured.RegisteredTypeToDetailsMap.Keys.Should().Contain(typeof(TypeWithObjectArray));
-            configured.RegisteredTypeToDetailsMap.Keys.Should().Contain(typeof(TypeWithObjectArrayElementType));
-            configured.RegisteredTypeToDetailsMap.Keys.Should().NotContain(typeof(TypeWithObjectArrayElementType[]));
+            configured.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Should().Contain(typeof(TypeWithObjectArray));
+            configured.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Should().Contain(typeof(TypeWithObjectArrayElementType));
+            configured.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Should().NotContain(typeof(TypeWithObjectArrayElementType[]));
         }
     }
 

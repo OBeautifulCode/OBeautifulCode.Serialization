@@ -23,7 +23,7 @@ namespace OBeautifulCode.Serialization
     {
         private static readonly object SyncInstances = new object();
 
-        private static readonly Dictionary<Type, SerializationConfigurationBase> Instances = new Dictionary<Type, SerializationConfigurationBase>();
+        private static readonly Dictionary<SerializationConfigurationType, SerializationConfigurationBase> Instances = new Dictionary<SerializationConfigurationType, SerializationConfigurationBase>();
 
         /// <summary>
         /// Registers the class maps for the specified <see cref="SerializationConfigurationBase"/> type.
@@ -34,7 +34,7 @@ namespace OBeautifulCode.Serialization
             where T : SerializationConfigurationBase, new()
         {
             // TODO: is there a race condition here? should we lock while calling configure...
-            FetchOrCreateConfigurationInstance(typeof(T));
+            FetchOrCreateConfigurationInstance(typeof(T).ToSerializationConfigurationType());
         }
 
         /// <summary>
@@ -46,26 +46,29 @@ namespace OBeautifulCode.Serialization
         public static T ConfigureWithReturn<T>()
             where T : SerializationConfigurationBase
         {
-            var result = ConfigureWithReturn<T>(typeof(T));
+            var result = ConfigureWithReturn<T>(typeof(T).ToSerializationConfigurationType());
+
             return result;
         }
 
         /// <summary>
         /// Registers the class maps for the specified <see cref="SerializationConfigurationBase"/> type.
         /// </summary>
-        /// <param name="type">Type of derivative of <see cref="SerializationConfigurationBase"/> to use.</param>
+        /// <param name="serializationConfigurationType">Type of derivative of <see cref="SerializationConfigurationBase"/> to use.</param>
         /// <typeparam name="TReturn">Type of derivative of <see cref="SerializationConfigurationBase"/> to return as.</typeparam>
         /// <returns>Configured instance.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Prefer to use in the generic sense.")]
-        public static TReturn ConfigureWithReturn<TReturn>(Type type)
+        public static TReturn ConfigureWithReturn<TReturn>(SerializationConfigurationType serializationConfigurationType)
             where TReturn : SerializationConfigurationBase
         {
-            new { type }.AsArg().Must().NotBeNull();
-            var returnType = typeof(TReturn);
-            type.IsAssignableTo(returnType).AsArg(Invariant($"typeMustBeSubclassOf{returnType}")).Must().BeTrue();
-            type.HasParameterlessConstructor().AsArg("typeHasParameterLessConstructor").Must().BeTrue();
+            new { serializationConfigurationType }.AsArg().Must().NotBeNull();
 
-            var result = FetchOrCreateConfigurationInstance(type);
+            var returnType = typeof(TReturn);
+
+            serializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.IsAssignableTo(returnType).AsArg(Invariant($"typeMustBeSubclassOf{returnType}")).Must().BeTrue();
+            serializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.HasParameterlessConstructor().AsArg("typeHasParameterLessConstructor").Must().BeTrue();
+
+            var result = FetchOrCreateConfigurationInstance(serializationConfigurationType);
 
             return (TReturn)result;
         }
@@ -73,56 +76,57 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Registers the class maps for the specified <see cref="SerializationConfigurationBase"/> type.
         /// </summary>
-        /// <param name="type">Type of derivative of <see cref="SerializationConfigurationBase"/> to use.</param>
+        /// <param name="serializationConfigurationType">Type of derivative of <see cref="SerializationConfigurationBase"/> to use.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Prefer to use in the generic sense.")]
-        public static void Configure(Type type)
+        public static void Configure(
+            SerializationConfigurationType serializationConfigurationType)
         {
-            new { type }.AsArg().Must().NotBeNull();
-            type.IsSubclassOf(typeof(SerializationConfigurationBase)).AsArg(Invariant($"typeMustBeSubclassOf{nameof(SerializationConfigurationBase)}")).Must().BeTrue();
-            type.HasParameterlessConstructor().AsArg("typeHasParameterLessConstructor").Must().BeTrue();
+            new { serializationConfigurationType }.AsArg().Must().NotBeNull();
 
-            FetchOrCreateConfigurationInstance(type);
+            FetchOrCreateConfigurationInstance(serializationConfigurationType);
          }
 
-        private static Type GetInheritorOfSerializationBase(this Type configurationType)
+        private static SerializationConfigurationType GetInheritorOfSerializationBase(
+            this SerializationConfigurationType serializationConfigurationType)
         {
-            var type = configurationType.BaseType;
-            while (type != null && type.BaseType != null && type.BaseType != typeof(SerializationConfigurationBase))
+            var type = serializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.BaseType;
+
+            while ((type != null) && (type.BaseType != null) && (type.BaseType != typeof(SerializationConfigurationBase)))
             {
                 type = type.BaseType;
             }
 
-            return
-                   type != null
-                   && type.BaseType != null
-                   && type.BaseType == typeof(SerializationConfigurationBase)
-                ? type
+            var result = (type != null) && (type.BaseType != null) && (type.BaseType == typeof(SerializationConfigurationBase))
+                ? type.ToSerializationConfigurationType()
                 : null;
+
+            return result;
         }
 
-        private static SerializationConfigurationBase FetchOrCreateConfigurationInstance(Type configurationType)
+        private static SerializationConfigurationBase FetchOrCreateConfigurationInstance(
+            SerializationConfigurationType serializationConfigurationType)
         {
             lock (SyncInstances)
             {
-                if (!Instances.ContainsKey(configurationType))
+                if (!Instances.ContainsKey(serializationConfigurationType))
                 {
-                    var instance = (SerializationConfigurationBase)configurationType.Construct();
+                    var instance = (SerializationConfigurationBase)serializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.Construct();
 
                     var allDependentConfigTypes = instance.GetDependentSerializationConfigurationTypesWithInternalIfApplicable().ToList();
 
                     allDependentConfigTypes = allDependentConfigTypes.Distinct().ToList();
 
-                    var configInheritor = configurationType.GetInheritorOfSerializationBase();
+                    var configInheritor = serializationConfigurationType.GetInheritorOfSerializationBase();
 
                     // TODO: test this throw.
                     // This protects against a JsonSerializationConfiguration listing dependent types that are BsonSerializationConfiguration derivatives, and vice-versa.
                     var rogueDependents = allDependentConfigTypes.Where(_ => _.GetInheritorOfSerializationBase() != configInheritor).ToList();
                     if (rogueDependents.Any())
                     {
-                        throw new InvalidOperationException(Invariant($"Configuration {configurationType} has {nameof(instance.GetDependentSerializationConfigurationTypesWithInternalIfApplicable)} ({string.Join(",", rogueDependents)}) that do not share the same first layer of inheritance {configInheritor}."));
+                        throw new InvalidOperationException(Invariant($"Configuration {serializationConfigurationType} has {nameof(instance.GetDependentSerializationConfigurationTypesWithInternalIfApplicable)} ({string.Join(",", rogueDependents)}) that do not share the same first layer of inheritance {configInheritor}."));
                     }
 
-                    var dependentConfigTypeToConfigMap = new Dictionary<Type, SerializationConfigurationBase>();
+                    var dependentConfigTypeToConfigMap = new Dictionary<SerializationConfigurationType, SerializationConfigurationBase>();
 
                     foreach (var dependentConfigType in allDependentConfigTypes)
                     {
@@ -146,10 +150,10 @@ namespace OBeautifulCode.Serialization
 
                     instance.Configure(dependentConfigTypeToConfigMap);
 
-                    Instances.Add(configurationType, instance);
+                    Instances.Add(serializationConfigurationType, instance);
                 }
 
-                var result = Instances[configurationType];
+                var result = Instances[serializationConfigurationType];
 
                 return result;
             }

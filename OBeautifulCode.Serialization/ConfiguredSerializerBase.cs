@@ -39,27 +39,30 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfiguredSerializerBase"/> class.
         /// </summary>
-        /// <param name="configurationType">Configuration type to use.</param>
+        /// <param name="serializationConfigurationType">Configuration type to use.</param>
         /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; if the type is a <see cref="IImplementNullObjectPattern" /> and value is default then <see cref="UnregisteredTypeEncounteredStrategy.Throw" /> is used.</param>
         protected ConfiguredSerializerBase(
-            Type configurationType,
+            SerializationConfigurationType serializationConfigurationType,
             UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy)
         {
-            new { configurationType }.AsArg().Must().NotBeNull();
+            new { serializationConfigurationType }.AsArg().Must().NotBeNull();
 
-            this.unregisteredTypeEncounteredStrategy =
-                (unregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Default &&
-                 !configurationType.IsAssignableTo(typeof(IImplementNullObjectPattern))) ||
-                unregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Throw
-                    ? UnregisteredTypeEncounteredStrategy.Throw
-                    : UnregisteredTypeEncounteredStrategy.Attempt;
+            if (unregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Default)
+            {
+                unregisteredTypeEncounteredStrategy =
+                    serializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(IImplementNullObjectPattern))
+                        ? UnregisteredTypeEncounteredStrategy.Throw
+                        : UnregisteredTypeEncounteredStrategy.Attempt;
+            }
 
-            this.SerializationConfigurationType = configurationType;
+            this.unregisteredTypeEncounteredStrategy = unregisteredTypeEncounteredStrategy;
+
+            this.SerializationConfigurationType = serializationConfigurationType;
             this.configuration = SerializationConfigurationManager.ConfigureWithReturn<SerializationConfigurationBase>(this.SerializationConfigurationType);
         }
 
         /// <inheritdoc />
-        public Type SerializationConfigurationType { get; private set; }
+        public SerializationConfigurationType SerializationConfigurationType { get; private set; }
 
         /// <inheritdoc />
         public abstract SerializationKind SerializationKind { get; }
@@ -109,7 +112,7 @@ namespace OBeautifulCode.Serialization
             {
                 if (this.unregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Throw)
                 {
-                    if (!this.configuration.RegisteredTypeToDetailsMap.ContainsKey(type))
+                    if (!this.configuration.RegisteredTypeToSerializationConfigurationTypeMap.ContainsKey(type))
                     {
                         throw new UnregisteredTypeAttemptException(Invariant($"Attempted to perform operation on unregistered type '{type.FullName}'"), type);
                     }

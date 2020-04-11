@@ -74,7 +74,7 @@ namespace OBeautifulCode.Serialization.Test
             new[] { typeof(BsonConfigB), typeof(BsonConfigC) };
     }
 
-    public class PropBagConfigA : PropertyBagConfigurationBase
+    public class PropBagConfigA : PropertyBagSerializationConfigurationBase
     {
         public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
             new[] { typeof(PropBagConfigB), typeof(PropBagConfigC) };
@@ -92,7 +92,7 @@ namespace OBeautifulCode.Serialization.Test
             new[] { typeof(BsonConfigC) };
     }
 
-    public class PropBagConfigB : PropertyBagConfigurationBase
+    public class PropBagConfigB : PropertyBagSerializationConfigurationBase
     {
         public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
             new[] { typeof(PropBagConfigC) };
@@ -216,7 +216,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
-    public class PropBagConfigC : PropertyBagConfigurationBase
+    public class PropBagConfigC : PropertyBagSerializationConfigurationBase
     {
         protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery =>
             new[] { typeof(TestingDependentConfigAbstractType) };

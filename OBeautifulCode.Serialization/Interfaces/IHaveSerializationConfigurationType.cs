@@ -9,13 +9,13 @@ namespace OBeautifulCode.Serialization
     using System;
 
     /// <summary>
-    /// Interface to expose the <see cref="System.Type" /> of configuration.
+    /// Interface to expose the serialization configuration type.
     /// </summary>
     public interface IHaveSerializationConfigurationType
     {
         /// <summary>
-        /// Gets the <see cref="System.Type" /> of configuration.
+        /// Gets serialization configuration type.
         /// </summary>
-        Type SerializationConfigurationType { get; }
+        SerializationConfigurationType SerializationConfigurationType { get; }
     }
 }

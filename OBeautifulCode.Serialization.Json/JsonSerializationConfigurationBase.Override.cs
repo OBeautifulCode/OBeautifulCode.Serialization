@@ -24,7 +24,7 @@ namespace OBeautifulCode.Serialization.Json
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
         {
-            var dependentConfigTypes = new List<Type>(this.GetDependentSerializationConfigurationTypesWithInternalIfApplicable().Reverse());
+            var dependentConfigTypes = new List<SerializationConfigurationType>(this.GetDependentSerializationConfigurationTypesWithInternalIfApplicable().Reverse());
             while (dependentConfigTypes.Any())
             {
                 var type = dependentConfigTypes.Last();
@@ -34,16 +34,15 @@ namespace OBeautifulCode.Serialization.Json
                 dependentConfigTypes.AddRange(dependentConfig.GetDependentSerializationConfigurationTypesWithInternalIfApplicable());
 
                 this.ProcessConverter(dependentConfig.RegisteredConverters, false);
-                this.AddHierarchyParticipatingTypes(dependentConfig.RegisteredTypeToDetailsMap.Keys.ToList());
+                this.AddHierarchyParticipatingTypes(dependentConfig.RegisteredTypeToSerializationConfigurationTypeMap.Keys.ToList());
             }
 
             var converters = (this.ConvertersToRegister ?? new RegisteredJsonConverter[0]).ToList();
             var handledTypes = this.ProcessConverter(converters);
-            var registrationDetails = new RegistrationDetails(this.GetType());
 
             foreach (var handledType in handledTypes)
             {
-                this.MutableRegisteredTypeToDetailsMap.Add(handledType, registrationDetails);
+                this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(handledType, this.GetType().ToJsonSerializationConfigurationType());
             }
         }
 
@@ -52,8 +51,7 @@ namespace OBeautifulCode.Serialization.Json
         {
             new { types }.AsArg().Must().NotBeNull();
 
-            var discoveredRegistrationDetails = new RegistrationDetails(this.GetType());
-            this.MutableRegisteredTypeToDetailsMap.AddRange(types.ToDictionary(k => k, v => discoveredRegistrationDetails));
+            this.MutableRegisteredTypeToSerializationConfigurationTypeMap.AddRange(types.ToDictionary(k => k, v => (SerializationConfigurationType)this.GetType().ToJsonSerializationConfigurationType()));
 
             this.AddHierarchyParticipatingTypes(types);
         }
@@ -62,7 +60,7 @@ namespace OBeautifulCode.Serialization.Json
         {
             var handledTypes = registeredConverters.SelectMany(_ => _.HandledTypes).ToList();
 
-            if (checkForAlreadyRegistered && this.RegisteredTypeToDetailsMap.Keys.Intersect(handledTypes).Any())
+            if (checkForAlreadyRegistered && this.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Intersect(handledTypes).Any())
             {
                 throw new DuplicateRegistrationException(
                     Invariant($"Trying to register one or more types via {nameof(this.ConvertersToRegister)} processing, but one is already registered."),

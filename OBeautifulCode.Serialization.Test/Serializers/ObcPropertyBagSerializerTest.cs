@@ -33,7 +33,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void Constructor___Configuration_type_not_null___Throws()
         {
             // Arrange
-            Action action = () => new ObcPropertyBagSerializer(typeof(string));
+            Action action = () => new ObcPropertyBagSerializer();
 
             // Act
             var exception = Record.Exception(action);
@@ -62,8 +62,6 @@ namespace OBeautifulCode.Serialization.Test
                                 TimeSpan = A.Dummy<TimeSpan>(),
                                 DateTime = A.Dummy<DateTime>(),
                                 DateTimeNullable = A.Dummy<DateTime>(),
-                                StringAttributed = A.Dummy<string>(),
-                                CustomWithAttribute = new CustomWithAttribute(),
                                 CustomWithoutInterface = new CustomWithoutInterface(),
                                 CustomWithInterface = new CustomWithInterface(),
                                 StringArray = new[] { A.Dummy<string>(), },
@@ -73,14 +71,8 @@ namespace OBeautifulCode.Serialization.Test
                                 DateTimeCollection = new[] { A.Dummy<DateTime>(), }.ToList(),
                                 CustomWithoutInterfaceCollection = new[] { new CustomWithoutInterface(), new CustomWithoutInterface(), }.ToList(),
                                 CustomWithInterfaceCollection = new[] { new CustomWithInterface(), new CustomWithInterface(), }.ToList(),
-                                CustomElementArray = new[] { new CustomElement(), new CustomElement(), },
-                                CustomElementCollection = new[] { new CustomElement(), new CustomElement(), }.ToList(),
                                 EnumParseCollection = new[] { EnumParse.Default, EnumParse.Value, },
-                                EnumAttributeCollection = new[] { EnumAttribute.Default, EnumAttribute.Value, },
-                                EnumAttributePropertyCollection = new[] { EnumAttributeProperty.Default, EnumAttributeProperty.Value, },
                                 EnumParse = EnumParse.Value,
-                                EnumAttribute = EnumAttribute.Value,
-                                EnumAttributeProperty = EnumAttributeProperty.Value,
                                 StringCollectionWithSingleEmptyString = new[] { string.Empty },
                                 StringCollectionWithNulls = new[] { string.Empty, A.Dummy<string>(), null, string.Empty, null, A.Dummy<string>() },
                             };
@@ -108,8 +100,6 @@ namespace OBeautifulCode.Serialization.Test
                 actual.TimeSpan.Should().Be(input.TimeSpan);
                 actual.DateTime.Should().Be(input.DateTime);
                 actual.DateTimeNullable.Should().Be(input.DateTimeNullable);
-                actual.StringAttributed.Should().Be(CustomStringSerializer.CustomReplacementString);
-                actual.CustomWithAttribute.Should().NotBeNull();
                 actual.CustomWithoutInterface.Should().NotBeNull();
                 actual.CustomWithInterface.Should().NotBeNull();
                 actual.StringDefault.Should().BeNull();
@@ -126,17 +116,9 @@ namespace OBeautifulCode.Serialization.Test
                 actual.DateTimeCollection.Should().Equal(input.DateTimeCollection);
                 actual.CustomWithoutInterfaceCollection.Should().HaveCount(input.CustomWithoutInterfaceCollection.Count());
                 actual.CustomWithInterfaceCollection.Should().HaveCount(input.CustomWithInterfaceCollection.Count());
-                actual.CustomElementArray.Length.Should().Be(input.CustomElementArray.Length);
-                actual.CustomElementArray.Any(_ => _ == null).Should().BeFalse();
-                actual.CustomElementCollection.Count().Should().Be(input.CustomElementCollection.Count());
-                actual.CustomElementCollection.Any(_ => _ == null).Should().BeFalse();
                 actual.EnumParseCollection.Should().Equal(input.EnumParseCollection);
-                actual.EnumAttributeCollection.Should().BeEquivalentTo(Enumerable.Range(0, input.EnumAttributeCollection.Count).Select(_ => EnumAttributeProperty.Replaced));
-                actual.EnumAttributePropertyCollection.Should().BeEquivalentTo(Enumerable.Range(0, input.EnumAttributePropertyCollection.Count).Select(_ => EnumAttributeProperty.Replaced));
                 actual.EnumDefault.Should().Be(EnumParse.Default);
                 actual.EnumParse.Should().Be(input.EnumParse);
-                actual.EnumAttribute.Should().Be(EnumAttribute.Replaced);
-                actual.EnumAttributeProperty.Should().Be(EnumAttributeProperty.Replaced);
                 actual.StringCollectionDefault.Should().BeNull();
                 actual.StringCollectionWithSingleEmptyString.Should().Equal(input.StringCollectionWithSingleEmptyString);
                 actual.StringCollectionWithNulls.Should().Equal(input.StringCollectionWithNulls);
@@ -201,7 +183,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var configurationType = typeof(PropertyBagConfig);
-            var serializer = new ObcPropertyBagSerializer(configurationType, UnregisteredTypeEncounteredStrategy.Attempt);
+            var serializer = new ObcPropertyBagSerializer<PropertyBagConfig>(UnregisteredTypeEncounteredStrategy.Attempt);
             var input = new StringProperty { StringItem = A.Dummy<string>() };
 
             // Act
@@ -209,7 +191,6 @@ namespace OBeautifulCode.Serialization.Test
             var actual = serializer.Deserialize<StringProperty>(serializedString);
 
             // Act
-            actual.StringItem.Should().Be(CustomStringSerializer.CustomReplacementString);
         }
 
         private class ConstructorWithProperties
@@ -240,12 +221,12 @@ namespace OBeautifulCode.Serialization.Test
             public string Property { get; }
         }
 
-        private class PropertyBagConfig : PropertyBagConfigurationBase
+        private class PropertyBagConfig : PropertyBagSerializationConfigurationBase
         {
-            public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new[] { typeof(PropertyBagConfigDepend) };
+            protected override IReadOnlyCollection<PropertyBagSerializationConfigurationType> DependentPropertyBagSerializationConfigurationTypes => new[] { typeof(PropertyBagConfigDepend).ToPropertyBagSerializationConfigurationType() };
         }
 
-        private class PropertyBagConfigDepend : PropertyBagConfigurationBase
+        private class PropertyBagConfigDepend : PropertyBagSerializationConfigurationBase
         {
             protected override IReadOnlyCollection<RegisteredStringSerializer> SerializersToRegister =>
                 new[]
@@ -284,20 +265,9 @@ namespace OBeautifulCode.Serialization.Test
 
             public DateTime? DateTimeNullable { get; set; }
 
-            public CustomWithAttribute CustomWithAttribute { get; set; }
-
             public CustomWithoutInterface CustomWithoutInterface { get; set; }
 
             public CustomWithInterface CustomWithInterface { get; set; }
-
-            [ObcElementStringSerializer(typeof(CustomElementSerializer))]
-            public CustomElement[] CustomElementArray { get; set; }
-
-            [ObcElementStringSerializer(typeof(CustomElementSerializer))]
-            public IEnumerable<CustomElement> CustomElementCollection { get; set; }
-
-            [ObcStringSerializer(typeof(CustomStringSerializer))]
-            public string StringAttributed { get; set; }
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Keeping for default value testing.")]
             public string StringDefault { get; set; }
@@ -339,17 +309,7 @@ namespace OBeautifulCode.Serialization.Test
 
             public EnumParse EnumParse { get; set; }
 
-            public EnumAttribute EnumAttribute { get; set; }
-
-            [ObcStringSerializer(typeof(EnumAttributePropertySerializer))]
-            public EnumAttributeProperty EnumAttributeProperty { get; set; }
-
             public IReadOnlyCollection<EnumParse> EnumParseCollection { get; set; }
-
-            public IReadOnlyCollection<EnumAttribute> EnumAttributeCollection { get; set; }
-
-            [ObcElementStringSerializer(typeof(EnumAttributePropertySerializer))]
-            public IReadOnlyCollection<EnumAttributeProperty> EnumAttributePropertyCollection { get; set; }
 
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Keeping for default value testing.")]
             public IReadOnlyCollection<string> StringCollectionDefault { get; set; }
@@ -361,45 +321,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public enum EnumParse { Default, Value, }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix", Justification = "Name/spelling is correct.")]
-        [ObcStringSerializer(typeof(EnumAttributeSerializer))]
-        public enum EnumAttribute { Default, Value, Replaced, }
-
         public enum EnumAttributeProperty { Default, Value, Replaced, }
-
-        [ObcStringSerializer(typeof(CustomWithAttributeSerializer))]
-        private class CustomWithAttribute
-        {
-            public override string ToString()
-            {
-                return this.GetType().Name;
-            }
-        }
-
-        private class CustomWithAttributeSerializer : IStringSerializeAndDeserialize
-        {
-            public const string CustomSerializedString = "We have a serializer attribute.";
-
-            public Type SerializationConfigurationType => null;
-
-            public string SerializeToString(object objectToSerialize)
-            {
-                return CustomSerializedString;
-            }
-
-            public T Deserialize<T>(string serializedString)
-            {
-                return (T)this.Deserialize(serializedString, typeof(T));
-            }
-
-            public object Deserialize(string serializedString, Type type)
-            {
-                new { serializedString }.AsArg().Must().BeEqualTo(CustomSerializedString);
-                new { type }.AsArg().Must().BeEqualTo(typeof(CustomWithAttribute));
-
-                return new CustomWithAttribute();
-            }
-        }
 
         private class CustomStringSerializer : IStringSerializeAndDeserialize
         {
@@ -407,7 +329,7 @@ namespace OBeautifulCode.Serialization.Test
 
             public const string CustomSerializedString = "We have a string overwriting serializer attribute.";
 
-            public Type SerializationConfigurationType => null;
+            public SerializationConfigurationType SerializationConfigurationType => null;
 
             public string SerializeToString(object objectToSerialize)
             {
@@ -436,7 +358,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             public const string CustomSerializedString = "Array of these.";
 
-            public Type SerializationConfigurationType => null;
+            public SerializationConfigurationType SerializationConfigurationType => null;
 
             public string SerializeToString(object objectToSerialize)
             {
@@ -461,7 +383,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             public const string CustomSerializedString = "Enum attribute.";
 
-            public Type SerializationConfigurationType => null;
+            public SerializationConfigurationType SerializationConfigurationType => null;
 
             public string SerializeToString(object objectToSerialize)
             {

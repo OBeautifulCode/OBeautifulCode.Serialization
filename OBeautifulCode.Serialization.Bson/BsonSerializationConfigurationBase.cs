@@ -9,7 +9,6 @@ namespace OBeautifulCode.Serialization.Bson
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Drawing;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -20,7 +19,6 @@ namespace OBeautifulCode.Serialization.Bson
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
-    using OBeautifulCode.Type;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -57,7 +55,19 @@ namespace OBeautifulCode.Serialization.Bson
         protected virtual IReadOnlyCollection<RegisteredBsonSerializer> SerializersToRegister => new List<RegisteredBsonSerializer>();
 
         /// <inheritdoc />
-        public sealed override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new[] { typeof(InternalBsonSerializationConfiguration), typeof(NetDrawingBsonSerializationConfiguration) };
+        protected sealed override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new[]
+        {
+            typeof(InternallyRequiredTypesWithDiscoveryBsonSerializationConfiguration).ToBsonSerializationConfigurationType(),
+            typeof(NetDrawingBsonSerializationConfiguration).ToBsonSerializationConfigurationType(),
+        };
+
+        /// <summary>
+        /// Gets the <see cref="BsonSerializationConfigurationBase"/>s that are needed for the current implementation of <see cref="BsonSerializationConfigurationBase"/>.  Optionally overrideable, DEFAULT is empty collection.
+        /// </summary>
+        protected virtual IReadOnlyCollection<BsonSerializationConfigurationType> DependentBsonSerializationConfigurationTypes => new BsonSerializationConfigurationType[0];
+
+        /// <inheritdoc />
+        protected sealed override IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypes => this.DependentBsonSerializationConfigurationTypes;
 
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
@@ -67,7 +77,7 @@ namespace OBeautifulCode.Serialization.Bson
                 var serializer = serializerToRegister.SerializerBuilderFunction();
                 foreach (var handledType in serializerToRegister.HandledTypes)
                 {
-                    if (this.RegisteredTypeToDetailsMap.ContainsKey(handledType))
+                    if (this.RegisteredTypeToSerializationConfigurationTypeMap.ContainsKey(handledType))
                     {
                         throw new DuplicateRegistrationException(
                             Invariant($"Trying to register {handledType} via {nameof(this.SerializersToRegister)} processing, but it is already registered."),
@@ -75,8 +85,8 @@ namespace OBeautifulCode.Serialization.Bson
                     }
 
                     BsonSerializer.RegisterSerializer(handledType, serializer);
-                    var registrationDetails = new RegistrationDetails(this.GetType());
-                    this.MutableRegisteredTypeToDetailsMap.Add(handledType, registrationDetails);
+
+                    this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(handledType, this.GetType().ToBsonSerializationConfigurationType());
                 }
             }
         }
@@ -90,7 +100,7 @@ namespace OBeautifulCode.Serialization.Bson
         {
             new { type }.AsArg().Must().NotBeNull();
 
-            if (this.RegisteredTypeToDetailsMap.ContainsKey(type))
+            if (this.RegisteredTypeToSerializationConfigurationTypeMap.ContainsKey(type))
             {
                 throw new DuplicateRegistrationException(
                     Invariant($"Trying to register {type} in {nameof(this.RegisterClassMapForTypeUsingMongoGeneric)} but it is already registered."),
@@ -102,8 +112,7 @@ namespace OBeautifulCode.Serialization.Bson
                 var genericRegisterClassMapMethod = RegisterClassMapGenericMethod.MakeGenericMethod(type);
                 genericRegisterClassMapMethod.Invoke(null, null);
 
-                var registrationDetails = new RegistrationDetails(this.GetType());
-                this.MutableRegisteredTypeToDetailsMap.Add(type, registrationDetails);
+                this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(type, this.GetType().ToBsonSerializationConfigurationType());
             }
             catch (Exception ex)
             {
@@ -133,7 +142,7 @@ namespace OBeautifulCode.Serialization.Bson
         {
             new { type }.AsArg().Must().NotBeNull();
 
-            if (this.RegisteredTypeToDetailsMap.ContainsKey(type))
+            if (this.RegisteredTypeToSerializationConfigurationTypeMap.ContainsKey(type))
             {
                 throw new DuplicateRegistrationException(
                     Invariant($"Trying to register {type} in {nameof(this.RegisterTypeWithPropertyConstraints)} but it is already registered."),
@@ -146,8 +155,7 @@ namespace OBeautifulCode.Serialization.Bson
                 {
                     var bsonClassMap = this.AutomaticallyBuildBsonClassMap(type, constrainToProperties);
                     BsonClassMap.RegisterClassMap(bsonClassMap);
-                    var registrationDetails = new RegistrationDetails(this.GetType());
-                    this.MutableRegisteredTypeToDetailsMap.Add(type, registrationDetails);
+                    this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(type, this.GetType().ToBsonSerializationConfigurationType());
                 }
             }
             catch (Exception ex)
@@ -319,56 +327,6 @@ namespace OBeautifulCode.Serialization.Bson
             return new MemberInfo[0].Concat(fields).Concat(properties).ToList();
         }
     }
-
-    /// <summary>
-    /// Internal implementation of <see cref="BsonSerializationConfigurationBase" /> that will auto register necessary internal types.
-    /// </summary>
-    public sealed class InternalBsonSerializationConfiguration : BsonSerializationConfigurationBase, IDoNotNeedInternalDependencies
-    {
-        /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => InternallyRequiredTypes;
-    }
-
-    /// <summary>
-    /// Internal implementation of <see cref="BsonSerializationConfigurationBase" /> that will auto register necessary internal types.
-    /// </summary>
-    public sealed class NetDrawingBsonSerializationConfiguration : BsonSerializationConfigurationBase, IDoNotNeedInternalDependencies
-    {
-        /// <inheritdoc />
-        protected override IReadOnlyCollection<RegisteredBsonSerializer> SerializersToRegister => new[]
-        {
-            new RegisteredBsonSerializer(() => new ObcBsonColorSerializer(), new[] { typeof(Color) }),
-        };
-    }
-
-    /// <summary>
-    /// Generic implementation of <see cref="BsonSerializationConfigurationBase" /> that will auto register with discovery using type <typeparamref name="T" />.
-    /// </summary>
-    /// <typeparam name="T">Type to auto register with discovery.</typeparam>
-    public sealed class GenericDiscoveryBsonSerializationConfiguration<T> : BsonSerializationConfigurationBase
-    {
-        /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => new[] { typeof(T) };
-    }
-
-    /// <summary>
-    /// Generic implementation of <see cref="BsonSerializationConfigurationBase" /> that will auto register with discovery using type <typeparamref name="T1" />, <typeparamref name="T2" />.
-    /// </summary>
-    /// <typeparam name="T1">Type one to auto register with discovery.</typeparam>
-    /// <typeparam name="T2">Type two to auto register with discovery.</typeparam>
-    public sealed class GenericDiscoveryBsonSerializationConfiguration<T1, T2> : BsonSerializationConfigurationBase
-    {
-        /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => new[] { typeof(T1), typeof(T2) };
-    }
-
-    /// <summary>
-    /// Null implementation of <see cref="BsonSerializationConfigurationBase"/>.
-    /// </summary>
-    public sealed class NullBsonSerializationConfiguration : BsonSerializationConfigurationBase, IImplementNullObjectPattern
-    {
-    }
-
 #pragma warning restore SA1201 // Elements should appear in the correct order
 #pragma warning restore SA1202 // Public members should come before protected members
 #pragma warning restore SA1203 // Constant fields should appear before non-constant fields

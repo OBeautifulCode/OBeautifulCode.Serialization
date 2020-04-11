@@ -73,7 +73,7 @@ namespace OBeautifulCode.Serialization
         public string NullValueEncoding { get; }
 
         /// <inheritdoc />
-        public Type SerializationConfigurationType => null;
+        public SerializationConfigurationType SerializationConfigurationType => null;
 
         /// <inheritdoc />
         public string SerializeToString(

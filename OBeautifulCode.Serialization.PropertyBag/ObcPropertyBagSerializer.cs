@@ -49,27 +49,19 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
         private readonly Dictionary<Type, IStringSerializeAndDeserialize> cachedAttributeSerializerTypeToObjectMap;
 
-        private readonly PropertyBagConfigurationBase propertyBagConfiguration;
+        private readonly PropertyBagSerializationConfigurationBase propertyBagConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcPropertyBagSerializer"/> class.
         /// </summary>
-        /// <param name="configurationType">Type of configuration to use.</param>
+        /// <param name="propertyBagSerializationConfigurationType">Type of configuration to use.</param>
         /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
-        public ObcPropertyBagSerializer(Type configurationType = null, UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
-            : base(configurationType ?? typeof(NullPropertyBagConfiguration), unregisteredTypeEncounteredStrategy)
+        public ObcPropertyBagSerializer(
+            PropertyBagSerializationConfigurationType propertyBagSerializationConfigurationType = null,
+            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
+            : base(propertyBagSerializationConfigurationType ?? typeof(NullPropertyBagSerializationConfiguration).ToPropertyBagSerializationConfigurationType(), unregisteredTypeEncounteredStrategy)
         {
-            if (configurationType != null)
-            {
-                configurationType.IsSubclassOf(typeof(PropertyBagConfigurationBase)).AsArg(
-                    Invariant($"Configuration type - {configurationType.FullName} - must derive from {nameof(PropertyBagConfigurationBase)}.")).Must().BeTrue();
-
-                configurationType.HasParameterlessConstructor().AsArg(
-                        Invariant($"{nameof(configurationType)} must contain a default constructor to use in {nameof(ObcPropertyBagSerializer)}.")).Must()
-                    .BeTrue();
-            }
-
-            this.propertyBagConfiguration = (PropertyBagConfigurationBase)this.configuration;
+            this.propertyBagConfiguration = (PropertyBagSerializationConfigurationBase)this.configuration;
             this.dictionaryStringSerializer = new ObcDictionaryStringStringSerializer(
                 this.propertyBagConfiguration.StringSerializationKeyValueDelimiter,
                 this.propertyBagConfiguration.StringSerializationLineDelimiter,
@@ -188,7 +180,8 @@ namespace OBeautifulCode.Serialization.PropertyBag
         }
 
         /// <inheritdoc />
-        public IReadOnlyDictionary<string, string> SerializeToPropertyBag(object objectToSerialize)
+        public IReadOnlyDictionary<string, string> SerializeToPropertyBag(
+            object objectToSerialize)
         {
             if (objectToSerialize == null)
             {
@@ -207,10 +200,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
                         var propertyValue = propertyInfo.GetValue(objectToSerialize);
 
-                        var serializerType = propertyInfo.GetSerializerTypeFromAttribute(propertyValue?.GetType());
-                        var elementSerializerType = propertyInfo.GetElementSerializerTypeFromAttribute();
-
-                        return propertyValue == null ? null : this.MakeStringFromPropertyValue(propertyValue, serializerType, elementSerializerType);
+                        return propertyValue == null ? null : this.MakeStringFromPropertyValue(propertyValue);
                     });
 
             properties.Add(ReservedKeyToString, objectToSerialize.ToString());
@@ -312,10 +302,8 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 propertyInfo.AsArg(missingPropertyExceptionMessage).Must().NotBeNull();
                 var propertyType = propertyInfo?.PropertyType ?? throw new ArgumentNullException(missingPropertyExceptionMessage);
 
-                var serializerType = propertyInfo.GetSerializerTypeFromAttribute();
-                var elementSerializerType = propertyInfo.GetElementSerializerTypeFromAttribute();
+                var targetValue = property.Value == null ? null : this.MakeObjectFromString(property.Value, propertyType);
 
-                var targetValue = property.Value == null ? null : this.MakeObjectFromString(property.Value, propertyType, serializerType, elementSerializerType);
                 propertyNameToObjectMap.Add(property.Key, targetValue);
             }
 
@@ -348,7 +336,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Name/spelling is correct.")]
-        private object MakeObjectFromString(string serializedString, Type type, Type serializerType, Type elementSerializerType)
+        private object MakeObjectFromString(string serializedString, Type type)
         {
             new { serializedString }.AsArg().Must().NotBeNull();
 
@@ -363,18 +351,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 var ret = serializer.Deserialize(serializedString, type);
                 return ret;
             }
-            else if (serializerType != null)
-            {
-                if (!this.cachedAttributeSerializerTypeToObjectMap.ContainsKey(serializerType))
-                {
-                    var newAttributeOnClassSerializer = serializerType.Construct<IStringSerializeAndDeserialize>();
-                    this.cachedAttributeSerializerTypeToObjectMap.Add(serializerType, newAttributeOnClassSerializer);
-                }
-
-                var attributeOnClassSerializer = this.cachedAttributeSerializerTypeToObjectMap[serializerType];
-                var ret = attributeOnClassSerializer.Deserialize(serializedString, type);
-                return ret;
-            }
             else if (type.IsEnum)
             {
                 return Enum.Parse(type, serializedString);
@@ -384,9 +360,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 var arrayItemType = type.GetElementType() ?? throw new ArgumentException(Invariant($"Found array type that cannot extract element type: {type}"));
                 var asList = (IList)this.MakeObjectFromString(
                     serializedString,
-                    typeof(List<>).MakeGenericType(arrayItemType),
-                    null,
-                    elementSerializerType);
+                    typeof(List<>).MakeGenericType(arrayItemType));
                 var asArrayList = new ArrayList(asList);
                 return asArrayList.ToArray(arrayItemType);
             }
@@ -398,16 +372,13 @@ namespace OBeautifulCode.Serialization.PropertyBag
             {
                 var itemType = type.GenericTypeArguments.SingleOrDefault() ?? throw new ArgumentException(Invariant($"Found {typeof(IEnumerable)} type that cannot extract element type: {type}"));
                 var stringValues = serializedString.FromCsv(this.dictionaryStringSerializer.NullValueEncoding);
-                IList values = (IList)typeof(List<>).MakeGenericType(itemType).Construct();
+                var values = (IList)typeof(List<>).MakeGenericType(itemType).Construct();
                 foreach (var stringValue in stringValues)
                 {
                     var itemValue = stringValue == null
-                                        ? null
-                                        : this.MakeObjectFromString(
-                                            stringValue,
-                                            itemType,
-                                            elementSerializerType ?? itemType.GetSerializerTypeFromAttribute(),
-                                            null);
+                        ? null
+                        : this.MakeObjectFromString(stringValue, itemType);
+
                     values.Add(itemValue);
                 }
 
@@ -442,7 +413,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
             }
         }
 
-        private string MakeStringFromPropertyValue(object propertyValue, Type serializerType, Type elementSerializerType)
+        private string MakeStringFromPropertyValue(object propertyValue)
         {
             new { propertyValue }.AsArg().Must().NotBeNull();
 
@@ -452,18 +423,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
             {
                 var serializer = this.configuredTypeToSerializerMap[propertyType];
                 var ret = serializer.SerializeToString(propertyValue);
-                return ret;
-            }
-            else if (serializerType != null)
-            {
-                if (!this.cachedAttributeSerializerTypeToObjectMap.ContainsKey(serializerType))
-                {
-                    var newAttributeOnClassSerializer = serializerType.Construct<IStringSerializeAndDeserialize>();
-                    this.cachedAttributeSerializerTypeToObjectMap.Add(serializerType, newAttributeOnClassSerializer);
-                }
-
-                var attributeOnClassSerializer = this.cachedAttributeSerializerTypeToObjectMap[serializerType];
-                var ret = attributeOnClassSerializer.SerializeToString(propertyValue);
                 return ret;
             }
             else if (propertyValue is DateTime propertyValueAsDateTime)
@@ -478,11 +437,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
                     foreach (var item in propertyValueAsEnumerable)
                     {
                         var serializedItem = item == null
-                                                 ? null
-                                                 : this.MakeStringFromPropertyValue(
-                                                     item,
-                                                     elementSerializerType ?? item?.GetType().GetSerializerTypeFromAttribute(),
-                                                     null);
+                            ? null
+                            : this.MakeStringFromPropertyValue(item);
+
                         values.Add(serializedItem);
                     }
 
@@ -502,13 +459,15 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
     /// <inheritdoc />
     public sealed class ObcPropertyBagSerializer<TPropertyBagConfiguration> : ObcPropertyBagSerializer
-        where TPropertyBagConfiguration : PropertyBagConfigurationBase, new()
+        where TPropertyBagConfiguration : PropertyBagSerializationConfigurationBase, new()
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcPropertyBagSerializer{TPropertyBagConfiguration}"/> class.
         /// </summary>
-        public ObcPropertyBagSerializer()
-            : base(typeof(TPropertyBagConfiguration))
+        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
+        public ObcPropertyBagSerializer(
+            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
+            : base(typeof(TPropertyBagConfiguration).ToPropertyBagSerializationConfigurationType(), unregisteredTypeEncounteredStrategy)
         {
         }
     }

@@ -10,7 +10,7 @@ namespace OBeautifulCode.Serialization.Json
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Exception for issues configuring BSON.
+    /// Exception for issues configuring JSON.
     /// </summary>
     [Serializable]
     public class JsonSerializationConfigurationException : Exception

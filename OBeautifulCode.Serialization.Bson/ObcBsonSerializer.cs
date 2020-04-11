@@ -12,10 +12,8 @@ namespace OBeautifulCode.Serialization.Bson
 
     using OBeautifulCode.Assertion.Recipes;
 
-    using static System.FormattableString;
-
     /// <summary>
-    /// Mongo BSON serializer with optional configuration type.
+    /// BSON serializer with optional configuration type.
     /// </summary>
     public class ObcBsonSerializer : ConfiguredSerializerBase
     {
@@ -25,22 +23,13 @@ namespace OBeautifulCode.Serialization.Bson
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcBsonSerializer"/> class.
         /// </summary>
-        /// <param name="configurationType">Optional <see cref="BsonSerializationConfigurationBase"/> implementation to use; default is <see cref="NullBsonSerializationConfiguration"/>.</param>
+        /// <param name="bsonSerializationConfigurationType">Optional <see cref="BsonSerializationConfigurationBase"/> implementation to use; default is <see cref="NullBsonSerializationConfiguration"/>.</param>
         /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
         public ObcBsonSerializer(
-            Type configurationType = null,
+            BsonSerializationConfigurationType bsonSerializationConfigurationType = null,
             UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
-            : base(configurationType ?? typeof(NullBsonSerializationConfiguration), unregisteredTypeEncounteredStrategy)
+            : base(bsonSerializationConfigurationType ?? typeof(NullBsonSerializationConfiguration).ToBsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy)
         {
-            if (configurationType != null)
-            {
-                configurationType.IsSubclassOf(typeof(BsonSerializationConfigurationBase)).AsArg(
-                    Invariant($"Configuration type - {configurationType.FullName} - must derive from {nameof(BsonSerializationConfigurationBase)}.")).Must().BeTrue();
-
-                configurationType.HasParameterlessConstructor().AsArg(
-                    Invariant($"{nameof(configurationType)} must contain a default constructor to use in {nameof(ObcBsonSerializer)}.")).Must().BeTrue();
-            }
-
             this.bsonConfiguration = (BsonSerializationConfigurationBase)this.configuration;
         }
 
@@ -159,8 +148,10 @@ namespace OBeautifulCode.Serialization.Bson
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcBsonSerializer{TBsonSerializationConfiguration}"/> class.
         /// </summary>
-        public ObcBsonSerializer()
-            : base(typeof(TBsonSerializationConfiguration))
+        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
+        public ObcBsonSerializer(
+            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
+            : base(typeof(TBsonSerializationConfiguration).ToBsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy)
         {
         }
     }

@@ -147,7 +147,7 @@ namespace OBeautifulCode.Serialization.Test
             var config = SerializationConfigurationManager.ConfigureWithReturn<SerializationConfigurationBase>(configType);
 
             // Assert
-            config.RegisteredTypeToDetailsMap.Keys.Intersect(expectedTypes).Should().BeEquivalentTo(expectedTypes);
+            config.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Intersect(expectedTypes).Should().BeEquivalentTo(expectedTypes);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "configs", Justification = "Name/spelling is correct.")]
@@ -182,7 +182,7 @@ namespace OBeautifulCode.Serialization.Test
             var config = SerializationConfigurationManager.ConfigureWithReturn<BsonSerializationConfigurationBase>(configType);
 
             // Assert
-            config.RegisteredTypeToDetailsMap.Keys.Should().Contain(testType);
+            config.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Should().Contain(testType);
         }
 
         private static BsonClassMap RunTestCode(object configuration)

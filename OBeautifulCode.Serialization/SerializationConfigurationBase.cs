@@ -93,25 +93,25 @@ namespace OBeautifulCode.Serialization
             new ConcurrentDictionary<Assembly, IReadOnlyCollection<Type>>();
 
         /// <summary>
-        /// Gets the version of <see cref="RegisteredTypeToDetailsMap" />.
+        /// Gets the version of <see cref="RegisteredTypeToSerializationConfigurationTypeMap" />.
         /// </summary>
-        protected Dictionary<Type, RegistrationDetails> MutableRegisteredTypeToDetailsMap { get; } = new Dictionary<Type, RegistrationDetails>();
+        protected Dictionary<Type, SerializationConfigurationType> MutableRegisteredTypeToSerializationConfigurationTypeMap { get; } = new Dictionary<Type, SerializationConfigurationType>();
 
         /// <summary>
         /// Gets a map of the the dependent configuration type (and any ancestors) to their configured instance.
         /// </summary>
-        public IReadOnlyDictionary<Type, SerializationConfigurationBase> DependentSerializationConfigurationTypeToInstanceMap { get; private set; }
+        public IReadOnlyDictionary<SerializationConfigurationType, SerializationConfigurationBase> DependentSerializationConfigurationTypeToInstanceMap { get; private set; }
 
         /// <summary>
         /// Gets a map of registration details keyed on type registered.
         /// </summary>
-        public IReadOnlyDictionary<Type, RegistrationDetails> RegisteredTypeToDetailsMap => this.MutableRegisteredTypeToDetailsMap;
+        public IReadOnlyDictionary<Type, SerializationConfigurationType> RegisteredTypeToSerializationConfigurationTypeMap => this.MutableRegisteredTypeToSerializationConfigurationTypeMap;
 
         /// <summary>
         /// Run configuration logic.
         /// </summary>
         /// <param name="dependentSerializationConfigurationTypeToInstanceMap">Map of dependent configuration type to configured instance.</param>
-        public virtual void Configure(IReadOnlyDictionary<Type, SerializationConfigurationBase> dependentSerializationConfigurationTypeToInstanceMap)
+        public virtual void Configure(IReadOnlyDictionary<SerializationConfigurationType, SerializationConfigurationBase> dependentSerializationConfigurationTypeToInstanceMap)
         {
             new { dependentSerializationConfigurationTypeToInstanceMap }.AsArg().Must().NotBeNull();
 
@@ -128,17 +128,15 @@ namespace OBeautifulCode.Serialization
                             var dependentConfigType = dependentSerializationConfigurationTypeToInstance.Key;
                             var dependentConfigInstance = dependentSerializationConfigurationTypeToInstance.Value;
 
-                            var registrationDetails = new RegistrationDetails(dependentConfigType);
-
                             var dependentConfigRegisteredTypes = dependentConfigInstance
-                                .RegisteredTypeToDetailsMap
-                                .Where(_ => _.Value.RegisteringSerializationConfigurationType == dependentConfigType).ToList();
+                                .RegisteredTypeToSerializationConfigurationTypeMap
+                                .Where(_ => _.Value == dependentConfigType).ToList();
 
                             foreach (var dependentConfigRegisteredType in dependentConfigRegisteredTypes)
                             {
-                                this.MutableRegisteredTypeToDetailsMap.Add(
+                                this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(
                                     dependentConfigRegisteredType.Key,
-                                    registrationDetails);
+                                    dependentConfigType);
                             }
                         }
 
@@ -177,7 +175,7 @@ namespace OBeautifulCode.Serialization
                             .Concat(discoveredTypes)
                             .ToList();
 
-                        var typesToAutoRegisterAlreadyHandledByDependentConfiguration = typesToAutoRegister.Intersect(this.RegisteredTypeToDetailsMap.Keys).ToList();
+                        var typesToAutoRegisterAlreadyHandledByDependentConfiguration = typesToAutoRegister.Intersect(this.RegisteredTypeToSerializationConfigurationTypeMap.Keys).ToList();
                         if (typesToAutoRegisterAlreadyHandledByDependentConfiguration.Any())
                         {
                             // TODO: what info do we want to capture here?
@@ -215,7 +213,7 @@ namespace OBeautifulCode.Serialization
                 var type = typesToInspect.First();
                 typesToInspect.Remove(type);
 
-                if (typeSeen.Contains(type) || this.RegisteredTypeToDetailsMap.ContainsKey(type))
+                if (typeSeen.Contains(type) || this.RegisteredTypeToSerializationConfigurationTypeMap.ContainsKey(type))
                 {
                     continue;
                 }
@@ -294,9 +292,10 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <returns>All types that should be considered for registration.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Want this to be a method since it's running logic.")]
-        protected static IReadOnlyCollection<Type> GetAllTypesToConsiderForRegistration()
+        private static IReadOnlyCollection<Type> GetAllTypesToConsiderForRegistration()
         {
             var assemblies = AssemblyLoader.GetLoadedAssemblies();
+
             foreach (var assembly in assemblies)
             {
                 if (!AssemblyToTypesToConsiderForRegistration.ContainsKey(assembly))
@@ -307,7 +306,7 @@ namespace OBeautifulCode.Serialization
                             .Where(_ =>
                                 _.IsClass &&
                                 (!_.IsClosedAnonymousType()) &&
-                                (!DiscoverAssignableTypesBlackList.Contains(_)) &&
+                                (!DiscoverAssignableTypesBlackList.Contains(_)) && // all types will be assignable to these types, so filter them out
                                 (!_.IsGenericTypeDefinition)) // can't do an IsAssignableTo check on generic type definitions
                             .ToList();
 
@@ -334,33 +333,35 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Gets a list of <see cref="SerializationConfigurationBase"/>'s that are needed for the current implementation of <see cref="SerializationConfigurationBase"/>.  Optionally overrideable, DEFAULT is empty collection.
         /// </summary>
-        public virtual IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new Type[0];
+        protected abstract IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypes { get; }
 
         /// <summary>
         /// Gets all specified dependent configuration types, including all internal configuration types
-        /// unless this this configuration type is <see cref="IDoNotNeedInternalDependencies"/>.
+        /// unless this this configuration type is <see cref="IIgnoreDefaultDependencies"/>.
         /// </summary>
         /// <returns>
         /// All specified dependent configuration types, including all internal configuration types
-        /// unless this this configuration type is <see cref="IDoNotNeedInternalDependencies"/>.
+        /// unless this this configuration type is <see cref="IIgnoreDefaultDependencies"/>.
         /// </returns>
-        public IReadOnlyCollection<Type> GetDependentSerializationConfigurationTypesWithInternalIfApplicable()
+        public IReadOnlyCollection<SerializationConfigurationType> GetDependentSerializationConfigurationTypesWithInternalIfApplicable()
         {
             var result = this.DependentSerializationConfigurationTypes.ToList();
 
-            if (!(this is IDoNotNeedInternalDependencies))
+            if (!(this is IIgnoreDefaultDependencies))
             {
-                result.AddRange(this.InternalDependentSerializationConfigurationTypes);
+                result.AddRange(this.DefaultDependentSerializationConfigurationTypes);
             }
 
             return result;
         }
 
         /// <summary>
-        /// Gets the dependent configurations that encompasses any necessary internal types, this should be used by first level inheritor and sealed.
+        /// Gets the dependent configurations that are required to be in-effect for <see cref="SerializationKind"/>-associated abstract inheritors,
+        /// (e.g. BsonSerializationConfiguration) so that, in turn, their concrete inheritors (e.g. MyDomainBsonSerializationConfiguration)
+        /// do not need to specify these dependencies and so that any and all serialization that utilizes such concrete inheritors will work as expected.
+        /// These will be ignored for any configuration that implements <see cref="IIgnoreDefaultDependencies"/>.
         /// </summary>
-        /// <returns>Configurations necessary to accomodate internal types.</returns>
-        public abstract IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes { get; }
+        protected abstract IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes { get; }
 
         /// <summary>
         /// Gets a list of <see cref="Type"/>s to auto-register.
@@ -440,153 +441,13 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="types">Types to register.</param>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Want to be used from derivatives using 'this.'")]
-        protected abstract void RegisterTypes(IReadOnlyCollection<Type> types);
-    }
-
-    /// <summary>
-    /// Generic implementation of <see cref="SerializationConfigurationBase" /> that will depend on config using type <typeparamref name="T" />.
-    /// </summary>
-    /// <typeparam name="T">Type to auto register with discovery.</typeparam>
-    public sealed class GenericDependencyConfiguration<T> : SerializationConfigurationBase
-        where T : SerializationConfigurationBase
-    {
-        /// <inheritdoc />
-        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new[] { typeof(T) };
-
-        /// <inheritdoc />
-        protected override void RegisterTypes(IReadOnlyCollection<Type> types)
+        protected virtual void RegisterTypes(IReadOnlyCollection<Type> types)
         {
-            var registrationDetails = new RegistrationDetails(this.GetType());
             foreach (var type in types ?? new Type[0])
             {
-                this.MutableRegisteredTypeToDetailsMap.Add(type, registrationDetails);
+                this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(type, this.GetType().ToSerializationConfigurationType());
             }
         }
-
-        /// <inheritdoc />
-        public sealed override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new Type[0];
-    }
-
-    /// <summary>
-    /// Generic implementation of <see cref="SerializationConfigurationBase" /> that will depend on config using type <typeparamref name="T1" />, <typeparamref name="T2" />.
-    /// </summary>
-    /// <typeparam name="T1">Type one to auto register with discovery.</typeparam>
-    /// <typeparam name="T2">Type two to auto register with discovery.</typeparam>
-    public sealed class GenericDependencyConfiguration<T1, T2> : SerializationConfigurationBase
-        where T1 : SerializationConfigurationBase
-        where T2 : SerializationConfigurationBase
-    {
-        /// <inheritdoc />
-        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new[] { typeof(T1), typeof(T2) };
-
-        /// <inheritdoc />
-        protected override void RegisterTypes(IReadOnlyCollection<Type> types)
-        {
-            var registrationDetails = new RegistrationDetails(this.GetType());
-            foreach (var type in types ?? new Type[0])
-            {
-                this.MutableRegisteredTypeToDetailsMap.Add(type, registrationDetails);
-            }
-        }
-
-        /// <inheritdoc />
-        public sealed override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new Type[0];
-    }
-
-    /// <summary>
-    /// Null implementation of <see cref="SerializationConfigurationBase"/>.
-    /// </summary>
-    public sealed class NullSerializationConfiguration : SerializationConfigurationBase, IImplementNullObjectPattern
-    {
-        /// <inheritdoc />
-        protected override void RegisterTypes(IReadOnlyCollection<Type> types)
-        {
-            var registrationDetails = new RegistrationDetails(this.GetType());
-            foreach (var type in types ?? new Type[0])
-            {
-                this.MutableRegisteredTypeToDetailsMap.Add(type, registrationDetails);
-            }
-        }
-
-        /// <inheritdoc />
-        public sealed override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new Type[0];
-    }
-
-    /// <summary>
-    /// Internal implementation of <see cref="SerializationConfigurationBase" /> that will auto register necessary internal types.
-    /// </summary>
-    public sealed class InternalNullDiscoveryConfiguration : SerializationConfigurationBase, IDoNotNeedInternalDependencies, IImplementNullObjectPattern
-    {
-        /// <inheritdoc />
-        protected override void RegisterTypes(IReadOnlyCollection<Type> types)
-        {
-            var registrationDetails = new RegistrationDetails(this.GetType());
-            foreach (var type in types ?? new Type[0])
-            {
-                this.MutableRegisteredTypeToDetailsMap.Add(type, registrationDetails);
-            }
-        }
-
-        /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => InternallyRequiredTypes;
-
-        /// <inheritdoc />
-        public override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new Type[0];
-    }
-
-    /// <summary>
-    /// Generic implementation of <see cref="SerializationConfigurationBase" /> that will perform discovery using type <typeparamref name="T" />.
-    /// </summary>
-    /// <typeparam name="T">Type to use for discovery.</typeparam>
-    public sealed class NullDiscoverySerializationConfiguration<T> : SerializationConfigurationBase, IImplementNullObjectPattern
-    {
-        /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => new[] { typeof(T) };
-
-        /// <inheritdoc />
-        protected override void RegisterTypes(IReadOnlyCollection<Type> types)
-        {
-            var registrationDetails = new RegistrationDetails(this.GetType());
-            foreach (var type in types ?? new Type[0])
-            {
-                this.MutableRegisteredTypeToDetailsMap.Add(type, registrationDetails);
-            }
-        }
-
-        /// <inheritdoc />
-        public override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new[] { typeof(InternalNullDiscoveryConfiguration) };
-    }
-
-    /// <summary>
-    /// Generic implementation of <see cref="SerializationConfigurationBase" /> that will perform discovery using type <typeparamref name="T1" />, <typeparamref name="T2" />.
-    /// </summary>
-    /// <typeparam name="T1">Type one to use for discovery.</typeparam>
-    /// <typeparam name="T2">Type two to use for discovery.</typeparam>
-    public sealed class NullDiscoverySerializationConfiguration<T1, T2> : SerializationConfigurationBase, IImplementNullObjectPattern
-    {
-        /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => new[] { typeof(T1), typeof(T2) };
-
-        /// <inheritdoc />
-        protected override void RegisterTypes(IReadOnlyCollection<Type> types)
-        {
-            var registrationDetails = new RegistrationDetails(this.GetType());
-            foreach (var type in types ?? new Type[0])
-            {
-                this.MutableRegisteredTypeToDetailsMap.Add(type, registrationDetails);
-            }
-        }
-
-        /// <inheritdoc />
-        public override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new Type[0];
-    }
-
-    /// <summary>
-    /// Interface to declare that it does not require the internal dependency configuration.
-    /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces", Justification = "Prefer an interface for this instead of an attribute.")]
-    public interface IDoNotNeedInternalDependencies
-    {
     }
 }
 

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PropertyBagConfigurationBase.cs" company="OBeautifulCode">
+// <copyright file="PropertyBagSerializationConfigurationBase.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
     using System.Linq;
 
     using OBeautifulCode.Collection.Recipes;
-    using OBeautifulCode.Type;
 
     using static System.FormattableString;
 
@@ -23,7 +22,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
     /// <summary>
     /// Base class to use for creating a <see cref="ObcPropertyBagSerializer" /> configuration.
     /// </summary>
-    public abstract class PropertyBagConfigurationBase : SerializationConfigurationBase
+    public abstract class PropertyBagSerializationConfigurationBase : SerializationConfigurationBase
     {
         /// <summary>
         /// Gets the map of type to specific serializer.
@@ -33,15 +32,25 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <inheritdoc />
         protected override void RegisterTypes(IReadOnlyCollection<Type> types)
         {
-            var registrationDetails = new RegistrationDetails(this.GetType());
             foreach (var type in types ?? new Type[0])
             {
-                this.MutableRegisteredTypeToDetailsMap.Add(type, registrationDetails);
+                this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(type, this.GetType().ToPropertyBagSerializationConfigurationType());
             }
         }
 
         /// <inheritdoc />
-        public sealed override IReadOnlyCollection<Type> InternalDependentSerializationConfigurationTypes => new[] { typeof(InternalPropertyBagConfiguration) };
+        protected sealed override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new[]
+        {
+            typeof(InternallyRequiredTypesWithDiscoveryPropertyBagSerializationConfiguration).ToPropertyBagSerializationConfigurationType(),
+        };
+
+        /// <summary>
+        /// Gets the <see cref="PropertyBagSerializationConfigurationBase"/>s that are needed for the current implementation of <see cref="PropertyBagSerializationConfigurationBase"/>.  Optionally overrideable, DEFAULT is empty collection.
+        /// </summary>
+        protected virtual IReadOnlyCollection<PropertyBagSerializationConfigurationType> DependentPropertyBagSerializationConfigurationTypes => new PropertyBagSerializationConfigurationType[0];
+
+        /// <inheritdoc />
+        protected sealed override IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypes => this.DependentPropertyBagSerializationConfigurationTypes;
 
         /// <summary>
         /// Gets the registered serializer set to use.
@@ -66,13 +75,14 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
         {
-            var dependentConfigTypes = new List<Type>(this.GetDependentSerializationConfigurationTypesWithInternalIfApplicable().Reverse());
+            var dependentConfigTypes = new List<SerializationConfigurationType>(this.GetDependentSerializationConfigurationTypesWithInternalIfApplicable().Reverse());
+
             while (dependentConfigTypes.Any())
             {
                 var type = dependentConfigTypes.Last();
                 dependentConfigTypes.RemoveAt(dependentConfigTypes.Count - 1);
 
-                var dependentConfig = (PropertyBagConfigurationBase)this.DependentSerializationConfigurationTypeToInstanceMap[type];
+                var dependentConfig = (PropertyBagSerializationConfigurationBase)this.DependentSerializationConfigurationTypeToInstanceMap[type];
                 dependentConfigTypes.AddRange(dependentConfig.GetDependentSerializationConfigurationTypesWithInternalIfApplicable());
 
                 this.ProcessSerializer(dependentConfig.RegisteredSerializers, false);
@@ -80,11 +90,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
             var serializers = (this.SerializersToRegister ?? new RegisteredStringSerializer[0]).ToList();
             var handledTypes = this.ProcessSerializer(serializers);
-            var registrationDetails = new RegistrationDetails(this.GetType());
 
             foreach (var handledType in handledTypes)
             {
-                this.MutableRegisteredTypeToDetailsMap.Add(handledType, registrationDetails);
+                this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(handledType, this.GetType().ToPropertyBagSerializationConfigurationType());
             }
         }
 
@@ -92,7 +101,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         {
             var handledTypes = registeredSerializers.SelectMany(_ => _.HandledTypes).ToList();
 
-            if (checkForAlreadyRegistered && this.RegisteredTypeToDetailsMap.Keys.Intersect(handledTypes).Any())
+            if (checkForAlreadyRegistered && this.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Intersect(handledTypes).Any())
             {
                 throw new DuplicateRegistrationException(
                     Invariant($"Trying to register one or more types via {nameof(this.SerializersToRegister)} processing, but one is already registered."),
@@ -140,23 +149,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
     }
 
     /// <summary>
-    /// Internal implementation of <see cref="PropertyBagConfigurationBase" /> that will auto register necessary internal types.
-    /// </summary>
-    public sealed class InternalPropertyBagConfiguration : PropertyBagConfigurationBase, IDoNotNeedInternalDependencies
-    {
-        /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => InternallyRequiredTypes;
-    }
-
-    /// <summary>
-    /// Null implementation of <see cref="PropertyBagConfigurationBase"/>.
-    /// </summary>
-    public sealed class NullPropertyBagConfiguration : PropertyBagConfigurationBase, IImplementNullObjectPattern
-    {
-    }
-
-    /// <summary>
-    /// Strategy on dealing with collisions in the <see cref="PropertyBagConfigurationBase" /> logic.
+    /// Strategy on dealing with collisions in the <see cref="PropertyBagSerializationConfigurationBase" /> logic.
     /// </summary>
     public enum TypeSerializationRegistrationCollisionStrategy
     {
