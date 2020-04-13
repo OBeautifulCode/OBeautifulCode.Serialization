@@ -34,8 +34,8 @@ namespace OBeautifulCode.Serialization.Test
             RoundtripSerializeWithCallback(
                 expected,
                 (yieldedDescribedSerialization, deserializedObject) => deserializedObject.Should().Be(expected),
-                shouldUseConfiguration ? typeof(GenericDiscoveryJsonSerializationConfiguration<T>) : null,
-                shouldUseConfiguration ? typeof(GenericDiscoveryBsonSerializationConfiguration<T>) : null);
+                shouldUseConfiguration ? typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<T>) : null,
+                shouldUseConfiguration ? typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<T>) : null);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Want parameters this way.")]
@@ -56,19 +56,19 @@ namespace OBeautifulCode.Serialization.Test
 
             if (testJson)
             {
-                var jsonSerializer = new ObcJsonSerializer(jsonConfigType, unregisteredTypeEncounteredStrategy);
+                var jsonSerializer = new ObcJsonSerializer(jsonConfigType?.ToJsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
                 serializers.Add(jsonSerializer);
             }
 
             if (testBson)
             {
-                var bsonSerializer = new ObcBsonSerializer(bsonConfigType, unregisteredTypeEncounteredStrategy);
+                var bsonSerializer = new ObcBsonSerializer(bsonConfigType?.ToBsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
                 serializers.Add(bsonSerializer);
             }
 
             if (testPropBag)
             {
-                var propBagSerializer = new ObcPropertyBagSerializer(propBagConfigType, unregisteredTypeEncounteredStrategy);
+                var propBagSerializer = new ObcPropertyBagSerializer(propBagConfigType?.ToPropertyBagSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
                 serializers.Add(propBagSerializer);
             }
 
@@ -79,7 +79,7 @@ namespace OBeautifulCode.Serialization.Test
 
             foreach (var serializer in serializers)
             {
-                var configurationTypeRepresentation = serializer.SerializationConfigurationType.ToRepresentation();
+                var configurationTypeRepresentation = serializer.SerializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.ToRepresentation();
 
                 var stringDescription = new SerializerDescription(
                     serializer.SerializationKind,

@@ -47,7 +47,7 @@ namespace OBeautifulCode.Serialization.Json
                 switch (serializerDescription.SerializationKind)
                 {
                     case SerializationKind.Json:
-                        return new ObcJsonSerializer(configurationType.ToJsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
+                        return new ObcJsonSerializer(configurationType?.ToJsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
                     default:
                         throw new NotSupportedException(Invariant($"{nameof(serializerDescription)} from enumeration {nameof(SerializationKind)} of {serializerDescription.SerializationKind} is not supported."));
                 }

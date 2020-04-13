@@ -25,11 +25,6 @@ namespace OBeautifulCode.Serialization
 
     using static System.FormattableString;
 
-#pragma warning disable SA1201 // Elements should appear in the correct order
-#pragma warning disable SA1202 // Public members should come before protected members
-#pragma warning disable SA1203 // Constant fields should appear before non-constant fields
-#pragma warning disable SA1204 // Static members should appear before non-static members
-
     /// <summary>
     /// Common configuration base across all kinds of serialization.
     /// </summary>
@@ -74,10 +69,6 @@ namespace OBeautifulCode.Serialization
             typeof(DynamicTypePlaceholder),
         };
 
-        private readonly object syncConfigure = new object();
-
-        private bool configured;
-
         private static readonly HashSet<Type> DiscoverAssignableTypesBlackList =
             new HashSet<Type>(
                 new[]
@@ -92,10 +83,9 @@ namespace OBeautifulCode.Serialization
         private static readonly ConcurrentDictionary<Assembly, IReadOnlyCollection<Type>> AssemblyToTypesToConsiderForRegistration =
             new ConcurrentDictionary<Assembly, IReadOnlyCollection<Type>>();
 
-        /// <summary>
-        /// Gets the version of <see cref="RegisteredTypeToSerializationConfigurationTypeMap" />.
-        /// </summary>
-        protected Dictionary<Type, SerializationConfigurationType> MutableRegisteredTypeToSerializationConfigurationTypeMap { get; } = new Dictionary<Type, SerializationConfigurationType>();
+        private readonly object syncConfigure = new object();
+
+        private bool initialized;
 
         /// <summary>
         /// Gets a map of the the dependent configuration type (and any ancestors) to their configured instance.
@@ -108,18 +98,105 @@ namespace OBeautifulCode.Serialization
         public IReadOnlyDictionary<Type, SerializationConfigurationType> RegisteredTypeToSerializationConfigurationTypeMap => this.MutableRegisteredTypeToSerializationConfigurationTypeMap;
 
         /// <summary>
+        /// Gets the version of <see cref="RegisteredTypeToSerializationConfigurationTypeMap" />.
+        /// </summary>
+        protected Dictionary<Type, SerializationConfigurationType> MutableRegisteredTypeToSerializationConfigurationTypeMap { get; } = new Dictionary<Type, SerializationConfigurationType>();
+
+        /// <summary>
+        /// Gets a list of <see cref="SerializationConfigurationBase"/>'s that are needed for the current implementation of <see cref="SerializationConfigurationBase"/>.  Optionally overrideable, DEFAULT is empty collection.
+        /// </summary>
+        protected abstract IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypes { get; }
+
+        /// <summary>
+        /// Gets the dependent configurations that are required to be in-effect for <see cref="SerializationKind"/>-associated abstract inheritors,
+        /// (e.g. BsonSerializationConfiguration) so that, in turn, their concrete inheritors (e.g. MyDomainBsonSerializationConfiguration)
+        /// do not need to specify these dependencies and so that any and all serialization that utilizes such concrete inheritors will work as expected.
+        /// These will be ignored for any configuration that implements <see cref="IIgnoreDefaultDependencies"/>.
+        /// </summary>
+        protected abstract IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes { get; }
+
+        /// <summary>
+        /// Gets a list of <see cref="Type"/>s to auto-register.
+        /// Auto-registration is a convenient way to register types; it accounts for interface implementations and class inheritance when performing the registration.
+        /// For interface types, all implementations will be also be registered.  For classes, all inheritors will also be registered.  These additional types do not need to be specified.
+        /// </summary>
+        protected virtual IReadOnlyCollection<Type> TypesToAutoRegister => new Type[0];
+
+        /// <summary>
+        /// Gets a list of <see cref="Type"/>s to auto-register with discovery.
+        /// Will take these specified types and recursively detect all model objects used then treat them all as if they were specified on <see cref="TypesToAutoRegister" /> directly.
+        /// </summary>
+        protected virtual IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => new Type[0];
+
+        /// <summary>
+        /// Gets a list of class <see cref="Type"/>s to register.
+        /// </summary>
+        protected virtual IReadOnlyCollection<Type> ClassTypesToRegister => new Type[0];
+
+        /// <summary>
+        /// Gets a list of parent class <see cref="Type"/>s to register.  These classes and all of their inheritors will be registered.  The inheritors do not need to be specified.
+        /// </summary>
+        protected virtual IReadOnlyCollection<Type> ClassTypesToRegisterAlongWithInheritors => new Type[0];
+
+        /// <summary>
+        /// Gets a list of interface <see cref="Type"/>s whose implementations should be registered.
+        /// </summary>
+        protected virtual IReadOnlyCollection<Type> InterfaceTypesToRegisterImplementationOf => new Type[0];
+
+        /// <summary>
+        /// Register the specified type and class types that are assignable to those specified types.
+        /// </summary>
+        /// <param name="types">The types.</param>
+        /// <returns>Types assignable to the types provided.</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Want to be used from derivatives using 'this.'")]
+        public static IReadOnlyCollection<Type> DiscoverAllAssignableTypes(IReadOnlyCollection<Type> types)
+        {
+            new { types }.AsArg().Must().NotBeNull();
+
+            var allTypesToConsiderForRegistration = GetAllTypesToConsiderForRegistration();
+
+            var result = allTypesToConsiderForRegistration
+                .Where(_ => types.Any(typeToAutoRegister => IsAssignableToOrFrom(_, typeToAutoRegister)))
+                .Concat(types.Where(_ => _.IsInterface)) // add interfaces back as they were explicitly provided.
+                .ToList();
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets all specified dependent configuration types, including all internal configuration types
+        /// unless this this configuration type is <see cref="IIgnoreDefaultDependencies"/>.
+        /// </summary>
+        /// <returns>
+        /// All specified dependent configuration types, including all internal configuration types
+        /// unless this this configuration type is <see cref="IIgnoreDefaultDependencies"/>.
+        /// </returns>
+        public IReadOnlyCollection<SerializationConfigurationType> GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable()
+        {
+            var result = this.DependentSerializationConfigurationTypes.ToList();
+
+            if (!(this is IIgnoreDefaultDependencies))
+            {
+                result.AddRange(this.DefaultDependentSerializationConfigurationTypes);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Run configuration logic.
         /// </summary>
         /// <param name="dependentSerializationConfigurationTypeToInstanceMap">Map of dependent configuration type to configured instance.</param>
-        public virtual void Configure(IReadOnlyDictionary<SerializationConfigurationType, SerializationConfigurationBase> dependentSerializationConfigurationTypeToInstanceMap)
+        public virtual void Initialize(
+            IReadOnlyDictionary<SerializationConfigurationType, SerializationConfigurationBase> dependentSerializationConfigurationTypeToInstanceMap)
         {
             new { dependentSerializationConfigurationTypeToInstanceMap }.AsArg().Must().NotBeNull();
 
-            if (!this.configured)
+            if (!this.initialized)
             {
                 lock (this.syncConfigure)
                 {
-                    if (!this.configured)
+                    if (!this.initialized)
                     {
                         // Configure dependency map.
                         this.DependentSerializationConfigurationTypeToInstanceMap = dependentSerializationConfigurationTypeToInstanceMap;
@@ -134,8 +211,17 @@ namespace OBeautifulCode.Serialization
 
                             foreach (var dependentConfigRegisteredType in dependentConfigRegisteredTypes)
                             {
+                                var dependentTypeToRegister = dependentConfigRegisteredType.Key;
+
+                                if (this.MutableRegisteredTypeToSerializationConfigurationTypeMap.ContainsKey(dependentTypeToRegister))
+                                {
+                                    var dependentConfigTypeHavingAlreadyRegisteredSpecifiedType = dependentConfigRegisteredType.Value;
+
+                                    throw new InvalidOperationException(Invariant($"Config {this.GetType().ToStringReadable()} is attempting to register type '{dependentTypeToRegister.ToStringReadable()}' from dependent config {dependentConfigType.ConcreteSerializationConfigurationDerivativeType.ToStringReadable()} but it was already registered by {dependentConfigTypeHavingAlreadyRegisteredSpecifiedType.ConcreteSerializationConfigurationDerivativeType.ToStringReadable()}."));
+                                }
+
                                 this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(
-                                    dependentConfigRegisteredType.Key,
+                                    dependentTypeToRegister,
                                     dependentConfigType);
                             }
                         }
@@ -194,10 +280,111 @@ namespace OBeautifulCode.Serialization
                         // Run optional final config for the last inheritor.
                         this.FinalConfiguration();
 
-                        this.configured = true;
+                        this.initialized = true;
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Optional template method to be used by a specific configuration implementation at the beginning of the configuration logic.
+        /// </summary>
+        protected virtual void InitialConfiguration()
+        {
+            /* no-op - just for additional custom logic */
+        }
+
+        /// <summary>
+        /// Optional to each serializer, a template method for any specific logic for the serialization implementation.
+        /// </summary>
+        protected virtual void InternalConfigure()
+        {
+            /* no-op - just for additional custom logic */
+        }
+
+        /// <summary>
+        /// Optional template method to be used by a specific configuration implementation at the end of the configuration logic.
+        /// </summary>
+        protected virtual void FinalConfiguration()
+        {
+            /* no-op - just for additional custom logic */
+        }
+
+        /// <summary>
+        /// Register type using specific internal conventions.
+        /// </summary>
+        /// <param name="type">Type to register.</param>
+        protected void RegisterType(Type type)
+        {
+            this.RegisterTypes(new[] { type });
+        }
+
+        /// <summary>
+        /// Register type using specific internal conventions.
+        /// </summary>
+        /// <typeparam name="T">Type to register.</typeparam>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Want to use this as a generic.")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Like this structure.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Want to be used from derivatives using 'this.'")]
+        protected void RegisterType<T>()
+        {
+            this.RegisterTypes(new[] { typeof(T) });
+        }
+
+        /// <summary>
+        /// Register types using specific internal conventions.
+        /// </summary>
+        /// <param name="types">Types to register.</param>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Want to be used from derivatives using 'this.'")]
+        protected virtual void RegisterTypes(IReadOnlyCollection<Type> types)
+        {
+            foreach (var type in types ?? new Type[0])
+            {
+                this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(type, this.GetType().ToSerializationConfigurationType());
+            }
+        }
+
+        /// <summary>
+        /// Discover all types that should considered for registration when looking for derivative types.
+        /// </summary>
+        /// <returns>All types that should be considered for registration.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Want this to be a method since it's running logic.")]
+        private static IReadOnlyCollection<Type> GetAllTypesToConsiderForRegistration()
+        {
+            var assemblies = AssemblyLoader.GetLoadedAssemblies();
+
+            foreach (var assembly in assemblies)
+            {
+                if (!AssemblyToTypesToConsiderForRegistration.ContainsKey(assembly))
+                {
+                    var typesToConsiderForThisAssembly =
+                        new[] { assembly }
+                            .GetTypesFromAssemblies()
+                            .Where(_ =>
+                                _.IsClass &&
+                                (!_.IsClosedAnonymousType()) &&
+                                (!DiscoverAssignableTypesBlackList.Contains(_)) && // all types will be assignable to these types, so filter them out
+                                (!_.IsGenericTypeDefinition)) // can't do an IsAssignableTo check on generic type definitions
+                            .ToList();
+
+                    AssemblyToTypesToConsiderForRegistration.TryAdd(assembly, typesToConsiderForThisAssembly);
+                }
+            }
+
+            var result = AssemblyToTypesToConsiderForRegistration.Values.SelectMany(_ => _).ToList();
+
+            return result;
+        }
+
+        private static bool IsAssignableToOrFrom(
+            Type type1,
+            Type type2)
+        {
+            // note: we are PURPOSELY not using OBeautifulCode.Reflection.Recipes.TypeHelper.IsAssignableTo
+            // because of performance issues related to the OBeautifulCode.Validation calls in that method.
+            var result = (type1 == type2) || type1.IsAssignableFrom(type2) || type2.IsAssignableFrom(type1);
+
+            return result;
         }
 
         private IReadOnlyCollection<Type> DiscoverAllContainedAssignableTypes(IReadOnlyCollection<Type> types)
@@ -266,192 +453,5 @@ namespace OBeautifulCode.Serialization
 
             return result;
         }
-
-        /// <summary>
-        /// Register the specified type and class types that are assignable to those specified types.
-        /// </summary>
-        /// <param name="types">The types.</param>
-        /// <returns>Types assignable to the types provided.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Want to be used from derivatives using 'this.'")]
-        public static IReadOnlyCollection<Type> DiscoverAllAssignableTypes(IReadOnlyCollection<Type> types)
-        {
-            new { types }.AsArg().Must().NotBeNull();
-
-            var allTypesToConsiderForRegistration = GetAllTypesToConsiderForRegistration();
-
-            var result = allTypesToConsiderForRegistration
-                .Where(_ => types.Any(typeToAutoRegister => IsAssignableToOrFrom(_, typeToAutoRegister)))
-                .Concat(types.Where(_ => _.IsInterface)) // add interfaces back as they were explicitly provided.
-                .ToList();
-
-            return result;
-        }
-
-        /// <summary>
-        /// Discover all types that should considered for registration when looking for derivative types.
-        /// </summary>
-        /// <returns>All types that should be considered for registration.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Want this to be a method since it's running logic.")]
-        private static IReadOnlyCollection<Type> GetAllTypesToConsiderForRegistration()
-        {
-            var assemblies = AssemblyLoader.GetLoadedAssemblies();
-
-            foreach (var assembly in assemblies)
-            {
-                if (!AssemblyToTypesToConsiderForRegistration.ContainsKey(assembly))
-                {
-                    var typesToConsiderForThisAssembly =
-                        new[] { assembly }
-                            .GetTypesFromAssemblies()
-                            .Where(_ =>
-                                _.IsClass &&
-                                (!_.IsClosedAnonymousType()) &&
-                                (!DiscoverAssignableTypesBlackList.Contains(_)) && // all types will be assignable to these types, so filter them out
-                                (!_.IsGenericTypeDefinition)) // can't do an IsAssignableTo check on generic type definitions
-                            .ToList();
-
-                    AssemblyToTypesToConsiderForRegistration.TryAdd(assembly, typesToConsiderForThisAssembly);
-                }
-            }
-
-            var result = AssemblyToTypesToConsiderForRegistration.Values.SelectMany(_ => _).ToList();
-
-            return result;
-        }
-
-        private static bool IsAssignableToOrFrom(
-            Type type1,
-            Type type2)
-        {
-            // note: we are PURPOSELY not using OBeautifulCode.Reflection.Recipes.TypeHelper.IsAssignableTo
-            // because of performance issues related to the OBeautifulCode.Validation calls in that method.
-            var result = (type1 == type2) || type1.IsAssignableFrom(type2) || type2.IsAssignableFrom(type1);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets a list of <see cref="SerializationConfigurationBase"/>'s that are needed for the current implementation of <see cref="SerializationConfigurationBase"/>.  Optionally overrideable, DEFAULT is empty collection.
-        /// </summary>
-        protected abstract IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypes { get; }
-
-        /// <summary>
-        /// Gets all specified dependent configuration types, including all internal configuration types
-        /// unless this this configuration type is <see cref="IIgnoreDefaultDependencies"/>.
-        /// </summary>
-        /// <returns>
-        /// All specified dependent configuration types, including all internal configuration types
-        /// unless this this configuration type is <see cref="IIgnoreDefaultDependencies"/>.
-        /// </returns>
-        public IReadOnlyCollection<SerializationConfigurationType> GetDependentSerializationConfigurationTypesWithInternalIfApplicable()
-        {
-            var result = this.DependentSerializationConfigurationTypes.ToList();
-
-            if (!(this is IIgnoreDefaultDependencies))
-            {
-                result.AddRange(this.DefaultDependentSerializationConfigurationTypes);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Gets the dependent configurations that are required to be in-effect for <see cref="SerializationKind"/>-associated abstract inheritors,
-        /// (e.g. BsonSerializationConfiguration) so that, in turn, their concrete inheritors (e.g. MyDomainBsonSerializationConfiguration)
-        /// do not need to specify these dependencies and so that any and all serialization that utilizes such concrete inheritors will work as expected.
-        /// These will be ignored for any configuration that implements <see cref="IIgnoreDefaultDependencies"/>.
-        /// </summary>
-        protected abstract IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes { get; }
-
-        /// <summary>
-        /// Gets a list of <see cref="Type"/>s to auto-register.
-        /// Auto-registration is a convenient way to register types; it accounts for interface implementations and class inheritance when performing the registration.
-        /// For interface types, all implementations will be also be registered.  For classes, all inheritors will also be registered.  These additional types do not need to be specified.
-        /// </summary>
-        protected virtual IReadOnlyCollection<Type> TypesToAutoRegister => new Type[0];
-
-        /// <summary>
-        /// Gets a list of <see cref="Type"/>s to auto-register with discovery.
-        /// Will take these specified types and recursively detect all model objects used then treat them all as if they were specified on <see cref="TypesToAutoRegister" /> directly.
-        /// </summary>
-        protected virtual IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => new Type[0];
-
-        /// <summary>
-        /// Gets a list of class <see cref="Type"/>s to register.
-        /// </summary>
-        protected virtual IReadOnlyCollection<Type> ClassTypesToRegister => new Type[0];
-
-        /// <summary>
-        /// Gets a list of parent class <see cref="Type"/>s to register.  These classes and all of their inheritors will be registered.  The inheritors do not need to be specified.
-        /// </summary>
-        protected virtual IReadOnlyCollection<Type> ClassTypesToRegisterAlongWithInheritors => new Type[0];
-
-        /// <summary>
-        /// Gets a list of interface <see cref="Type"/>s whose implementations should be registered.
-        /// </summary>
-        protected virtual IReadOnlyCollection<Type> InterfaceTypesToRegisterImplementationOf => new Type[0];
-
-        /// <summary>
-        /// Optional template method to be used by a specific configuration implementation at the beginning of the configuration logic.
-        /// </summary>
-        protected virtual void InitialConfiguration()
-        {
-            /* no-op - just for additional custom logic */
-        }
-
-        /// <summary>
-        /// Optional to each serializer, a template method for any specific logic for the serialization implementation.
-        /// </summary>
-        protected virtual void InternalConfigure()
-        {
-            /* no-op - just for additional custom logic */
-        }
-
-        /// <summary>
-        /// Optional template method to be used by a specific configuration implementation at the end of the configuration logic.
-        /// </summary>
-        protected virtual void FinalConfiguration()
-        {
-            /* no-op - just for additional custom logic */
-        }
-
-        /// <summary>
-        /// Register type using specific internal conventions.
-        /// </summary>
-        /// <param name="type">Type to register.</param>
-        protected void RegisterType(Type type)
-        {
-            this.RegisterTypes(new[] { type });
-        }
-
-        /// <summary>
-        /// Register type using specific internal conventions.
-        /// </summary>
-        /// <typeparam name="T">Type to register.</typeparam>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Want to use this as a generic.")]
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Like this structure.")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Want to be used from derivatives using 'this.'")]
-        protected void RegisterType<T>()
-        {
-            this.RegisterTypes(new[] { typeof(T) });
-        }
-
-        /// <summary>
-        /// Register types using specific internal conventions.
-        /// </summary>
-        /// <param name="types">Types to register.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Want to be used from derivatives using 'this.'")]
-        protected virtual void RegisterTypes(IReadOnlyCollection<Type> types)
-        {
-            foreach (var type in types ?? new Type[0])
-            {
-                this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(type, this.GetType().ToSerializationConfigurationType());
-            }
-        }
     }
 }
-
-#pragma warning restore SA1201 // Elements should appear in the correct order
-#pragma warning restore SA1202 // Public members should come before protected members
-#pragma warning restore SA1203 // Constant fields should appear before non-constant fields
-#pragma warning restore SA1204 // Static members should appear before non-static members

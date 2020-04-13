@@ -144,7 +144,7 @@ namespace OBeautifulCode.Serialization.Test
             var configType = typeof(TestVariousTypeOverloadsConfig);
 
             // Act
-            var config = SerializationConfigurationManager.ConfigureWithReturn<SerializationConfigurationBase>(configType);
+            var config = SerializationConfigurationManager.GetOrAddSerializationConfiguration(configType.ToSerializationConfigurationType());
 
             // Assert
             config.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Intersect(expectedTypes).Should().BeEquivalentTo(expectedTypes);
@@ -154,10 +154,10 @@ namespace OBeautifulCode.Serialization.Test
         [Fact]
         public static void Configure___Provided_with_dependent_configs___Configures_dependents()
         {
-            Action action = SerializationConfigurationManager.Configure<DependsOnCustomThrowsConfig>;
+            void Action() => SerializationConfigurationManager.GetOrAddSerializationConfiguration<DependsOnCustomThrowsConfig>();
 
             // Act
-            var exception = Record.Exception(action);
+            var exception = Record.Exception(Action);
 
             // Assert
             exception.Should().NotBeNull();
@@ -176,10 +176,10 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var testType = typeof(TestTracking);
-            var configType = typeof(GenericDiscoveryBsonSerializationConfiguration<TestTracking>);
+            var configType = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<TestTracking>);
 
             // Act
-            var config = SerializationConfigurationManager.ConfigureWithReturn<BsonSerializationConfigurationBase>(configType);
+            var config = SerializationConfigurationManager.GetOrAddSerializationConfiguration(configType.ToSerializationConfigurationType());
 
             // Assert
             config.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Should().Contain(testType);

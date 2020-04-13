@@ -31,7 +31,7 @@ namespace OBeautifulCode.Serialization.Test
             var tasks = Enumerable.Range(1, 10000).Select(_ => A.Dummy<TestDictionaryMixedKeyValues>())
                 .Select(_ => new Task(() =>
                 {
-                    var serializer = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<TestDictionaryMixedKeyValues>));
+                    var serializer = new ObcJsonSerializer(typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<TestDictionaryMixedKeyValues>).ToJsonSerializationConfigurationType());
                     serializer.SerializeToString(_);
                 })).ToArray();
             Parallel.ForEach(tasks, _ => _.Start());
@@ -44,7 +44,7 @@ namespace OBeautifulCode.Serialization.Test
             var tasks = Enumerable.Range(1, 10000).Select(_ => A.Dummy<TestBase>())
                 .Select(_ => new Task(() =>
                 {
-                    var serializer = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<TestBase>));
+                    var serializer = new ObcJsonSerializer(typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<TestBase>).ToJsonSerializationConfigurationType());
                     serializer.SerializeToString(_);
                 })).ToArray();
             Parallel.ForEach(tasks, _ => _.Start());
@@ -54,7 +54,7 @@ namespace OBeautifulCode.Serialization.Test
         [Fact(Skip = "Long running")]
         public static void TestBase()
         {
-            var serializer = new ObcJsonSerializer(typeof(GenericDiscoveryJsonSerializationConfiguration<TestBase>));
+            var serializer = new ObcJsonSerializer(typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<TestBase>).ToJsonSerializationConfigurationType());
             var tasks = Enumerable.Range(1, 100).Select(_ => A.Dummy<TestBase>())
                 .Select(_ => new Task(() => serializer.SerializeToString(_))).ToArray();
             Parallel.ForEach(tasks, _ => _.Start());

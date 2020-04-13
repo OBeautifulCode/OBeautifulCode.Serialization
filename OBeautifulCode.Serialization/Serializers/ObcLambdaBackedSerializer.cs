@@ -11,7 +11,7 @@ namespace OBeautifulCode.Serialization
     using OBeautifulCode.Assertion.Recipes;
 
     /// <summary>
-    /// Serializer that is backed by <see cref="Func{T1,T2,T3,T4,T5,T6,T7,T8,T9,TResult}" />.
+    /// Serializer that is backed by <see cref="Func{T1,TResult}" />.
     /// </summary>
     public class ObcLambdaBackedSerializer : ISerializeAndDeserialize
     {

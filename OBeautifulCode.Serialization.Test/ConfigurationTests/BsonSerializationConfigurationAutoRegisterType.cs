@@ -41,7 +41,7 @@ namespace OBeautifulCode.Serialization.Test
 
     public class DependsOnCustomThrowsConfig : BsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new[] { typeof(CustomThrowsConfig) };
+        protected override IReadOnlyCollection<BsonSerializationConfigurationType> DependentBsonSerializationConfigurationTypes => new[] { typeof(CustomThrowsConfig).ToBsonSerializationConfigurationType() };
     }
 
     public class CustomThrowsConfig : BsonSerializationConfigurationBase

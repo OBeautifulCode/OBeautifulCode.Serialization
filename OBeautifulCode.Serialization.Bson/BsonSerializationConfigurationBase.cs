@@ -52,7 +52,7 @@ namespace OBeautifulCode.Serialization.Bson
         /// <summary>
         /// Gets a map of <see cref="Type"/> to the <see cref="IBsonSerializer"/> to register.
         /// </summary>
-        protected virtual IReadOnlyCollection<RegisteredBsonSerializer> SerializersToRegister => new List<RegisteredBsonSerializer>();
+        protected virtual IReadOnlyCollection<BsonSerializerForTypes> TypesToRegisterWithSerializer => new List<BsonSerializerForTypes>();
 
         /// <inheritdoc />
         protected sealed override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new[]
@@ -72,15 +72,15 @@ namespace OBeautifulCode.Serialization.Bson
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
         {
-            foreach (var serializerToRegister in this.SerializersToRegister ?? new List<RegisteredBsonSerializer>())
+            foreach (var serializerToRegister in this.TypesToRegisterWithSerializer ?? new List<BsonSerializerForTypes>())
             {
-                var serializer = serializerToRegister.SerializerBuilderFunction();
+                var serializer = serializerToRegister.SerializerBuilderFunc();
                 foreach (var handledType in serializerToRegister.HandledTypes)
                 {
                     if (this.RegisteredTypeToSerializationConfigurationTypeMap.ContainsKey(handledType))
                     {
                         throw new DuplicateRegistrationException(
-                            Invariant($"Trying to register {handledType} via {nameof(this.SerializersToRegister)} processing, but it is already registered."),
+                            Invariant($"Trying to register {handledType} via {nameof(this.TypesToRegisterWithSerializer)} processing, but it is already registered."),
                             new[] { handledType });
                     }
 

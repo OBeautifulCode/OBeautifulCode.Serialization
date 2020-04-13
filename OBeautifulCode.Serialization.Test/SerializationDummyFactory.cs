@@ -28,7 +28,7 @@ namespace OBeautifulCode.Serialization.Test
             AutoFixtureBackedDummyFactory.ConstrainDummyToExclude(SerializationFormat.Invalid);
 
 #if OBeautifulCodeSerializationRecipesProject
-            AutoFixtureBackedDummyFactory.ConstrainDummyToExclude(OBeautifulCode.Serialization.Json.RegisteredJsonConverterOutputKind.Unknown);
+            AutoFixtureBackedDummyFactory.ConstrainDummyToExclude(OBeautifulCode.Serialization.Json.JsonConverterOutputKind.Unknown);
             AutoFixtureBackedDummyFactory.UseRandomConcreteSubclassForDummy<KeyOrValueObjectHierarchyBase>();
             AutoFixtureBackedDummyFactory.UseRandomConcreteSubclassForDummy<TestBase>();
 #endif

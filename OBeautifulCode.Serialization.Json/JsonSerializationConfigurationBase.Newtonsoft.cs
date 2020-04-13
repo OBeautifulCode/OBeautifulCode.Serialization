@@ -154,8 +154,8 @@ namespace OBeautifulCode.Serialization.Json
 
             var specifiedConverters = this.RegisteredConverters.Select(_ =>
                 serializationDirection == SerializationDirection.Serialize
-                    ? _.SerializingConverterBuilderFunction()
-                    : _.DeserializingConverterBuilderFunction()).ToList();
+                    ? _.SerializingConverterBuilderFunc()
+                    : _.DeserializingConverterBuilderFunc()).ToList();
 
             var defaultConverters = this.GetDefaultConverters(serializationDirection, formattingKind);
 

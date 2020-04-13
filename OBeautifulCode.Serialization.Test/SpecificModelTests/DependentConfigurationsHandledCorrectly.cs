@@ -64,38 +64,38 @@ namespace OBeautifulCode.Serialization.Test
 
     public class JsonConfigA : JsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
-            new[] { typeof(JsonConfigB), typeof(JsonConfigC) };
+        protected override IReadOnlyCollection<JsonSerializationConfigurationType> DependentJsonSerializationConfigurationTypes =>
+            new[] { typeof(JsonConfigB).ToJsonSerializationConfigurationType(), typeof(JsonConfigC).ToJsonSerializationConfigurationType() };
     }
 
     public class BsonConfigA : BsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
-            new[] { typeof(BsonConfigB), typeof(BsonConfigC) };
+        protected override IReadOnlyCollection<BsonSerializationConfigurationType> DependentBsonSerializationConfigurationTypes =>
+            new[] { typeof(BsonConfigB).ToBsonSerializationConfigurationType(), typeof(BsonConfigC).ToBsonSerializationConfigurationType() };
     }
 
     public class PropBagConfigA : PropertyBagSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
-            new[] { typeof(PropBagConfigB), typeof(PropBagConfigC) };
+        protected override IReadOnlyCollection<PropertyBagSerializationConfigurationType> DependentPropertyBagSerializationConfigurationTypes =>
+            new[] { typeof(PropBagConfigB).ToPropertyBagSerializationConfigurationType(), typeof(PropBagConfigC).ToPropertyBagSerializationConfigurationType() };
     }
 
     public class JsonConfigB : JsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
-            new[] { typeof(JsonConfigC) };
+        protected override IReadOnlyCollection<JsonSerializationConfigurationType> DependentJsonSerializationConfigurationTypes =>
+            new[] { typeof(JsonConfigC).ToJsonSerializationConfigurationType() };
     }
 
     public class BsonConfigB : BsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
-            new[] { typeof(BsonConfigC) };
+        protected override IReadOnlyCollection<BsonSerializationConfigurationType> DependentBsonSerializationConfigurationTypes =>
+            new[] { typeof(BsonConfigC).ToBsonSerializationConfigurationType() };
     }
 
     public class PropBagConfigB : PropertyBagSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes =>
-            new[] { typeof(PropBagConfigC) };
+        protected override IReadOnlyCollection<PropertyBagSerializationConfigurationType> DependentPropertyBagSerializationConfigurationTypes =>
+            new[] { typeof(PropBagConfigC).ToPropertyBagSerializationConfigurationType() };
     }
 
     public class JsonConfigC : JsonSerializationConfigurationBase
@@ -103,12 +103,12 @@ namespace OBeautifulCode.Serialization.Test
         protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery =>
             new[] { typeof(TestingDependentConfigAbstractType) };
 
-        protected override IReadOnlyCollection<RegisteredJsonConverter> ConvertersToRegister => new[]
+        protected override IReadOnlyCollection<JsonConverterForTypes> ConvertersToRegister => new[]
         {
-            new RegisteredJsonConverter(
+            new JsonConverterForTypes(
                 () => new TestingDependentConverter(),
                 () => new TestingDependentConverter(),
-                A.Dummy<RegisteredJsonConverterOutputKind>(),
+                A.Dummy<JsonConverterOutputKind>(),
                 new[] { typeof(TestingDependentConfigType) }),
         };
     }
@@ -169,9 +169,9 @@ namespace OBeautifulCode.Serialization.Test
         protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery =>
             new[] { typeof(TestingDependentConfigAbstractType) };
 
-        protected override IReadOnlyCollection<RegisteredBsonSerializer> SerializersToRegister => new[]
+        protected override IReadOnlyCollection<BsonSerializerForTypes> TypesToRegisterWithSerializer => new[]
         {
-            new RegisteredBsonSerializer(
+            new BsonSerializerForTypes(
                 () => new TestingDependentSerializer(),
                 new[] { typeof(TestingDependentConfigType) }),
         };
@@ -221,9 +221,9 @@ namespace OBeautifulCode.Serialization.Test
         protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery =>
             new[] { typeof(TestingDependentConfigAbstractType) };
 
-        protected override IReadOnlyCollection<RegisteredStringSerializer> SerializersToRegister => new[]
+        protected override IReadOnlyCollection<StringSerializerForTypes> SerializersToRegister => new[]
         {
-            new RegisteredStringSerializer(
+            new StringSerializerForTypes(
                 () => new TestingDependentPropBagSerializer(),
                 new[] { typeof(TestingDependentConfigType) }),
         };
@@ -231,7 +231,7 @@ namespace OBeautifulCode.Serialization.Test
 
     public class TestingDependentPropBagSerializer : IStringSerializeAndDeserialize
     {
-        public Type SerializationConfigurationType => typeof(NullPropertyBagConfiguration);
+        public SerializationConfigurationType SerializationConfigurationType => typeof(NullPropertyBagSerializationConfiguration).ToSerializationConfigurationType();
 
         public string SerializeToString(object objectToSerialize)
         {

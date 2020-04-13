@@ -24,20 +24,20 @@ namespace OBeautifulCode.Serialization.Json
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
         {
-            var dependentConfigTypes = new List<SerializationConfigurationType>(this.GetDependentSerializationConfigurationTypesWithInternalIfApplicable().Reverse());
+            var dependentConfigTypes = new List<SerializationConfigurationType>(this.GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable().Reverse());
             while (dependentConfigTypes.Any())
             {
                 var type = dependentConfigTypes.Last();
                 dependentConfigTypes.RemoveAt(dependentConfigTypes.Count - 1);
 
                 var dependentConfig = (JsonSerializationConfigurationBase)this.DependentSerializationConfigurationTypeToInstanceMap[type];
-                dependentConfigTypes.AddRange(dependentConfig.GetDependentSerializationConfigurationTypesWithInternalIfApplicable());
+                dependentConfigTypes.AddRange(dependentConfig.GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable());
 
                 this.ProcessConverter(dependentConfig.RegisteredConverters, false);
                 this.AddHierarchyParticipatingTypes(dependentConfig.RegisteredTypeToSerializationConfigurationTypeMap.Keys.ToList());
             }
 
-            var converters = (this.ConvertersToRegister ?? new RegisteredJsonConverter[0]).ToList();
+            var converters = (this.ConvertersToRegister ?? new JsonConverterForTypes[0]).ToList();
             var handledTypes = this.ProcessConverter(converters);
 
             foreach (var handledType in handledTypes)
@@ -56,7 +56,7 @@ namespace OBeautifulCode.Serialization.Json
             this.AddHierarchyParticipatingTypes(types);
         }
 
-        private IReadOnlyCollection<Type> ProcessConverter(IList<RegisteredJsonConverter> registeredConverters, bool checkForAlreadyRegistered = true)
+        private IReadOnlyCollection<Type> ProcessConverter(IList<JsonConverterForTypes> registeredConverters, bool checkForAlreadyRegistered = true)
         {
             var handledTypes = registeredConverters.SelectMany(_ => _.HandledTypes).ToList();
 
@@ -71,7 +71,7 @@ namespace OBeautifulCode.Serialization.Json
             this.TypesWithConverters.AddRange(handledTypes);
             this.TypesWithStringConverters.AddRange(
                 registeredConverters
-                    .Where(_ => _.OutputKind == RegisteredJsonConverterOutputKind.String)
+                    .Where(_ => _.OutputKind == JsonConverterOutputKind.String)
                     .SelectMany(_ => _.HandledTypes).Distinct());
 
             return handledTypes;

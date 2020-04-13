@@ -15,32 +15,20 @@ namespace OBeautifulCode.Serialization
     using static System.FormattableString;
 
     /// <summary>
-    /// Base serializer to handle activation of configuration type.
+    /// Serializer that utilizes a fully configured <see cref="SerializationConfigurationBase"/>.
     /// </summary>
     public abstract class ConfiguredSerializerBase : ISerializeAndDeserialize
     {
         /// <summary>
-        /// Strategy on how to deal with unregistered types.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "Prefer field here.")]
-        #pragma warning disable SA1401 // Fields should be private
-        protected readonly UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy;
-        #pragma warning restore SA1401 // Fields should be private
-
-        /// <summary>
-        /// The initialized configuration provided or appropriate null implementation.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "It is not mutated.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "Prefer field here.")]
-        #pragma warning disable SA1401 // Fields should be private
-        protected readonly SerializationConfigurationBase configuration;
-        #pragma warning restore SA1401 // Fields should be private
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ConfiguredSerializerBase"/> class.
         /// </summary>
-        /// <param name="serializationConfigurationType">Configuration type to use.</param>
-        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; if the type is a <see cref="IImplementNullObjectPattern" /> and value is default then <see cref="UnregisteredTypeEncounteredStrategy.Throw" /> is used.</param>
+        /// <param name="serializationConfigurationType">The serialization configuration type to use.</param>
+        /// <param name="unregisteredTypeEncounteredStrategy">
+        /// Strategy of how to handle a type that has never been registered.
+        /// If <see cref="UnregisteredTypeEncounteredStrategy.Default"/>:
+        ///     If type is an <see cref="IImplementNullObjectPattern" /> then the <see cref="UnregisteredTypeEncounteredStrategy.Default"/> strategy will be used.
+        ///     Otherwise, the <see cref="UnregisteredTypeEncounteredStrategy.Throw" /> strategy is used.
+        /// </param>
         protected ConfiguredSerializerBase(
             SerializationConfigurationType serializationConfigurationType,
             UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy)
@@ -51,18 +39,27 @@ namespace OBeautifulCode.Serialization
             {
                 unregisteredTypeEncounteredStrategy =
                     serializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(IImplementNullObjectPattern))
-                        ? UnregisteredTypeEncounteredStrategy.Throw
-                        : UnregisteredTypeEncounteredStrategy.Attempt;
+                        ? UnregisteredTypeEncounteredStrategy.Attempt
+                        : UnregisteredTypeEncounteredStrategy.Throw;
             }
 
-            this.unregisteredTypeEncounteredStrategy = unregisteredTypeEncounteredStrategy;
-
             this.SerializationConfigurationType = serializationConfigurationType;
-            this.configuration = SerializationConfigurationManager.ConfigureWithReturn<SerializationConfigurationBase>(this.SerializationConfigurationType);
+            this.UnregisteredTypeEncounteredStrategy = unregisteredTypeEncounteredStrategy;
+            this.SerializationConfiguration = SerializationConfigurationManager.GetOrAddSerializationConfiguration(serializationConfigurationType);
         }
 
+        /// <summary>
+        /// Gets the strategy of how to handle a type that has never been registered.
+        /// </summary>
+        public UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy { get; }
+
+        /// <summary>
+        /// Gets the serialization configuration.
+        /// </summary>
+        public SerializationConfigurationBase SerializationConfiguration { get; }
+
         /// <inheritdoc />
-        public SerializationConfigurationType SerializationConfigurationType { get; private set; }
+        public SerializationConfigurationType SerializationConfigurationType { get; }
 
         /// <inheritdoc />
         public abstract SerializationKind SerializationKind { get; }
@@ -89,7 +86,8 @@ namespace OBeautifulCode.Serialization
         /// Throw an <see cref="UnregisteredTypeAttemptException" /> if appropriate.
         /// </summary>
         /// <param name="type">Type to check.</param>
-        protected void ThrowOnUnregisteredTypeIfAppropriate(Type type)
+        protected void ThrowOnUnregisteredTypeIfAppropriate(
+            Type type)
         {
             if (type == null)
             {
@@ -102,7 +100,7 @@ namespace OBeautifulCode.Serialization
             }
             else if (type.IsGenericType && (type.Namespace?.StartsWith(nameof(System), StringComparison.Ordinal) ?? false))
             {
-                // this is for lists, dictionaries, and such.
+                // this is for lists, dictionaries, nullable, and such.
                 foreach (var genericArgumentType in type.GenericTypeArguments)
                 {
                     this.ThrowOnUnregisteredTypeIfAppropriate(genericArgumentType);
@@ -110,11 +108,11 @@ namespace OBeautifulCode.Serialization
             }
             else
             {
-                if (this.unregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Throw)
+                if (this.UnregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Throw)
                 {
-                    if (!this.configuration.RegisteredTypeToSerializationConfigurationTypeMap.ContainsKey(type))
+                    if (!this.SerializationConfiguration.RegisteredTypeToSerializationConfigurationTypeMap.ContainsKey(type))
                     {
-                        throw new UnregisteredTypeAttemptException(Invariant($"Attempted to perform operation on unregistered type '{type.FullName}'"), type);
+                        throw new UnregisteredTypeAttemptException(Invariant($"Attempted to perform operation on unregistered type '{type.ToStringReadable()}'."), type);
                     }
                 }
             }

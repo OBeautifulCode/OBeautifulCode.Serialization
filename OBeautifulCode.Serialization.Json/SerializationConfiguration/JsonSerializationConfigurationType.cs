@@ -9,6 +9,7 @@ namespace OBeautifulCode.Serialization.Json
     using System;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -16,7 +17,7 @@ namespace OBeautifulCode.Serialization.Json
     /// <summary>
     /// A wrapper for a concrete JSON serialization configuration type (derives from <see cref="JsonSerializationConfigurationBase"/>).
     /// </summary>
-    public class JsonSerializationConfigurationType : SerializationConfigurationType
+    public class JsonSerializationConfigurationType : SerializationConfigurationType, IEquatable<JsonSerializationConfigurationType>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonSerializationConfigurationType"/> class.
@@ -27,6 +28,69 @@ namespace OBeautifulCode.Serialization.Json
             : base(concreteSerializationConfigurationDerivativeType)
         {
             concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(JsonSerializationConfigurationBase)).AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(JsonSerializationConfigurationBase)}")).Must().BeTrue();
+        }
+
+        /// <summary>
+        /// Determines whether two objects of type <see cref="JsonSerializationConfigurationType"/> are equal.
+        /// </summary>
+        /// <param name="left">The object to the left of the equality operator.</param>
+        /// <param name="right">The object to the right of the equality operator.</param>
+        /// <returns>true if the two items are equal; otherwise false.</returns>
+        public static bool operator ==(JsonSerializationConfigurationType left, JsonSerializationConfigurationType right)
+        {
+            if (ReferenceEquals(left, right))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+            {
+                return false;
+            }
+
+            var result = left.Equals(right);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Determines whether two objects of type <see cref="JsonSerializationConfigurationType"/> are not equal.
+        /// </summary>
+        /// <param name="left">The object to the left of the equality operator.</param>
+        /// <param name="right">The object to the right of the equality operator.</param>
+        /// <returns>true if the two items are not equal; otherwise false.</returns>
+        public static bool operator !=(JsonSerializationConfigurationType left, JsonSerializationConfigurationType right) => !(left == right);
+
+        /// <inheritdoc />
+        public bool Equals(JsonSerializationConfigurationType other)
+        {
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(other, null))
+            {
+                return false;
+            }
+
+            var result = this.ConcreteSerializationConfigurationDerivativeType == other.ConcreteSerializationConfigurationDerivativeType;
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj) => this == (obj as JsonSerializationConfigurationType);
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCodeHelper.Initialize().Hash(this.ConcreteSerializationConfigurationDerivativeType).Value;
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            var result = this.ConcreteSerializationConfigurationDerivativeType.ToStringReadable();
+
+            return result;
         }
     }
 }

@@ -21,6 +21,6 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Gets the optional converters to add.
         /// </summary>
-        protected virtual IReadOnlyCollection<RegisteredJsonConverter> ConvertersToRegister => null;
+        protected virtual IReadOnlyCollection<JsonConverterForTypes> ConvertersToRegister => null;
     }
 }

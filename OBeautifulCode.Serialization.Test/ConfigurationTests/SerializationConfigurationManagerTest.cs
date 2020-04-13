@@ -17,39 +17,9 @@ namespace OBeautifulCode.Serialization.Test
     public static class SerializationConfigurationManagerTest
     {
         [Fact]
-        public static void Configure___Type_not_BsonSerializationConfigurationBase___Throws()
-        {
-            // Arrange
-            Action action = () => SerializationConfigurationManager.Configure(typeof(string));
-
-            // Act
-            var exception = Record.Exception(action);
-
-            // Assert
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Provided value (name: 'typeMustBeSubclassOfSerializationConfigurationBase') is not true.  Provided value is 'False'.");
-        }
-
-        [Fact]
-        public static void Configure___Type_does_not_have_default_constructor___Throws()
-        {
-            // Arrange
-            Action action = () => SerializationConfigurationManager.Configure(typeof(TestConfigureParameterConstructor));
-
-            // Act
-            var exception = Record.Exception(action);
-
-            // Assert
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Provided value (name: 'typeHasParameterLessConstructor') is not true.  Provided value is 'False'.");
-        }
-
-        [Fact]
         public static void Configure___Valid_type_as_generic___Works()
         {
-            SerializationConfigurationManager.Configure<TestConfigure>();
+            SerializationConfigurationManager.GetOrAddSerializationConfiguration<TestConfigure>();
             TestConfigure.Configured.Should().BeTrue();
         }
     }
@@ -70,22 +40,6 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             Configured = true;
-        }
-    }
-
-    public class TestConfigureParameterConstructor : BsonSerializationConfigurationBase
-    {
-        public TestConfigureParameterConstructor(string thingy)
-        {
-            this.Thingy = thingy;
-        }
-
-        public string Thingy { get; set; }
-
-        /// <inheritdoc cref="BsonSerializationConfigurationBase" />
-        protected override void FinalConfiguration()
-        {
-            /* no-op */
         }
     }
 }

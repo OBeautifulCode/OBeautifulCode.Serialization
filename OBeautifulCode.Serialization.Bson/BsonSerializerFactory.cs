@@ -47,7 +47,7 @@ namespace OBeautifulCode.Serialization.Bson
                 switch (serializerDescription.SerializationKind)
                 {
                     case SerializationKind.Bson:
-                        return new ObcBsonSerializer(configurationType.ToBsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
+                        return new ObcBsonSerializer(configurationType?.ToBsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
                     default:
                         throw new NotSupportedException(Invariant($"{nameof(serializerDescription)} from enumeration {nameof(SerializationKind)} of {serializerDescription.SerializationKind} is not supported."));
                 }

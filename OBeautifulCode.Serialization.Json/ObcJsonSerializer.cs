@@ -51,7 +51,7 @@ namespace OBeautifulCode.Serialization.Json
 
             this.formattingKind = formattingKind;
 
-            this.jsonConfiguration = (JsonSerializationConfigurationBase)this.configuration;
+            this.jsonConfiguration = (JsonSerializationConfigurationBase)this.SerializationConfiguration;
 
             this.anonymousWriteSerializationSettings = this.jsonConfiguration.BuildAnonymousJsonSerializerSettings(SerializationDirection.Serialize, this.formattingKind);
         }

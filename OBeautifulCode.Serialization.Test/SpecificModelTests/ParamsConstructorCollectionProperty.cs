@@ -22,8 +22,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Values_in_collection_will_be_passed_to_constructor()
         {
             // Arrange
-            var jsonConfigType = typeof(GenericDiscoveryJsonSerializationConfiguration<ObjectWithParamsConstructor>);
-            var bsonConfigType = typeof(GenericDiscoveryBsonSerializationConfiguration<ObjectWithParamsConstructor>);
+            var jsonConfigType = typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<ObjectWithParamsConstructor>);
+            var bsonConfigType = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<ObjectWithParamsConstructor>);
 
             var expected = A.Dummy<ObjectWithParamsConstructor>();
 

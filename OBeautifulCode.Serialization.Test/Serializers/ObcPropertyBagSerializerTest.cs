@@ -29,21 +29,6 @@ namespace OBeautifulCode.Serialization.Test
 #pragma warning disable SA1136 // Enum values should be on separate lines
 #pragma warning disable SA1502 // Element should not be on a single line
 
-        [Fact]
-        public static void Constructor___Configuration_type_not_null___Throws()
-        {
-            // Arrange
-            Action action = () => new ObcPropertyBagSerializer();
-
-            // Act
-            var exception = Record.Exception(action);
-
-            // Assert
-            exception.Should().NotBeNull();
-            exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Provided value (name: 'typeMustBeSubclassOfOBeautifulCode.Serialization.SerializationConfigurationBase') is not true.  Provided value is 'False'.");
-        }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "RoundTrip", Justification = "Name/spelling is correct.")]
         [Fact]
         public static void RoundTrip___Supported_scenarios___Works()
@@ -379,56 +364,6 @@ namespace OBeautifulCode.Serialization.Test
             }
         }
 
-        private class EnumAttributeSerializer : IStringSerializeAndDeserialize
-        {
-            public const string CustomSerializedString = "Enum attribute.";
-
-            public SerializationConfigurationType SerializationConfigurationType => null;
-
-            public string SerializeToString(object objectToSerialize)
-            {
-                return CustomSerializedString;
-            }
-
-            public T Deserialize<T>(string serializedString)
-            {
-                return (T)this.Deserialize(serializedString, typeof(T));
-            }
-
-            public object Deserialize(string serializedString, Type type)
-            {
-                new { serializedString }.AsArg().Must().BeEqualTo(CustomSerializedString);
-                new { type }.AsArg().Must().BeEqualTo(typeof(EnumAttribute));
-
-                return EnumAttribute.Replaced;
-            }
-        }
-
-        private class EnumAttributePropertySerializer : IStringSerializeAndDeserialize
-        {
-            public const string CustomSerializedString = "Enum attribute on property.";
-
-            public Type SerializationConfigurationType => null;
-
-            public string SerializeToString(object objectToSerialize)
-            {
-                return CustomSerializedString;
-            }
-
-            public T Deserialize<T>(string serializedString)
-            {
-                return (T)this.Deserialize(serializedString, typeof(T));
-            }
-
-            public object Deserialize(string serializedString, Type type)
-            {
-                new { serializedString }.AsArg().Must().BeEqualTo(CustomSerializedString);
-                new { type }.AsArg().Must().BeEqualTo(typeof(EnumAttributeProperty));
-
-                return EnumAttributeProperty.Replaced;
-            }
-        }
-
         private class HasSerializesWithComma
         {
             public IReadOnlyCollection<SerializesWithComma> WithCommas { get; set; }
@@ -492,7 +427,6 @@ namespace OBeautifulCode.Serialization.Test
             }
         }
 
-        [ObcStringSerializer(typeof(InheritTestSerializer))]
         private abstract class InheritTypeBase
         {
             public override string ToString()
@@ -508,32 +442,6 @@ namespace OBeautifulCode.Serialization.Test
                 return this.GetType().Name;
             }
         }
-
-        private class InheritTestSerializer : IStringSerializeAndDeserialize
-        {
-            public const string CustomSerializedString = "We have a serializer inherited.";
-
-            public Type SerializationConfigurationType => null;
-
-            public string SerializeToString(object objectToSerialize)
-            {
-                return CustomSerializedString;
-            }
-
-            public T Deserialize<T>(string serializedString)
-            {
-                return (T)this.Deserialize(serializedString, typeof(T));
-            }
-
-            public object Deserialize(string serializedString, Type type)
-            {
-                new { serializedString }.AsArg().Must().BeEqualTo(CustomSerializedString);
-                (type == typeof(InheritTypeBase) || type == typeof(InheritTypeDerive)).AsArg().Must().BeTrue();
-
-                return new InheritTypeDerive();
-            }
-        }
-
 #pragma warning restore SA1201 // Elements should appear in the correct order
 #pragma warning restore SA1202 // Public members should come before protected members
 #pragma warning restore SA1203 // Constant fields should appear before non-constant fields

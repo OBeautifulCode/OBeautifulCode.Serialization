@@ -18,22 +18,22 @@ namespace OBeautifulCode.Serialization.Test
         [Fact]
         public static void RootFirstWorks()
         {
-            var middleSerializer = new ObcJsonSerializer(typeof(ConfigMiddle));
+            var middleSerializer = new ObcJsonSerializer(typeof(ConfigMiddle).ToJsonSerializationConfigurationType());
             middleSerializer.SerializeToString(null);
 
-            var topSerializer = new ObcJsonSerializer(typeof(ConfigTop));
+            var topSerializer = new ObcJsonSerializer(typeof(ConfigTop).ToJsonSerializationConfigurationType());
             topSerializer.SerializeToString(null);
         }
     }
 
     public class ConfigTop : JsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new[] { typeof(ConfigMiddle) };
+        protected override IReadOnlyCollection<JsonSerializationConfigurationType> DependentJsonSerializationConfigurationTypes => new[] { typeof(ConfigMiddle).ToJsonSerializationConfigurationType() };
     }
 
     public class ConfigMiddle : JsonSerializationConfigurationBase
     {
-        public override IReadOnlyCollection<Type> DependentSerializationConfigurationTypes => new[] { typeof(ConfigBottom1), typeof(ConfigBottom2), };
+        protected override IReadOnlyCollection<JsonSerializationConfigurationType> DependentJsonSerializationConfigurationTypes => new[] { typeof(ConfigBottom1).ToJsonSerializationConfigurationType(), typeof(ConfigBottom2).ToJsonSerializationConfigurationType(), };
     }
 
     public class ConfigBottom1 : JsonSerializationConfigurationBase

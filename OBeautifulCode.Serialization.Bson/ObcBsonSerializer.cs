@@ -30,7 +30,7 @@ namespace OBeautifulCode.Serialization.Bson
             UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
             : base(bsonSerializationConfigurationType ?? typeof(NullBsonSerializationConfiguration).ToBsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy)
         {
-            this.bsonConfiguration = (BsonSerializationConfigurationBase)this.configuration;
+            this.bsonConfiguration = (BsonSerializationConfigurationBase)this.SerializationConfiguration;
         }
 
         /// <inheritdoc />

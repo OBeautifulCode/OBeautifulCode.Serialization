@@ -21,9 +21,9 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_recurse_through_OBC_element_serializer___When_called()
         {
             // Arrange
-            var config = typeof(GenericDiscoveryBsonSerializationConfiguration<SystemCollectionsModel>);
+            var config = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<SystemCollectionsModel>);
 
-            var serializer = new ObcBsonSerializer(config);
+            var serializer = new ObcBsonSerializer(config.ToBsonSerializationConfigurationType());
 
             var dateTime = new DateTime(DateTime.UtcNow.Ticks, DateTimeKind.Unspecified);
 

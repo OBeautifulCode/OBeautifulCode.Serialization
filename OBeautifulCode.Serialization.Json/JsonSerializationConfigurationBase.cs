@@ -45,7 +45,7 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Gets the registered converter set to use.
         /// </summary>
-        protected IList<RegisteredJsonConverter> RegisteredConverters { get; } = new List<RegisteredJsonConverter>();
+        protected IList<JsonConverterForTypes> RegisteredConverters { get; } = new List<JsonConverterForTypes>();
 
         /// <summary>
         /// Gets the types that participate in a hierarchy.

@@ -22,9 +22,9 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_recurse_through_OBC_key_and_value_serializers___When_called()
         {
             // Arrange
-            var config = typeof(GenericDiscoveryBsonSerializationConfiguration<SystemDictionariesModel>);
+            var config = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<SystemDictionariesModel>);
 
-            var serializer = new ObcBsonSerializer(config);
+            var serializer = new ObcBsonSerializer(config.ToBsonSerializationConfigurationType());
 
             var dateTime = new DateTime(DateTime.UtcNow.Ticks, DateTimeKind.Unspecified);
 

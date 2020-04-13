@@ -23,7 +23,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void JsonSerializationConfigurationBase___With_contract_override___Works()
         {
             // Arrange & Act
-            var actual = SerializationConfigurationManager.ConfigureWithReturn<DefaultTestConfiguration>();
+            var actual = SerializationConfigurationManager.GetOrAddSerializationConfiguration<DefaultTestConfiguration>();
 
             // Assert
             actual.Should().NotBeNull();
@@ -35,7 +35,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void JsonSerializationConfigurationBase___With_null_implementation___Works()
         {
             // Arrange & Act
-            var actual = SerializationConfigurationManager.ConfigureWithReturn<NullJsonSerializationConfiguration>();
+            var actual = SerializationConfigurationManager.GetOrAddSerializationConfiguration<NullJsonSerializationConfiguration>();
 
             // Assert
             actual.Should().NotBeNull();

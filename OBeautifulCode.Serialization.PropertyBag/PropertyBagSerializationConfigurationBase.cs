@@ -55,27 +55,27 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <summary>
         /// Gets the registered serializer set to use.
         /// </summary>
-        protected IList<RegisteredStringSerializer> RegisteredSerializers { get; } = new List<RegisteredStringSerializer>();
+        protected virtual IList<StringSerializerForTypes> TypesToRegisterWithStringSerializers { get; } = new List<StringSerializerForTypes>();
 
         /// <summary>
         /// Gets the key value delimiter to use for string serialization of the property bag.
         /// </summary>
-        public virtual string StringSerializationKeyValueDelimiter { get; private set; } = ObcDictionaryStringStringSerializer.DefaultKeyValueDelimiter;
+        public virtual string StringSerializationKeyValueDelimiter { get; } = ObcDictionaryStringStringSerializer.DefaultKeyValueDelimiter;
 
         /// <summary>
         /// Gets the line delimiter to use for string serialization of the property bag.
         /// </summary>
-        public virtual string StringSerializationLineDelimiter { get; private set; } = ObcDictionaryStringStringSerializer.DefaultLineDelimiter;
+        public virtual string StringSerializationLineDelimiter { get; } = ObcDictionaryStringStringSerializer.DefaultLineDelimiter;
 
         /// <summary>
         /// Gets the null value encoding to use for string serialization of the property bag.
         /// </summary>
-        public virtual string StringSerializationNullValueEncoding { get; private set; } = ObcDictionaryStringStringSerializer.DefaultNullValueEncoding;
+        public virtual string StringSerializationNullValueEncoding { get; } = ObcDictionaryStringStringSerializer.DefaultNullValueEncoding;
 
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
         {
-            var dependentConfigTypes = new List<SerializationConfigurationType>(this.GetDependentSerializationConfigurationTypesWithInternalIfApplicable().Reverse());
+            var dependentConfigTypes = new List<SerializationConfigurationType>(this.GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable().Reverse());
 
             while (dependentConfigTypes.Any())
             {
@@ -83,12 +83,12 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 dependentConfigTypes.RemoveAt(dependentConfigTypes.Count - 1);
 
                 var dependentConfig = (PropertyBagSerializationConfigurationBase)this.DependentSerializationConfigurationTypeToInstanceMap[type];
-                dependentConfigTypes.AddRange(dependentConfig.GetDependentSerializationConfigurationTypesWithInternalIfApplicable());
+                dependentConfigTypes.AddRange(dependentConfig.GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable());
 
-                this.ProcessSerializer(dependentConfig.RegisteredSerializers, false);
+                this.ProcessSerializer(dependentConfig.TypesToRegisterWithStringSerializers, false);
             }
 
-            var serializers = (this.SerializersToRegister ?? new RegisteredStringSerializer[0]).ToList();
+            var serializers = (this.SerializersToRegister ?? new StringSerializerForTypes[0]).ToList();
             var handledTypes = this.ProcessSerializer(serializers);
 
             foreach (var handledType in handledTypes)
@@ -97,7 +97,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
             }
         }
 
-        private IReadOnlyCollection<Type> ProcessSerializer(IList<RegisteredStringSerializer> registeredSerializers, bool checkForAlreadyRegistered = true)
+        private IReadOnlyCollection<Type> ProcessSerializer(IList<StringSerializerForTypes> registeredSerializers, bool checkForAlreadyRegistered = true)
         {
             var handledTypes = registeredSerializers.SelectMany(_ => _.HandledTypes).ToList();
 
@@ -108,7 +108,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
                     handledTypes);
             }
 
-            this.RegisteredSerializers.AddRange(registeredSerializers);
+            this.TypesToRegisterWithStringSerializers.AddRange(registeredSerializers);
 
             foreach (var registeredSerializer in registeredSerializers)
             {
@@ -125,7 +125,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
                     }
                     else
                     {
-                        this.TypeToSerializerMap.Add(handledType, registeredSerializer.SerializerBuilderFunction());
+                        this.TypeToSerializerMap.Add(handledType, registeredSerializer.SerializerBuilderFunc());
                     }
                 }
             }
@@ -136,7 +136,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <summary>
         /// Gets the optional serializers to add.
         /// </summary>
-        protected virtual IReadOnlyCollection<RegisteredStringSerializer> SerializersToRegister => new List<RegisteredStringSerializer>();
+        protected virtual IReadOnlyCollection<StringSerializerForTypes> SerializersToRegister => new List<StringSerializerForTypes>();
 
         /// <summary>
         /// Builds a map of type to serializer.

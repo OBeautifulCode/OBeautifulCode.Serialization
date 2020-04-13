@@ -19,7 +19,7 @@ namespace OBeautifulCode.Serialization
     using static System.FormattableString;
 
     /// <summary>
-    /// Interface to work with compression.
+    /// String serializer for <see cref="IReadOnlyDictionary{String, String}"/>.
     /// </summary>
     public class ObcDictionaryStringStringSerializer : IStringSerializeAndDeserialize
     {

@@ -61,7 +61,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
             UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
             : base(propertyBagSerializationConfigurationType ?? typeof(NullPropertyBagSerializationConfiguration).ToPropertyBagSerializationConfigurationType(), unregisteredTypeEncounteredStrategy)
         {
-            this.propertyBagConfiguration = (PropertyBagSerializationConfigurationBase)this.configuration;
+            this.propertyBagConfiguration = (PropertyBagSerializationConfigurationBase)this.SerializationConfiguration;
             this.dictionaryStringSerializer = new ObcDictionaryStringStringSerializer(
                 this.propertyBagConfiguration.StringSerializationKeyValueDelimiter,
                 this.propertyBagConfiguration.StringSerializationLineDelimiter,

@@ -60,11 +60,11 @@ namespace OBeautifulCode.Serialization.Recipes
                 switch (serializerDescription.SerializationKind)
                 {
                     case SerializationKind.Bson: 
-                        return new ObcBsonSerializer(configurationType.ToBsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
+                        return new ObcBsonSerializer(configurationType?.ToBsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
                     case SerializationKind.Json: 
-                        return new ObcJsonSerializer(configurationType.ToJsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
+                        return new ObcJsonSerializer(configurationType?.ToJsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
                     case SerializationKind.PropertyBag: 
-                        return new ObcPropertyBagSerializer(configurationType.ToPropertyBagSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
+                        return new ObcPropertyBagSerializer(configurationType?.ToPropertyBagSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
                     default: 
                         throw new NotSupportedException(Invariant($"{nameof(serializerDescription)} from enumeration {nameof(SerializationKind)} of {serializerDescription.SerializationKind} is not supported."));
                 }
