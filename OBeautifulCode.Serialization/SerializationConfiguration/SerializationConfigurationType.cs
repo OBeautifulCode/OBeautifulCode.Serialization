@@ -29,7 +29,7 @@ namespace OBeautifulCode.Serialization
             new { concreteSerializationConfigurationDerivativeType }.AsArg().Must().NotBeNull();
             new { concreteSerializationConfigurationDerivativeType.IsAbstract }.AsArg().Must().BeFalse();
             concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(SerializationConfigurationBase)).AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(SerializationConfigurationBase)}")).Must().BeTrue();
-            concreteSerializationConfigurationDerivativeType.HasParameterlessConstructor().AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)}.{nameof(DomainExtensions.HasParameterlessConstructor)}()")).Must().BeTrue();
+            concreteSerializationConfigurationDerivativeType.HasDefaultConstructor().AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)}.{nameof(TypeExtensions.HasDefaultConstructor)}()")).Must().BeTrue();
 
             this.ConcreteSerializationConfigurationDerivativeType = concreteSerializationConfigurationDerivativeType;
         }

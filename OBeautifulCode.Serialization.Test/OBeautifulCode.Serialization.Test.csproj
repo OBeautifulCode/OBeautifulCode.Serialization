@@ -211,6 +211,7 @@
     <Compile Include="Serializers\ObcJsonSerializerTest.cs" />
     <Compile Include="Serializers\ObcLambdaBackedSerializerTest.cs" />
     <Compile Include="Serializers\ObcPropertyBagSerializerTest.cs" />
+    <Compile Include="SharedExtensions.cs" />
     <Compile Include="SpecificModels\Animal.cs" />
     <Compile Include="SpecificModels\ITopInterface.cs" />
     <Compile Include="SpecificModels\Lighting.cs" />

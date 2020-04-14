@@ -311,32 +311,11 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <summary>
-        /// Register type using specific internal conventions.
-        /// </summary>
-        /// <param name="type">Type to register.</param>
-        protected void RegisterType(Type type)
-        {
-            this.RegisterTypes(new[] { type });
-        }
-
-        /// <summary>
-        /// Register type using specific internal conventions.
-        /// </summary>
-        /// <typeparam name="T">Type to register.</typeparam>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Want to use this as a generic.")]
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Like this structure.")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Want to be used from derivatives using 'this.'")]
-        protected void RegisterType<T>()
-        {
-            this.RegisterTypes(new[] { typeof(T) });
-        }
-
-        /// <summary>
-        /// Register types using specific internal conventions.
+        /// Registers the specified types.
         /// </summary>
         /// <param name="types">Types to register.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Want to be used from derivatives using 'this.'")]
-        protected virtual void RegisterTypes(IReadOnlyCollection<Type> types)
+        protected virtual void RegisterTypes(
+            IReadOnlyCollection<Type> types)
         {
             foreach (var type in types ?? new Type[0])
             {
@@ -348,7 +327,6 @@ namespace OBeautifulCode.Serialization
         /// Discover all types that should considered for registration when looking for derivative types.
         /// </summary>
         /// <returns>All types that should be considered for registration.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Want this to be a method since it's running logic.")]
         private static IReadOnlyCollection<Type> GetAllTypesToConsiderForRegistration()
         {
             var assemblies = AssemblyLoader.GetLoadedAssemblies();

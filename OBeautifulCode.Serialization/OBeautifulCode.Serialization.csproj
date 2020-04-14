@@ -153,7 +153,7 @@
     <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlySerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationType.cs" />
     <Compile Include="SerializationConfigurationBase.cs" />
-    <Compile Include="SerializationConfigurationManager.cs" />
+    <Compile Include="SerializationConfiguration\SerializationConfigurationManager.cs" />
     <Compile Include="Models\SerializerDescription.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationTypeExtensions.cs" />
     <Compile Include="Enums\SerializationDirection.cs" />

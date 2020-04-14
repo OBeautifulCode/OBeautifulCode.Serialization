@@ -18,6 +18,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
     using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.String.Recipes;
+    using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
 
@@ -229,7 +230,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
             if (!serializedPropertyBag.Any())
             {
-                if (type.HasParameterlessConstructor())
+                if (type.HasDefaultConstructor())
                 {
                     return type.Construct();
                 }

@@ -7,19 +7,19 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
-    using System.Linq;
-    using System.Reflection;
+    using System.Diagnostics.CodeAnalysis;
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Compression;
     using OBeautifulCode.Compression.Recipes;
     using OBeautifulCode.Representation.System;
+    using OBeautifulCode.Serialization.Internal;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
 
     /// <summary>
-    /// Extension methods.
+    /// Serialization-related extension methods.
     /// </summary>
     public static class DomainExtensions
     {
@@ -33,11 +33,10 @@ namespace OBeautifulCode.Serialization
         /// <param name="compressorFactory">Implementation of <see cref="ICompressorFactory" /> that can resolve the compressor.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
-        /// <returns>Self described serialization.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "Checked with Must and tested.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "2", Justification = "Checked with Must and tested.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "3", Justification = "Checked with Must and tested.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object", Justification = "Spelling/name is correct.")]
+        /// <returns>
+        /// Self described serialization.
+        /// </returns>
+        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
         public static DescribedSerialization ToDescribedSerializationUsingSpecificFactory<T>(
             this T objectToPackageIntoDescribedSerialization,
             SerializerDescription serializerDescription,
@@ -51,12 +50,10 @@ namespace OBeautifulCode.Serialization
             new { compressorFactory }.AsArg().Must().NotBeNull();
 
             var serializer = serializerFactory.BuildSerializer(serializerDescription, assemblyMatchStrategy, unregisteredTypeEncounteredStrategy);
+
             var compressor = compressorFactory.BuildCompressor(serializerDescription.CompressionKind);
 
-            var ret = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificSerializer(
-                serializerDescription,
-                serializer,
-                compressor);
+            var ret = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificSerializer(serializerDescription, serializer, compressor);
 
             return ret;
         }
@@ -69,11 +66,10 @@ namespace OBeautifulCode.Serialization
         /// <param name="serializerDescription">Description of the serializer to use.</param>
         /// <param name="serializer">Serializer to use.</param>
         /// <param name="compressor">Optional compressor to use; DEFAULT is null.</param>
-        /// <returns>Self described serialization.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "Checked with Must and tested.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "2", Justification = "Checked with Must and tested.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "3", Justification = "Checked with Must and tested.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object", Justification = "Spelling/name is correct.")]
+        /// <returns>
+        /// Self described serialization.
+        /// </returns>
+        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
         public static DescribedSerialization ToDescribedSerializationUsingSpecificSerializer<T>(
             this T objectToPackageIntoDescribedSerialization,
             SerializerDescription serializerDescription,
@@ -88,6 +84,7 @@ namespace OBeautifulCode.Serialization
             localCompressor.CompressionKind.AsArg(Invariant($"{nameof(serializerDescription)}.{nameof(serializerDescription.CompressionKind)}-Must-match-{nameof(compressor)}.{nameof(compressor.CompressionKind)}")).Must().BeEqualTo(serializerDescription.CompressionKind);
 
             string payload;
+
             switch (serializerDescription.SerializationFormat)
             {
                 case SerializationFormat.Binary:
@@ -102,17 +99,15 @@ namespace OBeautifulCode.Serialization
             }
 
             var payloadType = objectToPackageIntoDescribedSerialization?.GetType() ?? typeof(T);
+
             if (payloadType.IsClosedAnonymousType())
             {
                 payloadType = typeof(DynamicTypePlaceholder);
             }
 
-            var ret = new DescribedSerialization(
-                payloadType.ToRepresentation(),
-                payload,
-                serializerDescription);
+            var result = new DescribedSerialization(payloadType.ToRepresentation(), payload, serializerDescription);
 
-            return ret;
+            return result;
         }
 
         /// <summary>
@@ -123,9 +118,9 @@ namespace OBeautifulCode.Serialization
         /// <param name="compressorFactory">Implementation of <see cref="ICompressorFactory" /> that can resolve the compressor.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
-        /// <returns>Originally serialized object.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "Checked with Must and tested.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "2", Justification = "Checked with Must and tested.")]
+        /// <returns>
+        /// Originally serialized object.
+        /// </returns>
         public static object DeserializePayloadUsingSpecificFactory(
             this DescribedSerialization describedSerialization,
             ISerializerFactory serializerFactory,
@@ -138,10 +133,12 @@ namespace OBeautifulCode.Serialization
             new { compressorFactory }.AsArg().Must().NotBeNull();
 
             var serializer = serializerFactory.BuildSerializer(describedSerialization.SerializerDescription, assemblyMatchStrategy, unregisteredTypeEncounteredStrategy);
+
             var compressor = compressorFactory.BuildCompressor(describedSerialization.SerializerDescription.CompressionKind);
 
-            var ret = describedSerialization.DeserializePayloadUsingSpecificSerializer(serializer, compressor, assemblyMatchStrategy);
-            return ret;
+            var result = describedSerialization.DeserializePayloadUsingSpecificSerializer(serializer, compressor, assemblyMatchStrategy);
+
+            return result;
         }
 
         /// <summary>
@@ -151,11 +148,11 @@ namespace OBeautifulCode.Serialization
         /// <param name="deserializer">Deserializer to use.</param>
         /// <param name="decompressor">Optional compressor to use; DEFAULT is null.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
-        /// <returns>Originally serialized object.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "deserializer", Justification = "It's a better name than serializer.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "decompressor", Justification = "It's a better name than compressor.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "Checked with Must and tested.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "2", Justification = "Checked with Must and tested.")]
+        /// <returns>
+        /// Originally serialized object.
+        /// </returns>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "deserializer", Justification = ObcSuppressBecause.CA1704_IdentifiersShouldBeSpelledCorrectly_SpellingIsCorrectInContextOfTheDomain)]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "decompressor", Justification = ObcSuppressBecause.CA1704_IdentifiersShouldBeSpelledCorrectly_SpellingIsCorrectInContextOfTheDomain)]
         public static object DeserializePayloadUsingSpecificSerializer(
             this DescribedSerialization describedSerialization,
             IDeserialize deserializer,
@@ -166,23 +163,26 @@ namespace OBeautifulCode.Serialization
             new { deserializer }.AsArg().Must().NotBeNull();
 
             var localDecompressor = decompressor ?? new NullCompressor();
+
             var targetType = describedSerialization.PayloadTypeRepresentation.ResolveFromLoadedTypes(assemblyMatchStrategy);
 
-            object ret;
+            object result;
+
             switch (describedSerialization.SerializerDescription.SerializationFormat)
             {
                 case SerializationFormat.Binary:
                     var rawBytes = Convert.FromBase64String(describedSerialization.SerializedPayload);
                     var decompressedBytes = localDecompressor.DecompressBytes(rawBytes);
-                    ret = deserializer.Deserialize(decompressedBytes, targetType);
+                    result = deserializer.Deserialize(decompressedBytes, targetType);
                     break;
                 case SerializationFormat.String:
-                    ret = deserializer.Deserialize(describedSerialization.SerializedPayload, targetType);
+                    result = deserializer.Deserialize(describedSerialization.SerializedPayload, targetType);
                     break;
-                default: throw new NotSupportedException(Invariant($"{nameof(SerializationFormat)} - {describedSerialization.SerializerDescription.SerializationFormat} is not supported."));
+                default:
+                    throw new NotSupportedException(Invariant($"{nameof(SerializationFormat)} - {describedSerialization.SerializerDescription.SerializationFormat} is not supported."));
             }
 
-            return ret;
+            return result;
         }
 
         /// <summary>
@@ -194,8 +194,9 @@ namespace OBeautifulCode.Serialization
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
         /// <typeparam name="T">Expected return type.</typeparam>
-        /// <returns>Originally serialized object.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "Checked with Must and tested.")]
+        /// <returns>
+        /// Originally serialized object.
+        /// </returns>
         public static T DeserializePayloadUsingSpecificFactory<T>(
             this DescribedSerialization describedSerialization,
             ISerializerFactory serializerFactory,
@@ -203,39 +204,9 @@ namespace OBeautifulCode.Serialization
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion,
             UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
         {
-            return (T)DeserializePayloadUsingSpecificFactory(describedSerialization, serializerFactory, compressorFactory, assemblyMatchStrategy, unregisteredTypeEncounteredStrategy);
-        }
+            var result = (T)DeserializePayloadUsingSpecificFactory(describedSerialization, serializerFactory, compressorFactory, assemblyMatchStrategy, unregisteredTypeEncounteredStrategy);
 
-        /// <summary>
-        /// Interrogates the type for a parameterless constructor.
-        /// </summary>
-        /// <param name="type">Type to check.</param>
-        /// <returns>A value indicating whether or not the type has a parameterless constructor.</returns>
-        public static bool HasParameterlessConstructor(this Type type)
-        {
-            new { type }.AsArg().Must().NotBeNull();
-            var paramterlessConstructor = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance).SingleOrDefault(_ => _.GetParameters().Length == 0);
-            return paramterlessConstructor != null;
-        }
-
-        /// <summary>
-        /// Converts a <see cref="DateTime"/> to the <see cref="DateTimeKind"/> of <see cref="DateTimeKind.Unspecified"/>.
-        /// </summary>
-        /// <param name="dateTime"><see cref="DateTime"/> to convert.</param>
-        /// <returns>Converted <see cref="DateTime"/>.</returns>
-        public static DateTime ToUnspecified(this DateTime dateTime)
-        {
-            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, DateTimeKind.Unspecified);
-        }
-
-        /// <summary>
-        /// Converts a nullable <see cref="DateTime"/> to the <see cref="DateTimeKind"/> of <see cref="DateTimeKind.Unspecified"/>.
-        /// </summary>
-        /// <param name="dateTime">Nullable <see cref="DateTime"/> to convert.</param>
-        /// <returns>Converted nullable <see cref="DateTime"/>.</returns>
-        public static DateTime? ToUnspecified(this DateTime? dateTime)
-        {
-            return dateTime is DateTime notNull ? (DateTime?)notNull.ToUnspecified() : null;
+            return result;
         }
     }
 }

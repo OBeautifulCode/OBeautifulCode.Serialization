@@ -366,6 +366,35 @@ namespace OBeautifulCode.Type.Recipes
         }
 
         /// <summary>
+        /// Determines if the specified type has a default (public parameterless) constructor.
+        /// </summary>
+        /// <param name="type">Type to check.</param>
+        /// <returns>
+        /// A value indicating whether or not the type has a default (public parameterless) constructor.
+        /// </returns>
+        public static bool HasDefaultConstructor(
+            this Type type)
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (type.ContainsGenericParameters)
+            {
+                return false;
+            }
+
+            new DateTime();
+
+            var defaultConstructor = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance).SingleOrDefault(_ => _.GetParameters().Length == 0);
+
+            var result = defaultConstructor != null;
+
+            return result;
+        }
+
+        /// <summary>
         /// Determines if <see cref="Comparer{T}.Default"/> will return a
         /// working (non-throwing) comparer for the specified type.
         /// </summary>
