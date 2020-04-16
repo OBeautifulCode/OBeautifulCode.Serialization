@@ -6,7 +6,6 @@
 
 namespace OBeautifulCode.Serialization.Bson
 {
-    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -17,6 +16,6 @@ namespace OBeautifulCode.Serialization.Bson
     public sealed class RegisterOnlyWithDiscoveryBsonSerializationConfiguration<T1, T2> : BsonSerializationConfigurationBase
     {
         /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => new[] { typeof(T1), typeof(T2) };
+        protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new[] { typeof(T1).ToTypeToRegisterForBson(), typeof(T2).ToTypeToRegisterForBson() };
     }
 }

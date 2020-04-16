@@ -6,8 +6,8 @@
 
 namespace OBeautifulCode.Serialization.Json
 {
-    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// A default serialization configuration that will only register, with discovery, the internally required types.
@@ -21,6 +21,6 @@ namespace OBeautifulCode.Serialization.Json
         protected override IReadOnlyCollection<JsonSerializationConfigurationType> DependentJsonSerializationConfigurationTypes => new JsonSerializationConfigurationType[0];
 
         /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => InternallyRequiredTypes;
+        protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => InternallyRequiredTypes.Select(_ => _.ToTypeToRegisterForJson()).ToList();
     }
 }

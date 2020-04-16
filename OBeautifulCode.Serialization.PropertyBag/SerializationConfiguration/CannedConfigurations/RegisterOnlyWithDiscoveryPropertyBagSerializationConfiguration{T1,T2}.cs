@@ -6,7 +6,6 @@
 
 namespace OBeautifulCode.Serialization.PropertyBag
 {
-    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -17,6 +16,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
     public sealed class RegisterOnlyWithDiscoveryPropertyBagSerializationConfiguration<T1, T2> : PropertyBagSerializationConfigurationBase
     {
         /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => new[] { typeof(T1), typeof(T2) };
+        protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => new[] { typeof(T1).ToTypeToRegisterForPropertyBag(), typeof(T2).ToTypeToRegisterForPropertyBag() };
     }
 }

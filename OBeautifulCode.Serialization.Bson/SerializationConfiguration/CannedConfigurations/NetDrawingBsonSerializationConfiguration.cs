@@ -15,9 +15,9 @@ namespace OBeautifulCode.Serialization.Bson
     public sealed class NetDrawingBsonSerializationConfiguration : BsonSerializationConfigurationBase, IIgnoreDefaultDependencies
     {
         /// <inheritdoc />
-        protected override IReadOnlyCollection<BsonSerializerForTypes> TypesToRegisterWithSerializer => new[]
+        protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new[]
         {
-            new BsonSerializerForTypes(() => new ObcBsonColorSerializer(), new[] { typeof(Color) }),
+            typeof(Color).ToTypeToRegisterForBson(MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new ObcBsonColorSerializer()),
         };
     }
 }

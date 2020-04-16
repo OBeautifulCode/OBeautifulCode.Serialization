@@ -131,10 +131,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="RegisteredContractResolver.cs" />
-    <Compile Include="SerializationConfiguration\JsonConverterForTypes.cs" />
+    <Compile Include="SerializationConfiguration\TypeToRegister\JsonConverterBuilder.cs" />
     <Compile Include="SerializationConfiguration\JsonConverterOutputKind.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationType.cs" />
-    <Compile Include="SerializationConfiguration\JsonSerializationConfigurationTypeExtensions.cs" />
+    <Compile Include="SerializationConfiguration\JsonSerializationConfigurationExtensions.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationType{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlyJsonSerializationConfiguration{T1,T2}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlyJsonSerializationConfiguration{T}.cs" />
@@ -143,6 +143,8 @@
     <Compile Include="SerializationConfiguration\CannedConfigurations\RegisterOnlyWithDiscoveryJsonSerializationConfiguration{T1,T2}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\RegisterOnlyWithDiscoveryJsonSerializationConfiguration{T}.cs" />
     <AdditionalFiles Include=".analyzers\stylecop.json" />
+    <Compile Include="SerializationConfiguration\TypeToRegister\TypeToRegisterForJson.cs" />
+    <Compile Include="SerializationConfiguration\TypeToRegister\TypeToRegisterForJson{T}.cs" />
     <None Include=".analyzers\release.ruleset" />
     <None Include="OBeautifulCode.Serialization.Json.override-nuspec" />
     <None Include="packages.config" />

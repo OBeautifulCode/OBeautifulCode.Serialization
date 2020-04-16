@@ -8,9 +8,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
-    using OBeautifulCode.Collection.Recipes;
+    using OBeautifulCode.Serialization;
+    using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
 
@@ -30,15 +30,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
         private Dictionary<Type, IStringSerializeAndDeserialize> TypeToSerializerMap { get; } = new Dictionary<Type, IStringSerializeAndDeserialize>();
 
         /// <inheritdoc />
-        protected override void RegisterTypes(IReadOnlyCollection<Type> types)
-        {
-            foreach (var type in types ?? new Type[0])
-            {
-                this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(type, this.GetType().ToPropertyBagSerializationConfigurationType());
-            }
-        }
-
-        /// <inheritdoc />
         protected sealed override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new[]
         {
             typeof(InternallyRequiredTypesWithDiscoveryPropertyBagSerializationConfiguration).ToPropertyBagSerializationConfigurationType(),
@@ -51,11 +42,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
         /// <inheritdoc />
         protected sealed override IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypes => this.DependentPropertyBagSerializationConfigurationTypes;
-
-        /// <summary>
-        /// Gets the registered serializer set to use.
-        /// </summary>
-        protected virtual IList<StringSerializerForTypes> TypesToRegisterWithStringSerializers { get; } = new List<StringSerializerForTypes>();
 
         /// <summary>
         /// Gets the key value delimiter to use for string serialization of the property bag.
@@ -72,76 +58,33 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// </summary>
         public virtual string StringSerializationNullValueEncoding { get; } = ObcDictionaryStringStringSerializer.DefaultNullValueEncoding;
 
-        public override TypeToRegister BuildSpecificTypeToRegister(Type type)
-        {
-            return type.ToTypeToRegisterForPropertyBag();
-        }
-
         /// <inheritdoc />
-        protected sealed override void InternalConfigure()
-        {
-            var dependentConfigTypes = new List<SerializationConfigurationType>(this.DependentSerializationConfigurationTypesWithDefaultsIfApplicable.Reverse());
-
-            while (dependentConfigTypes.Any())
-            {
-                var type = dependentConfigTypes.Last();
-                dependentConfigTypes.RemoveAt(dependentConfigTypes.Count - 1);
-
-                var dependentConfig = (PropertyBagSerializationConfigurationBase)this.DependentSerializationConfigurationTypeToInstanceMap[type];
-                dependentConfigTypes.AddRange(dependentConfig.DependentSerializationConfigurationTypesWithDefaultsIfApplicable);
-
-                this.ProcessSerializer(dependentConfig.TypesToRegisterWithStringSerializers, false);
-            }
-
-            var serializers = (this.SerializersToRegister ?? new StringSerializerForTypes[0]).ToList();
-            var handledTypes = this.ProcessSerializer(serializers);
-
-            foreach (var handledType in handledTypes)
-            {
-                this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(handledType, this.GetType().ToPropertyBagSerializationConfigurationType());
-            }
-        }
-
-        private IReadOnlyCollection<Type> ProcessSerializer(IList<StringSerializerForTypes> registeredSerializers, bool checkForAlreadyRegistered = true)
-        {
-            var handledTypes = registeredSerializers.SelectMany(_ => _.HandledTypes).ToList();
-
-            if (checkForAlreadyRegistered && this.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Intersect(handledTypes).Any())
-            {
-                throw new DuplicateRegistrationException(
-                    Invariant($"Trying to register one or more types via {nameof(this.SerializersToRegister)} processing, but one is already registered."),
-                    handledTypes);
-            }
-
-            this.TypesToRegisterWithStringSerializers.AddRange(registeredSerializers);
-
-            foreach (var registeredSerializer in registeredSerializers)
-            {
-                foreach (var handledType in registeredSerializer.HandledTypes)
-                {
-                    if (this.TypeToSerializerMap.ContainsKey(handledType))
-                    {
-                        if (checkForAlreadyRegistered)
-                        {
-                            throw new DuplicateRegistrationException(
-                                Invariant($"Type {handledType} is already registered."),
-                                new[] { handledType });
-                        }
-                    }
-                    else
-                    {
-                        this.TypeToSerializerMap.Add(handledType, registeredSerializer.SerializerBuilderFunc());
-                    }
-                }
-            }
-
-            return handledTypes;
-        }
+        protected sealed override IReadOnlyCollection<TypeToRegister> TypesToRegister => this.TypesToRegisterForPropertyBag;
 
         /// <summary>
-        /// Gets the optional serializers to add.
+        /// Gets the types to register for property bag serialization.
         /// </summary>
-        protected virtual IReadOnlyCollection<StringSerializerForTypes> SerializersToRegister => new List<StringSerializerForTypes>();
+        protected virtual IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag { get; } = new TypeToRegisterForPropertyBag[0];
+
+        /// <inheritdoc />
+        protected sealed override void ProcessRegistrationDetailsPriorToRegistration(RegistrationDetails registrationDetails)
+        {
+            if (registrationDetails.TypeToRegister is TypeToRegisterForPropertyBag typeToRegisterForPropertyBag)
+            {
+                var type = typeToRegisterForPropertyBag.Type;
+
+                var stringSerializerBuilderFunc = typeToRegisterForPropertyBag.StringSerializerBuilderFunc;
+
+                if (stringSerializerBuilderFunc != null)
+                {
+                    this.TypeToSerializerMap.Add(type, stringSerializerBuilderFunc());
+                }
+            }
+            else
+            {
+                throw new NotSupportedException(Invariant($"{nameof(registrationDetails)}.{nameof(RegistrationDetails.TypeToRegister)} is expected to be of type {nameof(TypeToRegisterForPropertyBag)}, but found this type: {registrationDetails.TypeToRegister.GetType().ToStringReadable()}."));
+            }
+        }
 
         /// <summary>
         /// Builds a map of type to serializer.

@@ -8,6 +8,7 @@ namespace OBeautifulCode.Serialization
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// A default serialization configuration that will only register, with discovery, the internally required types.
@@ -24,6 +25,6 @@ namespace OBeautifulCode.Serialization
         protected override IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypes => new SerializationConfigurationType[0];
 
         /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => InternallyRequiredTypes;
+        protected override IReadOnlyCollection<TypeToRegister> TypesToRegister => InternallyRequiredTypes.Select(_ => _.ToTypeToRegister()).ToList();
     }
 }

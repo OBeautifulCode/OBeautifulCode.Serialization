@@ -6,8 +6,8 @@
 
 namespace OBeautifulCode.Serialization.Bson
 {
-    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// A default serialization configuration that will only register, with discovery, the internally required types.
@@ -21,6 +21,6 @@ namespace OBeautifulCode.Serialization.Bson
         protected override IReadOnlyCollection<BsonSerializationConfigurationType> DependentBsonSerializationConfigurationTypes => new BsonSerializationConfigurationType[0];
 
         /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => InternallyRequiredTypes;
+        protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => InternallyRequiredTypes.Select(_ => _.ToTypeToRegisterForBson()).ToList();
     }
 }

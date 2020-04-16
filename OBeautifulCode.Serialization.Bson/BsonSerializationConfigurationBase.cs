@@ -19,6 +19,7 @@ namespace OBeautifulCode.Serialization.Bson
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
+    using OBeautifulCode.Serialization;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -45,14 +46,13 @@ namespace OBeautifulCode.Serialization.Bson
         /// </summary>
         public const string DefaultIdMemberName = "Id";
 
-        private const string RegisterClassMapMethodName = nameof(BsonClassMap.RegisterClassMap);
-
-        private static readonly MethodInfo RegisterClassMapGenericMethod = typeof(BsonClassMap).GetMethods().Single(_ => (_.Name == RegisterClassMapMethodName) && (!_.GetParameters().Any()) && _.IsGenericMethod);
+        /// <inheritdoc />
+        protected sealed override IReadOnlyCollection<TypeToRegister> TypesToRegister => this.TypesToRegisterForBson;
 
         /// <summary>
-        /// Gets a map of <see cref="Type"/> to the <see cref="IBsonSerializer"/> to register.
+        /// Gets the types to register for BSON serialization.
         /// </summary>
-        protected virtual IReadOnlyCollection<BsonSerializerForTypes> TypesToRegisterWithSerializer => new List<BsonSerializerForTypes>();
+        protected virtual IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson { get; } = new TypeToRegisterForBson[0];
 
         /// <inheritdoc />
         protected sealed override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new[]
@@ -70,97 +70,42 @@ namespace OBeautifulCode.Serialization.Bson
         protected sealed override IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypes => this.DependentBsonSerializationConfigurationTypes;
 
         /// <inheritdoc />
-        protected sealed override void InternalConfigure()
+        protected sealed override void ProcessRegistrationDetailsPriorToRegistration(
+            RegistrationDetails registrationDetails)
         {
-            foreach (var serializerToRegister in this.TypesToRegisterWithSerializer ?? new List<BsonSerializerForTypes>())
+            if (registrationDetails.TypeToRegister is TypeToRegisterForBson typeToRegisterForBson)
             {
-                var serializer = serializerToRegister.SerializerBuilderFunc();
-                foreach (var handledType in serializerToRegister.HandledTypes)
+                var type = typeToRegisterForBson.Type;
+
+                var serializerBuilderFunc = typeToRegisterForBson.SerializerBuilderFunc;
+
+                if (registrationDetails.SerializationConfigurationType == this.SerializationConfigurationType)
                 {
-                    if (this.RegisteredTypeToSerializationConfigurationTypeMap.ContainsKey(handledType))
+                    if (serializerBuilderFunc == null)
                     {
-                        throw new DuplicateRegistrationException(
-                            Invariant($"Trying to register {handledType} via {nameof(this.TypesToRegisterWithSerializer)} processing, but it is already registered."),
-                            new[] { handledType });
+                        try
+                        {
+                            if (type.IsClass)
+                            {
+                                var bsonClassMap = this.AutomaticallyBuildBsonClassMap(type, typeToRegisterForBson.PropertyNameWhitelist);
+
+                                BsonClassMap.RegisterClassMap(bsonClassMap);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new BsonSerializationConfigurationException(Invariant($"Failed to run {nameof(BsonClassMap.RegisterClassMap)} on {type.FullName}"), ex);
+                        }
                     }
-
-                    BsonSerializer.RegisterSerializer(handledType, serializer);
-
-                    this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(handledType, this.GetType().ToBsonSerializationConfigurationType());
+                    else
+                    {
+                        BsonSerializer.RegisterSerializer(type, serializerBuilderFunc());
+                    }
                 }
             }
-        }
-
-        /// <summary>
-        /// Method to call <see cref="BsonClassMap.RegisterClassMap{TClass}()"/> using a <see cref="Type"/> parameter instead of the generic.
-        /// </summary>
-        /// <param name="type">Type to register.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Want to be used from derivatives using 'this.' to make sure type is tracked correctly.")]
-        protected void RegisterClassMapForTypeUsingMongoGeneric(Type type)
-        {
-            new { type }.AsArg().Must().NotBeNull();
-
-            if (this.RegisteredTypeToSerializationConfigurationTypeMap.ContainsKey(type))
+            else
             {
-                throw new DuplicateRegistrationException(
-                    Invariant($"Trying to register {type} in {nameof(this.RegisterClassMapForTypeUsingMongoGeneric)} but it is already registered."),
-                    new[] { type });
-            }
-
-            try
-            {
-                var genericRegisterClassMapMethod = RegisterClassMapGenericMethod.MakeGenericMethod(type);
-                genericRegisterClassMapMethod.Invoke(null, null);
-
-                this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(type, this.GetType().ToBsonSerializationConfigurationType());
-            }
-            catch (Exception ex)
-            {
-                throw new BsonSerializationConfigurationException(Invariant($"Failed to run {nameof(BsonClassMap.RegisterClassMap)} on {type.FullName}"), ex);
-            }
-        }
-
-        /// <inheritdoc />
-        protected sealed override void RegisterTypes(IReadOnlyCollection<Type> types)
-        {
-            new { types }.AsArg().Must().NotBeNull();
-
-            foreach (var type in types)
-            {
-                this.RegisterTypeWithPropertyConstraints(type);
-            }
-        }
-
-        /// <summary>
-        /// Method to perform automatic type member mapping using specific internal conventions.
-        /// </summary>
-        /// <param name="type">Type to register.</param>
-        /// <param name="constrainToProperties">Optional list of properties to constrain type members to (null or 0 will mean all).</param>
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Like this structure.")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Want to be used from derivatives using 'this.'")]
-        protected void RegisterTypeWithPropertyConstraints(Type type, IReadOnlyCollection<string> constrainToProperties = null)
-        {
-            new { type }.AsArg().Must().NotBeNull();
-
-            if (this.RegisteredTypeToSerializationConfigurationTypeMap.ContainsKey(type))
-            {
-                throw new DuplicateRegistrationException(
-                    Invariant($"Trying to register {type} in {nameof(this.RegisterTypeWithPropertyConstraints)} but it is already registered."),
-                    new[] { type });
-            }
-
-            try
-            {
-                if (type.IsClass)
-                {
-                    var bsonClassMap = this.AutomaticallyBuildBsonClassMap(type, constrainToProperties);
-                    BsonClassMap.RegisterClassMap(bsonClassMap);
-                    this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(type, this.GetType().ToBsonSerializationConfigurationType());
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new BsonSerializationConfigurationException(Invariant($"Failed to run {nameof(BsonClassMap.RegisterClassMap)} on {type.FullName}"), ex);
+                throw new NotSupportedException(Invariant($"{nameof(registrationDetails)}.{nameof(RegistrationDetails.TypeToRegister)} is expected to be of type {nameof(TypeToRegisterForBson)}, but found this type: {registrationDetails.TypeToRegister.GetType().ToStringReadable()}."));
             }
         }
 
@@ -238,6 +183,7 @@ namespace OBeautifulCode.Serialization.Bson
         internal static IBsonSerializer GetAppropriateSerializer(Type type, bool defaultToObjectSerializer = true)
         {
             IBsonSerializer result;
+
             if (type == typeof(string))
             {
                 result = new StringSerializer();
@@ -318,6 +264,7 @@ namespace OBeautifulCode.Serialization.Bson
                 .ToList();
 
             const bool returnIfSetMethodIsNotPublic = true;
+
             var properties = allMembers
                 .Where(_ => _.MemberType == MemberTypes.Property)
                 .Cast<PropertyInfo>()

@@ -10,8 +10,8 @@ namespace OBeautifulCode.Serialization.Json
     using System.Collections.Generic;
     using System.Linq;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Collection.Recipes;
+    using OBeautifulCode.Serialization;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -22,62 +22,56 @@ namespace OBeautifulCode.Serialization.Json
     public abstract partial class JsonSerializationConfigurationBase
     {
         /// <inheritdoc />
-        protected sealed override void InternalConfigure()
+        protected sealed override IReadOnlyCollection<TypeToRegister> TypesToRegister => this.TypesToRegisterForJson;
+
+        /// <inheritdoc />
+        protected sealed override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new[]
         {
-            var dependentConfigTypes = new List<SerializationConfigurationType>(this.GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable().Reverse());
-            while (dependentConfigTypes.Any())
+            typeof(InternallyRequiredTypesWithDiscoveryJsonSerializationConfiguration).ToJsonSerializationConfigurationType(),
+        };
+
+        /// <inheritdoc />
+        protected sealed override IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypes => this.DependentJsonSerializationConfigurationTypes;
+
+        /// <inheritdoc />
+        protected sealed override void ProcessRegistrationDetailsPriorToRegistration(
+            RegistrationDetails registrationDetails)
+        {
+            if (registrationDetails.TypeToRegister is TypeToRegisterForJson typeToRegisterForJson)
             {
-                var type = dependentConfigTypes.Last();
-                dependentConfigTypes.RemoveAt(dependentConfigTypes.Count - 1);
+                var type = typeToRegisterForJson.Type;
 
-                var dependentConfig = (JsonSerializationConfigurationBase)this.DependentSerializationConfigurationTypeToInstanceMap[type];
-                dependentConfigTypes.AddRange(dependentConfig.GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable());
+                var jsonConverterBuilder = typeToRegisterForJson.JsonConverterBuilder;
 
-                this.ProcessConverter(dependentConfig.RegisteredConverters, false);
-                this.AddHierarchyParticipatingTypes(dependentConfig.RegisteredTypeToSerializationConfigurationTypeMap.Keys.ToList());
+                if (jsonConverterBuilder != null)
+                {
+                    this.TypesWithConverters.Add(type);
+
+                    if (jsonConverterBuilder.OutputKind == JsonConverterOutputKind.String)
+                    {
+                        this.TypesWithStringConverters.Add(type);
+                    }
+
+                    if (this.JsonConverterBuilders.All(_ => _.Id != jsonConverterBuilder.Id))
+                    {
+                        this.JsonConverterBuilders.Add(jsonConverterBuilder);
+                    }
+                }
             }
-
-            var converters = (this.ConvertersToRegister ?? new JsonConverterForTypes[0]).ToList();
-            var handledTypes = this.ProcessConverter(converters);
-
-            foreach (var handledType in handledTypes)
+            else
             {
-                this.MutableRegisteredTypeToSerializationConfigurationTypeMap.Add(handledType, this.GetType().ToJsonSerializationConfigurationType());
+                throw new NotSupportedException(Invariant($"{nameof(registrationDetails)}.{nameof(RegistrationDetails.TypeToRegister)} is expected to be of type {nameof(TypeToRegisterForJson)}, but found this type: {registrationDetails.TypeToRegister.GetType().ToStringReadable()}."));
             }
         }
 
         /// <inheritdoc />
-        protected sealed override void RegisterTypes(IReadOnlyCollection<Type> types)
+        protected sealed override void FinalizeInitialization()
         {
-            new { types }.AsArg().Must().NotBeNull();
-
-            this.MutableRegisteredTypeToSerializationConfigurationTypeMap.AddRange(types.ToDictionary(k => k, v => (SerializationConfigurationType)this.GetType().ToJsonSerializationConfigurationType()));
-
-            this.AddHierarchyParticipatingTypes(types);
+            this.AddHierarchyParticipatingTypes(this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList());
         }
 
-        private IReadOnlyCollection<Type> ProcessConverter(IList<JsonConverterForTypes> registeredConverters, bool checkForAlreadyRegistered = true)
-        {
-            var handledTypes = registeredConverters.SelectMany(_ => _.HandledTypes).ToList();
-
-            if (checkForAlreadyRegistered && this.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Intersect(handledTypes).Any())
-            {
-                throw new DuplicateRegistrationException(
-                    Invariant($"Trying to register one or more types via {nameof(this.ConvertersToRegister)} processing, but one is already registered."),
-                    handledTypes);
-            }
-
-            this.RegisteredConverters.AddRange(registeredConverters);
-            this.TypesWithConverters.AddRange(handledTypes);
-            this.TypesWithStringConverters.AddRange(
-                registeredConverters
-                    .Where(_ => _.OutputKind == JsonConverterOutputKind.String)
-                    .SelectMany(_ => _.HandledTypes).Distinct());
-
-            return handledTypes;
-        }
-
-        private void AddHierarchyParticipatingTypes(IReadOnlyCollection<Type> types)
+        private void AddHierarchyParticipatingTypes(
+            IReadOnlyCollection<Type> types)
         {
             var inheritedTypeConverterTypes = types.Where(t =>
                 (!InheritedTypeConverterBlackList.Contains(t)) &&

@@ -27,6 +27,6 @@ namespace OBeautifulCode.Serialization
         protected override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new[] { typeof(InternallyRequiredTypesRegisterOnlyWithDiscoverySerializationConfiguration).ToSerializationConfigurationType() };
 
         /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => new[] { typeof(T1), typeof(T2) };
+        protected override IReadOnlyCollection<TypeToRegister> TypesToRegister => new[] { typeof(T1).ToTypeToRegister(), typeof(T2).ToTypeToRegister() };
     }
 }

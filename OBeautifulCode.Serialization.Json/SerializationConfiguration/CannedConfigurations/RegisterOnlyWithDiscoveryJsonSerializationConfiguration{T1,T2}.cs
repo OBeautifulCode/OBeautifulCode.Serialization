@@ -6,7 +6,6 @@
 
 namespace OBeautifulCode.Serialization.Json
 {
-    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -17,6 +16,6 @@ namespace OBeautifulCode.Serialization.Json
     public sealed class RegisterOnlyWithDiscoveryJsonSerializationConfiguration<T1, T2> : JsonSerializationConfigurationBase
     {
         /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => new[] { typeof(T1), typeof(T2) };
+        protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[] { typeof(T1).ToTypeToRegisterForJson(), typeof(T2).ToTypeToRegisterForJson() };
     }
 }

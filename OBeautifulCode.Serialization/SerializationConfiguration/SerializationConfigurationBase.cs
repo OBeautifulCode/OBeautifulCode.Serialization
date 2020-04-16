@@ -7,18 +7,15 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
     using OBeautifulCode.Assertion.Recipes;
-    using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Compression;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
-    using OBeautifulCode.Serialization.Internal;
     using OBeautifulCode.Type;
     using OBeautifulCode.Type.Recipes;
 
@@ -48,8 +45,6 @@ namespace OBeautifulCode.Serialization
 
         private readonly Dictionary<Type, RegistrationDetails> registeredTypeToRegistrationDetailsMap = new Dictionary<Type, RegistrationDetails>();
 
-        private readonly SerializationConfigurationType serializationConfigurationType;
-
         private bool initialized;
 
         /// <summary>
@@ -57,18 +52,13 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         protected SerializationConfigurationBase()
         {
-            this.serializationConfigurationType = this.GetType().ToSerializationConfigurationType();
+            this.SerializationConfigurationType = this.GetType().ToSerializationConfigurationType();
         }
-
-        /// <summary>
-        /// Gets the string representation of null.
-        /// </summary>
-        public string NullSerializedStringValue => "null";
 
         /// <summary>
         /// Gets the types that need to be registered for any and all serialization.
         /// </summary>
-        public IReadOnlyCollection<Type> InternallyRequiredTypes => new[]
+        public static IReadOnlyCollection<Type> InternallyRequiredTypes => new[]
         {
             // OBC.Type
             typeof(UtcDateTimeRangeInclusive),
@@ -93,6 +83,11 @@ namespace OBeautifulCode.Serialization
         };
 
         /// <summary>
+        /// Gets the string representation of null.
+        /// </summary>
+        public static string NullSerializedStringValue => "null";
+
+        /// <summary>
         /// Gets a map of the dependent (all ancestors) serialization configuration types to their initialized instance.
         /// </summary>
         public IReadOnlyDictionary<SerializationConfigurationType, SerializationConfigurationBase> DependentSerializationConfigurationTypeToInstanceMap { get; private set; }
@@ -107,6 +102,11 @@ namespace OBeautifulCode.Serialization
         /// unless this this configuration type is <see cref="IIgnoreDefaultDependencies"/>.
         /// </summary>
         public IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypesWithDefaultsIfApplicable => this.GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable();
+
+        /// <summary>
+        /// Gets the serialization configuration type of the current instance.
+        /// </summary>
+        protected SerializationConfigurationType SerializationConfigurationType { get; }
 
         /// <summary>
         /// Gets the serialization configuration types that are needed for this serialization configuration to work.
@@ -431,7 +431,7 @@ namespace OBeautifulCode.Serialization
         {
             new { typeToRegister }.AsArg().Must().NotBeNull();
 
-            var registrationDetails = new RegistrationDetails(typeToRegister, this.serializationConfigurationType);
+            var registrationDetails = new RegistrationDetails(typeToRegister, this.SerializationConfigurationType);
 
             this.RegisterType(registrationDetails);
         }
@@ -443,7 +443,7 @@ namespace OBeautifulCode.Serialization
 
             if (!IsTypeThatCanBeRegistered(type))
             {
-                throw new InvalidOperationException(Invariant($"Serialization configuration {this.serializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.ToStringReadable()} is attempting to register the following type which cannot be registered: {type.ToStringReadable()}."));
+                throw new InvalidOperationException(Invariant($"Serialization configuration {this.SerializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.ToStringReadable()} is attempting to register the following type which cannot be registered: {type.ToStringReadable()}."));
             }
 
             if (this.registeredTypeToRegistrationDetailsMap.ContainsKey(type))

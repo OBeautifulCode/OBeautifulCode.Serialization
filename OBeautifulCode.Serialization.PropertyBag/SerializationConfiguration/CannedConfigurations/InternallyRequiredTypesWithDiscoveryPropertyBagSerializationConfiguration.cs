@@ -6,8 +6,8 @@
 
 namespace OBeautifulCode.Serialization.PropertyBag
 {
-    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// A default serialization configuration that will only register, with discovery, the internally required types.
@@ -21,6 +21,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
         protected override IReadOnlyCollection<PropertyBagSerializationConfigurationType> DependentPropertyBagSerializationConfigurationTypes => new PropertyBagSerializationConfigurationType[0];
 
         /// <inheritdoc />
-        protected override IReadOnlyCollection<Type> TypesToAutoRegisterWithDiscovery => InternallyRequiredTypes;
+        protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => InternallyRequiredTypes.Select(_ => _.ToTypeToRegisterForPropertyBag()).ToList();
     }
 }

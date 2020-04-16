@@ -150,12 +150,9 @@ namespace OBeautifulCode.Serialization.Json
 
             var resultBuilder = SerializationKindToSettingsSelectorByDirection[formattingKind](SerializationDirection.Serialize);
 
-            var result = resultBuilder(this.RegisteredTypeToSerializationConfigurationTypeMap.Keys.ToList());
+            var result = resultBuilder(this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList());
 
-            var specifiedConverters = this.RegisteredConverters.Select(_ =>
-                serializationDirection == SerializationDirection.Serialize
-                    ? _.SerializingConverterBuilderFunc()
-                    : _.DeserializingConverterBuilderFunc()).ToList();
+            var specifiedConverters = this.JsonConverterBuilders.Select(_ => _.GetJsonConverterBuilderFuncBySerializationDirection(serializationDirection)()).ToList();
 
             var defaultConverters = this.GetDefaultConverters(serializationDirection, formattingKind);
 
@@ -171,7 +168,7 @@ namespace OBeautifulCode.Serialization.Json
             {
                 var overrideResolver = this.OverrideContractResolver[serializationDirection];
                 new { overrideResolver }.AsArg().Must().NotBeNull();
-                result.ContractResolver = overrideResolver.ContractResolverBuilder(this.RegisteredTypeToSerializationConfigurationTypeMap.Keys.ToList());
+                result.ContractResolver = overrideResolver.ContractResolverBuilder(this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList());
             }
 
             return result;
@@ -191,7 +188,7 @@ namespace OBeautifulCode.Serialization.Json
             // this is a hack to not mess with casing since the case must match for dynamic deserialization...
             var resultBuilder = SerializationKindToSettingsSelectorByDirection[formattingKind](serializationDirection);
 
-            var result = resultBuilder(this.RegisteredTypeToSerializationConfigurationTypeMap.Keys.ToList());
+            var result = resultBuilder(this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList());
 
             result.ContractResolver = new DefaultContractResolver();
 
