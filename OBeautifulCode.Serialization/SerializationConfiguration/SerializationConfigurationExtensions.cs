@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SerializationConfigurationTypeExtensions.cs" company="OBeautifulCode">
+// <copyright file="SerializationConfigurationExtensions.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -9,9 +9,9 @@ namespace OBeautifulCode.Serialization
     using System;
 
     /// <summary>
-    /// Extension methods related to <see cref="SerializationConfigurationType"/>.
+    /// Extension methods related to serialization configuration.
     /// </summary>
-    public static class SerializationConfigurationTypeExtensions
+    public static class SerializationConfigurationExtensions
     {
         /// <summary>
         /// Gets the <see cref="SerializationConfigurationType"/> corresponding to the specified configuration type.

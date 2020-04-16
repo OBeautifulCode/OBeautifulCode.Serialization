@@ -72,10 +72,15 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// </summary>
         public virtual string StringSerializationNullValueEncoding { get; } = ObcDictionaryStringStringSerializer.DefaultNullValueEncoding;
 
+        public override TypeToRegister BuildSpecificTypeToRegister(Type type)
+        {
+            return type.ToTypeToRegisterForPropertyBag();
+        }
+
         /// <inheritdoc />
         protected sealed override void InternalConfigure()
         {
-            var dependentConfigTypes = new List<SerializationConfigurationType>(this.GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable().Reverse());
+            var dependentConfigTypes = new List<SerializationConfigurationType>(this.DependentSerializationConfigurationTypesWithDefaultsIfApplicable.Reverse());
 
             while (dependentConfigTypes.Any())
             {
@@ -83,7 +88,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 dependentConfigTypes.RemoveAt(dependentConfigTypes.Count - 1);
 
                 var dependentConfig = (PropertyBagSerializationConfigurationBase)this.DependentSerializationConfigurationTypeToInstanceMap[type];
-                dependentConfigTypes.AddRange(dependentConfig.GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable());
+                dependentConfigTypes.AddRange(dependentConfig.DependentSerializationConfigurationTypesWithDefaultsIfApplicable);
 
                 this.ProcessSerializer(dependentConfig.TypesToRegisterWithStringSerializers, false);
             }

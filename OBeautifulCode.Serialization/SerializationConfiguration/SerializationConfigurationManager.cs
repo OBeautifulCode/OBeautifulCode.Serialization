@@ -68,7 +68,7 @@ namespace OBeautifulCode.Serialization
                 {
                     var instance = serializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.Construct<SerializationConfigurationBase>();
 
-                    var children = instance.GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable().Distinct().ToList();
+                    var children = instance.DependentSerializationConfigurationTypesWithDefaultsIfApplicable.Distinct().ToList();
 
                     var descendentTypeToInstanceMap = new Dictionary<SerializationConfigurationType, SerializationConfigurationBase>();
 
