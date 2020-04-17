@@ -161,7 +161,11 @@ namespace OBeautifulCode.Serialization.Test
 
     public class TestWithReadOnlyCollectionOfBaseClassConfig : BsonSerializationConfigurationBase
     {
-        protected override IReadOnlyCollection<Type> ClassTypesToRegisterAlongWithInheritors => new[] { typeof(TestBase), typeof(TestWithReadOnlyCollectionOfBaseClass) };
+        protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[]
+        {
+            typeof(TestBase).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+            typeof(TestWithReadOnlyCollectionOfBaseClass).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+        };
     }
 
     public abstract class TestBase

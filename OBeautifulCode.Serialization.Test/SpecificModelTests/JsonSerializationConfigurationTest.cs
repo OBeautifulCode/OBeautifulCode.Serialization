@@ -449,7 +449,11 @@ namespace OBeautifulCode.Serialization.Test
         {
             var friendsJson = "{\"firstNames\": [\"betty\",\"bob\",\"bailey\"]}";
 
-            Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<Friends>).ToJsonSerializationConfigurationType()).Deserialize<Friends>(friendsJson));
+            var serializationConfigurationType = typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<Friends>).ToJsonSerializationConfigurationType();
+
+            var serializer = new ObcJsonSerializer(serializationConfigurationType);
+
+            Assert.Throws<JsonSerializationException>(() => serializer.Deserialize<Friends>(friendsJson));
         }
 
         [Fact]

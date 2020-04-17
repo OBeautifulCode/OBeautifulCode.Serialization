@@ -34,33 +34,36 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundTrip___Supported_scenarios___Works()
         {
             // Arrange
-            var serializer = new ObcPropertyBagSerializer();
+            var serializationConfigurationType = typeof(PropertyBagConfigForInheritTypeBase);
+
+            var serializer = new ObcPropertyBagSerializer(serializationConfigurationType.ToPropertyBagSerializationConfigurationType());
+
             var input = new ComplicatedObject
-                            {
-                                NullableDecimal = 29m,
-                                BaseVersion = new InheritTypeDerive(),
-                                DeriveVersion = new InheritTypeDerive(),
-                                DeriveVersionArray = new[] { new InheritTypeDerive(), },
-                                DeriveVersionCollection = new[] { new InheritTypeDerive(), }.ToList(),
-                                String = A.Dummy<string>(),
-                                Int = A.Dummy<int>(),
-                                TimeSpan = A.Dummy<TimeSpan>(),
-                                DateTime = A.Dummy<DateTime>(),
-                                DateTimeNullable = A.Dummy<DateTime>(),
-                                CustomWithoutInterface = new CustomWithoutInterface(),
-                                CustomWithInterface = new CustomWithInterface(),
-                                StringArray = new[] { A.Dummy<string>(), },
-                                StringCollection = new[] { A.Dummy<string>(), }.ToList(),
-                                IntCollection = new[] { A.Dummy<int>(), }.ToList(),
-                                TimeSpanCollection = new[] { A.Dummy<TimeSpan>(), }.ToList(),
-                                DateTimeCollection = new[] { A.Dummy<DateTime>(), }.ToList(),
-                                CustomWithoutInterfaceCollection = new[] { new CustomWithoutInterface(), new CustomWithoutInterface(), }.ToList(),
-                                CustomWithInterfaceCollection = new[] { new CustomWithInterface(), new CustomWithInterface(), }.ToList(),
-                                EnumParseCollection = new[] { EnumParse.Default, EnumParse.Value, },
-                                EnumParse = EnumParse.Value,
-                                StringCollectionWithSingleEmptyString = new[] { string.Empty },
-                                StringCollectionWithNulls = new[] { string.Empty, A.Dummy<string>(), null, string.Empty, null, A.Dummy<string>() },
-                            };
+            {
+                NullableDecimal = 29m,
+                BaseVersion = new InheritTypeDerive(),
+                DeriveVersion = new InheritTypeDerive(),
+                DeriveVersionArray = new[] { new InheritTypeDerive(), },
+                DeriveVersionCollection = new[] { new InheritTypeDerive(), }.ToList(),
+                String = A.Dummy<string>(),
+                Int = A.Dummy<int>(),
+                TimeSpan = A.Dummy<TimeSpan>(),
+                DateTime = A.Dummy<DateTime>(),
+                DateTimeNullable = A.Dummy<DateTime>(),
+                CustomWithoutInterface = new CustomWithoutInterface(),
+                CustomWithInterface = new CustomWithInterface(),
+                StringArray = new[] { A.Dummy<string>(), },
+                StringCollection = new[] { A.Dummy<string>(), }.ToList(),
+                IntCollection = new[] { A.Dummy<int>(), }.ToList(),
+                TimeSpanCollection = new[] { A.Dummy<TimeSpan>(), }.ToList(),
+                DateTimeCollection = new[] { A.Dummy<DateTime>(), }.ToList(),
+                CustomWithoutInterfaceCollection = new[] { new CustomWithoutInterface(), new CustomWithoutInterface(), }.ToList(),
+                CustomWithInterfaceCollection = new[] { new CustomWithInterface(), new CustomWithInterface(), }.ToList(),
+                EnumParseCollection = new[] { EnumParse.Default, EnumParse.Value, },
+                EnumParse = EnumParse.Value,
+                StringCollectionWithSingleEmptyString = new[] { string.Empty },
+                StringCollectionWithNulls = new[] { string.Empty, A.Dummy<string>(), null, string.Empty, null, A.Dummy<string>() },
+            };
 
             // Act
             var serializedPropertyBag = serializer.SerializeToPropertyBag(input);
@@ -167,15 +170,12 @@ namespace OBeautifulCode.Serialization.Test
         public static void Configuration___Specifying_type___Works()
         {
             // Arrange
-            var configurationType = typeof(PropertyBagConfig);
             var serializer = new ObcPropertyBagSerializer<PropertyBagConfig>(UnregisteredTypeEncounteredStrategy.Attempt);
-            var input = new StringProperty { StringItem = A.Dummy<string>() };
+            var input = new TypeWithCustomPropertyBagSerializerWrapper { CustomTypeWrapper = new TypeWithCustomPropertyBagSerializer() };
 
             // Act
             var serializedString = serializer.SerializeToString(input);
-            var actual = serializer.Deserialize<StringProperty>(serializedString);
-
-            // Act
+            var actual = serializer.Deserialize<TypeWithCustomPropertyBagSerializerWrapper>(serializedString);
         }
 
         private class ConstructorWithProperties
@@ -211,18 +211,55 @@ namespace OBeautifulCode.Serialization.Test
             protected override IReadOnlyCollection<PropertyBagSerializationConfigurationType> DependentPropertyBagSerializationConfigurationTypes => new[] { typeof(PropertyBagConfigDepend).ToPropertyBagSerializationConfigurationType() };
         }
 
-        private class PropertyBagConfigDepend : PropertyBagSerializationConfigurationBase
+        public class TypeWithCustomPropertyBagSerializer
         {
-            protected override IReadOnlyCollection<RegisteredStringSerializer> SerializersToRegister =>
-                new[]
-                {
-                    new RegisteredStringSerializer(() => new CustomStringSerializer(), new[] { typeof(string) }),
-                };
         }
 
-        private class StringProperty
+        private class PropertyBagConfigDepend : PropertyBagSerializationConfigurationBase
         {
-            public string StringItem { get; set; }
+            protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => new TypeToRegisterForPropertyBag[]
+            {
+                typeof(TypeWithCustomPropertyBagSerializer).ToTypeToRegisterForPropertyBag(MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new TypeWithCustomPropertyBagSerializerSerializer()),
+            };
+        }
+
+        private class PropertyBagConfigForInheritTypeBase : PropertyBagSerializationConfigurationBase
+        {
+            protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => new TypeToRegisterForPropertyBag[]
+            {
+                typeof(ComplicatedObject).ToTypeToRegisterForPropertyBag(),
+                typeof(InheritTypeBase).ToTypeToRegisterForPropertyBag(MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new InheritTestSerializer()),
+                typeof(InheritTypeDerive).ToTypeToRegisterForPropertyBag(MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new InheritTestSerializer()),
+            };
+        }
+
+        private class InheritTestSerializer : IStringSerializeAndDeserialize
+        {
+            public const string CustomSerializedString = "We have a serializer inherited.";
+
+            public SerializationConfigurationType SerializationConfigurationType => null;
+
+            public string SerializeToString(object objectToSerialize)
+            {
+                return CustomSerializedString;
+            }
+
+            public T Deserialize<T>(string serializedString)
+            {
+                return (T)this.Deserialize(serializedString, typeof(T));
+            }
+
+            public object Deserialize(string serializedString, Type type)
+            {
+                new { serializedString }.AsArg().Must().BeEqualTo(CustomSerializedString);
+                (type == typeof(InheritTypeBase) || type == typeof(InheritTypeDerive)).AsArg().Must().BeTrue();
+                return new InheritTypeDerive();
+            }
+        }
+
+        private class TypeWithCustomPropertyBagSerializerWrapper
+        {
+            public TypeWithCustomPropertyBagSerializer CustomTypeWrapper { get; set; }
         }
 
         private class ComplicatedObject
@@ -308,16 +345,16 @@ namespace OBeautifulCode.Serialization.Test
 
         public enum EnumAttributeProperty { Default, Value, Replaced, }
 
-        private class CustomStringSerializer : IStringSerializeAndDeserialize
+        private class TypeWithCustomPropertyBagSerializerSerializer : IStringSerializeAndDeserialize
         {
-            public const string CustomReplacementString = "We have a string overwriting.";
-
-            public const string CustomSerializedString = "We have a string overwriting serializer attribute.";
+            public const string CustomSerializedString = "This is the string representation of a TypeWithCustomPropertyBagSerializer object.";
 
             public SerializationConfigurationType SerializationConfigurationType => null;
 
             public string SerializeToString(object objectToSerialize)
             {
+                objectToSerialize.GetType().AsArg().Must().BeEqualTo(typeof(TypeWithCustomPropertyBagSerializer));
+
                 return CustomSerializedString;
             }
 
@@ -329,9 +366,9 @@ namespace OBeautifulCode.Serialization.Test
             public object Deserialize(string serializedString, Type type)
             {
                 new { serializedString }.AsArg().Must().BeEqualTo(CustomSerializedString);
-                new { type }.AsArg().Must().BeEqualTo(typeof(string));
+                new { type }.AsArg().Must().BeEqualTo(typeof(TypeWithCustomPropertyBagSerializer));
 
-                return CustomReplacementString;
+                return new TypeWithCustomPropertyBagSerializer();
             }
         }
 

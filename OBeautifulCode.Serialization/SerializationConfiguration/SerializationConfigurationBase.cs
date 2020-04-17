@@ -184,6 +184,11 @@ namespace OBeautifulCode.Serialization
                 return new Type[0];
             }
 
+            if (IsSystemType(type))
+            {
+                return new Type[0];
+            }
+
             var allTypesToConsiderForRegistration = GetAllTypesToConsiderForRegistration();
 
             IReadOnlyCollection<Type> result;
@@ -221,7 +226,7 @@ namespace OBeautifulCode.Serialization
                 {
                     var typesToConsiderForThisAssembly = new[] { assembly }
                         .GetTypesFromAssemblies()
-                        .Where(IsTypeThatCanBeRegistered) // && _.IsClass  In an old version of Serialization we only included class types but twe think this is algorithmically incorrect because in certain situations it will exclude types that should be identified as "related" in GetRelatedTypesToInclude
+                        .Where(_ => IsTypeThatCanBeRegistered(_, allowSystemType: false)) // && _.IsClass  In an old version of Serialization we only included class types but twe think this is algorithmically incorrect because in certain situations it will exclude types that should be identified as "related" in GetRelatedTypesToInclude
                         .ToList();
 
                     AssemblyToTypesToConsiderForRegistrationMap.Add(assembly, typesToConsiderForThisAssembly);
@@ -260,30 +265,34 @@ namespace OBeautifulCode.Serialization
                 }
             }
 
-            bool IsCompilerGenerated(MemberInfo memberInfo) => memberInfo.CustomAttributes.Select(s => s.AttributeType).Contains(typeof(CompilerGeneratedAttribute));
+            if (!IsSystemType(type))
+            {
+                bool IsCompilerGenerated(MemberInfo memberInfo) => memberInfo.CustomAttributes.Select(s => s.AttributeType).Contains(typeof(CompilerGeneratedAttribute));
 
-            result.AddRange(
-                type
-                    .GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                    .Where(_ => !IsCompilerGenerated(_))
-                    .SelectMany(
-                        _ =>
-                        {
-                            if ((_ is PropertyInfo propertyInfo) && memberTypesToInclude.HasFlag(MemberTypesToInclude.DeclaredProperties))
+                result.AddRange(
+                    type
+                        .GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                        .Where(_ => !IsCompilerGenerated(_))
+                        .SelectMany(
+                            _ =>
                             {
-                                return new[] { propertyInfo.PropertyType };
-                            }
+                                if ((_ is PropertyInfo propertyInfo) && memberTypesToInclude.HasFlag(MemberTypesToInclude.DeclaredProperties))
+                                {
+                                    return new[] { propertyInfo.PropertyType };
+                                }
 
-                            if ((_ is FieldInfo fieldInfo) && memberTypesToInclude.HasFlag(MemberTypesToInclude.DeclaredFields))
-                            {
-                                return new[] { fieldInfo.FieldType };
-                            }
+                                if ((_ is FieldInfo fieldInfo) && memberTypesToInclude.HasFlag(MemberTypesToInclude.DeclaredFields))
+                                {
+                                    return new[] { fieldInfo.FieldType };
+                                }
 
-                            return new Type[0];
-                        }));
+                                return new Type[0];
+                            }));
+            }
 
             // result = result.Where(_ => _.IsClosedNonAnonymousClassType()).ToList() // older versions of Serialization filtered to closed non-anonymous class types but we believe this is algorithmically incomplete
             result = result
+                .Where(_ => IsTypeThatCanBeRegistered(_, allowSystemType: true))
                 .Where(_ => _ != type)
                 .ToList();
 
@@ -307,14 +316,53 @@ namespace OBeautifulCode.Serialization
         }
 
         private static bool IsTypeThatCanBeRegistered(
-            Type type)
+            TypeToRegister typeToRegister)
         {
-            var result = (!RelatedTypesBlacklist.Contains(type))
-                      && (!IsSystemType(type))
-                      && (!type.IsClosedAnonymousType())
-                      && (!type.ContainsGenericParameters);
+            var type = typeToRegister.Type;
 
-            return result;
+            if (!IsTypeThatCanBeRegistered(type, allowSystemType: true))
+            {
+                return false;
+            }
+
+            if (IsSystemType(type) && (!typeToRegister.IsOriginatingType))
+            {
+                return false;
+            }
+
+            if (type.IsArray || type.IsClosedSystemDictionaryType() || type.IsClosedSystemCollectionType() || type.IsClosedSystemEnumerableType())
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool IsTypeThatCanBeRegistered(
+            Type type,
+            bool allowSystemType)
+        {
+            if (type.ContainsGenericParameters)
+            {
+                return false;
+            }
+
+            if (RelatedTypesBlacklist.Contains(type))
+            {
+                return false;
+            }
+
+            if (type.IsClosedAnonymousType())
+            {
+                return false;
+            }
+
+            if ((!allowSystemType) && IsSystemType(type))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private IReadOnlyCollection<SerializationConfigurationType> GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable()
@@ -387,7 +435,7 @@ namespace OBeautifulCode.Serialization
                         // and thus need to be processed in the queue, but they themselves cannot be registered.
                         // for example, if the type is List<List<MyModelType>>, we don't want to register it,
                         // but we want to run member inclusion to get at MyModelType.
-                        if (IsTypeThatCanBeRegistered(typeToRegister.Type))
+                        if (IsTypeThatCanBeRegistered(typeToRegister))
                         {
                             this.RegisterType(typeToRegister);
                         }
@@ -439,9 +487,11 @@ namespace OBeautifulCode.Serialization
         private void RegisterType(
             RegistrationDetails registrationDetails)
         {
-            var type = registrationDetails.TypeToRegister.Type;
+            var typeToRegister = registrationDetails.TypeToRegister;
 
-            if (!IsTypeThatCanBeRegistered(type))
+            var type = typeToRegister.Type;
+
+            if (!IsTypeThatCanBeRegistered(typeToRegister))
             {
                 throw new InvalidOperationException(Invariant($"Serialization configuration {this.SerializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.ToStringReadable()} is attempting to register the following type which cannot be registered: {type.ToStringReadable()}."));
             }

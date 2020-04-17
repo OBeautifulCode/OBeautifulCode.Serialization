@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BsonSerializationConfigurationAutoRegisterType.cs" company="OBeautifulCode">
+// <copyright file="BsonSerializationConfigurationTestAutoConstrainedType.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -8,33 +8,31 @@ namespace OBeautifulCode.Serialization.Test
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using MongoDB.Bson.Serialization;
 
     using OBeautifulCode.Serialization.Bson;
 
-    public class BsonSerializationConfigurationAutoRegisterType<T> : BsonSerializationConfigurationBase
-    {
-        protected override IReadOnlyCollection<Type> TypesToAutoRegister => new[] { typeof(T) };
-    }
-
     public class BsonSerializationConfigurationTestAutoConstrainedType : BsonSerializationConfigurationBase
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Only used in testing.")]
-        public BsonSerializationConfigurationTestAutoConstrainedType(Type type, IReadOnlyCollection<string> constrainedProperties = null)
-        {
-            this.TypeToRegister = type;
-            this.ConstrainedProperties = constrainedProperties;
-        }
-
         public Type TypeToRegister { get; set; }
 
         public IReadOnlyCollection<string> ConstrainedProperties { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Is actually called by reflection.")]
-        private BsonClassMap TestCode()
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Only used in testing.")]
+        public BsonSerializationConfigurationTestAutoConstrainedType Setup(Type type, IReadOnlyCollection<string> constrainedProperties = null)
         {
-            // this is just a hook to test this...
+            this.TypeToRegister = type;
+            this.ConstrainedProperties = constrainedProperties;
+
+            return this;
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Is actually called by reflection.")]
+        public BsonClassMap RunAutomaticallyBuildBsonClassMapOnSetupTypeAndConstrainedProperties()
+        {
+            // AutomaticallyBuildBsonClassMap is not public and this is a shim to expose that method to test this functionality directly
             return this.AutomaticallyBuildBsonClassMap(this.TypeToRegister, this.ConstrainedProperties);
         }
     }
@@ -51,7 +49,7 @@ namespace OBeautifulCode.Serialization.Test
         /// </summary>
         public const string ExceptionMessage = "Expected to be thrown.";
 
-        protected override void FinalConfiguration()
+        protected override void FinalizeInitialization()
         {
             throw new ArgumentException(ExceptionMessage);
         }
@@ -67,13 +65,14 @@ namespace OBeautifulCode.Serialization.Test
 
     public class TestVariousTypeOverloadsConfig : BsonSerializationConfigurationBase
     {
-        protected override IReadOnlyCollection<Type> ClassTypesToRegister => new[] { typeof(TestConfigureActionSingle) };
-
-        protected override IReadOnlyCollection<Type> TypesToAutoRegister => new[] { typeof(ITestConfigureActionFromAuto), typeof(TestConfigureActionBaseFromAuto) };
-
-        protected override IReadOnlyCollection<Type> ClassTypesToRegisterAlongWithInheritors => new[] { typeof(TestConfigureActionBaseFromSub) };
-
-        protected override IReadOnlyCollection<Type> InterfaceTypesToRegisterImplementationOf => new[] { typeof(ITestConfigureActionFromInterface) };
+        protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[]
+        {
+            typeof(TestConfigureActionSingle).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+            typeof(ITestConfigureActionFromAuto).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+            typeof(TestConfigureActionBaseFromSub).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+            typeof(TestConfigureActionBaseFromAuto).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+            typeof(ITestConfigureActionFromInterface).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+        };
     }
 
     public class TestConfigWithSettableFields : BsonSerializationConfigurationBase
@@ -93,17 +92,21 @@ namespace OBeautifulCode.Serialization.Test
 
 #pragma warning restore SA1401 // Fields should be private
 
-        protected override IReadOnlyCollection<Type> ClassTypesToRegister => this.SettableClassTypesToRegister;
-
-        protected override IReadOnlyCollection<Type> TypesToAutoRegister => this.SettableTypesToAutoRegister;
-
-        protected override IReadOnlyCollection<Type> ClassTypesToRegisterAlongWithInheritors => this.SettableClassTypesToRegisterAlongWithInheritors;
-
-        protected override IReadOnlyCollection<Type> InterfaceTypesToRegisterImplementationOf => this.SettableInterfaceTypesToRegisterImplementationOf;
+        protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[0]
+            .Concat(this.SettableClassTypesToRegister.Select(_ => _.ToTypeToRegisterForBson(MemberTypesToInclude.None)))
+            .Concat(this.SettableTypesToAutoRegister.Select(_ => _.ToTypeToRegisterForBson(MemberTypesToInclude.None)))
+            .Concat(this.SettableClassTypesToRegisterAlongWithInheritors.Select(_ => _.ToTypeToRegisterForBson(MemberTypesToInclude.None)))
+            .Concat(this.SettableInterfaceTypesToRegisterImplementationOf.Select(_ => _.ToTypeToRegisterForBson(MemberTypesToInclude.None)))
+            .ToList();
     }
 
     public class InvestigationConfiguration : BsonSerializationConfigurationBase
     {
-        protected override IReadOnlyCollection<Type> TypesToAutoRegister => new[] { typeof(IDeduceWhoLetTheDogsOut), typeof(NamedInvestigator), typeof(AnonymousInvestigator) };
+        protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[]
+        {
+            typeof(IDeduceWhoLetTheDogsOut).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+            typeof(NamedInvestigator).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+            typeof(AnonymousInvestigator).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+        };
     }
 }

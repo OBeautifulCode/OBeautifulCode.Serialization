@@ -180,7 +180,7 @@
     <Compile Include="Bson\CustomSerializers\ObcBsonDictionarySerializerTest.cs" />
     <Compile Include="Bson\CustomSerializers\ObcBsonCollectionSerializerTest.cs" />
     <Compile Include="Bson\ObcConfigurationBaseTest.cs" />
-    <Compile Include="ConfigurationTests\BsonSerializationConfigurationAutoRegisterType.cs" />
+    <Compile Include="ConfigurationTests\BsonSerializationConfigurationTestAutoConstrainedType.cs" />
     <Compile Include="ConfigurationTests\BsonSerializationConfigurationBaseTest.cs" />
     <Compile Include="ConfigurationTests\JsonSerializationConfigurationBaseTest.cs" />
     <Compile Include="ConfigurationTests\SerializationConfigurationManagerTest.cs" />
@@ -223,7 +223,7 @@
     <Compile Include="SpecificModelTests\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />
     <Compile Include="SpecificModelTests\DependentConfigurationsHandledCorrectly.cs" />
     <Compile Include="SpecificModelTests\DictionaryFlavorSupportTest.cs" />
-    <Compile Include="SpecificModelTests\DirectStringSerializationIsSupported.cs" />
+    <Compile Include="SpecificModelTests\DirectStringSerializationIsNotSupported.cs" />
     <Compile Include="SpecificModelTests\JsonSerializationConfigurationTest.cs" />
     <Compile Include="SpecificModelTests\MultilevelDependencyTest.cs" />
     <Compile Include="SpecificModelTests\NetDrawingTypeTests.cs" />

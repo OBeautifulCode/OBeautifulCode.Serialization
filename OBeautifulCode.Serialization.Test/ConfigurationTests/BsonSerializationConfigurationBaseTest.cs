@@ -26,11 +26,11 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var type = typeof(TestWithId);
-            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType(type);
+            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType().Setup(type);
             var expectedMemberNames = BsonSerializationConfigurationBase.GetMembersToAutomap(type).Select(_ => _.Name).OrderBy(_ => _).ToList();
 
             // Act
-            var classMap = RunTestCode(configuration);
+            var classMap = configuration.RunAutomaticallyBuildBsonClassMapOnSetupTypeAndConstrainedProperties();
 
             // Assert
             classMap.Should().NotBeNull();
@@ -47,11 +47,11 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var type = typeof(TestMapping);
-            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType(type);
+            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType().Setup(type);
             var expectedMemberNames = BsonSerializationConfigurationBase.GetMembersToAutomap(type).Select(_ => _.Name).OrderBy(_ => _).ToList();
 
             // Act
-            var classMap = RunTestCode(configuration);
+            var classMap = configuration.RunAutomaticallyBuildBsonClassMapOnSetupTypeAndConstrainedProperties();
 
             // Assert
             classMap.Should().NotBeNull();
@@ -68,10 +68,10 @@ namespace OBeautifulCode.Serialization.Test
             // Arrange
             var constraints = new[] { nameof(TestMapping.GuidProperty), nameof(TestMapping.StringIntMap) };
             var expectedMemberNames = constraints.ToList();
-            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType(typeof(TestMapping), constraints);
+            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType().Setup(typeof(TestMapping), constraints);
 
             // Act
-            var classMap = RunTestCode(configuration);
+            var classMap = configuration.RunAutomaticallyBuildBsonClassMapOnSetupTypeAndConstrainedProperties();
 
             // Assert
             classMap.Should().NotBeNull();
@@ -86,8 +86,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RegisterClassMapsTypeFullyAutomatic___Type_with_invalid_constraints___Throws()
         {
             // Arrange
-            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType(typeof(TestMapping), new[] { "monkey" });
-            Action action = () => RunTestCode(configuration);
+            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType().Setup(typeof(TestMapping), new[] { "monkey" });
+            Action action = () => configuration.RunAutomaticallyBuildBsonClassMapOnSetupTypeAndConstrainedProperties();
 
             // Act
             var exception = Record.Exception(action);
@@ -102,8 +102,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RegisterClassMapsTypeFullyAutomatic___All_null_type___Throws()
         {
             // Arrange
-            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType(null);
-            Action action = () => RunTestCode(configuration);
+            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType().Setup(null);
+            Action action = () => configuration.RunAutomaticallyBuildBsonClassMapOnSetupTypeAndConstrainedProperties();
 
             // Act
             var exception = Record.Exception(action);
@@ -118,8 +118,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RegisterClassMapsTypeFullyAutomatic___Constrained_null_type___Throws()
         {
             // Arrange
-            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType(null, new[] { "monkeys" });
-            Action action = () => RunTestCode(configuration);
+            var configuration = new BsonSerializationConfigurationTestAutoConstrainedType().Setup(null, new[] { "monkeys" });
+            Action action = () => configuration.RunAutomaticallyBuildBsonClassMapOnSetupTypeAndConstrainedProperties();
 
             // Act
             var exception = Record.Exception(action);
@@ -134,12 +134,15 @@ namespace OBeautifulCode.Serialization.Test
         public static void Configure___Override_collections___All_types_get_registered_as_expected()
         {
             var expectedTypes = new[]
-                                    {
-                                        typeof(TestConfigureActionBaseFromSub), typeof(TestConfigureActionInheritedSub),
-                                        typeof(TestConfigureActionSingle),
-                                        typeof(TestConfigureActionFromInterface),
-                                        typeof(TestConfigureActionBaseFromAuto), typeof(TestConfigureActionInheritedAuto), typeof(TestConfigureActionFromAuto),
-                                    };
+            {
+                typeof(TestConfigureActionBaseFromSub),
+                typeof(TestConfigureActionInheritedSub),
+                typeof(TestConfigureActionSingle),
+                typeof(TestConfigureActionFromInterface),
+                typeof(TestConfigureActionBaseFromAuto),
+                typeof(TestConfigureActionInheritedAuto),
+                typeof(TestConfigureActionFromAuto),
+            };
 
             var configType = typeof(TestVariousTypeOverloadsConfig);
 
@@ -147,7 +150,7 @@ namespace OBeautifulCode.Serialization.Test
             var config = SerializationConfigurationManager.GetOrAddSerializationConfiguration(configType.ToSerializationConfigurationType());
 
             // Assert
-            config.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Intersect(expectedTypes).Should().BeEquivalentTo(expectedTypes);
+            config.RegisteredTypeToRegistrationDetailsMap.Keys.Intersect(expectedTypes).Should().BeEquivalentTo(expectedTypes);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "configs", Justification = "Name/spelling is correct.")]
@@ -182,21 +185,7 @@ namespace OBeautifulCode.Serialization.Test
             var config = SerializationConfigurationManager.GetOrAddSerializationConfiguration(configType.ToSerializationConfigurationType());
 
             // Assert
-            config.RegisteredTypeToSerializationConfigurationTypeMap.Keys.Should().Contain(testType);
-        }
-
-        private static BsonClassMap RunTestCode(object configuration)
-        {
-            try
-            {
-                return (BsonClassMap)configuration.GetType().GetMethod("TestCode", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(configuration, null);
-            }
-            catch (TargetInvocationException ex)
-            {
-                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
-            }
-
-            throw new NotSupportedException();
+            config.RegisteredTypeToRegistrationDetailsMap.Keys.Should().Contain(testType);
         }
     }
 }

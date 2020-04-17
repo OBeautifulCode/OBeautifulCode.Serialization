@@ -105,5 +105,13 @@ namespace OBeautifulCode.Serialization
 
             return result;
         }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            var result = this.Type.ToStringReadable();
+
+            return result;
+        }
     }
 }

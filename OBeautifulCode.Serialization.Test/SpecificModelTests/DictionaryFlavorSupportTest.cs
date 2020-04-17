@@ -294,7 +294,10 @@ namespace OBeautifulCode.Serialization.Test
 
     public class TestWithDictionaryOfEnumToReadOnlyCollectionOfEnumsConfig : BsonSerializationConfigurationBase
     {
-        protected override IReadOnlyCollection<Type> ClassTypesToRegisterAlongWithInheritors => new[] { typeof(TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums) };
+        protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[]
+        {
+            typeof(TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+        };
     }
 
     public class TestDictionaryFields

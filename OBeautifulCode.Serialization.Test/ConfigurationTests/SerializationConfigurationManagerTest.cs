@@ -26,13 +26,9 @@ namespace OBeautifulCode.Serialization.Test
 
     public class TestConfigure : BsonSerializationConfigurationBase
     {
-        /// <summary>
-        /// Gets a value indicating whether or not it has been configured.
-        /// </summary>
         public static bool Configured { get; private set; }
 
-        /// <inheritdoc cref="BsonSerializationConfigurationBase" />
-        protected override void FinalConfiguration()
+        protected override void FinalizeInitialization()
         {
             if (Configured)
             {
