@@ -21,7 +21,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_recurse_through_OBC_element_serializer___When_called()
         {
             // Arrange
-            var config = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<SystemCollectionsModel>);
+            var config = typeof(TypesToRegisterBsonSerializationConfiguration<SystemCollectionsModel>);
 
             var serializer = new ObcBsonSerializer(config.ToBsonSerializationConfigurationType());
 

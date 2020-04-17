@@ -57,7 +57,7 @@ namespace OBeautifulCode.Serialization.Bson
         /// <inheritdoc />
         protected sealed override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new[]
         {
-            typeof(InternallyRequiredTypesWithDiscoveryBsonSerializationConfiguration).ToBsonSerializationConfigurationType(),
+            typeof(InternallyRequiredTypesToRegisterBsonSerializationConfiguration).ToBsonSerializationConfigurationType(),
             typeof(NetDrawingBsonSerializationConfiguration).ToBsonSerializationConfigurationType(),
         };
 

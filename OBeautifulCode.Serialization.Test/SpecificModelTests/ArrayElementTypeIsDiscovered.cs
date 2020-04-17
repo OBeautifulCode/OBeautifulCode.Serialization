@@ -18,7 +18,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void ElementTypeOfArrayIsOnlyTypeDiscovered()
         {
             // Arrange, Act
-            var configured = SerializationConfigurationManager.GetOrAddSerializationConfiguration<RegisterOnlyWithDiscoverySerializationConfiguration<TypeWithObjectArray>>();
+            var configured = SerializationConfigurationManager.GetOrAddSerializationConfiguration<TypesToRegisterSerializationConfiguration<TypeWithObjectArray>>();
 
             // Assert
             configured.RegisteredTypeToRegistrationDetailsMap.Keys.Should().Contain(typeof(TypeWithObjectArray));

@@ -22,7 +22,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_recurse_through_OBC_key_and_value_serializers___When_called()
         {
             // Arrange
-            var config = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<SystemDictionariesModel>);
+            var config = typeof(TypesToRegisterBsonSerializationConfiguration<SystemDictionariesModel>);
 
             var serializer = new ObcBsonSerializer(config.ToBsonSerializationConfigurationType());
 

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="InternallyRequiredTypesWithDiscoveryJsonSerializationConfiguration.cs" company="OBeautifulCode">
+// <copyright file="InternallyRequiredTypesToRegisterJsonSerializationConfiguration.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -10,12 +10,12 @@ namespace OBeautifulCode.Serialization.Json
     using System.Linq;
 
     /// <summary>
-    /// A default serialization configuration that will only register, with discovery, the internally required types.
+    /// A default JSON serialization configuration that adds the internally required types to <see cref="TypesToRegisterForJson"/>, using default behavior for <see cref="MemberTypesToInclude"/> and <see cref="RelatedTypesToInclude"/>.
     /// </summary>
     /// <remarks>
     /// This is a default serialization configuration for <see cref="JsonSerializationConfigurationBase"/>.
     /// </remarks>
-    public sealed class InternallyRequiredTypesWithDiscoveryJsonSerializationConfiguration : JsonSerializationConfigurationBase, IIgnoreDefaultDependencies
+    public sealed class InternallyRequiredTypesToRegisterJsonSerializationConfiguration : JsonSerializationConfigurationBase, IIgnoreDefaultDependencies
     {
         /// <inheritdoc />
         protected override IReadOnlyCollection<JsonSerializationConfigurationType> DependentJsonSerializationConfigurationTypes => new JsonSerializationConfigurationType[0];

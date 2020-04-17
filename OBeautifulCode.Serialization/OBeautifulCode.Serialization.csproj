@@ -112,9 +112,9 @@
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
     <Compile Include="SerializationConfiguration\IIgnoreDefaultDependencies.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\RegisterOnlyWithDiscoverySerializationConfiguration{T1,T2}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\RegisterOnlyWithDiscoverySerializationConfiguration{T}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\InternallyRequiredTypesRegisterOnlyWithDiscoverySerializationConfiguration.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterSerializationConfiguration{T1,T2}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\InternallyRequiredTypesToRegisterSerializationConfiguration.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\NullSerializationConfiguration.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlySerializationConfiguration{T1,T2}.cs" />
     <Compile Include="Interfaces\IStringSerialize.cs" />

@@ -32,7 +32,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <inheritdoc />
         protected sealed override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new[]
         {
-            typeof(InternallyRequiredTypesWithDiscoveryPropertyBagSerializationConfiguration).ToPropertyBagSerializationConfigurationType(),
+            typeof(InternallyRequiredTypesToRegisterPropertyBagSerializationConfiguration).ToPropertyBagSerializationConfigurationType(),
         };
 
         /// <summary>

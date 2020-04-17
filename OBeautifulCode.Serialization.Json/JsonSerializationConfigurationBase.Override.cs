@@ -27,7 +27,7 @@ namespace OBeautifulCode.Serialization.Json
         /// <inheritdoc />
         protected sealed override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new[]
         {
-            typeof(InternallyRequiredTypesWithDiscoveryJsonSerializationConfiguration).ToJsonSerializationConfigurationType(),
+            typeof(InternallyRequiredTypesToRegisterJsonSerializationConfiguration).ToJsonSerializationConfigurationType(),
         };
 
         /// <inheritdoc />

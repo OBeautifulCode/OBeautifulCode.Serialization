@@ -179,7 +179,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var testType = typeof(TestTracking);
-            var configType = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<TestTracking>);
+            var configType = typeof(TypesToRegisterBsonSerializationConfiguration<TestTracking>);
 
             // Act
             var config = SerializationConfigurationManager.GetOrAddSerializationConfiguration(configType.ToSerializationConfigurationType());

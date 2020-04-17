@@ -118,10 +118,10 @@
     <Compile Include="SerializationConfiguration\PropertyBagSerializationConfigurationType{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlyPropertyBagSerializationConfiguration{T1,T2}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlyPropertyBagSerializationConfiguration{T}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\InternallyRequiredTypesWithDiscoveryPropertyBagSerializationConfiguration.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\InternallyRequiredTypesToRegisterPropertyBagSerializationConfiguration.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\NullPropertyBagSerializationConfiguration.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\RegisterOnlyWithDiscoveryPropertyBagSerializationConfiguration{T1,T2}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\RegisterOnlyWithDiscoveryPropertyBagSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterPropertyBagSerializationConfiguration{T1,T2}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterPropertyBagSerializationConfiguration{T}.cs" />
     <AdditionalFiles Include=".analyzers\stylecop.json" />
     <Compile Include="SerializationConfiguration\TypeToRegister\TypeToRegisterForPropertyBag.cs" />
     <Compile Include="SerializationConfiguration\TypeToRegister\TypeToRegisterForPropertyBag{T}.cs" />

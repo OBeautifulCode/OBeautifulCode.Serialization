@@ -29,8 +29,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestDictionaryMapping___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<TestDictionaryFields>);
-            var jsonConfigType = typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<TestDictionaryFields>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<TestDictionaryFields>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<TestDictionaryFields>);
 
             var expected = A.Dummy<TestDictionaryFields>();
 
@@ -55,8 +55,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestDictionaryMixedKeyValues___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<TestDictionaryMixedKeyValues>);
-            var jsonConfigType = typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<TestDictionaryMixedKeyValues>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<TestDictionaryMixedKeyValues>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<TestDictionaryMixedKeyValues>);
 
             var expected = A.Dummy<TestDictionaryMixedKeyValues>();
 
@@ -127,8 +127,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestWithDictionaryKeyedOnEnum___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<TestWithDictionaryKeyedOnEnum>);
-            var jsonConfigType = typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<TestWithDictionaryKeyedOnEnum>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<TestWithDictionaryKeyedOnEnum>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<TestWithDictionaryKeyedOnEnum>);
 
             var expected = A.Dummy<TestWithDictionaryKeyedOnEnum>();
 
@@ -148,8 +148,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums>);
-            var jsonConfigType = typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums>);
 
             var expected = new TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums
             {
@@ -185,8 +185,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestDictionaryMapping_with_all_nulls___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<TestDictionaryFields>);
-            var jsonConfigType = typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<TestDictionaryFields>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<TestDictionaryFields>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<TestDictionaryFields>);
 
             var expected = new TestDictionaryFields();
 
@@ -211,8 +211,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestDictionaryMixedKeyValues_with_all_nulls___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(RegisterOnlyWithDiscoveryBsonSerializationConfiguration<TestDictionaryMixedKeyValues>);
-            var jsonConfigType = typeof(RegisterOnlyWithDiscoveryJsonSerializationConfiguration<TestDictionaryMixedKeyValues>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<TestDictionaryMixedKeyValues>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<TestDictionaryMixedKeyValues>);
 
             var expected = new TestDictionaryMixedKeyValues();
 

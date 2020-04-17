@@ -138,10 +138,10 @@
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationType{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlyJsonSerializationConfiguration{T1,T2}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlyJsonSerializationConfiguration{T}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\InternallyRequiredTypesWithDiscoveryJsonSerializationConfiguration.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\InternallyRequiredTypesToRegisterJsonSerializationConfiguration.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\NullJsonSerializationConfiguration.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\RegisterOnlyWithDiscoveryJsonSerializationConfiguration{T1,T2}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\RegisterOnlyWithDiscoveryJsonSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterJsonSerializationConfiguration{T1,T2}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterJsonSerializationConfiguration{T}.cs" />
     <AdditionalFiles Include=".analyzers\stylecop.json" />
     <Compile Include="SerializationConfiguration\TypeToRegister\TypeToRegisterForJson.cs" />
     <Compile Include="SerializationConfiguration\TypeToRegister\TypeToRegisterForJson{T}.cs" />

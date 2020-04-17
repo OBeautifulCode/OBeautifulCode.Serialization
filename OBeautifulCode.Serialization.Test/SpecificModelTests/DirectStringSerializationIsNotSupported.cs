@@ -18,7 +18,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void BsonSerializer()
         {
             // Arrange, Act
-            var actual = Record.Exception(() => new ObcBsonSerializer<RegisterOnlyWithDiscoveryBsonSerializationConfiguration<string>>());
+            var actual = Record.Exception(() => new ObcBsonSerializer<TypesToRegisterBsonSerializationConfiguration<string>>());
 
             // Assert
             actual.Should().BeOfType<InvalidOperationException>();
@@ -29,7 +29,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void JsonSerializer()
         {
             // Arrange, Act
-            var actual = Record.Exception(() => new ObcJsonSerializer<RegisterOnlyWithDiscoveryJsonSerializationConfiguration<string>>());
+            var actual = Record.Exception(() => new ObcJsonSerializer<TypesToRegisterJsonSerializationConfiguration<string>>());
 
             // Assert
             actual.Should().BeOfType<InvalidOperationException>();

@@ -125,10 +125,10 @@
     <Compile Include="SerializationConfiguration\BsonSerializationConfigurationType.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlyBsonSerializationConfiguration{T1,T2}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlyBsonSerializationConfiguration{T}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\InternallyRequiredTypesWithDiscoveryBsonSerializationConfiguration.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\InternallyRequiredTypesToRegisterBsonSerializationConfiguration.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\NullBsonSerializationConfiguration.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\RegisterOnlyWithDiscoveryBsonSerializationConfiguration{T1,T2}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\RegisterOnlyWithDiscoveryBsonSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterBsonSerializationConfiguration{T1,T2}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterBsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\BsonSerializationConfigurationType{T}.cs" />
     <Compile Include="SerializationConfiguration\BsonSerializationConfigurationExtensions.cs" />
     <AdditionalFiles Include=".analyzers\stylecop.json" />

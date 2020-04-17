@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="InternallyRequiredTypesRegisterOnlyWithDiscoverySerializationConfiguration.cs" company="OBeautifulCode">
+// <copyright file="InternallyRequiredTypesToRegisterSerializationConfiguration.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -10,12 +10,12 @@ namespace OBeautifulCode.Serialization
     using System.Linq;
 
     /// <summary>
-    /// A default serialization configuration that will only register, with discovery, the internally required types.
+    /// A default serialization configuration that adds the internally required types to <see cref="TypesToRegister"/>, using default behavior for <see cref="MemberTypesToInclude"/> and <see cref="RelatedTypesToInclude"/>.
     /// </summary>
     /// <remarks>
-    /// This is the default serialization configuration for <see cref="RegisterOnlyWithDiscoverySerializationConfiguration{T}"/> and <see cref="RegisterOnlyWithDiscoverySerializationConfiguration{T1, T2}"/>.
+    /// This is the default serialization configuration for <see cref="TypesToRegisterSerializationConfiguration{T}"/> and <see cref="TypesToRegisterSerializationConfiguration{T1,T2}"/>.
     /// </remarks>
-    public sealed class InternallyRequiredTypesRegisterOnlyWithDiscoverySerializationConfiguration : SerializationConfigurationBase, IIgnoreDefaultDependencies
+    public sealed class InternallyRequiredTypesToRegisterSerializationConfiguration : SerializationConfigurationBase, IIgnoreDefaultDependencies
     {
         /// <inheritdoc />
         protected override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new SerializationConfigurationType[0];

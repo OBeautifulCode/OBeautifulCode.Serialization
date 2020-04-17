@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="InternallyRequiredTypesWithDiscoveryPropertyBagSerializationConfiguration.cs" company="OBeautifulCode">
+// <copyright file="InternallyRequiredTypesToRegisterPropertyBagSerializationConfiguration.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -10,12 +10,12 @@ namespace OBeautifulCode.Serialization.PropertyBag
     using System.Linq;
 
     /// <summary>
-    /// A default serialization configuration that will only register, with discovery, the internally required types.
+    /// A default property bag serialization configuration that adds the internally required types to <see cref="TypesToRegisterForPropertyBag"/>, using default behavior for <see cref="MemberTypesToInclude"/> and <see cref="RelatedTypesToInclude"/>.
     /// </summary>
     /// <remarks>
     /// This is a default serialization configuration for <see cref="PropertyBagSerializationConfigurationBase"/>.
     /// </remarks>
-    public sealed class InternallyRequiredTypesWithDiscoveryPropertyBagSerializationConfiguration : PropertyBagSerializationConfigurationBase, IIgnoreDefaultDependencies
+    public sealed class InternallyRequiredTypesToRegisterPropertyBagSerializationConfiguration : PropertyBagSerializationConfigurationBase, IIgnoreDefaultDependencies
     {
         /// <inheritdoc />
         protected override IReadOnlyCollection<PropertyBagSerializationConfigurationType> DependentPropertyBagSerializationConfigurationTypes => new PropertyBagSerializationConfigurationType[0];
