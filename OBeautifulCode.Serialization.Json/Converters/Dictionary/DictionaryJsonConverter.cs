@@ -32,7 +32,8 @@ namespace OBeautifulCode.Serialization.Json
         /// Initializes a new instance of the <see cref="DictionaryJsonConverter"/> class.
         /// </summary>
         /// <param name="typesThatSerializeToString">Types that convert to a string when serialized.</param>
-        public DictionaryJsonConverter(IReadOnlyCollection<Type> typesThatSerializeToString)
+        public DictionaryJsonConverter(
+            IReadOnlyCollection<Type> typesThatSerializeToString)
             : base(typesThatSerializeToString)
         {
         }
@@ -60,16 +61,21 @@ namespace OBeautifulCode.Serialization.Json
             new { objectType }.AsArg().Must().NotBeNull();
 
             const JsonToken propertyNameToken = JsonToken.PropertyName;
+
             const string jsonReaderUnderlyingTokenFieldName = "_tokenType";
 
             var genericArguments = objectType.GenericTypeArguments;
+
             new { genericArguments.Length }.AsArg().Must().BeEqualTo(2, "More ore less than 2 generic arguments means this cannot be a dictionary type that should supported.");
 
             var keyType = genericArguments.First();
+
             var valueType = genericArguments.Last();
+
             var wrappedDictionaryType = typeof(Dictionary<,>).MakeGenericType(genericArguments);
 
             var wrappedDictionary = wrappedDictionaryType.Construct();
+
             var wrappedDictionaryAddMethod = wrappedDictionaryType.GetMethod(nameof(Dictionary<object, object>.Add));
 
             if (reader.TokenType == JsonToken.StartArray)
@@ -99,13 +105,16 @@ namespace OBeautifulCode.Serialization.Json
                     else
                     {
                         var undoPropertyNameTokenFieldHack = false;
+
                         if (localReader.TokenType == propertyNameToken)
                         {
                             undoPropertyNameTokenFieldHack = true;
+
                             localReader.SetFieldValue(jsonReaderUnderlyingTokenFieldName, JsonToken.String);
                         }
 
                         var localResult = serializer.Deserialize(localReader, targetType);
+
                         if (undoPropertyNameTokenFieldHack)
                         {
                             localReader.SetFieldValue(jsonReaderUnderlyingTokenFieldName, propertyNameToken);
@@ -116,6 +125,7 @@ namespace OBeautifulCode.Serialization.Json
                 }
 
                 reader.Read();
+
                 while (reader.TokenType != JsonToken.EndObject)
                 {
                     if (reader.TokenType != propertyNameToken)
@@ -124,9 +134,11 @@ namespace OBeautifulCode.Serialization.Json
                     }
 
                     var key = WrappedDeserialize(reader, keyType);
+
                     reader.Read();
 
                     var value = WrappedDeserialize(reader, valueType);
+
                     reader.Read();
 
                     wrappedDictionaryAddMethod.Invoke(wrappedDictionary, new[] { key, value });
@@ -143,7 +155,8 @@ namespace OBeautifulCode.Serialization.Json
         }
 
         /// <inheritdoc />
-        protected override bool ShouldConsiderKeyType(Type keyType)
+        protected override bool ShouldConsiderKeyType(
+            Type keyType)
         {
             // We exclude DateTime because if not, then it gets picked-up as a Value type
             // and activates this converter.  However, this converter doesn't support writing

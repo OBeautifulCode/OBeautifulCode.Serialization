@@ -33,7 +33,8 @@ namespace OBeautifulCode.Serialization.Json
         /// Initializes a new instance of the <see cref="KeyValueArrayDictionaryJsonConverter"/> class.
         /// </summary>
         /// <param name="typesThatSerializeToString">Types that convert to a string when serialized.</param>
-        public KeyValueArrayDictionaryJsonConverter(IReadOnlyCollection<Type> typesThatSerializeToString)
+        public KeyValueArrayDictionaryJsonConverter(
+            IReadOnlyCollection<Type> typesThatSerializeToString)
             : base(typesThatSerializeToString)
         {
         }
@@ -47,9 +48,11 @@ namespace OBeautifulCode.Serialization.Json
             var valueAsEnumerable = (IEnumerable)value;
 
             var elementsToWrite = new List<object>();
+
             foreach (var element in valueAsEnumerable)
             {
                 var jo = JObject.FromObject(element, serializer);
+
                 elementsToWrite.Add(jo);
             }
 
@@ -124,7 +127,8 @@ namespace OBeautifulCode.Serialization.Json
         }
 
         /// <inheritdoc />
-        protected override bool ShouldConsiderKeyType(Type keyType)
+        protected override bool ShouldConsiderKeyType(
+            Type keyType)
         {
             // see comment in DictionaryJsonConverter about DateTime.
             var result =

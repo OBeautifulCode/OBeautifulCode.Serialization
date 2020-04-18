@@ -26,7 +26,8 @@ namespace OBeautifulCode.Serialization.Json
         /// Initializes a new instance of the <see cref="InheritedTypeWriterJsonConverter"/> class.
         /// </summary>
         /// <param name="typesToHandle">Types that when encountered should trigger usage of the converter.</param>
-        public InheritedTypeWriterJsonConverter(IReadOnlyCollection<Type> typesToHandle)
+        public InheritedTypeWriterJsonConverter(
+            IReadOnlyCollection<Type> typesToHandle)
             : base(typesToHandle)
         {
         }

@@ -10,9 +10,6 @@ namespace OBeautifulCode.Serialization.Json
 
     using OBeautifulCode.Serialization;
 
-    /// <summary>
-    /// Base class to use for creating <see cref="ObcJsonSerializer" /> configuration.
-    /// </summary>
     public abstract partial class JsonSerializationConfigurationBase
     {
         /// <summary>

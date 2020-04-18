@@ -33,7 +33,7 @@ namespace OBeautifulCode.Serialization.Test
         public BsonClassMap RunAutomaticallyBuildBsonClassMapOnSetupTypeAndConstrainedProperties()
         {
             // AutomaticallyBuildBsonClassMap is not public and this is a shim to expose that method to test this functionality directly
-            return this.AutomaticallyBuildBsonClassMap(this.TypeToRegister, this.ConstrainedProperties);
+            return AutomaticallyBuildBsonClassMap(this.TypeToRegister, this.ConstrainedProperties);
         }
     }
 

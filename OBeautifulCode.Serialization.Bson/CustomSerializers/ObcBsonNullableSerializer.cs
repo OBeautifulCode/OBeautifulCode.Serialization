@@ -36,7 +36,7 @@ namespace OBeautifulCode.Serialization.Bson
             }
             else
             {
-                var serializer = BsonSerializationConfigurationBase.GetAppropriateSerializer(typeof(T));
+                var serializer = typeof(T).GetAppropriateSerializer();
 
                 serializer.Serialize(context, args, value.Value);
             }
@@ -66,7 +66,7 @@ namespace OBeautifulCode.Serialization.Bson
                 }
                 else
                 {
-                    var serializer = BsonSerializationConfigurationBase.GetAppropriateSerializer(typeof(T));
+                    var serializer = typeof(T).GetAppropriateSerializer();
 
                     result = (T?)serializer.Deserialize(context, args);
                 }

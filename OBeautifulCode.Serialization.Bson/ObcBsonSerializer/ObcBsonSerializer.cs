@@ -7,7 +7,6 @@
 namespace OBeautifulCode.Serialization.Bson
 {
     using System;
-
     using MongoDB.Bson;
 
     using OBeautifulCode.Assertion.Recipes;
@@ -15,11 +14,8 @@ namespace OBeautifulCode.Serialization.Bson
     /// <summary>
     /// BSON serializer with optional configuration type.
     /// </summary>
-    public class ObcBsonSerializer : ConfiguredSerializerBase
+    public class ObcBsonSerializer : ObcSerializerBase
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Justification = "Keeping for easy extension.")]
-        private readonly BsonSerializationConfigurationBase bsonConfiguration;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcBsonSerializer"/> class.
         /// </summary>
@@ -30,107 +26,128 @@ namespace OBeautifulCode.Serialization.Bson
             UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
             : base(bsonSerializationConfigurationType ?? typeof(NullBsonSerializationConfiguration).ToBsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy)
         {
-            this.bsonConfiguration = (BsonSerializationConfigurationBase)this.SerializationConfiguration;
         }
 
         /// <inheritdoc />
         public override SerializationKind SerializationKind => SerializationKind.Bson;
 
         /// <inheritdoc />
-        public override byte[] SerializeToBytes(object objectToSerialize)
+        public override byte[] SerializeToBytes(
+            object objectToSerialize)
         {
             var objectType = objectToSerialize?.GetType();
 
             this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType);
 
-            if (objectToSerialize == null)
-            {
-                return null;
-            }
+            var result = objectToSerialize?.SerializeToBytes();
 
-            return ObcBsonSerializerHelper.SerializeToBytes(objectToSerialize);
+            return result;
         }
 
         /// <inheritdoc />
-        public override T Deserialize<T>(byte[] serializedBytes)
+        public override T Deserialize<T>(
+            byte[] serializedBytes)
         {
             var objectType = typeof(T);
 
             this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType);
 
-            if (serializedBytes == null)
-            {
-                return default(T);
-            }
+            var result = serializedBytes == null
+                ? default
+                : serializedBytes.Deserialize<T>();
 
-            return ObcBsonSerializerHelper.Deserialize<T>(serializedBytes);
+            return result;
         }
 
         /// <inheritdoc />
-        public override object Deserialize(byte[] serializedBytes, Type type)
+        public override object Deserialize(
+            byte[] serializedBytes,
+            Type type)
         {
             new { type }.AsArg().Must().NotBeNull();
 
             this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(type);
 
-            if (serializedBytes == null)
-            {
-                return null;
-            }
+            var result = serializedBytes?.Deserialize(type);
 
-            return ObcBsonSerializerHelper.Deserialize(serializedBytes, type);
+            return result;
         }
 
         /// <inheritdoc />
-        public override string SerializeToString(object objectToSerialize)
+        public override string SerializeToString(
+            object objectToSerialize)
         {
             var objectType = objectToSerialize?.GetType();
 
             this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType);
 
+            string result;
+
             if (objectToSerialize == null)
             {
-                return SerializationConfigurationBase.NullSerializedStringValue;
+                result = SerializationConfigurationBase.NullSerializedStringValue;
+            }
+            else
+            {
+                var document = objectToSerialize.SerializeToDocument();
+
+                result = document.ToJson();
             }
 
-            var document = ObcBsonSerializerHelper.SerializeToDocument(objectToSerialize);
-            var json = document.ToJson();
-            return json;
+            return result;
         }
 
         /// <inheritdoc />
-        public override T Deserialize<T>(string serializedString)
+        public override T Deserialize<T>(
+            string serializedString)
         {
             var objectType = typeof(T);
 
             this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType);
 
+            T result;
+
             if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
             {
-                return default(T);
+                result = default;
+            }
+            else
+            {
+                var document = serializedString.ToBsonDocument();
+
+                result = document.DeserializeFromDocument<T>();
             }
 
-            var document = serializedString.ToBsonDocument();
-            return ObcBsonSerializerHelper.DeserializeFromDocument<T>(document);
+            return result;
         }
 
         /// <inheritdoc />
-        public override object Deserialize(string serializedString, Type type)
+        public override object Deserialize(
+            string serializedString,
+            Type type)
         {
             new { type }.AsArg().Must().NotBeNull();
 
             this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(type);
 
+            object result;
+
             if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
             {
-                return null;
+                result = null;
+            }
+            else
+            {
+                var document = serializedString.ToBsonDocument();
+
+                result = document.DeserializeFromDocument(type);
             }
 
-            var document = serializedString.ToBsonDocument();
-            return ObcBsonSerializerHelper.DeserializeFromDocument(document, type);
+            return result;
         }
 
-        private void InternalBsonThrowOnUnregisteredTypeIfAppropriate(Type objectType)
+        private void InternalBsonThrowOnUnregisteredTypeIfAppropriate(
+            Type objectType)
         {
             if (objectType == typeof(string))
             {
@@ -138,21 +155,6 @@ namespace OBeautifulCode.Serialization.Bson
             }
 
             this.ThrowOnUnregisteredTypeIfAppropriate(objectType);
-        }
-    }
-
-    /// <inheritdoc />
-    public sealed class ObcBsonSerializer<TBsonSerializationConfiguration> : ObcBsonSerializer
-        where TBsonSerializationConfiguration : BsonSerializationConfigurationBase, new()
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObcBsonSerializer{TBsonSerializationConfiguration}"/> class.
-        /// </summary>
-        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
-        public ObcBsonSerializer(
-            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
-            : base(typeof(TBsonSerializationConfiguration).ToBsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy)
-        {
         }
     }
 }

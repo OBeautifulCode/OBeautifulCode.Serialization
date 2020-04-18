@@ -27,7 +27,7 @@ namespace OBeautifulCode.Serialization.Test
             // Arrange
             var type = typeof(TestWithId);
             var configuration = new BsonSerializationConfigurationTestAutoConstrainedType().Setup(type);
-            var expectedMemberNames = BsonSerializationConfigurationBase.GetMembersToAutomap(type).Select(_ => _.Name).OrderBy(_ => _).ToList();
+            var expectedMemberNames = type.GetMembersToAutomap().Select(_ => _.Name).OrderBy(_ => _).ToList();
 
             // Act
             var classMap = configuration.RunAutomaticallyBuildBsonClassMapOnSetupTypeAndConstrainedProperties();
@@ -48,7 +48,7 @@ namespace OBeautifulCode.Serialization.Test
             // Arrange
             var type = typeof(TestMapping);
             var configuration = new BsonSerializationConfigurationTestAutoConstrainedType().Setup(type);
-            var expectedMemberNames = BsonSerializationConfigurationBase.GetMembersToAutomap(type).Select(_ => _.Name).OrderBy(_ => _).ToList();
+            var expectedMemberNames = type.GetMembersToAutomap().Select(_ => _.Name).OrderBy(_ => _).ToList();
 
             // Act
             var classMap = configuration.RunAutomaticallyBuildBsonClassMapOnSetupTypeAndConstrainedProperties();

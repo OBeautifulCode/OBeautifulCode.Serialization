@@ -10,7 +10,6 @@ namespace OBeautifulCode.Serialization.Json
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Linq;
 
     using Newtonsoft.Json;
 
@@ -41,7 +40,8 @@ namespace OBeautifulCode.Serialization.Json
         /// Initializes a new instance of the <see cref="DictionaryJsonConverterBase"/> class.
         /// </summary>
         /// <param name="typesThatSerializeToString">Types that convert to a string when serialized.</param>
-        protected DictionaryJsonConverterBase(IReadOnlyCollection<Type> typesThatSerializeToString)
+        protected DictionaryJsonConverterBase(
+            IReadOnlyCollection<Type> typesThatSerializeToString)
         {
             this.typesThatSerializeToString = typesThatSerializeToString ?? new Type[0];
         }
@@ -81,11 +81,18 @@ namespace OBeautifulCode.Serialization.Json
         /// <param name="returnType">Type to convert to.</param>
         /// <param name="wrappedDictionary">Wrapped dictionary to convert.</param>
         /// <param name="genericArguments">Generic arguments.</param>
-        /// <returns>Converted dictionary to proper return object if necessary.</returns>
-        protected static object ConvertResultAsNecessary(Type returnType, object wrappedDictionary, Type[] genericArguments)
+        /// <returns>
+        /// Converted dictionary to proper return object if necessary.
+        /// </returns>
+        protected static object ConvertResultAsNecessary(
+            Type returnType,
+            object wrappedDictionary,
+            Type[] genericArguments)
         {
             object result;
+
             var unboundedGenericReturnType = returnType.GetGenericTypeDefinition();
+
             if ((unboundedGenericReturnType == typeof(IDictionary<,>)) || (unboundedGenericReturnType == typeof(Dictionary<,>)))
             {
                 // nothing to do, the dictionary is already of the expected return type
@@ -112,7 +119,10 @@ namespace OBeautifulCode.Serialization.Json
         /// Should consider this <see cref="Type"/> of key for this converter.
         /// </summary>
         /// <param name="keyType"><see cref="Type"/> of key.</param>
-        /// <returns>A value indicating whether or not to consider the <see cref="Type"/> of key.</returns>
-        protected abstract bool ShouldConsiderKeyType(Type keyType);
+        /// <returns>
+        /// A value indicating whether or not to consider the <see cref="Type"/> of key.
+        /// </returns>
+        protected abstract bool ShouldConsiderKeyType(
+            Type keyType);
     }
 }

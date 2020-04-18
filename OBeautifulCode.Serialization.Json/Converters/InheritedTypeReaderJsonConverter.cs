@@ -48,7 +48,8 @@ namespace OBeautifulCode.Serialization.Json
         public override bool CanWrite => false;
 
         /// <inheritdoc />
-        public override bool CanConvert(Type objectType)
+        public override bool CanConvert(
+            Type objectType)
         {
             // ReadJson determines which type (if payload is annotated with a concrete type token) or type(s)
             // (if evaluating candidates) to deserialize into and then attempts to deserialize into those type(s)
@@ -119,6 +120,7 @@ namespace OBeautifulCode.Serialization.Json
             }
 
             var jsonObject = JObject.Load(reader);
+
             var jsonProperties = GetProperties(jsonObject);
 
             var annotatedConcreteType = TryRemoveAnnotatedConcreteType(jsonObject, jsonProperties);
@@ -140,6 +142,7 @@ namespace OBeautifulCode.Serialization.Json
             if (!assignableTypes.Any())
             {
                 object assignableTypeAbsentResult;
+
                 if (objectType.IsClass)
                 {
                     assignableTypeAbsentResult = this.Deserialize(jsonObject, objectType, serializer);
@@ -186,7 +189,10 @@ namespace OBeautifulCode.Serialization.Json
         }
 
         /// <inheritdoc />
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(
+            JsonWriter writer,
+            object value,
+            JsonSerializer serializer)
         {
             throw new NotSupportedException("This is a read-only converter.");
         }

@@ -17,7 +17,8 @@ namespace OBeautifulCode.Serialization.Json
         /// Initializes a new instance of the <see cref="RegisteredContractResolver"/> class.
         /// </summary>
         /// <param name="contractResolverBuilder">A contract resolver builder.</param>
-        public RegisteredContractResolver(ContractResolverBuilder contractResolverBuilder)
+        public RegisteredContractResolver(
+            ContractResolverBuilder contractResolverBuilder)
         {
             new { contractResolverBuilder }.AsArg().Must().NotBeNull();
 
@@ -27,6 +28,6 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Gets the builder function.
         /// </summary>
-        public ContractResolverBuilder ContractResolverBuilder { get; private set; }
+        public ContractResolverBuilder ContractResolverBuilder { get; }
     }
 }

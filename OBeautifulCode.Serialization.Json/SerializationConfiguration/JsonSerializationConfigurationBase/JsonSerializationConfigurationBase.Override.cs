@@ -10,15 +10,11 @@ namespace OBeautifulCode.Serialization.Json
     using System.Collections.Generic;
     using System.Linq;
 
-    using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Serialization;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
 
-    /// <summary>
-    /// Base class to use for creating <see cref="ObcJsonSerializer" /> configuration.
-    /// </summary>
     public abstract partial class JsonSerializationConfigurationBase
     {
         /// <inheritdoc />
@@ -39,24 +35,7 @@ namespace OBeautifulCode.Serialization.Json
         {
             if (registrationDetails.TypeToRegister is TypeToRegisterForJson typeToRegisterForJson)
             {
-                var type = typeToRegisterForJson.Type;
-
-                var jsonConverterBuilder = typeToRegisterForJson.JsonConverterBuilder;
-
-                if (jsonConverterBuilder != null)
-                {
-                    this.TypesWithConverters.Add(type);
-
-                    if (jsonConverterBuilder.OutputKind == JsonConverterOutputKind.String)
-                    {
-                        this.TypesWithStringConverters.Add(type);
-                    }
-
-                    if (this.JsonConverterBuilders.All(_ => _.Id != jsonConverterBuilder.Id))
-                    {
-                        this.JsonConverterBuilders.Add(jsonConverterBuilder);
-                    }
-                }
+                this.ProcessTypeToRegisterForJson(typeToRegisterForJson);
             }
             else
             {
@@ -68,17 +47,6 @@ namespace OBeautifulCode.Serialization.Json
         protected sealed override void FinalizeInitialization()
         {
             this.AddHierarchyParticipatingTypes(this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList());
-        }
-
-        private void AddHierarchyParticipatingTypes(
-            IReadOnlyCollection<Type> types)
-        {
-            var inheritedTypeConverterTypes = types.Where(t =>
-                (!InheritedTypeConverterBlackList.Contains(t)) &&
-                (t.IsAbstract || t.IsInterface || types.Any(a => (a != t) && (t.IsAssignableTo(a) || a.IsAssignableTo(t))))).Distinct().ToList();
-
-            // TODO: what info do we want to capture here? should we give registration details?
-            this.HierarchyParticipatingTypes.AddRange(inheritedTypeConverterTypes.Except(this.TypesWithConverters));
         }
     }
 }

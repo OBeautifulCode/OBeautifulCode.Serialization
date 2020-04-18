@@ -7,28 +7,23 @@
 namespace OBeautifulCode.Serialization.Json
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Serialization.Json.Internal;
     using OBeautifulCode.Type.Recipes;
 
     /// <summary>
     /// JSON serializer.
     /// </summary>
-    public class ObcJsonSerializer : ConfiguredSerializerBase
+    public class ObcJsonSerializer : ObcSerializerBase
     {
-        /// <summary>
-        /// Encoding to use for conversion in and out of bytes.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Is not mutable.")]
-        public static readonly Encoding SerializationEncoding = Encoding.UTF8;
+        private static readonly Encoding SerializationEncoding = Encoding.UTF8;
 
-        /// <summary>
-        /// Gets the serialization settings to use for writing dynamic or anonymous objects.
-        /// </summary>
         private readonly JsonSerializerSettings anonymousWriteSerializationSettings;
 
         private readonly JsonSerializationConfigurationBase jsonConfiguration;
@@ -63,51 +58,70 @@ namespace OBeautifulCode.Serialization.Json
         /// Converts JSON string into a byte array.
         /// </summary>
         /// <param name="json">JSON string.</param>
-        /// <returns>Byte array.</returns>
-        public static byte[] ConvertJsonToByteArray(string json)
+        /// <returns>
+        /// Byte array.
+        /// </returns>
+        public static byte[] ConvertJsonToByteArray(
+            string json)
         {
-            var ret = SerializationEncoding.GetBytes(json);
-            return ret;
+            var result = SerializationEncoding.GetBytes(json);
+
+            return result;
         }
 
         /// <summary>
         /// Converts JSON byte array into a string.
         /// </summary>
         /// <param name="jsonAsBytes">JSON string as bytes.</param>
-        /// <returns>JSON string.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:Identifiers should not contain type names", Justification = "I like this name...")]
-        public static string ConvertByteArrayToJson(byte[] jsonAsBytes)
+        /// <returns>
+        /// JSON string.
+        /// </returns>
+        [SuppressMessage("Microsoft.Naming", "CA1720:Identifiers should not contain type names", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
+        public static string ConvertByteArrayToJson(
+            byte[] jsonAsBytes)
         {
-            var ret = SerializationEncoding.GetString(jsonAsBytes);
-            return ret;
+            var result = SerializationEncoding.GetString(jsonAsBytes);
+
+            return result;
         }
 
         /// <inheritdoc />
-        public override byte[] SerializeToBytes(object objectToSerialize)
+        public override byte[] SerializeToBytes(
+            object objectToSerialize)
         {
             var jsonString = this.SerializeToString(objectToSerialize);
-            var jsonBytes = ConvertJsonToByteArray(jsonString);
-            return jsonBytes;
+
+            var result = ConvertJsonToByteArray(jsonString);
+
+            return result;
         }
 
         /// <inheritdoc />
-        public override T Deserialize<T>(byte[] serializedBytes)
+        public override T Deserialize<T>(
+            byte[] serializedBytes)
         {
-            var ret = this.Deserialize(serializedBytes, typeof(T));
-            return (T)ret;
+            var result = this.Deserialize(serializedBytes, typeof(T));
+
+            return (T)result;
         }
 
         /// <inheritdoc />
-        public override object Deserialize(byte[] serializedBytes, Type type)
+        public override object Deserialize(
+            byte[] serializedBytes,
+            Type type)
         {
             new { type }.AsArg().Must().NotBeNull();
 
             var jsonString = ConvertByteArrayToJson(serializedBytes);
-            return this.Deserialize(jsonString, type);
+
+            var result = this.Deserialize(jsonString, type);
+
+            return result;
         }
 
         /// <inheritdoc />
-        public override string SerializeToString(object objectToSerialize)
+        public override string SerializeToString(
+            object objectToSerialize)
         {
             var objectType = objectToSerialize?.GetType();
 
@@ -117,75 +131,66 @@ namespace OBeautifulCode.Serialization.Json
                 ? this.anonymousWriteSerializationSettings
                 : this.jsonConfiguration.BuildJsonSerializerSettings(SerializationDirection.Serialize, this.formattingKind);
 
-            var ret = JsonConvert.SerializeObject(objectToSerialize, jsonSerializerSettings);
+            var result = JsonConvert.SerializeObject(objectToSerialize, jsonSerializerSettings);
 
             if (this.formattingKind == JsonFormattingKind.Compact)
             {
-                ret = ret.Replace(Environment.NewLine, string.Empty);
+                result = result.Replace(Environment.NewLine, string.Empty);
             }
 
-            return ret;
+            return result;
         }
 
         /// <inheritdoc />
-        public override T Deserialize<T>(string serializedString)
+        public override T Deserialize<T>(
+            string serializedString)
         {
             var objectType = typeof(T);
 
             this.InternalJsonThrowOnUnregisteredTypeIfAppropriate(objectType);
 
             var jsonSerializerSettings = this.jsonConfiguration.BuildJsonSerializerSettings(SerializationDirection.Deserialize, this.formattingKind);
-            var ret = JsonConvert.DeserializeObject<T>(serializedString, jsonSerializerSettings);
 
-            return ret;
+            var result = JsonConvert.DeserializeObject<T>(serializedString, jsonSerializerSettings);
+
+            return result;
         }
 
         /// <inheritdoc />
-        public override object Deserialize(string serializedString, Type type)
+        public override object Deserialize(
+            string serializedString,
+            Type type)
         {
             new { type }.AsArg().Must().NotBeNull();
 
             this.InternalJsonThrowOnUnregisteredTypeIfAppropriate(type);
 
-            object ret;
+            object result;
+
             if (type == typeof(DynamicTypePlaceholder))
             {
                 dynamic dyn = JObject.Parse(serializedString);
-                ret = dyn;
+
+                result = dyn;
             }
             else
             {
                 var jsonSerializerSettings = this.jsonConfiguration.BuildJsonSerializerSettings(SerializationDirection.Deserialize, this.formattingKind);
-                ret = JsonConvert.DeserializeObject(serializedString, type, jsonSerializerSettings);
+
+                result = JsonConvert.DeserializeObject(serializedString, type, jsonSerializerSettings);
             }
 
-            return ret;
+            return result;
         }
 
-        private void InternalJsonThrowOnUnregisteredTypeIfAppropriate(Type objectType)
+        private void InternalJsonThrowOnUnregisteredTypeIfAppropriate(
+            Type objectType)
         {
             // this type needs no registration and has value in consistent escaping/encoding...
             if (objectType != typeof(string))
             {
                 this.ThrowOnUnregisteredTypeIfAppropriate(objectType);
             }
-        }
-    }
-
-    /// <inheritdoc />
-    public sealed class ObcJsonSerializer<TJsonSerializationConfiguration> : ObcJsonSerializer
-        where TJsonSerializationConfiguration : JsonSerializationConfigurationBase, new()
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ObcJsonSerializer{TJsonSerializationConfiguration}"/> class.
-        /// </summary>
-        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
-        /// <param name="formattingKind">Optional type of formatting to use; DEFAULT is <see cref="JsonFormattingKind.Default" />.</param>
-        public ObcJsonSerializer(
-            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default,
-            JsonFormattingKind formattingKind = JsonFormattingKind.Default)
-            : base(typeof(TJsonSerializationConfiguration).ToJsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy, formattingKind)
-        {
         }
     }
 }

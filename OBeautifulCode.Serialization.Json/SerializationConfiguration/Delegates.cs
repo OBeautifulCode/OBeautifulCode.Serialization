@@ -20,7 +20,8 @@ namespace OBeautifulCode.Serialization.Json
     /// <returns>
     /// The contract resolver.
     /// </returns>
-    public delegate IContractResolver ContractResolverBuilder(IReadOnlyCollection<Type> registeredTypes);
+    public delegate IContractResolver ContractResolverBuilder(
+        IReadOnlyCollection<Type> registeredTypes);
 
     /// <summary>
     /// Builds a JSON serializer settings.
@@ -29,5 +30,6 @@ namespace OBeautifulCode.Serialization.Json
     /// <returns>
     /// The JSON serializer settings.
     /// </returns>
-    public delegate JsonSerializerSettings JsonSerializerSettingsBuilder(IReadOnlyCollection<Type> registeredTypes);
+    public delegate JsonSerializerSettings JsonSerializerSettingsBuilder(
+        IReadOnlyCollection<Type> registeredTypes);
 }

@@ -24,5 +24,6 @@
 
 
 	<!-- Preserved customizations are after this comment (do not edit above as it will make diffs more difficult. -->
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Automap/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=decompressor/@EntryIndexedValue">True</s:Boolean>
 </wpf:ResourceDictionary>

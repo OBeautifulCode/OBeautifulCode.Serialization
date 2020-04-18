@@ -28,7 +28,8 @@ namespace OBeautifulCode.Serialization.Json
         /// Initializes a new instance of the <see cref="InheritedTypeJsonConverterBase"/> class.
         /// </summary>
         /// <param name="typesToHandle">Types that when encountered should trigger usage of the converter.</param>
-        protected InheritedTypeJsonConverterBase(IReadOnlyCollection<Type> typesToHandle)
+        protected InheritedTypeJsonConverterBase(
+            IReadOnlyCollection<Type> typesToHandle)
         {
             this.typesToHandle = typesToHandle ?? new List<Type>();
         }
