@@ -8,7 +8,7 @@
     <dependencies>
       <dependency id="OBeautifulCode.Serialization" version="$version$" />
       <dependency id="OBeautifulCode.Compression.Recipes.DummyFactory" version="1.0.12" />
-      <dependency id="OBeautifulCode.Representation.System.Recipes.DummyFactory" version="1.0.40" />
+      <dependency id="OBeautifulCode.Representation.System.Recipes.DummyFactory" version="1.0.42" />
     </dependencies>
   </metadata>
   <files>
