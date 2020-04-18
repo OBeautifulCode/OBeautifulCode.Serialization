@@ -8,6 +8,7 @@ namespace OBeautifulCode.Serialization
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -194,7 +195,7 @@ namespace OBeautifulCode.Serialization
         private static string BuildIdIgnoringOrigin(
             TypeToRegister typeToRegister)
         {
-            var result = typeToRegister.Type.ToRepresentation().RemoveAssemblyVersions().BuildAssemblyQualifiedName() + "_" + typeToRegister.RelatedTypesToInclude + "_" + (int)typeToRegister.MemberTypesToInclude;
+            var result = typeToRegister.Type.ToRepresentation().RemoveAssemblyVersions().BuildAssemblyQualifiedName() + "_" + typeToRegister.RelatedTypesToInclude + "_" + ((int)typeToRegister.MemberTypesToInclude).ToString(CultureInfo.InvariantCulture);
 
             return result;
         }

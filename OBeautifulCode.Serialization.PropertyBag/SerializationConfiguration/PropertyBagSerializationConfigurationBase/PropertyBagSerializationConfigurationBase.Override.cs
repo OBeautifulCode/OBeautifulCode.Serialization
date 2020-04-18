@@ -9,6 +9,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
     using System;
     using System.Collections.Generic;
 
+    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization;
     using OBeautifulCode.Type.Recipes;
 
@@ -32,6 +33,8 @@ namespace OBeautifulCode.Serialization.PropertyBag
         protected sealed override void ProcessRegistrationDetailsPriorToRegistration(
             RegistrationDetails registrationDetails)
         {
+            new { registrationDetails }.AsArg().Must().NotBeNull();
+
             if (registrationDetails.TypeToRegister is TypeToRegisterForPropertyBag typeToRegisterForPropertyBag)
             {
                 this.ProcessTypeToRegisterForPropertyBag(typeToRegisterForPropertyBag);

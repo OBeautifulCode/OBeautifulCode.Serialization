@@ -7,12 +7,16 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
+
+    using OBeautifulCode.Serialization.Internal;
 
     /// <summary>
     /// Specifies which member types to include when registering a type.
     /// The included member types will be registered as well.
     /// </summary>
     [Flags]
+    [SuppressMessage("Microsoft.Naming", "CA1714:FlagsEnumsShouldHavePluralNames", Justification = ObcSuppressBecause.CA1714_FlagsEnumsShouldHavePluralNames_TheNameIsPlural)]
     public enum MemberTypesToInclude
     {
         /// <summary>

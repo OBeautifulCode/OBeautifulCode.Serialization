@@ -7,8 +7,10 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Serialization.Internal;
     using OBeautifulCode.Type.Recipes;
 
     /// <summary>
@@ -59,6 +61,7 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Gets the type to register.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "Type is the best name for this property.")]
         public Type Type { get; }
 
         /// <summary>

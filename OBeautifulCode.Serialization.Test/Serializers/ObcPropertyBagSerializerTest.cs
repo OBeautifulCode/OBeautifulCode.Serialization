@@ -8,6 +8,7 @@ namespace OBeautifulCode.Serialization.Test
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     using FakeItEasy;
@@ -16,7 +17,7 @@ namespace OBeautifulCode.Serialization.Test
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization.PropertyBag;
-
+    using OBeautifulCode.Serialization.Test.Internal;
     using Xunit;
 
     public static class ObcPropertyBagSerializerTest
@@ -175,7 +176,10 @@ namespace OBeautifulCode.Serialization.Test
 
             // Act
             var serializedString = serializer.SerializeToString(input);
-            var actual = serializer.Deserialize<TypeWithCustomPropertyBagSerializerWrapper>(serializedString);
+
+            var actual = Record.Exception(() => serializer.Deserialize<TypeWithCustomPropertyBagSerializerWrapper>(serializedString));
+
+            actual.Should().BeNull();
         }
 
         private class ConstructorWithProperties
@@ -206,11 +210,13 @@ namespace OBeautifulCode.Serialization.Test
             public string Property { get; }
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = ObcSuppressBecause.CA1812_AvoidUninstantiatedInternalClasses_ClassExistsToUseItsTypeInUnitTests)]
         private class PropertyBagConfig : PropertyBagSerializationConfigurationBase
         {
             protected override IReadOnlyCollection<PropertyBagSerializationConfigurationType> DependentPropertyBagSerializationConfigurationTypes => new[] { typeof(PropertyBagConfigDepend).ToPropertyBagSerializationConfigurationType() };
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class TypeWithCustomPropertyBagSerializer
         {
         }
@@ -369,35 +375,6 @@ namespace OBeautifulCode.Serialization.Test
                 new { type }.AsArg().Must().BeEqualTo(typeof(TypeWithCustomPropertyBagSerializer));
 
                 return new TypeWithCustomPropertyBagSerializer();
-            }
-        }
-
-        private class CustomElement
-        {
-        }
-
-        private class CustomElementSerializer : IStringSerializeAndDeserialize
-        {
-            public const string CustomSerializedString = "Array of these.";
-
-            public SerializationConfigurationType SerializationConfigurationType => null;
-
-            public string SerializeToString(object objectToSerialize)
-            {
-                return CustomSerializedString;
-            }
-
-            public T Deserialize<T>(string serializedString)
-            {
-                return (T)this.Deserialize(serializedString, typeof(T));
-            }
-
-            public object Deserialize(string serializedString, Type type)
-            {
-                new { serializedString }.AsArg().Must().BeEqualTo(CustomSerializedString);
-                new { type }.AsArg().Must().BeEqualTo(typeof(CustomElement));
-
-                return new CustomElement();
             }
         }
 

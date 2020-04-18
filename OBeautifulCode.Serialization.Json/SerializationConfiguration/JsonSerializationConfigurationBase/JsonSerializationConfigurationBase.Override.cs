@@ -10,6 +10,7 @@ namespace OBeautifulCode.Serialization.Json
     using System.Collections.Generic;
     using System.Linq;
 
+    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization;
     using OBeautifulCode.Type.Recipes;
 
@@ -33,6 +34,8 @@ namespace OBeautifulCode.Serialization.Json
         protected sealed override void ProcessRegistrationDetailsPriorToRegistration(
             RegistrationDetails registrationDetails)
         {
+            new { registrationDetails }.AsArg().Must().NotBeNull();
+
             if (registrationDetails.TypeToRegister is TypeToRegisterForJson typeToRegisterForJson)
             {
                 this.ProcessTypeToRegisterForJson(typeToRegisterForJson);

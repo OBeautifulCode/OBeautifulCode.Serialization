@@ -43,13 +43,12 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <summary>
         /// Encoding to use for conversion in and out of bytes.
         /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = ObcSuppressBecause.CA2104_DoNotDeclareReadOnlyMutableReferenceTypes_TypeIsImmutable)]
         public static readonly Encoding SerializationEncoding = Encoding.UTF8;
 
         private readonly ObcDictionaryStringStringSerializer dictionaryStringSerializer;
 
         private readonly IReadOnlyDictionary<Type, IStringSerializeAndDeserialize> configuredTypeToSerializerMap;
-
-        private readonly Dictionary<Type, IStringSerializeAndDeserialize> cachedAttributeSerializerTypeToObjectMap;
 
         private readonly PropertyBagSerializationConfigurationBase propertyBagConfiguration;
 
@@ -71,8 +70,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 this.propertyBagConfiguration.StringSerializationNullValueEncoding);
 
             this.configuredTypeToSerializerMap = this.propertyBagConfiguration.BuildConfiguredTypeToSerializerMap();
-
-            this.cachedAttributeSerializerTypeToObjectMap = new Dictionary<Type, IStringSerializeAndDeserialize>();
         }
 
         /// <inheritdoc />
