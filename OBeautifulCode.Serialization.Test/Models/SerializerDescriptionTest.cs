@@ -36,6 +36,7 @@ namespace OBeautifulCode.Serialization.Test
                                 SerializationKind.Invalid,
                                 referenceObject.SerializationFormat,
                                 A.Dummy<TypeRepresentation>(),
+                                referenceObject.UnregisteredTypeEncounteredStrategy,
                                 referenceObject.CompressionKind,
                                 referenceObject.Metadata);
 
@@ -56,6 +57,7 @@ namespace OBeautifulCode.Serialization.Test
                                 referenceObject.SerializationKind,
                                 SerializationFormat.Invalid,
                                 A.Dummy<TypeRepresentation>(),
+                                referenceObject.UnregisteredTypeEncounteredStrategy,
                                 referenceObject.CompressionKind,
                                 referenceObject.Metadata);
 
@@ -76,6 +78,7 @@ namespace OBeautifulCode.Serialization.Test
                                 referenceObject.SerializationKind,
                                 referenceObject.SerializationFormat,
                                 A.Dummy<TypeRepresentation>(),
+                                referenceObject.UnregisteredTypeEncounteredStrategy,
                                 CompressionKind.Invalid,
                                 referenceObject.Metadata);
 
@@ -89,7 +92,7 @@ namespace OBeautifulCode.Serialization.Test
                 .AddScenario(() =>
                     new ConstructorPropertyAssignmentTestScenario<SerializerDescription>
                     {
-                        Name = "ConfigurationTypeRepresentation should return null passed to constructor parameter 'configurationTypeRepresentation' when getting",
+                        Name = "ConfigurationTypeRepresentation should return null passed to constructor parameter 'serializationConfigType' when getting",
                         SystemUnderTestExpectedPropertyValueFunc = () =>
                         {
                             var referenceObject = A.Dummy<SerializerDescription>();
@@ -100,6 +103,7 @@ namespace OBeautifulCode.Serialization.Test
                                     referenceObject.SerializationKind,
                                     referenceObject.SerializationFormat,
                                     null,
+                                    referenceObject.UnregisteredTypeEncounteredStrategy,
                                     referenceObject.CompressionKind,
                                     referenceObject.Metadata),
                                 ExpectedPropertyValue = null,
@@ -107,7 +111,7 @@ namespace OBeautifulCode.Serialization.Test
 
                             return result;
                         },
-                        PropertyName = nameof(SerializerDescription.ConfigurationTypeRepresentation),
+                        PropertyName = nameof(SerializerDescription.SerializationConfigType),
                     })
                 .AddScenario(() =>
                     new ConstructorPropertyAssignmentTestScenario<SerializerDescription>
@@ -122,7 +126,8 @@ namespace OBeautifulCode.Serialization.Test
                                 SystemUnderTest = new SerializerDescription(
                                     referenceObject.SerializationKind,
                                     referenceObject.SerializationFormat,
-                                    referenceObject.ConfigurationTypeRepresentation,
+                                    referenceObject.SerializationConfigType,
+                                    referenceObject.UnregisteredTypeEncounteredStrategy,
                                     referenceObject.CompressionKind,
                                     null),
                                 ExpectedPropertyValue = new Dictionary<string, string>(),

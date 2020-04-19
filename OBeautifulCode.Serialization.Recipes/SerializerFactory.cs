@@ -48,23 +48,22 @@ namespace OBeautifulCode.Serialization.Recipes
         /// <inheritdoc />
         public ISerializeAndDeserialize BuildSerializer(
             SerializerDescription serializerDescription, 
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion, 
-            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
+            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
             new { serializerDescription }.AsArg().Must().NotBeNull();
 
             lock (this.sync)
             {
-                var configurationType = serializerDescription.ConfigurationTypeRepresentation?.ResolveFromLoadedTypes(assemblyMatchStrategy, throwIfCannotResolve: true);
+                var configurationType = serializerDescription.SerializationConfigType?.ResolveFromLoadedTypes(assemblyMatchStrategy, throwIfCannotResolve: true);
 
                 switch (serializerDescription.SerializationKind)
                 {
                     case SerializationKind.Bson: 
-                        return new ObcBsonSerializer(configurationType?.ToBsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
+                        return new ObcBsonSerializer(configurationType?.ToBsonSerializationConfigurationType(), serializerDescription.UnregisteredTypeEncounteredStrategy);
                     case SerializationKind.Json: 
-                        return new ObcJsonSerializer(configurationType?.ToJsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
+                        return new ObcJsonSerializer(configurationType?.ToJsonSerializationConfigurationType(), serializerDescription.UnregisteredTypeEncounteredStrategy);
                     case SerializationKind.PropertyBag: 
-                        return new ObcPropertyBagSerializer(configurationType?.ToPropertyBagSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
+                        return new ObcPropertyBagSerializer(configurationType?.ToPropertyBagSerializationConfigurationType(), serializerDescription.UnregisteredTypeEncounteredStrategy);
                     default: 
                         throw new NotSupportedException(Invariant($"{nameof(serializerDescription)} from enumeration {nameof(SerializationKind)} of {serializerDescription.SerializationKind} is not supported."));
                 }

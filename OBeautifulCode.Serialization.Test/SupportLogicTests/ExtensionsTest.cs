@@ -84,7 +84,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             string objectToPackageIntoDescribedSerialization = null;
-            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
+            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), UnregisteredTypeEncounteredStrategy.Default, CompressionKind.None);
 
             // Act
             var describedSerialization = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificFactory(
@@ -104,7 +104,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             string objectToPackageIntoDescribedSerialization = null;
-            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
+            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), UnregisteredTypeEncounteredStrategy.Default, CompressionKind.None);
 
             // Act
             var describedSerialization = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificFactory(
@@ -124,15 +124,14 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var objectToPackageIntoDescribedSerialization = A.Dummy<string>();
-            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
+            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), UnregisteredTypeEncounteredStrategy.Attempt, CompressionKind.None);
 
             // Act
             var describedSerialization = DomainExtensions.ToDescribedSerializationUsingSpecificFactory(
                 objectToPackageIntoDescribedSerialization,
                 serializerDescription,
                 SerializerFactory.Instance,
-                CompressorFactory.Instance,
-                unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt);
+                CompressorFactory.Instance);
 
             // Assert
             describedSerialization.Should().NotBeNull();
@@ -146,7 +145,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             string expected = null;
-            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
+            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), UnregisteredTypeEncounteredStrategy.Attempt, CompressionKind.None);
             var payload = "null";
             var describedSerialization = new DescribedSerialization(
                 typeof(string).ToRepresentation(),
@@ -157,8 +156,7 @@ namespace OBeautifulCode.Serialization.Test
             var actual = DomainExtensions.DeserializePayloadUsingSpecificFactory(
                 describedSerialization,
                 SerializerFactory.Instance,
-                CompressorFactory.Instance,
-                unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt);
+                CompressorFactory.Instance);
 
             // Assert
             actual.Should().Be(expected);
@@ -169,7 +167,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var expected = A.Dummy<string>();
-            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
+            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), UnregisteredTypeEncounteredStrategy.Attempt, CompressionKind.None);
             var payload = "\"" + expected + "\"";
             var describedSerialization = new DescribedSerialization(
                 expected.GetType().ToRepresentation(),
@@ -180,8 +178,7 @@ namespace OBeautifulCode.Serialization.Test
             var actual = DomainExtensions.DeserializePayloadUsingSpecificFactory(
                 describedSerialization,
                 SerializerFactory.Instance,
-                CompressorFactory.Instance,
-                unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt);
+                CompressorFactory.Instance);
 
             // Assert
             actual.Should().NotBeNull();
@@ -193,10 +190,10 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var objectToPackageIntoDescribedSerialization = A.Dummy<string>();
-            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
+            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), UnregisteredTypeEncounteredStrategy.Attempt, CompressionKind.None);
 
             // Act
-            var describedSerialization = objectToPackageIntoDescribedSerialization.ToDescribedSerialization(serializerDescription, unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt);
+            var describedSerialization = objectToPackageIntoDescribedSerialization.ToDescribedSerialization(serializerDescription);
 
             // Assert
             describedSerialization.Should().NotBeNull();
@@ -210,7 +207,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var expected = A.Dummy<string>();
-            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
+            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), UnregisteredTypeEncounteredStrategy.Attempt, CompressionKind.None);
             var payload = "\"" + expected + "\"";
             var describedSerialization = new DescribedSerialization(
                 expected.GetType().ToRepresentation(),
@@ -218,7 +215,7 @@ namespace OBeautifulCode.Serialization.Test
                 serializerDescription);
 
             // Act
-            var actual = describedSerialization.DeserializePayload(unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt);
+            var actual = describedSerialization.DeserializePayload();
 
             // Assert
             actual.Should().NotBeNull();
@@ -230,7 +227,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var expected = A.Dummy<string>();
-            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
+            var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, typeof(NullJsonSerializationConfiguration).ToRepresentation(), UnregisteredTypeEncounteredStrategy.Attempt, CompressionKind.None);
             var payload = "\"" + expected + "\"";
             var describedSerialization = new DescribedSerialization(
                 expected.GetType().ToRepresentation(),
@@ -238,7 +235,7 @@ namespace OBeautifulCode.Serialization.Test
                 serializerDescription);
 
             // Act
-            var actual = describedSerialization.DeserializePayload<string>(unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt);
+            var actual = describedSerialization.DeserializePayload<string>();
 
             // Assert
             actual.Should().NotBeNull();

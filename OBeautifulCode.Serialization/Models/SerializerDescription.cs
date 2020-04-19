@@ -23,13 +23,15 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="serializationKind">The <see cref="SerializationKind" /> to serialize into.</param>
         /// <param name="serializationFormat">The <see cref="SerializationFormat" /> to serialize into.</param>
+        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of how to handle a type that has never been registered.  DEFAULT is the default algorithm.</param>
         /// <param name="compressionKind">Optional <see cref="CompressionKind" /> to use; DEFAULT is None.</param>
-        /// <param name="configurationTypeRepresentation">Optional configuration to use; DEFAULT is null.</param>
+        /// <param name="serializationConfigType">Optional representation of the type of the serialization configuration to use; DEFAULT is null.</param>
         /// <param name="metadata">Optional metadata to put, especially useful for customer serializer factory; DEFAULT is empty.</param>
         public SerializerDescription(
             SerializationKind serializationKind,
             SerializationFormat serializationFormat,
-            TypeRepresentation configurationTypeRepresentation = null,
+            TypeRepresentation serializationConfigType = null,
+            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default,
             CompressionKind compressionKind = CompressionKind.None,
             IReadOnlyDictionary<string, string> metadata = null)
         {
@@ -39,7 +41,8 @@ namespace OBeautifulCode.Serialization
 
             this.SerializationKind = serializationKind;
             this.SerializationFormat = serializationFormat;
-            this.ConfigurationTypeRepresentation = configurationTypeRepresentation;
+            this.SerializationConfigType = serializationConfigType;
+            this.UnregisteredTypeEncounteredStrategy = unregisteredTypeEncounteredStrategy;
             this.CompressionKind = compressionKind;
             this.Metadata = metadata ?? new Dictionary<string, string>();
         }
@@ -55,14 +58,19 @@ namespace OBeautifulCode.Serialization
         public SerializationFormat SerializationFormat { get; private set; }
 
         /// <summary>
+        /// Gets the <see cref="TypeRepresentation" /> of the type of the serialization configuration.
+        /// </summary>
+        public TypeRepresentation SerializationConfigType { get; private set; }
+
+        /// <summary>
+        /// Gets the strategy of how to handle a type that has never been registered.
+        /// </summary>
+        public UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy { get; private set; }
+
+        /// <summary>
         /// Gets the <see cref="CompressionKind" /> to use.
         /// </summary>
         public CompressionKind CompressionKind { get; private set; }
-
-        /// <summary>
-        /// Gets the <see cref="TypeRepresentation" /> of the configuration.
-        /// </summary>
-        public TypeRepresentation ConfigurationTypeRepresentation { get; private set; }
 
         /// <summary>
         /// Gets a map of metadata for custom use.

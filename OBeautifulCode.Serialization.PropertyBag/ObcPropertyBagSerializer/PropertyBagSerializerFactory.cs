@@ -35,19 +35,18 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <inheritdoc />
         public ISerializeAndDeserialize BuildSerializer(
             SerializerDescription serializerDescription,
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion,
-            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
+            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
             new { serializerDescription }.AsArg().Must().NotBeNull();
 
             lock (this.sync)
             {
-                var configurationType = serializerDescription.ConfigurationTypeRepresentation?.ResolveFromLoadedTypes(assemblyMatchStrategy, throwIfCannotResolve: true);
+                var configurationType = serializerDescription.SerializationConfigType?.ResolveFromLoadedTypes(assemblyMatchStrategy, throwIfCannotResolve: true);
 
                 switch (serializerDescription.SerializationKind)
                 {
                     case SerializationKind.PropertyBag:
-                        return new ObcPropertyBagSerializer(configurationType?.ToPropertyBagSerializationConfigurationType(), unregisteredTypeEncounteredStrategy);
+                        return new ObcPropertyBagSerializer(configurationType?.ToPropertyBagSerializationConfigurationType(), serializerDescription.UnregisteredTypeEncounteredStrategy);
                     default:
                         throw new NotSupportedException(Invariant($"{nameof(serializerDescription)} from enumeration {nameof(SerializationKind)} of {serializerDescription.SerializationKind} is not supported."));
                 }

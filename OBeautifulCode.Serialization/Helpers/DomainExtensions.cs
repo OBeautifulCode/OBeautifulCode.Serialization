@@ -32,7 +32,6 @@ namespace OBeautifulCode.Serialization
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
         /// <param name="compressorFactory">Implementation of <see cref="ICompressorFactory" /> that can resolve the compressor.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
-        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
         /// <returns>
         /// Self described serialization.
         /// </returns>
@@ -42,14 +41,13 @@ namespace OBeautifulCode.Serialization
             SerializerDescription serializerDescription,
             ISerializerFactory serializerFactory,
             ICompressorFactory compressorFactory,
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion,
-            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
+            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
             new { serializerDescription }.AsArg().Must().NotBeNull();
             new { serializerFactory }.AsArg().Must().NotBeNull();
             new { compressorFactory }.AsArg().Must().NotBeNull();
 
-            var serializer = serializerFactory.BuildSerializer(serializerDescription, assemblyMatchStrategy, unregisteredTypeEncounteredStrategy);
+            var serializer = serializerFactory.BuildSerializer(serializerDescription, assemblyMatchStrategy);
 
             var compressor = compressorFactory.BuildCompressor(serializerDescription.CompressionKind);
 
@@ -117,7 +115,6 @@ namespace OBeautifulCode.Serialization
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
         /// <param name="compressorFactory">Implementation of <see cref="ICompressorFactory" /> that can resolve the compressor.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
-        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
         /// <returns>
         /// Originally serialized object.
         /// </returns>
@@ -125,14 +122,13 @@ namespace OBeautifulCode.Serialization
             this DescribedSerialization describedSerialization,
             ISerializerFactory serializerFactory,
             ICompressorFactory compressorFactory,
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion,
-            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
+            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
             new { describedSerialization }.AsArg().Must().NotBeNull();
             new { serializerFactory }.AsArg().Must().NotBeNull();
             new { compressorFactory }.AsArg().Must().NotBeNull();
 
-            var serializer = serializerFactory.BuildSerializer(describedSerialization.SerializerDescription, assemblyMatchStrategy, unregisteredTypeEncounteredStrategy);
+            var serializer = serializerFactory.BuildSerializer(describedSerialization.SerializerDescription, assemblyMatchStrategy);
 
             var compressor = compressorFactory.BuildCompressor(describedSerialization.SerializerDescription.CompressionKind);
 
@@ -192,7 +188,6 @@ namespace OBeautifulCode.Serialization
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
         /// <param name="compressorFactory">Implementation of <see cref="ICompressorFactory" /> that can resolve the compressor.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
-        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
         /// <typeparam name="T">Expected return type.</typeparam>
         /// <returns>
         /// Originally serialized object.
@@ -201,10 +196,9 @@ namespace OBeautifulCode.Serialization
             this DescribedSerialization describedSerialization,
             ISerializerFactory serializerFactory,
             ICompressorFactory compressorFactory,
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion,
-            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
+            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            var result = (T)DeserializePayloadUsingSpecificFactory(describedSerialization, serializerFactory, compressorFactory, assemblyMatchStrategy, unregisteredTypeEncounteredStrategy);
+            var result = (T)DeserializePayloadUsingSpecificFactory(describedSerialization, serializerFactory, compressorFactory, assemblyMatchStrategy);
 
             return result;
         }
