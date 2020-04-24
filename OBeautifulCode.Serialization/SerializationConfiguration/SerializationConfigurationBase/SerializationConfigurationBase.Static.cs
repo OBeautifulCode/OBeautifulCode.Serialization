@@ -47,6 +47,7 @@ namespace OBeautifulCode.Serialization
         protected static IReadOnlyCollection<Type> InternallyRequiredTypes => new[]
         {
             // OBC.Type
+            typeof(ExpressionRepresentationBase),
             typeof(UtcDateTimeRangeInclusive),
 
             // OBC.Compression
@@ -56,7 +57,6 @@ namespace OBeautifulCode.Serialization
             typeof(AssemblyRepresentation),
             typeof(ElementInitRepresentation),
             typeof(MemberBindingRepresentationBase),
-            typeof(ExpressionRepresentationBase),
             typeof(TypeRepresentation),
             typeof(ConstructorInfoRepresentation),
             typeof(MemberInfoRepresentation),
@@ -235,7 +235,8 @@ namespace OBeautifulCode.Serialization
             Type type,
             bool allowSystemType)
         {
-            if (type.ContainsGenericParameters)
+            // open type is only allowed if it is a generic type definition
+            if (type.ContainsGenericParameters && (!type.IsGenericTypeDefinition))
             {
                 return false;
             }
