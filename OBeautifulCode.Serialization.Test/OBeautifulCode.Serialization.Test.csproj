@@ -189,7 +189,7 @@
     <Compile Include="Models\DynamicTypePlaceholderTest.designer.cs">
       <DependentUpon>DynamicTypePlaceholderTest.cs</DependentUpon>
     </Compile>
-    <Compile Include="InternallyRegisteredTypesTest.cs" />
+    <None Include="InternallyRegisteredTypesTest.cs" />
     <Compile Include="Models\DescribedSerializationTest.designer.cs">
       <DependentUpon>DescribedSerializationTest.cs</DependentUpon>
     </Compile>
