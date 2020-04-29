@@ -34,6 +34,7 @@ namespace OBeautifulCode.Representation.System.Test
             AutoFixtureBackedDummyFactory.AddDummyCreator(
                 () =>
                 {
+                    // TypeDummyFactory will return a real, loaded type. 
                     var result = A.Dummy<Type>().ToRepresentation();
 
                     return result;
