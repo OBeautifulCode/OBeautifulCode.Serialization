@@ -40,15 +40,15 @@ namespace OBeautifulCode.Serialization
         public IReadOnlyDictionary<SerializationConfigurationType, SerializationConfigurationBase> DependentSerializationConfigurationTypeToInstanceMap { get; private set; }
 
         /// <summary>
-        /// Gets a map of registered type to the type of serialization configuration that registered that type.
-        /// </summary>
-        public IReadOnlyDictionary<Type, RegistrationDetails> RegisteredTypeToRegistrationDetailsMap => this.registeredTypeToRegistrationDetailsMap;
-
-        /// <summary>
         /// Gets all specified dependent configuration types, including all internal configuration types
         /// unless this this configuration type is <see cref="IIgnoreDefaultDependencies"/>.
         /// </summary>
         public IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypesWithDefaultsIfApplicable => this.GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable();
+
+        /// <summary>
+        /// Gets a map of registered type to the type of serialization configuration that registered that type.
+        /// </summary>
+        protected IReadOnlyDictionary<Type, RegistrationDetails> RegisteredTypeToRegistrationDetailsMap => this.registeredTypeToRegistrationDetailsMap;
 
         /// <summary>
         /// Gets the serialization configuration type of the current instance.

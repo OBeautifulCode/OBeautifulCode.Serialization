@@ -8,13 +8,10 @@ namespace OBeautifulCode.Serialization.Test
 {
     using System;
     using System.Linq;
-    using System.Reflection;
-    using System.Runtime.ExceptionServices;
 
     using FluentAssertions;
 
-    using MongoDB.Bson.Serialization;
-
+    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization.Bson;
 
     using Xunit;
@@ -150,7 +147,7 @@ namespace OBeautifulCode.Serialization.Test
             var config = SerializationConfigurationManager.GetOrAddSerializationConfiguration(configType.ToSerializationConfigurationType());
 
             // Assert
-            config.RegisteredTypeToRegistrationDetailsMap.Keys.Intersect(expectedTypes).Should().BeEquivalentTo(expectedTypes);
+            expectedTypes.Select(_ => config.IsRegisteredType(_)).AsTest().Must().Each().BeTrue();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "configs", Justification = "Name/spelling is correct.")]
@@ -185,7 +182,7 @@ namespace OBeautifulCode.Serialization.Test
             var config = SerializationConfigurationManager.GetOrAddSerializationConfiguration(configType.ToSerializationConfigurationType());
 
             // Assert
-            config.RegisteredTypeToRegistrationDetailsMap.Keys.Should().Contain(testType);
+            config.IsRegisteredType(testType).Should().BeTrue();
         }
     }
 }
