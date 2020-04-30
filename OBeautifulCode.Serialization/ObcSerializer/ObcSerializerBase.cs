@@ -118,7 +118,7 @@ namespace OBeautifulCode.Serialization
             {
                 if (this.UnregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Throw)
                 {
-                    if (!this.SerializationConfiguration.RegisteredTypeToRegistrationDetailsMap.ContainsKey(type))
+                    if (!this.SerializationConfiguration.IsRegisteredType(type))
                     {
                         throw new UnregisteredTypeAttemptException(Invariant($"Attempted to perform operation on unregistered type '{type.ToStringReadable()}'."), type);
                     }

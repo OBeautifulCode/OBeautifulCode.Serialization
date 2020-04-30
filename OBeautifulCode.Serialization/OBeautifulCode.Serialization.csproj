@@ -44,8 +44,8 @@
     <Reference Include="OBeautifulCode.Compression, Version=1.0.12.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OBeautifulCode.Compression.1.0.12\lib\net462\OBeautifulCode.Compression.dll</HintPath>
     </Reference>
-    <Reference Include="OBeautifulCode.Representation.System, Version=1.0.43.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OBeautifulCode.Representation.System.1.0.43\lib\net462\OBeautifulCode.Representation.System.dll</HintPath>
+    <Reference Include="OBeautifulCode.Representation.System, Version=1.0.44.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OBeautifulCode.Representation.System.1.0.44\lib\net462\OBeautifulCode.Representation.System.dll</HintPath>
     </Reference>
     <Reference Include="OBeautifulCode.Type, Version=1.0.49.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OBeautifulCode.Type.1.0.49\lib\net462\OBeautifulCode.Type.dll</HintPath>
@@ -151,6 +151,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="SerializationConfiguration\RegistrationDetails.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlySerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\SerializationConfigurationBase\VersionlessOpenTypeConsolidatingTypeEqualityComparer.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationBase\SerializationConfigurationBase.Static.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationBase\SerializationConfigurationBase.Overridable.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationType.cs" />

@@ -86,6 +86,24 @@ namespace OBeautifulCode.Serialization
             }
         }
 
+        /// <summary>
+        /// Determines if the specified type has been registered.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>
+        /// true if the type has been registered, otherwise false.
+        /// </returns>
+        public bool IsRegisteredType(
+            Type type)
+        {
+            new { type }.AsArg().Must().NotBeNull();
+            new { type.ContainsGenericParameters }.AsArg().Must().BeFalse();
+
+            var result = this.registeredTypeToRegistrationDetailsMap.ContainsKey(type);
+
+            return result;
+        }
+
         private IReadOnlyCollection<SerializationConfigurationType> GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable()
         {
             var result = this.DependentSerializationConfigurationTypes.ToList();
@@ -152,7 +170,7 @@ namespace OBeautifulCode.Serialization
                     // in traversing the same type multiple times, so just skip the registration.
                     if (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(typeToRegister.Type))
                     {
-                        // these types need to be considered for spawning additional types in to include
+                        // these types need to be considered for spawning additional types to include
                         // and thus need to be processed in the queue, but they themselves cannot be registered.
                         // for example, if the type is List<List<MyModelType>>, we don't want to register it,
                         // but we want to run member inclusion to get at MyModelType.
@@ -177,7 +195,7 @@ namespace OBeautifulCode.Serialization
                         .Concat(relatedTypes)
                         .Concat(memberTypes)
                         .Distinct()
-                        .Where(_ => _ != typeToRegister.Type)
+                        .Where(_ => !VersionlessOpenTypeConsolidatingTypeEqualityComparer.Instance.Equals(_, typeToRegister.Type))
                         .ToList();
 
                     foreach (var additionalTypeToInclude in additionalTypesToInclude)
