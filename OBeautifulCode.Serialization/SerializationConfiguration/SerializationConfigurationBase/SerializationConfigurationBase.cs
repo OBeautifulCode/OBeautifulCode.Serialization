@@ -123,7 +123,7 @@ namespace OBeautifulCode.Serialization
                 var dependentSerializationConfiguration = this.DependentSerializationConfigurationTypeToInstanceMap[dependentSerializationConfigurationType];
 
                 var registrationDetailsForDirectlyRegisteredTypes = dependentSerializationConfiguration
-                    .RegisteredTypeToRegistrationDetailsMap
+                    .registeredTypeToRegistrationDetailsMap
                     .Where(_ => _.Value.SerializationConfigurationType == dependentSerializationConfigurationType)
                     .Select(_ => _.Value)
                     .ToList();
