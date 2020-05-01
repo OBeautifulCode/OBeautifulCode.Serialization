@@ -99,7 +99,22 @@ namespace OBeautifulCode.Serialization
             new { type }.AsArg().Must().NotBeNull();
             new { type.ContainsGenericParameters }.AsArg().Must().BeFalse();
 
-            var result = this.registeredTypeToRegistrationDetailsMap.ContainsKey(type);
+            bool result;
+
+            if (this.registeredTypeToRegistrationDetailsMap.ContainsKey(type))
+            {
+                result = true;
+            }
+            else if (type.IsGenericType)
+            {
+                var genericTypeDefinition = type.GetGenericTypeDefinition();
+
+                result = this.registeredTypeToRegistrationDetailsMap.ContainsKey(genericTypeDefinition) && type.GenericTypeArguments.All(this.IsRegisteredType);
+            }
+            else
+            {
+                result = false;
+            }
 
             return result;
         }
