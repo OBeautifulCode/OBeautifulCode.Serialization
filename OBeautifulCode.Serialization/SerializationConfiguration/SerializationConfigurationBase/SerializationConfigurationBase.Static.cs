@@ -112,7 +112,7 @@ namespace OBeautifulCode.Serialization
             // short-circuit System types.  We will see these types here because we want to explore them in
             // GetMemberTypesToInclude (e.g. List<MyModel>), but we are not interested in their related types
             // (e.g. IEnumerable).
-            if (IsSystemType(type))
+            if (type.IsSystemType())
             {
                 return new Type[0];
             }
@@ -233,7 +233,7 @@ namespace OBeautifulCode.Serialization
             // We want to pull generic arguments and array elements from System types (e.g. List<MyModel>)
             // but otherwise we are not interested in the fields and properties of those types, which will
             // contain a bunch of other System and .NET internal types.
-            if (!IsSystemType(type))
+            if (!type.IsSystemType())
             {
                 bool IsCompilerGenerated(MemberInfo memberInfo) => memberInfo.CustomAttributes.Select(s => s.AttributeType).Contains(typeof(CompilerGeneratedAttribute));
 
@@ -413,14 +413,6 @@ namespace OBeautifulCode.Serialization
             return result;
         }
 
-        private static bool IsSystemType(
-            Type type)
-        {
-            var result = type.Namespace?.StartsWith(nameof(System), StringComparison.Ordinal) ?? false;
-
-            return result;
-        }
-
         private static bool IsTypeThatCanBeRegistered(
             TypeToRegister typeToRegister)
         {
@@ -438,7 +430,7 @@ namespace OBeautifulCode.Serialization
             }
 
             // needed to register serializer for System.Drawing.Color and others
-            if (IsSystemType(type) && (!typeToRegister.IsOriginatingType))
+            if (type.IsSystemType() && (!typeToRegister.IsOriginatingType))
             {
                 return false;
             }
@@ -495,7 +487,7 @@ namespace OBeautifulCode.Serialization
         private static bool IsRelatedTypeCandidate(
             Type type)
         {
-            var result = IsTypeThatCanBeExplored(type) && (!IsSystemType(type));
+            var result = IsTypeThatCanBeExplored(type) && (!type.IsSystemType());
 
             return result;
         }

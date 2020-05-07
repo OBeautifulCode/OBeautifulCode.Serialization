@@ -31,10 +31,28 @@ namespace OBeautifulCode.Serialization.Bson
         protected sealed override IReadOnlyCollection<TypeToRegister> TypesToRegister => this.TypesToRegisterForBson;
 
         /// <inheritdoc />
+        protected sealed override TypeToRegister BuildTypeToRegisterForPostInitializationRegistration(
+            Type type,
+            Type recursiveOriginType,
+            Type directOriginType,
+            MemberTypesToInclude memberTypesToInclude,
+            RelatedTypesToInclude relatedTypesToInclude)
+        {
+            var genericTypeDefinition = type.GetGenericTypeDefinition();
+
+            var genericTypeDefinitionTypeToRegister = (TypeToRegisterForBson)this.RegisteredTypeToRegistrationDetailsMap[genericTypeDefinition].TypeToRegister;
+
+            var result = new TypeToRegisterForBson(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude, genericTypeDefinitionTypeToRegister.SerializerBuilderFunc, genericTypeDefinitionTypeToRegister.PropertyNameWhitelist);
+
+            return result;
+        }
+
+        /// <inheritdoc />
         protected sealed override void ProcessRegistrationDetailsPriorToRegistration(
             RegistrationDetails registrationDetails)
         {
             new { registrationDetails }.AsArg().Must().NotBeNull();
+
 
             if (registrationDetails.TypeToRegister is TypeToRegisterForBson typeToRegisterForBson)
             {

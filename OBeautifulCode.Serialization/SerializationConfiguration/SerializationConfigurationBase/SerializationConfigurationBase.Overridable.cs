@@ -6,6 +6,7 @@
 
 namespace OBeautifulCode.Serialization
 {
+    using System;
     using System.Collections.Generic;
 
     public abstract partial class SerializationConfigurationBase
@@ -27,6 +28,26 @@ namespace OBeautifulCode.Serialization
         /// Gets the types to register along with additional information about other types that this type should "pull-in" to registration.
         /// </summary>
         protected virtual IReadOnlyCollection<TypeToRegister> TypesToRegister => new TypeToRegister[0];
+
+        /// <summary>
+        /// Builds a <see cref="TypeToRegister"/> to be used for post-initialization registration,
+        /// which only occurs for closed generic types at serialization-time, because these
+        /// runtime types are not discoverable during initialization.
+        /// </summary>
+        /// <param name="type">The type to register.</param>
+        /// <param name="recursiveOriginType">The type whose recursive processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> resulted in the creation of this <see cref="TypeToRegister"/>.</param>
+        /// <param name="directOriginType">The type whose processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> directly resulted in the creation of this <see cref="TypeToRegister"/>.</param>
+        /// <param name="memberTypesToInclude">Specifies which member types of <paramref name="type"/> that should also be registered.</param>
+        /// <param name="relatedTypesToInclude">Specifies which types related to <paramref name="type"/> that should also be registered.</param>
+        /// <returns>
+        /// The type to register wrapper.
+        /// </returns>
+        protected abstract TypeToRegister BuildTypeToRegisterForPostInitializationRegistration(
+            Type type,
+            Type recursiveOriginType,
+            Type directOriginType,
+            MemberTypesToInclude memberTypesToInclude,
+            RelatedTypesToInclude relatedTypesToInclude);
 
         /// <summary>
         /// Processes a <see cref="RegistrationDetails"/> prior to registration.

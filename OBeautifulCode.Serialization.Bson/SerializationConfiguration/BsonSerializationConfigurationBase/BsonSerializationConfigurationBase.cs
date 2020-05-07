@@ -39,6 +39,10 @@ namespace OBeautifulCode.Serialization.Bson
 
                             BsonClassMap.RegisterClassMap(bsonClassMap);
                         }
+
+                        // we are not 100% sure whether interface types or abstract types need to be registered
+                        // but there doesn't seem to be any harm in doing so.
+                        BsonSerializer.RegisterDiscriminatorConvention(type, ObcBsonDiscriminatorConvention.Instance);
                     }
                     catch (Exception ex)
                     {

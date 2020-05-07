@@ -13,12 +13,12 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeToRegisterForJson{T}"/> class.
         /// </summary>
-        /// <param name="memberTypesToInclude">Optional <see cref="MemberTypesToInclude"/>.  DEFAULT is <see cref="MemberTypesToInclude.All"/>.</param>
-        /// <param name="relatedTypesToInclude">Optional <see cref="RelatedTypesToInclude"/>.  DEFAULT is <see cref="RelatedTypesToInclude.Descendants"/>.</param>
+        /// <param name="memberTypesToInclude">Optional <see cref="MemberTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultMemberTypesToInclude"/>.</param>
+        /// <param name="relatedTypesToInclude">Optional <see cref="RelatedTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultRelatedTypesToInclude"/>.</param>
         /// <param name="jsonConverterBuilder">Optional <see cref="JsonConverterBuilder"/>.  DEFAULT is null.</param>
         public TypeToRegisterForJson(
-            MemberTypesToInclude memberTypesToInclude = MemberTypesToInclude.All,
-            RelatedTypesToInclude relatedTypesToInclude = RelatedTypesToInclude.Descendants,
+            MemberTypesToInclude memberTypesToInclude = TypeToRegisterConstants.DefaultMemberTypesToInclude,
+            RelatedTypesToInclude relatedTypesToInclude = TypeToRegisterConstants.DefaultRelatedTypesToInclude,
             JsonConverterBuilder jsonConverterBuilder = null)
         : base(typeof(T), memberTypesToInclude, relatedTypesToInclude, jsonConverterBuilder)
         {

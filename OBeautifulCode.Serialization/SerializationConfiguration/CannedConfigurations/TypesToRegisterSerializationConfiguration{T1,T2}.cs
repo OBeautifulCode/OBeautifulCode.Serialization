@@ -28,5 +28,18 @@ namespace OBeautifulCode.Serialization
 
         /// <inheritdoc />
         protected override IReadOnlyCollection<TypeToRegister> TypesToRegister => new[] { typeof(T1).ToTypeToRegister(), typeof(T2).ToTypeToRegister() };
+
+        /// <inheritdoc />
+        protected override TypeToRegister BuildTypeToRegisterForPostInitializationRegistration(
+            Type type,
+            Type recursiveOriginType,
+            Type directOriginType,
+            MemberTypesToInclude memberTypesToInclude,
+            RelatedTypesToInclude relatedTypesToInclude)
+        {
+            var result = new TypeToRegister(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude);
+
+            return result;
+        }
     }
 }

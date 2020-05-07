@@ -10,7 +10,6 @@ namespace OBeautifulCode.Serialization
     using System.Diagnostics.CodeAnalysis;
 
     using OBeautifulCode.Assertion.Recipes;
-    using OBeautifulCode.Serialization.Internal;
     using OBeautifulCode.Type.Recipes;
 
     /// <summary>

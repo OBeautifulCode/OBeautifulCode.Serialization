@@ -44,8 +44,8 @@ namespace OBeautifulCode.Serialization.Bson
         /// Builds a <see cref="TypeToRegisterForBson"/> from a type.
         /// </summary>
         /// <param name="type">The type to register.</param>
-        /// <param name="memberTypesToInclude">Optional <see cref="MemberTypesToInclude"/>.  DEFAULT is <see cref="MemberTypesToInclude.All"/>.</param>
-        /// <param name="relatedTypesToInclude">Optional <see cref="RelatedTypesToInclude"/>.  DEFAULT is <see cref="RelatedTypesToInclude.Descendants"/>.</param>
+        /// <param name="memberTypesToInclude">Optional <see cref="MemberTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultMemberTypesToInclude"/>.</param>
+        /// <param name="relatedTypesToInclude">Optional <see cref="RelatedTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultRelatedTypesToInclude"/>.</param>
         /// <param name="serializerBuilderFunc">Optional func that builds the <see cref="IBsonSerializer"/>.  DEFAULT is null (no serializer).</param>
         /// <param name="propertyNameWhitelist">Optional names of the properties to constrain the registration to.  DEFAULT is null (no whitelist).</param>
         /// <returns>
@@ -53,8 +53,8 @@ namespace OBeautifulCode.Serialization.Bson
         /// </returns>
         public static TypeToRegisterForBson ToTypeToRegisterForBson(
             this Type type,
-            MemberTypesToInclude memberTypesToInclude = MemberTypesToInclude.All,
-            RelatedTypesToInclude relatedTypesToInclude = RelatedTypesToInclude.Descendants,
+            MemberTypesToInclude memberTypesToInclude = TypeToRegisterConstants.DefaultMemberTypesToInclude,
+            RelatedTypesToInclude relatedTypesToInclude = TypeToRegisterConstants.DefaultRelatedTypesToInclude,
             Func<IBsonSerializer> serializerBuilderFunc = null,
             IReadOnlyCollection<string> propertyNameWhitelist = null)
         {
@@ -153,6 +153,7 @@ namespace OBeautifulCode.Serialization.Bson
 
             bool FilterCompilerGenerated(MemberInfo memberInfo) => !memberInfo.CustomAttributes.Select(s => s.AttributeType).Contains(typeof(CompilerGeneratedAttribute));
 
+            // We use DeclaredOnly here because BSON uses the class map that was registered for the base class.
             var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
             var allMembers = type.GetMembers(bindingFlags).Where(FilterCompilerGenerated).ToList();

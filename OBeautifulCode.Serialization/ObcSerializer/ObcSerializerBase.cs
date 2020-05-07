@@ -102,26 +102,71 @@ namespace OBeautifulCode.Serialization
                 // this must be supported for serializing null.
                 return;
             }
-            else if (type.IsArray)
+
+            // only closed types are supported
+            new { type.ContainsGenericParameters }.AsArg().Must().BeFalse();
+
+            this.InternalThrowOnUnregisteredTypeIfAppropriate(type, type);
+        }
+
+        private void InternalThrowOnUnregisteredTypeIfAppropriate(
+            Type originalType,
+            Type typeToValidate)
+        {
+            if (typeToValidate.IsArray)
             {
-                this.ThrowOnUnregisteredTypeIfAppropriate(type.GetElementType());
+                this.InternalThrowOnUnregisteredTypeIfAppropriate(originalType, typeToValidate.GetElementType());
             }
-            else if (type.IsGenericType && (type.Namespace?.StartsWith(nameof(System), StringComparison.Ordinal) ?? false))
+            else if (typeToValidate.IsGenericType)
             {
-                // this is for lists, dictionaries, nullable, and such.
-                foreach (var genericArgumentType in type.GenericTypeArguments)
+                // is the closed type registered?  if so, nothing to do
+                if (!this.SerializationConfiguration.IsRegisteredType(typeToValidate))
                 {
-                    this.ThrowOnUnregisteredTypeIfAppropriate(genericArgumentType);
+                    if (typeToValidate.IsSystemType())
+                    {
+                        // the closed system type is not registered, confirm that the generic type arguments are registered
+                        // so this will inspect the element of type of lists, the key/value types of dictionaries, etc.
+                        // we do NOT need to do this for non-System types; the code below will call
+                        // RegisterClosedGenericTypePostInitialization which, using MemberTypesToExplore.All, will
+                        // recurse through the types nested in the generic.
+                        foreach (var genericArgumentType in typeToValidate.GenericTypeArguments)
+                        {
+                            this.InternalThrowOnUnregisteredTypeIfAppropriate(originalType, genericArgumentType);
+                        }
+                    }
+                    else
+                    {
+                        // for non-System generic types that are not registered, the generic type definition should be registered
+                        var genericTypeDefinition = typeToValidate.GetGenericTypeDefinition();
+
+                        this.ThrowUnregisteredTypeEncounteredStrategyIfAppropriate(originalType, genericTypeDefinition);
+
+                        this.SerializationConfiguration.RegisterClosedGenericTypePostInitialization(typeToValidate);
+                    }
                 }
+            }
+            else if (typeToValidate.IsSystemType())
+            {
             }
             else
             {
-                if (this.UnregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Throw)
+                this.ThrowUnregisteredTypeEncounteredStrategyIfAppropriate(originalType, typeToValidate);
+            }
+        }
+
+        private void ThrowUnregisteredTypeEncounteredStrategyIfAppropriate(
+            Type originalType,
+            Type typeToValidate)
+        {
+            if ((this.UnregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Throw) && (!this.SerializationConfiguration.IsRegisteredType(typeToValidate)))
+            {
+                if (originalType == typeToValidate)
                 {
-                    if (!this.SerializationConfiguration.IsRegisteredType(type))
-                    {
-                        throw new UnregisteredTypeAttemptException(Invariant($"Attempted to perform operation on unregistered type '{type.ToStringReadable()}'."), type);
-                    }
+                    throw new UnregisteredTypeAttemptException(Invariant($"Attempted to perform operation on unregistered type '{originalType.ToStringReadable()}'."), originalType);
+                }
+                else
+                {
+                    throw new UnregisteredTypeAttemptException(Invariant($"Attempted to perform operation on type '{originalType.ToStringReadable()}', which contains the unregistered type '{typeToValidate.ToStringReadable()}'."), originalType);
                 }
             }
         }

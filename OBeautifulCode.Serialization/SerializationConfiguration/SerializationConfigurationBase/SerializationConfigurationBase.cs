@@ -7,10 +7,12 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -22,7 +24,9 @@ namespace OBeautifulCode.Serialization
     {
         private readonly object syncConfigure = new object();
 
-        private readonly Dictionary<Type, RegistrationDetails> registeredTypeToRegistrationDetailsMap = new Dictionary<Type, RegistrationDetails>();
+        private readonly ConcurrentDictionary<Type, RegistrationDetails> registeredTypeToRegistrationDetailsMap = new ConcurrentDictionary<Type, RegistrationDetails>();
+
+        private readonly HashSet<string> visitedTypesToRegisterIds = new HashSet<string>();
 
         private bool initialized;
 
@@ -97,26 +101,57 @@ namespace OBeautifulCode.Serialization
             Type type)
         {
             new { type }.AsArg().Must().NotBeNull();
-            new { type.ContainsGenericParameters }.AsArg().Must().BeFalse();
 
-            bool result;
+            var result = this.registeredTypeToRegistrationDetailsMap.ContainsKey(type);
 
-            if (this.registeredTypeToRegistrationDetailsMap.ContainsKey(type))
-            {
-                result = true;
-            }
-            else if (type.IsGenericType)
+            return result;
+        }
+
+        /// <summary>
+        /// Registers the specified closed generic type, post-initialization.
+        /// </summary>
+        /// <param name="type">The type to register.</param>
+        /// <remarks>
+        /// These types are runtime types; they cannot be "discovered" during initialization and yet they still
+        /// need to be registered so that derivative serialization configurations can perform the property setup
+        /// to serialize the type.
+        /// </remarks>
+        public void RegisterClosedGenericTypePostInitialization(
+            Type type)
+        {
+            type.IsClosedGenericType().AsArg(Invariant($"{nameof(SerializationConfigurationExtensions.IsClosedGenericType)}({type?.ToStringReadable() ?? "<null>"})")).Must().BeTrue();
+
+            if (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(type))
             {
                 var genericTypeDefinition = type.GetGenericTypeDefinition();
 
-                result = this.registeredTypeToRegistrationDetailsMap.ContainsKey(genericTypeDefinition) && type.GenericTypeArguments.All(this.IsRegisteredType);
-            }
-            else
-            {
-                result = false;
-            }
+                this.registeredTypeToRegistrationDetailsMap.ContainsKey(genericTypeDefinition).AsArg(Invariant($"{genericTypeDefinition.ToStringReadable()} is registered")).Must().BeTrue();
 
-            return result;
+                lock (this.syncConfigure)
+                {
+                    if (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(type))
+                    {
+                        // it's not clear what the direct and recursive origin would be, even given the tracked RegistrationDetails
+                        // It's not as simple as this.registeredTypeToRegistrationDetailsMap[genericTypeDefinition]
+                        // Consider type IGeneric<GenericClass<string>>>.  The registered typeof(IGeneric<>) might have been encountered
+                        // is a completely different way than GenericClass (different origin, different Member/RelatedTypesToInclude).
+                        // Choosing type as it's own direct and recursive origin is actually not bad - at least it lets us connect the
+                        // specified type to the additional types encountered in ProcessTypesToRegister().
+                        // Related, it's also not clear how to set Member/RelatedTypesToInclude.  Here we are choosing the most inclusive
+                        // settings, but there are certainly scenarios where the resulting registered types, reasoned against the originally
+                        // registered types, would not have been registered.  In practice we don't believe consumers will be so surgical
+                        // about the choice of Member/RelatedTypesToInclude and in fact there's even a bit of a smell in that (e.g. only wanting
+                        // descendants of a type but not wanting to register it's ancestors)
+                        var typeToRegister = this.BuildTypeToRegisterForPostInitializationRegistration(type, type, type, TypeToRegisterConstants.DefaultMemberTypesToInclude, TypeToRegisterConstants.DefaultRelatedTypesToInclude);
+
+                        var queue = new Queue<TypeToRegister>();
+
+                        queue.Enqueue(typeToRegister);
+
+                        this.ProcessTypesToRegister(queue);
+                    }
+                }
+            }
         }
 
         private IReadOnlyCollection<SerializationConfigurationType> GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable()
@@ -147,6 +182,8 @@ namespace OBeautifulCode.Serialization
                 {
                     this.RegisterType(registrationDetails);
                 }
+
+                this.visitedTypesToRegisterIds.AddRange(dependentSerializationConfiguration.visitedTypesToRegisterIds);
             }
         }
 
@@ -165,8 +202,6 @@ namespace OBeautifulCode.Serialization
                 // has already been registered by a dependent serialization configuration
                 this.RegisterType(typeToRegister);
             }
-
-            var visitedTypesToRegisterIds = new HashSet<string>();
 
             while (typesToRegister.Count > 0)
             {
@@ -198,9 +233,9 @@ namespace OBeautifulCode.Serialization
 
                 var typeToRegisterId = BuildIdIgnoringOrigin(typeToRegister);
 
-                if (!visitedTypesToRegisterIds.Contains(typeToRegisterId))
+                if (!this.visitedTypesToRegisterIds.Contains(typeToRegisterId))
                 {
-                    visitedTypesToRegisterIds.Add(typeToRegisterId);
+                    this.visitedTypesToRegisterIds.Add(typeToRegisterId);
 
                     var relatedTypes = GetRelatedTypesToInclude(typeToRegister.Type, typeToRegister.RelatedTypesToInclude);
 
@@ -219,7 +254,7 @@ namespace OBeautifulCode.Serialization
 
                         var additionalTypeToRegisterId = BuildIdIgnoringOrigin(additionalTypeToRegister);
 
-                        if (!visitedTypesToRegisterIds.Contains(additionalTypeToRegisterId))
+                        if (!this.visitedTypesToRegisterIds.Contains(additionalTypeToRegisterId))
                         {
                             typesToRegister.Enqueue(additionalTypeToRegister);
                         }
@@ -259,7 +294,7 @@ namespace OBeautifulCode.Serialization
 
             this.ProcessRegistrationDetailsPriorToRegistration(registrationDetails);
 
-            this.registeredTypeToRegistrationDetailsMap.Add(type, registrationDetails);
+            this.registeredTypeToRegistrationDetailsMap.TryAdd(type, registrationDetails);
         }
     }
 }

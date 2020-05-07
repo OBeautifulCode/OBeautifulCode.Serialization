@@ -40,7 +40,9 @@ namespace OBeautifulCode.Serialization.Json
         /// </summary>
         /// <param name="serializationDirection">Direction of serialization.</param>
         /// <param name="formattingKind">Kind of formatting to use.</param>
-        /// <returns>Prepared settings to use with Newtonsoft.</returns>
+        /// <returns>
+        /// Prepared settings to use with Newtonsoft.
+        /// </returns>
         public JsonSerializerSettings BuildJsonSerializerSettings(
             SerializationDirection serializationDirection,
             JsonFormattingKind formattingKind = JsonFormattingKind.Default)

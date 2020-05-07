@@ -6,6 +6,7 @@
 
 namespace OBeautifulCode.Serialization
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -22,5 +23,18 @@ namespace OBeautifulCode.Serialization
 
         /// <inheritdoc />
         protected override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new SerializationConfigurationType[0];
+
+        /// <inheritdoc />
+        protected override TypeToRegister BuildTypeToRegisterForPostInitializationRegistration(
+            Type type,
+            Type recursiveOriginType,
+            Type directOriginType,
+            MemberTypesToInclude memberTypesToInclude,
+            RelatedTypesToInclude relatedTypesToInclude)
+        {
+            var result = new TypeToRegister(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude);
+
+            return result;
+        }
     }
 }

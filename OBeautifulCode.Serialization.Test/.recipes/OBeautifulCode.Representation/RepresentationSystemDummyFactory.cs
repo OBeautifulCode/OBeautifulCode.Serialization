@@ -46,7 +46,7 @@ namespace OBeautifulCode.Representation.System.Test
                 {
                     ExpressionRepresentationBase result;
 
-                    var randomNumber = ThreadSafeRandom.Next(0, 2);
+                    var randomNumber = ThreadSafeRandom.Next(0, 3);
 
                     if (randomNumber == 0)
                     {
@@ -54,6 +54,17 @@ namespace OBeautifulCode.Representation.System.Test
                             A.Dummy<TypeRepresentation>(),
                             A.Dummy<ExpressionType>(),
                             A.Dummy<string>());
+                    }
+                    else if (randomNumber == 1)
+                    {
+                        // this will ensure that type is being properly registered in serialization
+                        // because BSON serializes DateTime with 3 f's precision, whereas our
+                        // serializer uses 7 f's, so roundtrip serialization will fail if our serializer
+                        // is not registered.
+                        result = new ConstantExpressionRepresentation<DateTime>(
+                            A.Dummy<TypeRepresentation>(),
+                            A.Dummy<ExpressionType>(),
+                            A.Dummy<DateTime>());
                     }
                     else
                     {

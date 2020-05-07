@@ -6,6 +6,7 @@
 
 namespace OBeautifulCode.Serialization
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -25,5 +26,18 @@ namespace OBeautifulCode.Serialization
 
         /// <inheritdoc />
         protected override IReadOnlyCollection<TypeToRegister> TypesToRegister => InternallyRequiredTypes.Select(_ => _.ToTypeToRegister()).ToList();
+
+        /// <inheritdoc />
+        protected override TypeToRegister BuildTypeToRegisterForPostInitializationRegistration(
+            Type type,
+            Type recursiveOriginType,
+            Type directOriginType,
+            MemberTypesToInclude memberTypesToInclude,
+            RelatedTypesToInclude relatedTypesToInclude)
+        {
+            var result = new TypeToRegister(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude);
+
+            return result;
+        }
     }
 }

@@ -32,16 +32,16 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// Builds a <see cref="TypeToRegisterForPropertyBag"/> from a type.
         /// </summary>
         /// <param name="type">The type to register.</param>
-        /// <param name="memberTypesToInclude">Optional <see cref="MemberTypesToInclude"/>.  DEFAULT is <see cref="MemberTypesToInclude.All"/>.</param>
-        /// <param name="relatedTypesToInclude">Optional <see cref="RelatedTypesToInclude"/>.  DEFAULT is <see cref="RelatedTypesToInclude.Descendants"/>.</param>
+        /// <param name="memberTypesToInclude">Optional <see cref="MemberTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultMemberTypesToInclude"/>.</param>
+        /// <param name="relatedTypesToInclude">Optional <see cref="RelatedTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultRelatedTypesToInclude"/>.</param>
         /// <param name="stringSerializerBuilderFunc">Optional func that builds the <see cref="IStringSerializeAndDeserialize"/>.  DEFAULT is null (no serializer).</param>
         /// <returns>
         /// The type to register for property bag serialization.
         /// </returns>
         public static TypeToRegisterForPropertyBag ToTypeToRegisterForPropertyBag(
             this Type type,
-            MemberTypesToInclude memberTypesToInclude = MemberTypesToInclude.All,
-            RelatedTypesToInclude relatedTypesToInclude = RelatedTypesToInclude.Descendants,
+            MemberTypesToInclude memberTypesToInclude = TypeToRegisterConstants.DefaultMemberTypesToInclude,
+            RelatedTypesToInclude relatedTypesToInclude = TypeToRegisterConstants.DefaultRelatedTypesToInclude,
             Func<IStringSerializeAndDeserialize> stringSerializerBuilderFunc = null)
         {
             var result = new TypeToRegisterForPropertyBag(type, memberTypesToInclude, relatedTypesToInclude, stringSerializerBuilderFunc);

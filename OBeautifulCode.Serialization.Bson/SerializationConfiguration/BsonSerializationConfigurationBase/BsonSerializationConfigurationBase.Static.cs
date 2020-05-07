@@ -30,7 +30,8 @@ namespace OBeautifulCode.Serialization.Bson
         /// Configured <see cref="BsonClassMap"/>.
         /// </returns>
         protected static BsonClassMap AutomaticallyBuildBsonClassMap(
-            Type type, IReadOnlyCollection<string> constrainToProperties = null)
+            Type type,
+            IReadOnlyCollection<string> constrainToProperties = null)
         {
             new { type }.AsArg().Must().NotBeNull();
 
