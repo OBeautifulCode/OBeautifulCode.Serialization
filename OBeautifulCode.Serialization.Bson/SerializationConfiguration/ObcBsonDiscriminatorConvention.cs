@@ -86,6 +86,29 @@ namespace OBeautifulCode.Serialization.Bson
         {
             var result = actualType.ToRepresentation().RemoveAssemblyVersions().BuildAssemblyQualifiedName();
 
+            // The below approach didn't work because, prior to calling this method, Mongo
+            // registers the missing class map for the closed generic type.  So when we attempt
+            // to register our own via RegisterClosedGenericTypePostInitialization, Mongo throws.
+            // We need an earlier hook point.
+            // -------------------------------------------
+            // see comments in RegisterClosedGenericTypePostInitialization()
+            // ObcSerializerBase.InternalThrowOnUnregisteredTypeIfAppropriate will call
+            // RegisterClosedGenericTypePostInitialization() on the top-most (the type being serialized
+            // thru the front door) type if it's a closed generic, which will recurse thru the related
+            // and member types (all of which will be closed at that point).
+            //
+            // If we are getting here, it means that either:
+            //    the top-most type is a closed generic (BSON always uses a discriminator for the top-most type),
+            //    in which case this call will have no net effect since it was already made by
+            //    InternalThrowOnUnregisteredTypeIfAppropriate()
+            // OR
+            //    we are serializing a property of the top-most type that is declared as an abstract class or
+            //    an interface (hence the need for a discriminator) and the runtime type is a closed generic
+            //    which may not have been previously registered.
+            // if (actualType.IsClosedGenericType())
+            // {
+            //    // this.SerializationConfiguration.RegisterClosedGenericTypePostInitialization(actualType);
+            // }
             return result;
         }
     }
