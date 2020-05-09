@@ -7,6 +7,9 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
+    using System.Linq;
+    using System.Reflection;
+    using System.Runtime.CompilerServices;
 
     using OBeautifulCode.Assertion.Recipes;
 
@@ -79,6 +82,21 @@ namespace OBeautifulCode.Serialization
             new { type }.AsArg().Must().NotBeNull();
 
             var result = type.IsGenericType && (!type.ContainsGenericParameters);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Determines if the specified member is compiler-generated.
+        /// </summary>
+        /// <param name="memberInfo">The member info.</param>
+        /// <returns>
+        /// True if the member is compiler-generated, otherwise false.
+        /// </returns>
+        public static bool IsCompilerGenerated(
+            this MemberInfo memberInfo)
+        {
+            var result = memberInfo.CustomAttributes.Select(s => s.AttributeType).Contains(typeof(CompilerGeneratedAttribute));
 
             return result;
         }

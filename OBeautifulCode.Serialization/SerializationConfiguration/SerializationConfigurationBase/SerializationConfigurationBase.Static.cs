@@ -235,12 +235,10 @@ namespace OBeautifulCode.Serialization
             // contain a bunch of other System and .NET internal types.
             if (!type.IsSystemType())
             {
-                bool IsCompilerGenerated(MemberInfo memberInfo) => memberInfo.CustomAttributes.Select(s => s.AttributeType).Contains(typeof(CompilerGeneratedAttribute));
-
                 result.AddRange(
                     type
                         .GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                        .Where(_ => !IsCompilerGenerated(_))
+                        .Where(_ => !_.IsCompilerGenerated())
                         .SelectMany(
                             _ =>
                             {

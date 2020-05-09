@@ -152,7 +152,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 throw new NotSupportedException("String is not supported as a type for this serializer.");
             }
 
-            this.ThrowOnUnregisteredTypeIfAppropriate(objectType);
+            this.ThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Serialize, objectToSerialize);
 
             if (objectToSerialize == null)
             {
@@ -172,7 +172,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         {
             var objectType = typeof(T);
 
-            this.ThrowOnUnregisteredTypeIfAppropriate(objectType);
+            this.ThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Deserialize, null);
 
             if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
             {
@@ -193,7 +193,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         {
             new { type }.AsArg().Must().NotBeNull();
 
-            this.ThrowOnUnregisteredTypeIfAppropriate(type);
+            this.ThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
 
             if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
             {

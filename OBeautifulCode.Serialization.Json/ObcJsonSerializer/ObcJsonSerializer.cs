@@ -125,7 +125,7 @@ namespace OBeautifulCode.Serialization.Json
         {
             var objectType = objectToSerialize?.GetType();
 
-            this.InternalJsonThrowOnUnregisteredTypeIfAppropriate(objectType);
+            this.InternalJsonThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Serialize, objectToSerialize);
 
             var jsonSerializerSettings = objectToSerialize != null && objectType.IsClosedAnonymousType()
                 ? this.anonymousWriteSerializationSettings
@@ -147,7 +147,7 @@ namespace OBeautifulCode.Serialization.Json
         {
             var objectType = typeof(T);
 
-            this.InternalJsonThrowOnUnregisteredTypeIfAppropriate(objectType);
+            this.InternalJsonThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Deserialize, null);
 
             var jsonSerializerSettings = this.jsonConfiguration.BuildJsonSerializerSettings(SerializationDirection.Deserialize, this.formattingKind);
 
@@ -163,7 +163,7 @@ namespace OBeautifulCode.Serialization.Json
         {
             new { type }.AsArg().Must().NotBeNull();
 
-            this.InternalJsonThrowOnUnregisteredTypeIfAppropriate(type);
+            this.InternalJsonThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
 
             object result;
 
@@ -184,12 +184,14 @@ namespace OBeautifulCode.Serialization.Json
         }
 
         private void InternalJsonThrowOnUnregisteredTypeIfAppropriate(
-            Type objectType)
+            Type objectType,
+            SerializationDirection serializationDirection,
+            object objectToSerialize)
         {
             // this type needs no registration and has value in consistent escaping/encoding...
             if (objectType != typeof(string))
             {
-                this.ThrowOnUnregisteredTypeIfAppropriate(objectType);
+                this.ThrowOnUnregisteredTypeIfAppropriate(objectType, serializationDirection, objectToSerialize);
             }
         }
     }

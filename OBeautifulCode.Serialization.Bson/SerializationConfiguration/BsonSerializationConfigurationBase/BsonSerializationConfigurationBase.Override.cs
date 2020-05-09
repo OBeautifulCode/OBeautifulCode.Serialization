@@ -53,6 +53,14 @@ namespace OBeautifulCode.Serialization.Bson
         {
             new { registrationDetails }.AsArg().Must().NotBeNull();
 
+            // there's nothing to do if it's a generic type definition
+            // the concrete types will be registered post-initialization: upon serializing
+            // that's done by ObcSerializerBase recursing through the runtime types of the object
+            // being serialized.  upon deserialization this is handled by ObcBsonDiscriminatorConvention.
+            if (registrationDetails.TypeToRegister.Type.IsGenericTypeDefinition)
+            {
+                return;
+            }
 
             if (registrationDetails.TypeToRegister is TypeToRegisterForBson typeToRegisterForBson)
             {

@@ -9,6 +9,7 @@ namespace OBeautifulCode.Serialization.Bson
     using System;
 
     using MongoDB.Bson.Serialization;
+    using MongoDB.Bson.Serialization.Conventions;
 
     using OBeautifulCode.Serialization;
 
@@ -19,6 +20,8 @@ namespace OBeautifulCode.Serialization.Bson
     /// </summary>
     public abstract partial class BsonSerializationConfigurationBase : SerializationConfigurationBase
     {
+        private IDiscriminatorConvention obcBsonDiscriminatorConvention;
+
         private void ProcessTypeToRegisterForBson(
             TypeToRegisterForBson typeToRegisterForBson,
             SerializationConfigurationType registeringSerializationConfigurationType)
@@ -42,7 +45,12 @@ namespace OBeautifulCode.Serialization.Bson
 
                         // we are not 100% sure whether interface types or abstract types need to be registered
                         // but there doesn't seem to be any harm in doing so.
-                        BsonSerializer.RegisterDiscriminatorConvention(type, ObcBsonDiscriminatorConvention.Instance);
+                        if (this.obcBsonDiscriminatorConvention == null)
+                        {
+                            this.obcBsonDiscriminatorConvention = new ObcBsonDiscriminatorConvention(this);
+                        }
+
+                        BsonSerializer.RegisterDiscriminatorConvention(type, this.obcBsonDiscriminatorConvention);
                     }
                     catch (Exception ex)
                     {

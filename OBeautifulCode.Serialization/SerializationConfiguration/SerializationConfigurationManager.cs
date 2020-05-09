@@ -76,16 +76,16 @@ namespace OBeautifulCode.Serialization
                     {
                         var childInstance = GetOrAddInstance(child);
 
-                        var grandchildTypeToInstanceMap = childInstance.DependentSerializationConfigurationTypeToInstanceMap;
+                        var childDescendantsTypeToInstanceMap = childInstance.DescendantSerializationConfigurationTypeToInstanceMap;
 
                         // add the dependent's dependents to the dictionary
-                        foreach (var grandchild in grandchildTypeToInstanceMap.Keys)
+                        foreach (var childDescendant in childDescendantsTypeToInstanceMap.Keys)
                         {
-                            if (!descendentTypeToInstanceMap.ContainsKey(grandchild))
+                            if (!descendentTypeToInstanceMap.ContainsKey(childDescendant))
                             {
-                                var grandchildInstance = grandchildTypeToInstanceMap[grandchild];
+                                var childDescendantInstance = childDescendantsTypeToInstanceMap[childDescendant];
 
-                                descendentTypeToInstanceMap.Add(grandchild, grandchildInstance);
+                                descendentTypeToInstanceMap.Add(childDescendant, childDescendantInstance);
                             }
                         }
 

@@ -7,6 +7,7 @@
 namespace OBeautifulCode.Serialization.Bson
 {
     using System;
+
     using MongoDB.Bson;
 
     using OBeautifulCode.Assertion.Recipes;
@@ -37,7 +38,7 @@ namespace OBeautifulCode.Serialization.Bson
         {
             var objectType = objectToSerialize?.GetType();
 
-            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType);
+            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Serialize, objectToSerialize);
 
             var result = objectToSerialize?.SerializeToBytes();
 
@@ -50,7 +51,7 @@ namespace OBeautifulCode.Serialization.Bson
         {
             var objectType = typeof(T);
 
-            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType);
+            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Deserialize, null);
 
             var result = serializedBytes == null
                 ? default
@@ -66,7 +67,7 @@ namespace OBeautifulCode.Serialization.Bson
         {
             new { type }.AsArg().Must().NotBeNull();
 
-            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(type);
+            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
 
             var result = serializedBytes?.Deserialize(type);
 
@@ -79,7 +80,7 @@ namespace OBeautifulCode.Serialization.Bson
         {
             var objectType = objectToSerialize?.GetType();
 
-            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType);
+            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Serialize, objectToSerialize);
 
             string result;
 
@@ -103,7 +104,7 @@ namespace OBeautifulCode.Serialization.Bson
         {
             var objectType = typeof(T);
 
-            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType);
+            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Deserialize, null);
 
             T result;
 
@@ -128,7 +129,7 @@ namespace OBeautifulCode.Serialization.Bson
         {
             new { type }.AsArg().Must().NotBeNull();
 
-            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(type);
+            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
 
             object result;
 
@@ -147,14 +148,16 @@ namespace OBeautifulCode.Serialization.Bson
         }
 
         private void InternalBsonThrowOnUnregisteredTypeIfAppropriate(
-            Type objectType)
+            Type objectType,
+            SerializationDirection serializationDirection,
+            object objectToSerialize)
         {
             if (objectType == typeof(string))
             {
                 throw new NotSupportedException("String is not supported as a root type by the underlying BSON Serializer.");
             }
 
-            this.ThrowOnUnregisteredTypeIfAppropriate(objectType);
+            this.ThrowOnUnregisteredTypeIfAppropriate(objectType, serializationDirection, objectToSerialize);
         }
     }
 }

@@ -24,6 +24,8 @@ namespace OBeautifulCode.Serialization
     {
         private readonly object syncConfigure = new object();
 
+        private readonly List<SerializationConfigurationBase> ancestorSerializationConfigurationInstances = new List<SerializationConfigurationBase>();
+
         private readonly ConcurrentDictionary<Type, RegistrationDetails> registeredTypeToRegistrationDetailsMap = new ConcurrentDictionary<Type, RegistrationDetails>();
 
         private readonly HashSet<string> visitedTypesToRegisterIds = new HashSet<string>();
@@ -39,12 +41,12 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <summary>
-        /// Gets a map of the dependent (all ancestors) serialization configuration types to their initialized instance.
+        /// Gets a map of the descendant (children, grandchildren, etc.) serialization configuration types to their initialized instance.
         /// </summary>
-        public IReadOnlyDictionary<SerializationConfigurationType, SerializationConfigurationBase> DependentSerializationConfigurationTypeToInstanceMap { get; private set; }
+        public IReadOnlyDictionary<SerializationConfigurationType, SerializationConfigurationBase> DescendantSerializationConfigurationTypeToInstanceMap { get; private set; }
 
         /// <summary>
-        /// Gets all specified dependent configuration types, including all internal configuration types
+        /// Gets all specified dependent (child) configuration types, including all internal configuration types
         /// unless this this configuration type is <see cref="IIgnoreDefaultDependencies"/>.
         /// </summary>
         public IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypesWithDefaultsIfApplicable => this.GetDependentSerializationConfigurationTypesWithDefaultsIfApplicable();
@@ -62,11 +64,11 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Run configuration logic.
         /// </summary>
-        /// <param name="dependentSerializationConfigurationTypeToInstanceMap">Map of dependent configuration type to configured instance.</param>
+        /// <param name="descendantSerializationConfigurationTypeToInstanceMap">Map of descendant (children, grandchildren, etc.) configuration type to configured instance.</param>
         public void Initialize(
-            IReadOnlyDictionary<SerializationConfigurationType, SerializationConfigurationBase> dependentSerializationConfigurationTypeToInstanceMap)
+            IReadOnlyDictionary<SerializationConfigurationType, SerializationConfigurationBase> descendantSerializationConfigurationTypeToInstanceMap)
         {
-            new { dependentSerializationConfigurationTypeToInstanceMap }.AsArg().Must().NotBeNull().And().NotContainAnyKeyValuePairsWithNullValue();
+            new { descendantSerializationConfigurationTypeToInstanceMap }.AsArg().Must().NotBeNull().And().NotContainAnyKeyValuePairsWithNullValue();
 
             if (!this.initialized)
             {
@@ -74,9 +76,11 @@ namespace OBeautifulCode.Serialization
                 {
                     if (!this.initialized)
                     {
-                        this.DependentSerializationConfigurationTypeToInstanceMap = dependentSerializationConfigurationTypeToInstanceMap;
+                        this.DescendantSerializationConfigurationTypeToInstanceMap = descendantSerializationConfigurationTypeToInstanceMap;
 
-                        this.RegisterTypesFromDependentSerializationConfigurations();
+                        this.RegisterTypesFromDescendantSerializationConfigurations();
+
+                        this.RegisterThisInstanceAsAncestorOfDescendantSerializationConfigurations();
 
                         var typesToRegister = new Queue<TypeToRegister>(this.TypesToRegister ?? new TypeToRegister[0]);
 
@@ -103,6 +107,23 @@ namespace OBeautifulCode.Serialization
             new { type }.AsArg().Must().NotBeNull();
 
             var result = this.registeredTypeToRegistrationDetailsMap.ContainsKey(type);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the serialization configuration type that registered the specified type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>
+        /// The serialization configuration type that registered the specified type.
+        /// </returns>
+        public SerializationConfigurationType GetRegisteringSerializationConfigurationType(
+            Type type)
+        {
+            new { type }.AsArg().Must().NotBeNull();
+
+            var result = this.registeredTypeToRegistrationDetailsMap[type].SerializationConfigurationType;
 
             return result;
         }
@@ -148,7 +169,12 @@ namespace OBeautifulCode.Serialization
 
                         queue.Enqueue(typeToRegister);
 
-                        this.ProcessTypesToRegister(queue);
+                        var processTypesToRegisterResult = this.ProcessTypesToRegister(queue);
+
+                        foreach (var ancestorSerializationConfiguration in this.ancestorSerializationConfigurationInstances)
+                        {
+                            ancestorSerializationConfiguration.RegisterTypesFromDescendantPostInitialization(processTypesToRegisterResult);
+                        }
                     }
                 }
             }
@@ -166,15 +192,15 @@ namespace OBeautifulCode.Serialization
             return result;
         }
 
-        private void RegisterTypesFromDependentSerializationConfigurations()
+        private void RegisterTypesFromDescendantSerializationConfigurations()
         {
-            foreach (var dependentSerializationConfigurationType in this.DependentSerializationConfigurationTypeToInstanceMap.Keys)
+            foreach (var descendantSerializationConfigurationType in this.DescendantSerializationConfigurationTypeToInstanceMap.Keys)
             {
-                var dependentSerializationConfiguration = this.DependentSerializationConfigurationTypeToInstanceMap[dependentSerializationConfigurationType];
+                var descendantSerializationConfiguration = this.DescendantSerializationConfigurationTypeToInstanceMap[descendantSerializationConfigurationType];
 
-                var registrationDetailsForDirectlyRegisteredTypes = dependentSerializationConfiguration
+                var registrationDetailsForDirectlyRegisteredTypes = descendantSerializationConfiguration
                     .registeredTypeToRegistrationDetailsMap
-                    .Where(_ => _.Value.SerializationConfigurationType == dependentSerializationConfigurationType)
+                    .Where(_ => _.Value.SerializationConfigurationType == descendantSerializationConfigurationType)
                     .Select(_ => _.Value)
                     .ToList();
 
@@ -183,16 +209,52 @@ namespace OBeautifulCode.Serialization
                     this.RegisterType(registrationDetails);
                 }
 
-                this.visitedTypesToRegisterIds.AddRange(dependentSerializationConfiguration.visitedTypesToRegisterIds);
+                this.visitedTypesToRegisterIds.AddRange(descendantSerializationConfiguration.visitedTypesToRegisterIds);
             }
         }
 
-        private void ProcessTypesToRegister(
+        private void RegisterThisInstanceAsAncestorOfDescendantSerializationConfigurations()
+        {
+            foreach (var descendantSerializationConfiguration in this.DescendantSerializationConfigurationTypeToInstanceMap.Values)
+            {
+                descendantSerializationConfiguration.ancestorSerializationConfigurationInstances.Add(this);
+            }
+        }
+
+        private void RegisterTypesFromDescendantPostInitialization(
+            ProcessTypesToRegisterResult processTypesToRegisterResult)
+        {
+            this.visitedTypesToRegisterIds.AddRange(processTypesToRegisterResult.VisitedTypesToRegisterIds);
+
+            foreach (var registrationDetails in processTypesToRegisterResult.RegistrationDetails)
+            {
+                var type = registrationDetails.TypeToRegister.Type;
+
+                // We should NOT throw if the type is already registered, consider:
+                // a descendant config has MyGeneric<> registered and
+                // descendant.RegisterClosedGenericTypePostInitialization(MyGeneric<SomeType>) is called.
+                // the descendant didn't have SomeType registered, which it discovers and then registers.
+                // This config, an ancestor, will be notified and will register MyGeneric<SomeType> but it already has
+                // SomeType registered.  That's a legitimate scenario and this config should just skip SomeType and
+                // move on.  This config doesn't need to explore MyGeneric<SomeType> for types to register.
+                // If SomeType was already registered by the descendant, then it would have been inherited by
+                // this config during initialization.  Truly, only new the new types discovered by the descendant
+                // need to be considered for registration here.
+                if (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(type))
+                {
+                    this.RegisterType(registrationDetails);
+                }
+            }
+        }
+
+        private ProcessTypesToRegisterResult ProcessTypesToRegister(
             Queue<TypeToRegister> typesToRegister)
         {
             new { typesToRegister }.AsOp().Must().NotContainAnyNullElements();
 
             typesToRegister.All(_ => _.IsOriginatingType).AsOp(Invariant($"All {nameof(TypeToRegister)} objects in {nameof(this.TypesToRegister)} are originating {nameof(TypeToRegister)} objects.")).Must().BeTrue();
+
+            var result = new ProcessTypesToRegisterResult();
 
             // this could have been done in the while loop below but we think the algorithm
             // is easier to understand by registering these types upfront
@@ -200,7 +262,9 @@ namespace OBeautifulCode.Serialization
             {
                 // this.RegisterType will throw if the user specifies the same type twice or if type
                 // has already been registered by a dependent serialization configuration
-                this.RegisterType(typeToRegister);
+                var registrationDetails = this.RegisterType(typeToRegister);
+
+                result.RegistrationDetails.Add(registrationDetails);
             }
 
             while (typesToRegister.Count > 0)
@@ -226,7 +290,9 @@ namespace OBeautifulCode.Serialization
                         // but we want to run member inclusion to get at MyModelType.
                         if (IsTypeThatCanBeRegistered(typeToRegister))
                         {
-                            this.RegisterType(typeToRegister);
+                            var registrationDetails = this.RegisterType(typeToRegister);
+
+                            result.RegistrationDetails.Add(registrationDetails);
                         }
                     }
                 }
@@ -236,6 +302,8 @@ namespace OBeautifulCode.Serialization
                 if (!this.visitedTypesToRegisterIds.Contains(typeToRegisterId))
                 {
                     this.visitedTypesToRegisterIds.Add(typeToRegisterId);
+
+                    result.VisitedTypesToRegisterIds.Add(typeToRegisterId);
 
                     var relatedTypes = GetRelatedTypesToInclude(typeToRegister.Type, typeToRegister.RelatedTypesToInclude);
 
@@ -261,16 +329,20 @@ namespace OBeautifulCode.Serialization
                     }
                 }
             }
+
+            return result;
         }
 
-        private void RegisterType(
+        private RegistrationDetails RegisterType(
             TypeToRegister typeToRegister)
         {
             new { typeToRegister }.AsArg().Must().NotBeNull();
 
-            var registrationDetails = new RegistrationDetails(typeToRegister, this.SerializationConfigurationType);
+            var result = new RegistrationDetails(typeToRegister, this.SerializationConfigurationType);
 
-            this.RegisterType(registrationDetails);
+            this.RegisterType(result);
+
+            return result;
         }
 
         private void RegisterType(
@@ -295,6 +367,13 @@ namespace OBeautifulCode.Serialization
             this.ProcessRegistrationDetailsPriorToRegistration(registrationDetails);
 
             this.registeredTypeToRegistrationDetailsMap.TryAdd(type, registrationDetails);
+        }
+
+        private class ProcessTypesToRegisterResult
+        {
+            public List<RegistrationDetails> RegistrationDetails { get; } = new List<RegistrationDetails>();
+
+            public List<string> VisitedTypesToRegisterIds { get; } = new List<string>();
         }
     }
 }

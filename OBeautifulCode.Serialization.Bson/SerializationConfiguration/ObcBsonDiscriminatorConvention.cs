@@ -13,6 +13,7 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Conventions;
 
+    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Type.Recipes;
 
@@ -26,10 +27,19 @@ namespace OBeautifulCode.Serialization.Bson
     /// </summary>
     public class ObcBsonDiscriminatorConvention : IDiscriminatorConvention
     {
+        private readonly SerializationConfigurationBase serializationConfiguration;
+
         /// <summary>
-        /// An instance of this discriminator.
+        /// Initializes a new instance of the <see cref="ObcBsonDiscriminatorConvention"/> class.
         /// </summary>
-        public static readonly ObcBsonDiscriminatorConvention Instance = new ObcBsonDiscriminatorConvention();
+        /// <param name="serializationConfiguration">A reference to the serialization configuration instance that created this discriminator.</param>
+        public ObcBsonDiscriminatorConvention(
+            SerializationConfigurationBase serializationConfiguration)
+        {
+            new { serializationConfiguration }.AsArg().Must().NotBeNull();
+
+            this.serializationConfiguration = serializationConfiguration;
+        }
 
         /// <inheritdoc />
         public string ElementName => "_t";
@@ -76,6 +86,19 @@ namespace OBeautifulCode.Serialization.Bson
 
             bsonReader.ReturnToBookmark(bookmark);
 
+            // If the type is a closed generic type, it's possible that it hasn't been registered yet.
+            // The serialization configuration will throw if the generic type definition is not registered.
+            // NOTE that it's possible, but unlikely, that the config that registered the interface or base class
+            // associated with this discriminator does not have the generic type definition registered.
+            // We'll have to cross that bridge when we get there.
+            // If this.serializationConfiguration can register the type, then it communicate that registration
+            // with it's ancestors and will not need to be registered again when serializing the type (the serializer
+            // is most likely using the top-level config).
+            if (result.IsClosedGenericType())
+            {
+                this.serializationConfiguration.RegisterClosedGenericTypePostInitialization(result);
+            }
+
             return result;
         }
 
@@ -89,7 +112,9 @@ namespace OBeautifulCode.Serialization.Bson
             // The below approach didn't work because, prior to calling this method, Mongo
             // registers the missing class map for the closed generic type.  So when we attempt
             // to register our own via RegisterClosedGenericTypePostInitialization, Mongo throws.
-            // We need an earlier hook point.
+            // We need an earlier hook point.  This is, among other reasons, why ObcSerializerBase
+            // recurses thru the runtime types of the object being serialized and registers any closed
+            // generic types it encounters.
             // -------------------------------------------
             // see comments in RegisterClosedGenericTypePostInitialization()
             // ObcSerializerBase.InternalThrowOnUnregisteredTypeIfAppropriate will call
