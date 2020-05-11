@@ -78,7 +78,7 @@ namespace OBeautifulCode.Serialization.Json
         {
             new { value }.AsArg().Must().NotBeNull();
 
-            var typeName = value.GetType().ToRepresentation().BuildAssemblyQualifiedName();
+            var typeName = value.GetType().ToRepresentation().RemoveAssemblyVersions().BuildAssemblyQualifiedName();
 
             this.writeJsonCalled = true;
 
