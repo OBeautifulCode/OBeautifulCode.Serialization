@@ -112,6 +112,8 @@
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
     <Compile Include="CamelStrictConstructorContractResolver.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\ThrowOnUnregisteredTypeJsonSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\AttemptOnUnregisteredTypeJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\Delegates.cs" />
     <Compile Include="Converters\DateTimeJsonConverter.cs" />
     <Compile Include="Converters\Dictionary\DictionaryJsonConverter.cs" />

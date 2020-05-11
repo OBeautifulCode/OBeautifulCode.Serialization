@@ -112,6 +112,8 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\AttemptOnUnregisteredTypeSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\ThrowOnUnregisteredTypeSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\IIgnoreDefaultDependencies.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterSerializationConfiguration{T1,T2}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterSerializationConfiguration{T}.cs" />
