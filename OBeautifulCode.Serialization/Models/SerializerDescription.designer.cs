@@ -72,7 +72,6 @@ namespace OBeautifulCode.Serialization
             var result = this.SerializationKind.IsEqualTo(other.SerializationKind)
                       && this.SerializationFormat.IsEqualTo(other.SerializationFormat)
                       && this.SerializationConfigType.IsEqualTo(other.SerializationConfigType)
-                      && this.UnregisteredTypeEncounteredStrategy.IsEqualTo(other.UnregisteredTypeEncounteredStrategy)
                       && this.CompressionKind.IsEqualTo(other.CompressionKind)
                       && this.Metadata.IsEqualTo(other.Metadata);
 
@@ -87,7 +86,6 @@ namespace OBeautifulCode.Serialization
             .Hash(this.SerializationKind)
             .Hash(this.SerializationFormat)
             .Hash(this.SerializationConfigType)
-            .Hash(this.UnregisteredTypeEncounteredStrategy)
             .Hash(this.CompressionKind)
             .Hash(this.Metadata)
             .Value;
@@ -102,7 +100,6 @@ namespace OBeautifulCode.Serialization
                                  this.SerializationKind,
                                  this.SerializationFormat,
                                  this.SerializationConfigType?.DeepClone(),
-                                 this.UnregisteredTypeEncounteredStrategy,
                                  this.CompressionKind,
                                  this.Metadata?.ToDictionary(k => k.Key?.Clone().ToString(), v => v.Value?.Clone().ToString()));
 
@@ -134,7 +131,6 @@ namespace OBeautifulCode.Serialization
                                  serializationKind,
                                  this.SerializationFormat,
                                  this.SerializationConfigType?.DeepClone(),
-                                 this.UnregisteredTypeEncounteredStrategy,
                                  this.CompressionKind,
                                  this.Metadata?.ToDictionary(k => k.Key?.Clone().ToString(), v => v.Value?.Clone().ToString()));
 
@@ -166,7 +162,6 @@ namespace OBeautifulCode.Serialization
                                  this.SerializationKind,
                                  serializationFormat,
                                  this.SerializationConfigType?.DeepClone(),
-                                 this.UnregisteredTypeEncounteredStrategy,
                                  this.CompressionKind,
                                  this.Metadata?.ToDictionary(k => k.Key?.Clone().ToString(), v => v.Value?.Clone().ToString()));
 
@@ -198,39 +193,6 @@ namespace OBeautifulCode.Serialization
                                  this.SerializationKind,
                                  this.SerializationFormat,
                                  serializationConfigType,
-                                 this.UnregisteredTypeEncounteredStrategy,
-                                 this.CompressionKind,
-                                 this.Metadata?.ToDictionary(k => k.Key?.Clone().ToString(), v => v.Value?.Clone().ToString()));
-
-            return result;
-        }
-
-        /// <summary>
-        /// Deep clones this object with a new <see cref="UnregisteredTypeEncounteredStrategy" />.
-        /// </summary>
-        /// <param name="unregisteredTypeEncounteredStrategy">The new <see cref="UnregisteredTypeEncounteredStrategy" />.  This object will NOT be deep cloned; it is used as-is.</param>
-        /// <returns>New <see cref="SerializerDescription" /> using the specified <paramref name="unregisteredTypeEncounteredStrategy" /> for <see cref="UnregisteredTypeEncounteredStrategy" /> and a deep clone of every other property.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1002: DoNotExposeGenericLists")]
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly")]
-        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly")]
-        [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-        [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
-        [SuppressMessage("Microsoft.Naming", "CA1715:IdentifiersShouldHaveCorrectPrefix")]
-        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords")]
-        [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames")]
-        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames")]
-        [SuppressMessage("Microsoft.Naming", "CA1722:IdentifiersShouldNotHaveIncorrectPrefix")]
-        [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
-        [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-        public SerializerDescription DeepCloneWithUnregisteredTypeEncounteredStrategy(UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy)
-        {
-            var result = new SerializerDescription(
-                                 this.SerializationKind,
-                                 this.SerializationFormat,
-                                 this.SerializationConfigType?.DeepClone(),
-                                 unregisteredTypeEncounteredStrategy,
                                  this.CompressionKind,
                                  this.Metadata?.ToDictionary(k => k.Key?.Clone().ToString(), v => v.Value?.Clone().ToString()));
 
@@ -262,7 +224,6 @@ namespace OBeautifulCode.Serialization
                                  this.SerializationKind,
                                  this.SerializationFormat,
                                  this.SerializationConfigType?.DeepClone(),
-                                 this.UnregisteredTypeEncounteredStrategy,
                                  compressionKind,
                                  this.Metadata?.ToDictionary(k => k.Key?.Clone().ToString(), v => v.Value?.Clone().ToString()));
 
@@ -294,7 +255,6 @@ namespace OBeautifulCode.Serialization
                                  this.SerializationKind,
                                  this.SerializationFormat,
                                  this.SerializationConfigType?.DeepClone(),
-                                 this.UnregisteredTypeEncounteredStrategy,
                                  this.CompressionKind,
                                  metadata);
 
@@ -304,7 +264,7 @@ namespace OBeautifulCode.Serialization
         /// <inheritdoc />
         public override string ToString()
         {
-            var result = Invariant($"OBeautifulCode.Serialization.SerializerDescription: SerializationKind = {this.SerializationKind.ToString() ?? "<null>"}, SerializationFormat = {this.SerializationFormat.ToString() ?? "<null>"}, SerializationConfigType = {this.SerializationConfigType?.ToString() ?? "<null>"}, UnregisteredTypeEncounteredStrategy = {this.UnregisteredTypeEncounteredStrategy.ToString() ?? "<null>"}, CompressionKind = {this.CompressionKind.ToString() ?? "<null>"}, Metadata = {this.Metadata?.ToString() ?? "<null>"}.");
+            var result = Invariant($"OBeautifulCode.Serialization.SerializerDescription: SerializationKind = {this.SerializationKind.ToString() ?? "<null>"}, SerializationFormat = {this.SerializationFormat.ToString() ?? "<null>"}, SerializationConfigType = {this.SerializationConfigType?.ToString() ?? "<null>"}, CompressionKind = {this.CompressionKind.ToString() ?? "<null>"}, Metadata = {this.Metadata?.ToString() ?? "<null>"}.");
 
             return result;
         }

@@ -13,10 +13,8 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcPropertyBagSerializer{TPropertyBagConfiguration}"/> class.
         /// </summary>
-        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
-        public ObcPropertyBagSerializer(
-            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
-            : base(typeof(TPropertyBagSerializationConfiguration).ToPropertyBagSerializationConfigurationType(), unregisteredTypeEncounteredStrategy)
+        public ObcPropertyBagSerializer()
+            : base(typeof(TPropertyBagSerializationConfiguration).ToPropertyBagSerializationConfigurationType())
         {
         }
     }

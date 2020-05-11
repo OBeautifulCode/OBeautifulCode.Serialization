@@ -12,11 +12,6 @@ namespace OBeautifulCode.Serialization
     public enum UnregisteredTypeEncounteredStrategy
     {
         /// <summary>
-        /// Default will use <see cref="Throw" /> if a <see cref="SerializationConfigurationBase" /> is provided, otherwise <see cref="Attempt" /> will be used.
-        /// </summary>
-        Default,
-
-        /// <summary>
         /// Attempt an operation on an object without prior registration.
         /// </summary>
         Attempt,

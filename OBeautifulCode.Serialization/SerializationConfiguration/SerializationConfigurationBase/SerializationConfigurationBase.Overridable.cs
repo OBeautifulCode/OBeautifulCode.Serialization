@@ -30,6 +30,11 @@ namespace OBeautifulCode.Serialization
         protected virtual IReadOnlyCollection<TypeToRegister> TypesToRegister => new TypeToRegister[0];
 
         /// <summary>
+        /// Gets the strategy to use with when attempting to serialize or deserialize using this configuration and encountering a type that has not been registered.
+        /// </summary>
+        protected virtual UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy => UnregisteredTypeEncounteredStrategy.Throw;
+
+        /// <summary>
         /// Builds a <see cref="TypeToRegister"/> to be used for post-initialization registration,
         /// which only occurs for closed generic types at serialization-time, because these
         /// runtime types are not discoverable during initialization.

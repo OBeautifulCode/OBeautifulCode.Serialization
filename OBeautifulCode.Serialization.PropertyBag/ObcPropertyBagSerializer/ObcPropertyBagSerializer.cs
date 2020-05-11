@@ -56,11 +56,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// Initializes a new instance of the <see cref="ObcPropertyBagSerializer"/> class.
         /// </summary>
         /// <param name="propertyBagSerializationConfigurationType">Type of configuration to use.</param>
-        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
         public ObcPropertyBagSerializer(
-            PropertyBagSerializationConfigurationType propertyBagSerializationConfigurationType = null,
-            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default)
-            : base(propertyBagSerializationConfigurationType ?? typeof(NullPropertyBagSerializationConfiguration).ToPropertyBagSerializationConfigurationType(), unregisteredTypeEncounteredStrategy)
+            PropertyBagSerializationConfigurationType propertyBagSerializationConfigurationType = null)
+            : base(propertyBagSerializationConfigurationType ?? typeof(NullPropertyBagSerializationConfiguration).ToPropertyBagSerializationConfigurationType())
         {
             this.propertyBagConfiguration = (PropertyBagSerializationConfigurationBase)this.SerializationConfiguration;
 
@@ -152,7 +150,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 throw new NotSupportedException("String is not supported as a type for this serializer.");
             }
 
-            this.ThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Serialize, objectToSerialize);
+            this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Serialize, objectToSerialize);
 
             if (objectToSerialize == null)
             {
@@ -172,7 +170,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         {
             var objectType = typeof(T);
 
-            this.ThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Deserialize, null);
+            this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Deserialize, null);
 
             if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
             {
@@ -193,7 +191,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         {
             new { type }.AsArg().Must().NotBeNull();
 
-            this.ThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
+            this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
 
             if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
             {

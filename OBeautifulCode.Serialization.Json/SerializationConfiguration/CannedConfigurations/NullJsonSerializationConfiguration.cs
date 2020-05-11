@@ -14,5 +14,7 @@ namespace OBeautifulCode.Serialization.Json
     /// </summary>
     public sealed class NullJsonSerializationConfiguration : JsonSerializationConfigurationBase, IImplementNullObjectPattern
     {
+        /// <inheritdoc />
+        protected override UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy => UnregisteredTypeEncounteredStrategy.Attempt;
     }
 }

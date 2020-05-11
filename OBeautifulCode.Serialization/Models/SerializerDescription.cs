@@ -23,7 +23,6 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="serializationKind">The <see cref="SerializationKind" /> to serialize into.</param>
         /// <param name="serializationFormat">The <see cref="SerializationFormat" /> to serialize into.</param>
-        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of how to handle a type that has never been registered.  DEFAULT is the default algorithm.</param>
         /// <param name="compressionKind">Optional <see cref="CompressionKind" /> to use; DEFAULT is None.</param>
         /// <param name="serializationConfigType">Optional representation of the type of the serialization configuration to use; DEFAULT is null.</param>
         /// <param name="metadata">Optional metadata to put, especially useful for customer serializer factory; DEFAULT is empty.</param>
@@ -31,7 +30,6 @@ namespace OBeautifulCode.Serialization
             SerializationKind serializationKind,
             SerializationFormat serializationFormat,
             TypeRepresentation serializationConfigType = null,
-            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default,
             CompressionKind compressionKind = CompressionKind.None,
             IReadOnlyDictionary<string, string> metadata = null)
         {
@@ -42,7 +40,6 @@ namespace OBeautifulCode.Serialization
             this.SerializationKind = serializationKind;
             this.SerializationFormat = serializationFormat;
             this.SerializationConfigType = serializationConfigType;
-            this.UnregisteredTypeEncounteredStrategy = unregisteredTypeEncounteredStrategy;
             this.CompressionKind = compressionKind;
             this.Metadata = metadata ?? new Dictionary<string, string>();
         }
@@ -61,11 +58,6 @@ namespace OBeautifulCode.Serialization
         /// Gets the <see cref="TypeRepresentation" /> of the type of the serialization configuration.
         /// </summary>
         public TypeRepresentation SerializationConfigType { get; private set; }
-
-        /// <summary>
-        /// Gets the strategy of how to handle a type that has never been registered.
-        /// </summary>
-        public UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="CompressionKind" /> to use.

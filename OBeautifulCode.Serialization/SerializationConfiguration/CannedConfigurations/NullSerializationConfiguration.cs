@@ -24,6 +24,9 @@ namespace OBeautifulCode.Serialization
         protected override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new SerializationConfigurationType[0];
 
         /// <inheritdoc />
+        protected override UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy => UnregisteredTypeEncounteredStrategy.Attempt;
+
+        /// <inheritdoc />
         protected override TypeToRegister BuildTypeToRegisterForPostInitializationRegistration(
             Type type,
             Type recursiveOriginType,

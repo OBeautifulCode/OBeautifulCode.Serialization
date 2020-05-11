@@ -34,13 +34,11 @@ namespace OBeautifulCode.Serialization.Json
         /// Initializes a new instance of the <see cref="ObcJsonSerializer"/> class.
         /// </summary>
         /// <param name="jsonSerializationConfigurationType">Optional type of configuration to use; DEFAULT is none.</param>
-        /// <param name="unregisteredTypeEncounteredStrategy">Optional strategy of what to do when encountering a type that has never been registered; DEFAULT is <see cref="UnregisteredTypeEncounteredStrategy.Throw" />.</param>
         /// <param name="formattingKind">Optional type of formatting to use; DEFAULT is <see cref="JsonFormattingKind.Default" />.</param>
         public ObcJsonSerializer(
             JsonSerializationConfigurationType jsonSerializationConfigurationType = null,
-            UnregisteredTypeEncounteredStrategy unregisteredTypeEncounteredStrategy = UnregisteredTypeEncounteredStrategy.Default,
             JsonFormattingKind formattingKind = JsonFormattingKind.Default)
-            : base(jsonSerializationConfigurationType ?? typeof(NullJsonSerializationConfiguration).ToJsonSerializationConfigurationType(), unregisteredTypeEncounteredStrategy)
+            : base(jsonSerializationConfigurationType ?? typeof(NullJsonSerializationConfiguration).ToJsonSerializationConfigurationType())
         {
             new { formattingKind }.AsArg().Must().NotBeEqualTo(JsonFormattingKind.Invalid);
 
@@ -191,7 +189,7 @@ namespace OBeautifulCode.Serialization.Json
             // this type needs no registration and has value in consistent escaping/encoding...
             if (objectType != typeof(string))
             {
-                this.ThrowOnUnregisteredTypeIfAppropriate(objectType, serializationDirection, objectToSerialize);
+                this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(objectType, serializationDirection, objectToSerialize);
             }
         }
     }

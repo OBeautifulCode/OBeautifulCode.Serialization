@@ -51,54 +51,5 @@ namespace OBeautifulCode.Serialization
 
             return result;
         }
-
-        /// <summary>
-        /// Determines if the specified type is in the <see cref="System"/> namespace.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns>
-        /// true if the specified type is in the <see cref="System"/> namespace, otherwise false.
-        /// </returns>
-        public static bool IsSystemType(
-            this Type type)
-        {
-            new { type }.AsArg().Must().NotBeNull();
-
-            var result = type.Namespace?.StartsWith(nameof(System), StringComparison.Ordinal) ?? false;
-
-            return result;
-        }
-
-        /// <summary>
-        /// Determines if the specified type is a closed generic type.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns>
-        /// true if the specified type is a closed generic type; otherwise false.
-        /// </returns>
-        public static bool IsClosedGenericType(
-            this Type type)
-        {
-            new { type }.AsArg().Must().NotBeNull();
-
-            var result = type.IsGenericType && (!type.ContainsGenericParameters);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Determines if the specified member is compiler-generated.
-        /// </summary>
-        /// <param name="memberInfo">The member info.</param>
-        /// <returns>
-        /// True if the member is compiler-generated, otherwise false.
-        /// </returns>
-        public static bool IsCompilerGenerated(
-            this MemberInfo memberInfo)
-        {
-            var result = memberInfo.CustomAttributes.Select(s => s.AttributeType).Contains(typeof(CompilerGeneratedAttribute));
-
-            return result;
-        }
     }
 }

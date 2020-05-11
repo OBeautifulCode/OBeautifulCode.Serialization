@@ -86,14 +86,22 @@ namespace OBeautifulCode.Serialization.Bson
 
             bsonReader.ReturnToBookmark(bookmark);
 
-            // If the type is a closed generic type, it's possible that it hasn't been registered yet.
-            // The serialization configuration will throw if the generic type definition is not registered.
-            // NOTE that it's possible, but unlikely, that the config that registered the interface or base class
-            // associated with this discriminator does not have the generic type definition registered.
+            // Ideally we would verify that the type is registered in all cases, but that's difficult in
+            // the current framework.  For example, what happens when this discriminator was created for a base class,
+            // in Config A, but the concrete class was registered in Config B, and Config A is an ancestor of Config B?
+            // We only have a reference to Config A, and Config A says that the concrete class is NOT registered.
+            // We don't know what config is being used by the serializer, so we don't know whether it's legitimate
+            // to check the ancestors.  But don't freak out - we are protected in other ways.  See notes in ObcSerializerBase.
+            // For closed generic types, it's possible that it hasn't been registered yet because during initialization
+            // time it's not possible to know all of the closed generic types that will be needed.
+            // So we call RegisterClosedGenericTypePostInitialization().  This WILL throw if the generic type definition
+            // is not registered.  So it's possible, but unlikely, that the config that created this discriminator
+            // does not have the generic type definition registered (e.g. BaseClass registered in Config A, and
+            // MyGeneric<T> : BaseClass registered in Config B, and Config A is an ancestor of Config B).
             // We'll have to cross that bridge when we get there.
-            // If this.serializationConfiguration can register the type, then it communicate that registration
-            // with it's ancestors and will not need to be registered again when serializing the type (the serializer
-            // is most likely using the top-level config).
+            // If this.serializationConfiguration can register the type, then it will communicate that registration
+            // with it's ancestors and it will not need to be registered again when serializing the type (the serializer
+            // is most likely using the top-level/oldest ancestor config).
             if (result.IsClosedGenericType())
             {
                 this.serializationConfiguration.RegisterClosedGenericTypePostInitialization(result);

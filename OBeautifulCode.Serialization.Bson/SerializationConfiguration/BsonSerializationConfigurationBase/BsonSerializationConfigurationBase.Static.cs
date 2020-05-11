@@ -14,6 +14,7 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Reflection.Recipes;
 
     using static System.FormattableString;
 
@@ -52,7 +53,7 @@ namespace OBeautifulCode.Serialization.Bson
 
             foreach (var member in members)
             {
-                var memberType = GetUnderlyingType(member);
+                var memberType = member.GetUnderlyingType();
 
                 memberType.AsArg(Invariant($"{member.Name}-{nameof(MemberInfo.DeclaringType)}")).Must().NotBeNull();
 
@@ -74,24 +75,6 @@ namespace OBeautifulCode.Serialization.Bson
             }
 
             return result;
-        }
-
-        private static Type GetUnderlyingType(
-            MemberInfo member)
-        {
-            switch (member.MemberType)
-            {
-                case MemberTypes.Event:
-                    return ((EventInfo)member).EventHandlerType;
-                case MemberTypes.Field:
-                    return ((FieldInfo)member).FieldType;
-                case MemberTypes.Method:
-                    return ((MethodInfo)member).ReturnType;
-                case MemberTypes.Property:
-                    return ((PropertyInfo)member).PropertyType;
-                default:
-                    throw new ArgumentException("Input MemberInfo must be if type EventInfo, FieldInfo, MethodInfo, or PropertyInfo");
-            }
         }
 
         private static BsonMemberMap MapMember(

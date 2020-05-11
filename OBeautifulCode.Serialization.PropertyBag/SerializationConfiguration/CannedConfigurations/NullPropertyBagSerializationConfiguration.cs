@@ -14,5 +14,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
     /// </summary>
     public sealed class NullPropertyBagSerializationConfiguration : PropertyBagSerializationConfigurationBase, IImplementNullObjectPattern
     {
+        /// <inheritdoc />
+        protected override UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy => UnregisteredTypeEncounteredStrategy.Attempt;
     }
 }

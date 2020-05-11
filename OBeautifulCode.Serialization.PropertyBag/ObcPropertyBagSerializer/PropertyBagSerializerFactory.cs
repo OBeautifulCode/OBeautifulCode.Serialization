@@ -46,7 +46,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 switch (serializerDescription.SerializationKind)
                 {
                     case SerializationKind.PropertyBag:
-                        return new ObcPropertyBagSerializer(configurationType?.ToPropertyBagSerializationConfigurationType(), serializerDescription.UnregisteredTypeEncounteredStrategy);
+                        return new ObcPropertyBagSerializer(configurationType?.ToPropertyBagSerializationConfigurationType());
                     default:
                         throw new NotSupportedException(Invariant($"{nameof(serializerDescription)} from enumeration {nameof(SerializationKind)} of {serializerDescription.SerializationKind} is not supported."));
                 }
