@@ -48,7 +48,8 @@ namespace OBeautifulCode.Serialization.Json
         }
         /// <inheritdoc />
         protected sealed override void ProcessRegistrationDetailsPriorToRegistration(
-            RegistrationDetails registrationDetails)
+            RegistrationDetails registrationDetails,
+            RegistrationTime registrationTime)
         {
             new { registrationDetails }.AsArg().Must().NotBeNull();
 

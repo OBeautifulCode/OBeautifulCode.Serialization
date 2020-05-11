@@ -30,6 +30,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
             concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(PropertyBagSerializationConfigurationBase)).AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(PropertyBagSerializationConfigurationBase)}")).Must().BeTrue();
         }
 
+        /// <inheritdoc />
+        public override SerializationKind SerializationKind => SerializationKind.PropertyBag;
+
         /// <summary>
         /// Determines whether two objects of type <see cref="PropertyBagSerializationConfigurationType"/> are equal.
         /// </summary>

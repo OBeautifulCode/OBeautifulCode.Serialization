@@ -40,6 +40,11 @@ namespace OBeautifulCode.Serialization
         public Type ConcreteSerializationConfigurationDerivativeType { get; }
 
         /// <summary>
+        /// Gets the <see cref="SerializationKind"/> of the serializer that will use this configuration type.
+        /// </summary>
+        public virtual SerializationKind SerializationKind => SerializationKind.Invalid;
+
+        /// <summary>
         /// Determines whether two objects of type <see cref="SerializationConfigurationType"/> are equal.
         /// </summary>
         /// <param name="left">The object to the left of the equality operator.</param>

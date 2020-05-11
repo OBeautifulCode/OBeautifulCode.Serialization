@@ -152,6 +152,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="SerializationConfiguration\RegistrationDetails.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlySerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\SerializationConfigurationBase\RegistrationTime.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationBase\VersionlessOpenTypeConsolidatingTypeEqualityComparer.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationBase\SerializationConfigurationBase.Static.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationBase\SerializationConfigurationBase.Overridable.cs" />

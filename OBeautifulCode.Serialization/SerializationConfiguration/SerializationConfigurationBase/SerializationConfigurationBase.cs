@@ -207,7 +207,7 @@ namespace OBeautifulCode.Serialization
 
                 foreach (var registrationDetails in registrationDetailsForDirectlyRegisteredTypes)
                 {
-                    this.RegisterType(registrationDetails);
+                    this.RegisterType(registrationDetails, RegistrationTime.Initialization);
                 }
 
                 this.visitedTypesToRegisterIds.AddRange(descendantSerializationConfiguration.visitedTypesToRegisterIds);
@@ -235,7 +235,7 @@ namespace OBeautifulCode.Serialization
             {
                 // this.RegisterType will throw if the user specifies the same type twice or if type
                 // has already been registered by a dependent serialization configuration
-                this.RegisterType(typeToRegister);
+                this.RegisterType(typeToRegister, RegistrationTime.Initialization);
             }
 
             while (typesToRegister.Count > 0)
@@ -261,7 +261,7 @@ namespace OBeautifulCode.Serialization
                         // but we want to run member inclusion to get at MyModelType.
                         if (IsTypeThatCanBeRegistered(typeToRegister))
                         {
-                            this.RegisterType(typeToRegister);
+                            this.RegisterType(typeToRegister, RegistrationTime.Initialization);
                         }
                     }
                 }
@@ -299,19 +299,21 @@ namespace OBeautifulCode.Serialization
         }
 
         private RegistrationDetails RegisterType(
-            TypeToRegister typeToRegister)
+            TypeToRegister typeToRegister,
+            RegistrationTime registrationTime)
         {
             new { typeToRegister }.AsArg().Must().NotBeNull();
 
             var result = new RegistrationDetails(typeToRegister, this.SerializationConfigurationType);
 
-            this.RegisterType(result);
+            this.RegisterType(result, registrationTime);
 
             return result;
         }
 
         private void RegisterType(
-            RegistrationDetails registrationDetails)
+            RegistrationDetails registrationDetails,
+            RegistrationTime registrationTime)
         {
             var typeToRegister = registrationDetails.TypeToRegister;
 
@@ -329,7 +331,7 @@ namespace OBeautifulCode.Serialization
                 throw new InvalidOperationException(Invariant($"Serialization configuration type {registrationDetails.SerializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.ToStringReadable()} is attempting to register type '{type.ToStringReadable()}' but it was already registered by {existingSerializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.ToStringReadable()}."));
             }
 
-            this.ProcessRegistrationDetailsPriorToRegistration(registrationDetails);
+            this.ProcessRegistrationDetailsPriorToRegistration(registrationDetails, registrationTime);
 
             this.registeredTypeToRegistrationDetailsMap.TryAdd(type, registrationDetails);
         }
@@ -445,7 +447,7 @@ namespace OBeautifulCode.Serialization
                         // Choosing type as it's own direct and recursive origin is actually not bad.
                         var typeToRegister = this.BuildTypeToRegisterForPostInitializationRegistration(type, type, type, MemberTypesToInclude.None, RelatedTypesToInclude.None);
 
-                        var registrationDetails = this.RegisterType(typeToRegister);
+                        var registrationDetails = this.RegisterType(typeToRegister, RegistrationTime.PostInitialization);
 
                         foreach (var ancestorSerializationConfiguration in this.ancestorSerializationConfigurationInstances)
                         {
@@ -467,7 +469,7 @@ namespace OBeautifulCode.Serialization
             // is called on a descendant config because it's being used by some serializer.
             if (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(type))
             {
-                this.RegisterType(registrationDetails);
+                this.RegisterType(registrationDetails, RegistrationTime.PostInitialization);
             }
         }
 

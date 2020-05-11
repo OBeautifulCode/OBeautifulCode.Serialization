@@ -86,26 +86,24 @@ namespace OBeautifulCode.Serialization.Bson
 
             bsonReader.ReturnToBookmark(bookmark);
 
-            // Ideally we would verify that the type is registered in all cases, but that's difficult in
-            // the current framework.  For example, what happens when this discriminator was created for a base class,
-            // in Config A, but the concrete class was registered in Config B, and Config A is an ancestor of Config B?
-            // We only have a reference to Config A, and Config A says that the concrete class is NOT registered.
-            // We don't know what config is being used by the serializer, so we don't know whether it's legitimate
-            // to check the ancestors.  But don't freak out - we are protected in other ways.  See notes in ObcSerializerBase.
-            // For closed generic types, it's possible that it hasn't been registered yet because during initialization
-            // time it's not possible to know all of the closed generic types that will be needed.
-            // So we call RegisterClosedGenericTypePostInitialization().  This WILL throw if the generic type definition
-            // is not registered.  So it's possible, but unlikely, that the config that created this discriminator
-            // does not have the generic type definition registered (e.g. BaseClass registered in Config A, and
-            // MyGeneric<T> : BaseClass registered in Config B, and Config A is an ancestor of Config B).
-            // We'll have to cross that bridge when we get there.
-            // If this.serializationConfiguration can register the type, then it will communicate that registration
-            // with it's ancestors and it will not need to be registered again when serializing the type (the serializer
-            // is most likely using the top-level/oldest ancestor config).
-            if (result.IsClosedGenericType())
-            {
-                this.serializationConfiguration.RegisterClosedGenericTypePostInitialization(result);
-            }
+            // See notes in ThrowOnUnregisteredTypeIfAppropriate for the need to make this call.
+            // Note that this isn't a 100% complete solution.  Ideally this discriminator would know
+            // which serializer (and hence which serialization configuration) is being used for deserializing,
+            // because it is passed as a parameter to this method.  Because that's not an option in Mongo,
+            // we have to construct this discriminator with a config and thus we have to choose which single config
+            // to use.  See notes in BsonSerializationConfigurationBase.  Upon the first attempt to serialize
+            // or de-serialize, we will consider THAT serializer's config to be the top-level config,
+            // we will iterate thru all registered types, creating discriminators and use that config when
+            // constructing those discriminators.  In that way, we ensure that ThrowOnUnregisteredTypeIfAppropriate
+            // is being called on the "front-door"/oldest-ancestor config.  This has two problems:
+            //    1. Another serializer can be instantiated with an even older ancestor config after the fact,
+            //       and we have no way to re-point to that config here.
+            //    2. Another serializer can be instantiated with a config that is in a completely different
+            //       inheritance tree than this.serializationConfiguration, but still registers the same
+            //       interface or base class type that this discriminator was created for.
+            // To avoid these problems, we disallow serializers from requesting two different configs in
+            // SerializationConfigurationManager.  First one wins, others will throw.
+            this.serializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(result, SerializationDirection.Deserialize, null);
 
             return result;
         }
@@ -119,28 +117,13 @@ namespace OBeautifulCode.Serialization.Bson
 
             // The below approach didn't work because, prior to calling this method, Mongo
             // registers the missing class map for the closed generic type.  So when we attempt
-            // to register our own via RegisterClosedGenericTypePostInitialization, Mongo throws.
-            // We need an earlier hook point.  This is, among other reasons, why ObcSerializerBase
+            // to register our own via ThrowOnUnregisteredTypeIfAppropriate, Mongo throws.
+            // We need an earlier hook point.  This is, among other reasons, why SerializationConfigurationBase
             // recurses thru the runtime types of the object being serialized and registers any closed
             // generic types it encounters.
-            // -------------------------------------------
-            // see comments in RegisterClosedGenericTypePostInitialization()
-            // ObcSerializerBase.InternalThrowOnUnregisteredTypeIfAppropriate will call
-            // RegisterClosedGenericTypePostInitialization() on the top-most (the type being serialized
-            // thru the front door) type if it's a closed generic, which will recurse thru the related
-            // and member types (all of which will be closed at that point).
-            //
-            // If we are getting here, it means that either:
-            //    the top-most type is a closed generic (BSON always uses a discriminator for the top-most type),
-            //    in which case this call will have no net effect since it was already made by
-            //    InternalThrowOnUnregisteredTypeIfAppropriate()
-            // OR
-            //    we are serializing a property of the top-most type that is declared as an abstract class or
-            //    an interface (hence the need for a discriminator) and the runtime type is a closed generic
-            //    which may not have been previously registered.
             // if (actualType.IsClosedGenericType())
             // {
-            //    // this.SerializationConfiguration.RegisterClosedGenericTypePostInitialization(actualType);
+            //    // this.serializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(actualType);
             // }
             return result;
         }

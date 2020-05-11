@@ -35,6 +35,14 @@ namespace OBeautifulCode.Serialization
         protected virtual UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy => UnregisteredTypeEncounteredStrategy.Throw;
 
         /// <summary>
+        /// Performs any setup/logic prior to being used by a serializer for any operations.
+        /// </summary>
+        public virtual void SetupForSerializationOperations()
+        {
+            /* no-op - inheritors can use this to perform setup/logic (e.g. in BSON we need to register all discriminators) */
+        }
+
+        /// <summary>
         /// Builds a <see cref="TypeToRegister"/> to be used for post-initialization registration,
         /// which only occurs for closed generic types at serialization-time, because these
         /// runtime types are not discoverable during initialization.
@@ -58,14 +66,16 @@ namespace OBeautifulCode.Serialization
         /// Processes a <see cref="RegistrationDetails"/> prior to registration.
         /// </summary>
         /// <param name="registrationDetails">Details related to the registration.</param>
+        /// <param name="registrationTime">The time of registration.</param>
         protected virtual void ProcessRegistrationDetailsPriorToRegistration(
-            RegistrationDetails registrationDetails)
+            RegistrationDetails registrationDetails,
+            RegistrationTime registrationTime)
         {
             /* no-op - inheritors can use this to examine the registration details prior to registration and perform inheritor-specific setup/logic (e.g. using a custom serializer for a type) */
         }
 
         /// <summary>
-        /// Perform any final setup/logic.
+        /// Perform any final setup/logic in initialization.
         /// </summary>
         protected virtual void FinalizeInitialization()
         {
