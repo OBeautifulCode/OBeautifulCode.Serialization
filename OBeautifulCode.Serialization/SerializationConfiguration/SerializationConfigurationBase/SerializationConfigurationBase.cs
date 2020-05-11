@@ -119,33 +119,46 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <summary>
-        /// Gets the serialization configuration type that registered the specified type.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns>
-        /// The serialization configuration type that registered the specified type.
-        /// </returns>
-        public SerializationConfigurationType GetRegisteringSerializationConfigurationType(
-            Type type)
-        {
-            new { type }.AsArg().Must().NotBeNull();
-
-            var result = this.registeredTypeToRegistrationDetailsMap[type].SerializationConfigurationType;
-
-            return result;
-        }
-
-        /// <summary>
         /// Throw an <see cref="UnregisteredTypeAttemptException" /> if appropriate.
         /// </summary>
         /// <param name="type">Type to check.</param>
         /// <param name="serializationDirection">The serialization direction.</param>
-        /// <param name="objectToSerialize">Optional object to serialize if serializing.  DEFAULT is null, assumes deserialization.</param>
+        /// <param name="objectToSerialize">OPTIONAL object to serialize if serializing.  DEFAULT is null, assumes deserialization.</param>
         public void ThrowOnUnregisteredTypeIfAppropriate(
             Type type,
             SerializationDirection serializationDirection,
             object objectToSerialize)
         {
+            // For serialization we are dealing with validating both declared and runtime types:
+            //     We are holding an object and it's object.GetType(), we need to validate that type ahead of serialization.
+            //     This means recursing thru the declared types AND runtime types of the original type's properties and fields.
+            //     Further, for arrays, collections and dictionaries we need to recurse
+            //     into the runtime types of the elements/keys/values and then consider the declared and runtime types
+            //     of the element/keys/values fields and properties.  In that process there is certainly some redundant
+            //     checks, but the heuristic would be harder to write in a correct way and anyways validatedTypes
+            //     short-circuits a lot of validation.  After this process, we'll be 100% certain that all of the types involved
+            //     with the object being serialized have been registered.  Because we are checking runtime types, we may encounter
+            //     unregistered closed generic types whose generic type definitions ARE registered.  In that case, we call
+            //     RegisterClosedGenericTypePostInitialization().  It's fine if, sometime later, we register the same closed generic
+            //     type in a descendant config type, because the descendant will notify it's ancestors and the ancestors will only
+            //     register the type if it is not yet registered.
+            // For deserialization we are dealing with validating declared types:
+            //     We validate that the declared type is registered and we recurse thru the declared types of the fields
+            //     and properties and validate that they are registered as well.  Given this, upon deserialization
+            //     the only unregistered types that we can encounter in the payload are concrete classes that are being
+            //     assigned to an interface or base class type.  In this case, at serialization time, we would have written
+            //     the assembly qualified name of the concrete type into the payload to facilitate de-serialization.
+            //     So the type we resolve from the assembly qualified name is potentially unregistered, and thus we need to call
+            //     THIS method on these types.  Assuming that the user is using the same config type for serialization and deserialization,
+            //     serialization (per above) recurses thru all runtime types and would have thrown for unregistered, non-generic
+            //     classes, and also throws if a generic class's generic type definition is not registered.
+            //     As mentioned above closed generic classes will be registered if needed.  So its unlikely chat calling this
+            //     method to validate concrete classes being assigned to interface or base types will throw.
+            //     What about generic classes that are NOT being deserialized into an interface or base class?
+            //     If the top-level type, the type we are deserializing into, is a closed generic type then we'll register that type
+            //     HERE in ValidateTypeIsRegistered() using RegisterClosedGenericTypePostInitialization(), if needed.
+            //     Otherwise, if there is a field or property whose declared type is a closed generic, we will check that it's registered
+            //     HERE in ValidateMembersAreRegistered() and if not call RegisterClosedGenericTypePostInitialization() if needed.
             if (type == null)
             {
                 // this must be supported for serializing null
@@ -160,8 +173,8 @@ namespace OBeautifulCode.Serialization
 
             this.InternalThrowOnUnregisteredTypeIfAppropriate(type, type, serializationDirection, objectToSerialize);
 
-            // if serializing and the type is a system type (e.g. List<MyClass>)
-            // then we need to iterate through the runtime types of the enumerable elements
+            // if serializing and the type is a System type (e.g. List<MyClass>)
+            // then we need to iterate through the runtime types of the enumerable elements, if applicable
             if ((serializationDirection == SerializationDirection.Serialize) && type.IsSystemType())
             {
                 this.ValidateEnumerableElementsAreRegisteredIfApplicable(type, serializationDirection, type, objectToSerialize);
@@ -209,40 +222,12 @@ namespace OBeautifulCode.Serialization
             }
         }
 
-        private void RegisterTypesFromDescendantPostInitialization(
-            ProcessTypesToRegisterResult processTypesToRegisterResult)
-        {
-            this.visitedTypesToRegisterIds.AddRange(processTypesToRegisterResult.VisitedTypesToRegisterIds);
-
-            foreach (var registrationDetails in processTypesToRegisterResult.RegistrationDetails)
-            {
-                var type = registrationDetails.TypeToRegister.Type;
-
-                // We should NOT throw if the type is already registered, consider:
-                // a descendant config has MyGeneric<> registered and
-                // descendant.RegisterClosedGenericTypePostInitialization(MyGeneric<SomeType>) is called.
-                // the descendant didn't have SomeType registered, which it discovers and then registers.
-                // This config, an ancestor, will be notified and will register MyGeneric<SomeType> but it already has
-                // SomeType registered.  That's a legitimate scenario and this config should just skip SomeType and
-                // move on.  This config doesn't need to explore MyGeneric<SomeType> for types to register.
-                // If SomeType was already registered by the descendant, then it would have been inherited by
-                // this config during initialization.  Truly, only new the new types discovered by the descendant
-                // need to be considered for registration here.
-                if (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(type))
-                {
-                    this.RegisterType(registrationDetails);
-                }
-            }
-        }
-
-        private ProcessTypesToRegisterResult ProcessTypesToRegister(
+        private void ProcessTypesToRegister(
             Queue<TypeToRegister> typesToRegister)
         {
             new { typesToRegister }.AsOp().Must().NotContainAnyNullElements();
 
             typesToRegister.All(_ => _.IsOriginatingType).AsOp(Invariant($"All {nameof(TypeToRegister)} objects in {nameof(this.TypesToRegister)} are originating {nameof(TypeToRegister)} objects.")).Must().BeTrue();
-
-            var result = new ProcessTypesToRegisterResult();
 
             // this could have been done in the while loop below but we think the algorithm
             // is easier to understand by registering these types upfront
@@ -250,9 +235,7 @@ namespace OBeautifulCode.Serialization
             {
                 // this.RegisterType will throw if the user specifies the same type twice or if type
                 // has already been registered by a dependent serialization configuration
-                var registrationDetails = this.RegisterType(typeToRegister);
-
-                result.RegistrationDetails.Add(registrationDetails);
+                this.RegisterType(typeToRegister);
             }
 
             while (typesToRegister.Count > 0)
@@ -278,9 +261,7 @@ namespace OBeautifulCode.Serialization
                         // but we want to run member inclusion to get at MyModelType.
                         if (IsTypeThatCanBeRegistered(typeToRegister))
                         {
-                            var registrationDetails = this.RegisterType(typeToRegister);
-
-                            result.RegistrationDetails.Add(registrationDetails);
+                            this.RegisterType(typeToRegister);
                         }
                     }
                 }
@@ -290,8 +271,6 @@ namespace OBeautifulCode.Serialization
                 if (!this.visitedTypesToRegisterIds.Contains(typeToRegisterId))
                 {
                     this.visitedTypesToRegisterIds.Add(typeToRegisterId);
-
-                    result.VisitedTypesToRegisterIds.Add(typeToRegisterId);
 
                     var relatedTypes = GetRelatedTypesToInclude(typeToRegister.Type, typeToRegister.RelatedTypesToInclude);
 
@@ -317,8 +296,6 @@ namespace OBeautifulCode.Serialization
                     }
                 }
             }
-
-            return result;
         }
 
         private RegistrationDetails RegisterType(
@@ -363,38 +340,6 @@ namespace OBeautifulCode.Serialization
             SerializationDirection serializationDirection,
             object objectToSerialize)
         {
-            // For serialization we are dealing with validating both declared and runtime types:
-            //     We are holding an object and it's object.GetType(), we need to validate that type ahead of serialization.
-            //     This means recursing thru the declared types AND runtime types of the original types properties and fields.
-            //     Further, for arrays, collections and dictionaries we need to recurse
-            //     into the runtime types of the elements/keys/values and then consider the declared and runtime types
-            //     of the element/keys/values fields and properties.  In that process there is certainly some redundant
-            //     checks, but the heuristic would be harder to write in a correct way and anyways the ValidatedTypeToObjectMap
-            //     short-circuits a lot of validation.  After this process, we'll be 100% certain that all of the types involved
-            //     with the object being serialized, have been registered.  Because we are checking runtime types, we may encounter
-            //     unregistered closed generic types whose generic type definitions ARE registered.  In that case, we call
-            //     RegisterClosedGenericTypePostInitialization().  It's fine if, sometime later, we register the same closed generic
-            //     type in a descendant config type, because the descendant will notify it's ancestors and the ancestors will only
-            //     register the type if it is not yet registered.
-            // For deserialization we are dealing with validating declared types:
-            //     We validate that the declared type is registered and we recurse thru the declared types of the fields
-            //     and properties and validate that they are registered as well.  Given this, upon deserialization
-            //     the only unregistered types that we can encounter in the payload are concrete classes that are being
-            //     assigned to an interface or base class type.  In this case, at serialization time, we would have written
-            //     the assembly qualified name of the concrete type into the payload to facilitate de-serialization.
-            //     Within this set of potential unregistered types, we are primarily concerned with closed generic classes,
-            //     which initialization doesn't know about head-of-time.  We should just check in all cases (generic or not),
-            //     to guard against serializing and deserializing with different serialization configuration types,
-            //     but this is currently difficult to do.  But assuming that the user is using the same config types,
-            //     serialization (per above) recurses thru all runtime types and would have thrown for unregistered, non-generic
-            //     classes, and also throws if a generic class's generic type definition is not registered.
-            //     So, upon deserialization, the serializer/wrapped-framework (e.g. Mongo, Newtonsoft) is only responsible
-            //     for performing a just-in-time registration of the concrete, closed generic type (e.g. ObcBsonDiscriminatorConvention).
-            //     What about generic classes that are NOT being deserialized into an interface or base class?
-            //     If the top-level type, the type we are deserializing into, is a closed generic type then we'll register that type
-            //     HERE in ValidateTypeIsRegistered() using RegisterClosedGenericTypePostInitialization(), if needed.
-            //     Otherwise, if there is a field or property whose declared type is a closed generic, we will check that it's registered
-            //     HERE in ValidateMembersAreRegistered() and if not call RegisterClosedGenericTypePostInitialization() if needed.
             if (!this.validatedTypes.ContainsKey(typeToValidate))
             {
                 this.ValidateTypeIsRegistered(originalType, typeToValidate);
@@ -402,7 +347,12 @@ namespace OBeautifulCode.Serialization
                 this.validatedTypes.TryAdd(typeToValidate, null);
             }
 
-            if (typeToValidate.IsSystemType())
+            // we don't want to validate the members of System types like bool, List<SomeType>, etc.
+            // ValidateTypeIsRegistered will pull out the type(s) of the array element, collection elements,
+            // dictionary keys/values and validate them.  On serialization, objects having array/collection/dictionary
+            // properties will have those enumerables iterated and their runtime types checked in ValidateMembersAreRegistered().
+            // So if we get there with a System type, there's nothing to do.
+            if (!typeToValidate.IsSystemType())
             {
                 this.ValidateMembersAreRegistered(originalType, typeToValidate, serializationDirection, objectToSerialize);
             }
@@ -419,9 +369,9 @@ namespace OBeautifulCode.Serialization
             else if (typeToValidate.IsGenericType)
             {
                 // is the closed type registered?  if so, nothing to do
-                if (!this.IsRegisteredType(typeToValidate))
+                if (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(typeToValidate))
                 {
-                    // the closed system type is not registered, confirm that the generic type arguments are registered
+                    // the closed type is not registered, confirm that the generic type arguments are registered
                     // so this will inspect the element type of lists, the key/value types of dictionaries, etc.
                     // will also check the arguments of custom generic types
                     foreach (var genericArgumentType in typeToValidate.GenericTypeArguments)
@@ -431,21 +381,25 @@ namespace OBeautifulCode.Serialization
 
                     if (!typeToValidate.IsSystemType())
                     {
-                        // for non-System generic types that are not registered, the generic type definition should be registered
+                        // For non-System generic types that are not registered, the generic type definition should be registered.
                         var genericTypeDefinition = typeToValidate.GetGenericTypeDefinition();
 
                         this.ThrowIfTypeIsNotRegistered(originalType, genericTypeDefinition);
 
-                        var registeringSerializationConfigurationType = this.GetRegisteringSerializationConfigurationType(genericTypeDefinition);
+                        // We are purposefully registering the closed generic with THIS configuration and not with
+                        // the config that registered the generic type definition (which is potentially a descendant config).
+                        // THIS config is guaranteed to know about all of the the types that define the generic
+                        // (e.g. MyGeneric1<MyGeneric2<MyGeneric2>>>) because we verified all of them in the foreach loop
+                        // above.  As such, this is the most appropriate config to register the type with.
+                        this.RegisterClosedGenericTypePostInitialization(typeToValidate);
 
-                        var registeringSerializationConfiguration = SerializationConfigurationManager.GetOrAddSerializationConfiguration(registeringSerializationConfigurationType);
-
-                        registeringSerializationConfiguration.RegisterClosedGenericTypePostInitialization(typeToValidate);
+                        this.ThrowIfTypeIsNotRegistered(originalType, typeToValidate);
                     }
                 }
             }
             else if (typeToValidate.IsSystemType())
             {
+                // do nothing for non-generic System types (e.g. bool, int, DateTime, Guid)
             }
             else
             {
@@ -457,7 +411,7 @@ namespace OBeautifulCode.Serialization
             Type originalType,
             Type typeToValidate)
         {
-            if ((this.UnregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Throw) && (!this.IsRegisteredType(typeToValidate)))
+            if ((this.UnregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Throw) && (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(typeToValidate)))
             {
                 if (originalType == typeToValidate)
                 {
@@ -470,27 +424,16 @@ namespace OBeautifulCode.Serialization
             }
         }
 
-        /// <summary>
-        /// Registers the specified closed generic type, post-initialization.
-        /// </summary>
-        /// <param name="type">The type to register.</param>
-        /// <remarks>
-        /// These types are runtime types; they cannot be "discovered" during initialization and yet they still
-        /// need to be registered so that derivative serialization configurations can perform the property setup
-        /// to serialize the type.
-        /// </remarks>
         private void RegisterClosedGenericTypePostInitialization(
             Type type)
         {
-            type.IsClosedGenericType().AsArg(Invariant($"{nameof(TypeExtensions.IsClosedGenericType)}({type?.ToStringReadable() ?? "<null>"})")).Must().BeTrue();
-
-            // ReSharper disable once AssignNullToNotNullAttribute
+            // Caller guarantees that this type is closed, generic, and its generic type definition is registered.
+            // These types are runtime types; they cannot be "discovered" during initialization and yet they still
+            // need to be registered so that derivative serialization configurations can perform the proper setup
+            // to serialize the type.
             if (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(type))
             {
-                var genericTypeDefinition = type.GetGenericTypeDefinition();
-
-                this.registeredTypeToRegistrationDetailsMap.ContainsKey(genericTypeDefinition).AsArg(Invariant($"{genericTypeDefinition.ToStringReadable()} is registered")).Must().BeTrue();
-
+                // ensures we don't attempt to register the same type multiple times
                 lock (this.syncConfigure)
                 {
                     if (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(type))
@@ -499,27 +442,32 @@ namespace OBeautifulCode.Serialization
                         // It's not as simple as this.registeredTypeToRegistrationDetailsMap[genericTypeDefinition]
                         // Consider type IGeneric<GenericClass<string>>>.  The registered typeof(IGeneric<>) might have been encountered
                         // is a completely different way than GenericClass (different origin, different Member/RelatedTypesToInclude).
-                        // Choosing type as it's own direct and recursive origin is actually not bad - at least it lets us connect the
-                        // specified type to the additional types encountered in ProcessTypesToRegister().
-                        // Related, it's also not clear how to set Member/RelatedTypesToInclude.  Here we are choosing the most inclusive
-                        // settings, but there are certainly scenarios where the resulting registered types, reasoned against the originally
-                        // registered types, would not have been registered.  In practice we don't believe consumers will be so surgical
-                        // about the choice of Member/RelatedTypesToInclude and in fact there's even a bit of a smell in that (e.g. only wanting
-                        // descendants of a type but not wanting to register it's ancestors)
-                        var typeToRegister = this.BuildTypeToRegisterForPostInitializationRegistration(type, type, type, TypeToRegisterConstants.DefaultMemberTypesToInclude, TypeToRegisterConstants.DefaultRelatedTypesToInclude);
+                        // Choosing type as it's own direct and recursive origin is actually not bad.
+                        var typeToRegister = this.BuildTypeToRegisterForPostInitializationRegistration(type, type, type, MemberTypesToInclude.None, RelatedTypesToInclude.None);
 
-                        var queue = new Queue<TypeToRegister>();
-
-                        queue.Enqueue(typeToRegister);
-
-                        var processTypesToRegisterResult = this.ProcessTypesToRegister(queue);
+                        var registrationDetails = this.RegisterType(typeToRegister);
 
                         foreach (var ancestorSerializationConfiguration in this.ancestorSerializationConfigurationInstances)
                         {
-                            ancestorSerializationConfiguration.RegisterTypesFromDescendantPostInitialization(processTypesToRegisterResult);
+                            ancestorSerializationConfiguration.RegisterTypeFromDescendantPostInitialization(registrationDetails);
                         }
                     }
                 }
+            }
+        }
+
+        private void RegisterTypeFromDescendantPostInitialization(
+            RegistrationDetails registrationDetails)
+        {
+            var type = registrationDetails.TypeToRegister.Type;
+
+            // We should NOT throw if the type is already registered.
+            // It's entirely possible that the type was registered with this config type
+            // (either pre or post initialization) and then RegisterClosedGenericTypePostInitialization()
+            // is called on a descendant config because it's being used by some serializer.
+            if (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(type))
+            {
+                this.RegisterType(registrationDetails);
             }
         }
 
@@ -536,7 +484,7 @@ namespace OBeautifulCode.Serialization
                 // both are fetching property and field members of a type.  GetMemberTypesToInclude
                 // uses the DeclaredOnly flag so there would be extra work to filter out the non-declared
                 // members in GetMemberTypesToInclude().  Trying to harmonize this into a single cache
-                // might introduce thread contention issues (potential a deadlock?) with SerializationConfigurationBase.syncConfigure.
+                // might introduce thread contention issues (potential a deadlock?) with syncConfigure.
                 // Not worth the optimization.
                 var memberInfosToAdd = typeToValidate
                     .GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
@@ -649,13 +597,6 @@ namespace OBeautifulCode.Serialization
             {
                 // not applicable
             }
-        }
-
-        private class ProcessTypesToRegisterResult
-        {
-            public List<RegistrationDetails> RegistrationDetails { get; } = new List<RegistrationDetails>();
-
-            public List<string> VisitedTypesToRegisterIds { get; } = new List<string>();
         }
     }
 }
