@@ -37,7 +37,7 @@ namespace OBeautifulCode.Serialization.Test
                            + "}";
 
             var test = new TestObjectForLambda { Property1 = property1, Property2 = property2, Property3 = property3, };
-            var backingSerializer = new ObcJsonSerializer(unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt);
+            var backingSerializer = new ObcJsonSerializer();
             var serializer = new ObcLambdaBackedSerializer(
                 backingSerializer.SerializeToString,
                 backingSerializer.Deserialize,

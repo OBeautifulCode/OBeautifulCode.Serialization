@@ -20,12 +20,10 @@ namespace OBeautifulCode.Serialization.Test
 
     using Xunit;
 
-    using static System.FormattableString;
-
     public static class RoundtripSerializationTest
     {
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Onlys", Justification = "Spelling/name is correct.")]
         [Fact]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Onlys", Justification = "Spelling/name is correct.")]
         public static void RoundtripSerializeDeserialize___Using_ClassWithGetterOnlysBase___Works()
         {
             // Arrange
@@ -223,8 +221,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestCollectionFields_with_all_nulls___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<TestCollectionFields>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<TestCollectionFields>);
+            var bsonConfigType = typeof(AttemptOnUnregisteredTypeBsonSerializationConfiguration<TypesToRegisterBsonSerializationConfiguration<TestCollectionFields>>);
+            var jsonConfigType = typeof(AttemptOnUnregisteredTypeJsonSerializationConfiguration<TypesToRegisterJsonSerializationConfiguration<TestCollectionFields>>);
 
             var expected = new TestCollectionFields();
 
@@ -241,7 +239,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType, unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
         }
 
         [Fact]
@@ -273,8 +271,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_collection_of_Interface_type___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<IDeduceWhoLetTheDogsOut>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<IDeduceWhoLetTheDogsOut>);
+            var bsonConfigType = typeof(AttemptOnUnregisteredTypeBsonSerializationConfiguration<TypesToRegisterBsonSerializationConfiguration<IDeduceWhoLetTheDogsOut>>);
+            var jsonConfigType = typeof(AttemptOnUnregisteredTypeJsonSerializationConfiguration<TypesToRegisterJsonSerializationConfiguration<IDeduceWhoLetTheDogsOut>>);
 
             IDeduceWhoLetTheDogsOut investigator1 = new NamedInvestigator("bob", 2);
             IDeduceWhoLetTheDogsOut investigator2 = new AnonymousInvestigator(4000);
@@ -300,7 +298,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType, unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
         }
 
         [Fact]

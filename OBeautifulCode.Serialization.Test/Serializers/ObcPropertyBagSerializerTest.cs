@@ -171,7 +171,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void Configuration___Specifying_type___Works()
         {
             // Arrange
-            var serializer = new ObcPropertyBagSerializer<PropertyBagConfig>(UnregisteredTypeEncounteredStrategy.Attempt);
+            var serializer = new ObcPropertyBagSerializer<AttemptOnUnregisteredTypePropertyBagSerializationConfiguration<PropertyBagConfig>>();
             var input = new TypeWithCustomPropertyBagSerializerWrapper { CustomTypeWrapper = new TypeWithCustomPropertyBagSerializer() };
 
             // Act

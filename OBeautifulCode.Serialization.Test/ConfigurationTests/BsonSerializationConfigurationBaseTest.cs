@@ -144,7 +144,7 @@ namespace OBeautifulCode.Serialization.Test
             var configType = typeof(TestVariousTypeOverloadsConfig);
 
             // Act
-            var config = SerializationConfigurationManager.GetOrAddSerializationConfiguration(configType.ToSerializationConfigurationType());
+            var config = SerializationConfigurationManager.GetOrAddSerializationConfiguration(configType.ToBsonSerializationConfigurationType());
 
             // Assert
             expectedTypes.Select(_ => config.IsRegisteredType(_)).AsTest().Must().Each().BeTrue();
@@ -179,7 +179,7 @@ namespace OBeautifulCode.Serialization.Test
             var configType = typeof(TypesToRegisterBsonSerializationConfiguration<TestTracking>);
 
             // Act
-            var config = SerializationConfigurationManager.GetOrAddSerializationConfiguration(configType.ToSerializationConfigurationType());
+            var config = SerializationConfigurationManager.GetOrAddSerializationConfiguration(configType.ToBsonSerializationConfigurationType());
 
             // Assert
             config.IsRegisteredType(testType).Should().BeTrue();

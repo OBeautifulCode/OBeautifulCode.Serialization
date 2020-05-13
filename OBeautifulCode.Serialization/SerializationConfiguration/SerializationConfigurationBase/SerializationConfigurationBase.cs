@@ -171,6 +171,14 @@ namespace OBeautifulCode.Serialization
                 throw new InvalidOperationException(Invariant($"Cannot serialize or deserialize an open type: {type.ToStringReadable()}."));
             }
 
+            if (this.UnregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Attempt)
+            {
+                // Short-circuit attempt mode.  If not, then when we encounter a closed generic we will try to register
+                // it, regardless of whether the generic type definition has been registered.  It's not clear whether attempt
+                // should be registering any types at all.
+                return;
+            }
+
             this.InternalThrowOnUnregisteredTypeIfAppropriate(type, type, serializationDirection, objectToSerialize);
 
             // if serializing and the type is a System type (e.g. List<MyClass>)
@@ -413,7 +421,7 @@ namespace OBeautifulCode.Serialization
             Type originalType,
             Type typeToValidate)
         {
-            if ((this.UnregisteredTypeEncounteredStrategy == UnregisteredTypeEncounteredStrategy.Throw) && (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(typeToValidate)))
+            if (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(typeToValidate))
             {
                 if (originalType == typeToValidate)
                 {

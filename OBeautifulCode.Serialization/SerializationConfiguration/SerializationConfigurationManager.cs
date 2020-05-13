@@ -60,6 +60,7 @@ namespace OBeautifulCode.Serialization
             SerializationConfigurationType serializationConfigurationType)
         {
             new { serializationConfigurationType }.AsArg().Must().NotBeNull();
+            new { serializationConfigurationType.SerializationKind }.AsArg().Must().NotBeEqualTo(SerializationKind.Invalid);
 
             if (serializationConfigurationType.SerializationKind == SerializationKind.Bson)
             {

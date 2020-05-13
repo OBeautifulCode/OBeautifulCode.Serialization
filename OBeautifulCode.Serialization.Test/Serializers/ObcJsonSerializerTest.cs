@@ -56,7 +56,7 @@ namespace OBeautifulCode.Serialization.Test
                            + "}";
 
             var test = new TestObject { Property1 = property1, Property2 = property2, Property3 = property3, };
-            var serializer = new ObcJsonSerializer(unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt);
+            var serializer = new ObcJsonSerializer();
 
             // Act
             var actual = serializer.SerializeToString(test);
@@ -75,7 +75,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var assemblyVersion = typeof(ObcJsonSerializerTest).Assembly.GetName().Version.ToString();
 
-            var expected = Invariant($"{{\r\n  \"name\": \"spud\",\r\n  \"furColor\": \"brindle\",\r\n  \"dogTag\": \"my name is spud\",\r\n  \"nickname\": null,\r\n  \"age\": 5,\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.Dog, OBeautifulCode.Serialization.Test, Version={assemblyVersion}\"\r\n}}");
+            var expected = Invariant($"{{\r\n  \"name\": \"spud\",\r\n  \"furColor\": \"brindle\",\r\n  \"dogTag\": \"my name is spud\",\r\n  \"nickname\": null,\r\n  \"age\": 5,\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.Dog, OBeautifulCode.Serialization.Test\"\r\n}}");
 
             json.Should().Be(expected);
         }
@@ -115,7 +115,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var dogJson = "{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}";
 
-            var dog = new ObcJsonSerializer(unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt).Deserialize<dynamic>(dogJson) as JObject;
+            var dog = new ObcJsonSerializer().Deserialize<dynamic>(dogJson) as JObject;
 
             dog.Properties().Count().Should().Be(3);
             dog["name"].ToString().Should().Be("Barney");
@@ -140,7 +140,7 @@ namespace OBeautifulCode.Serialization.Test
                            + "}";
 
             var test = new TestObject { Property1 = property1, Property2 = property2, Property3 = property3, };
-            var serializer = new ObcJsonSerializer(unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt, formattingKind: JsonFormattingKind.Compact);
+            var serializer = new ObcJsonSerializer(formattingKind: JsonFormattingKind.Compact);
 
             // Act
             var actual = serializer.SerializeToString(test);
@@ -159,7 +159,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var assemblyVersion = typeof(ObcJsonSerializerTest).Assembly.GetName().Version.ToString();
 
-            var expected = Invariant($"{{\"name\":\"spud\",\"furColor\":\"brindle\",\"dogTag\":\"my name is spud\",\"nickname\":null,\"age\":5,\"$concreteType\":\"OBeautifulCode.Serialization.Test.Dog, OBeautifulCode.Serialization.Test, Version={assemblyVersion}\"}}");
+            var expected = Invariant($"{{\"name\":\"spud\",\"furColor\":\"brindle\",\"dogTag\":\"my name is spud\",\"nickname\":null,\"age\":5,\"$concreteType\":\"OBeautifulCode.Serialization.Test.Dog, OBeautifulCode.Serialization.Test\"}}");
 
             json.Should().Be(expected);
         }
@@ -199,7 +199,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var dogJson = "{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}";
 
-            var dog = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType(), UnregisteredTypeEncounteredStrategy.Attempt, JsonFormattingKind.Compact).Deserialize<dynamic>(dogJson) as JObject;
+            var dog = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType(), JsonFormattingKind.Compact).Deserialize<dynamic>(dogJson) as JObject;
 
             dog.Properties().Count().Should().Be(3);
             dog["name"].ToString().Should().Be("Barney");
@@ -222,7 +222,7 @@ namespace OBeautifulCode.Serialization.Test
                            + "}";
 
             var test = new TestObject { Property1 = property1, Property2 = property2, Property3 = property3, };
-            var serializer = new ObcJsonSerializer(unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt, formattingKind: JsonFormattingKind.Minimal);
+            var serializer = new ObcJsonSerializer(formattingKind: JsonFormattingKind.Minimal);
 
             // Act
             var actual = serializer.SerializeToString(test);
@@ -271,7 +271,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var dogJson = "{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}";
 
-            var dog = new ObcJsonSerializer(unregisteredTypeEncounteredStrategy: UnregisteredTypeEncounteredStrategy.Attempt, formattingKind: JsonFormattingKind.Minimal).Deserialize<dynamic>(dogJson) as JObject;
+            var dog = new ObcJsonSerializer(formattingKind: JsonFormattingKind.Minimal).Deserialize<dynamic>(dogJson) as JObject;
 
             dog.Properties().Count().Should().Be(3);
             dog["name"].ToString().Should().Be("Barney");

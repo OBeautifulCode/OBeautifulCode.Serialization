@@ -1,20 +1,12 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ModelWithNullableProperties.cs" company="OBeautifulCode">
+// <copyright file="Delegates.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace OBeautifulCode.Serialization.Test
 {
-    using System;
-
-    [Serializable]
-    public class ModelWithNullableProperties
-    {
-        public DateTime? NullableDateTime { get; set; }
-
-        public Guid? NullableGuid { get; set; }
-
-        public int? NullableInt { get; set; }
-    }
+    public delegate void RoundtripSerializationCallback<in T>(
+        DescribedSerialization yieldedDescribedSerialization,
+        T deserializedObject);
 }

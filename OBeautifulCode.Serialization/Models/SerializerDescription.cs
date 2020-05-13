@@ -25,7 +25,7 @@ namespace OBeautifulCode.Serialization
         /// <param name="serializationFormat">The <see cref="SerializationFormat" /> to serialize into.</param>
         /// <param name="compressionKind">Optional <see cref="CompressionKind" /> to use; DEFAULT is None.</param>
         /// <param name="serializationConfigType">Optional representation of the type of the serialization configuration to use; DEFAULT is null.</param>
-        /// <param name="metadata">Optional metadata to put, especially useful for customer serializer factory; DEFAULT is empty.</param>
+        /// <param name="metadata">Optional metadata to put, especially useful for custom serializer factory; DEFAULT is empty.</param>
         public SerializerDescription(
             SerializationKind serializationKind,
             SerializationFormat serializationFormat,

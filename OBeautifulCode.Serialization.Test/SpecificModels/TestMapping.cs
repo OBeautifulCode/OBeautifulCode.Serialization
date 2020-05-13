@@ -16,6 +16,7 @@ namespace OBeautifulCode.Serialization.Test
 
 #pragma warning disable SA1201 // Elements should appear in the correct order
 
+    [Serializable]
     public class TestMapping
     {
         public string StringProperty { get; set; }
@@ -52,11 +53,13 @@ namespace OBeautifulCode.Serialization.Test
         public int[] IntArray { get; set; }
     }
 
+    [Serializable]
     public class TestWithId
     {
         public string Id { get; set; }
     }
 
+    [Serializable]
     public class TestWithInheritor
     {
         public string Id { get; set; }
@@ -64,6 +67,7 @@ namespace OBeautifulCode.Serialization.Test
         public string Name { get; set; }
     }
 
+    [Serializable]
     public class TestWithInheritorExtraProperty : TestWithInheritor
     {
         public string AnotherName { get; set; }
@@ -79,38 +83,47 @@ namespace OBeautifulCode.Serialization.Test
     {
     }
 
+    [Serializable]
     public class TestConfigureActionFromInterface : ITestConfigureActionFromInterface
     {
     }
 
+    [Serializable]
     public class TestConfigureActionFromAuto : ITestConfigureActionFromAuto
     {
     }
 
+    [Serializable]
     public abstract class TestConfigureActionBaseFromSub
     {
     }
 
+    [Serializable]
     public abstract class TestConfigureActionBaseFromAuto
     {
     }
 
+    [Serializable]
     public class TestConfigureActionInheritedSub : TestConfigureActionBaseFromSub
     {
     }
 
+    [Serializable]
     public class TestConfigureActionInheritedAuto : TestConfigureActionBaseFromAuto
     {
     }
 
+    [Serializable]
     public class TestConfigureActionSingle
     {
     }
 
+    [Serializable]
     public class TestTracking
     {
     }
 
+    [Serializable]
     public class TestWrappedFields
     {
         public DateTime? NullableDateTimeNull { get; set; }
@@ -127,6 +140,7 @@ namespace OBeautifulCode.Serialization.Test
         public IEnumerable<AnotherEnumeration> EnumerableOfEnum { get; set; }
     }
 
+    [Serializable]
     public class TestCollectionFields
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
@@ -150,6 +164,7 @@ namespace OBeautifulCode.Serialization.Test
         public Collection<Guid> CollectionGuid { get; set; }
     }
 
+    [Serializable]
     public class TestWithReadOnlyCollectionOfBaseClass
     {
         public IReadOnlyCollection<TestBase> TestCollection { get; set; }
@@ -159,6 +174,7 @@ namespace OBeautifulCode.Serialization.Test
         public TestImplementationTwo RootTwo { get; set; }
     }
 
+    [Serializable]
     public class TestWithReadOnlyCollectionOfBaseClassConfig : BsonSerializationConfigurationBase
     {
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[]
@@ -168,6 +184,7 @@ namespace OBeautifulCode.Serialization.Test
         };
     }
 
+    [Serializable]
     public abstract class TestBase
     {
         public string Message { get; set; }
@@ -208,6 +225,7 @@ namespace OBeautifulCode.Serialization.Test
         public abstract override int GetHashCode();
     }
 
+    [Serializable]
     public class TestImplementationOne : TestBase
     {
         public string One { get; set; }
@@ -249,6 +267,7 @@ namespace OBeautifulCode.Serialization.Test
                 .Value;
     }
 
+    [Serializable]
     public class TestImplementationTwo : TestBase
     {
         public string Two { get; set; }
@@ -290,10 +309,12 @@ namespace OBeautifulCode.Serialization.Test
                 .Value;
     }
 
+    [Serializable]
     public struct TestStruct
     {
     }
 
+    [Serializable]
     public enum TestEnumeration
     {
         /// <summary>
@@ -317,6 +338,7 @@ namespace OBeautifulCode.Serialization.Test
         TestThird,
     }
 
+    [Serializable]
     public enum AnotherEnumeration
     {
         /// <summary>
@@ -335,6 +357,7 @@ namespace OBeautifulCode.Serialization.Test
         AnotherSecond,
     }
 
+    [Serializable]
     public class Investigation
     {
         public IReadOnlyCollection<IDeduceWhoLetTheDogsOut> Investigators { get; set; }
@@ -345,6 +368,7 @@ namespace OBeautifulCode.Serialization.Test
         string WhoLetTheDogsOut();
     }
 
+    [Serializable]
     public class NamedInvestigator : IDeduceWhoLetTheDogsOut
     {
         public NamedInvestigator(string name, int yearsOfPractice)
@@ -364,6 +388,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
+    [Serializable]
     public class AnonymousInvestigator : IDeduceWhoLetTheDogsOut
     {
         public AnonymousInvestigator(int fee)
@@ -380,6 +405,7 @@ namespace OBeautifulCode.Serialization.Test
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Onlys", Justification = "Spelling/name is correct.")]
+    [Serializable]
     public abstract class ClassWithGetterOnlysBase
     {
         public AnotherEnumeration GetMyEnumOnlyBase { get; }
@@ -392,6 +418,7 @@ namespace OBeautifulCode.Serialization.Test
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Onlys", Justification = "Spelling/name is correct.")]
+    [Serializable]
     public class ClassWithGetterOnlys : ClassWithGetterOnlysBase
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This is strictly for testing.")]
@@ -405,6 +432,7 @@ namespace OBeautifulCode.Serialization.Test
         public override string GetMyStringFromBase => "MonkeyBusiness";
     }
 
+    [Serializable]
     public class ClassWithPrivateSetter
     {
         public ClassWithPrivateSetter(string privateValue)
@@ -448,6 +476,7 @@ namespace OBeautifulCode.Serialization.Test
                 .Value;
     }
 
+    [Serializable]
     public class VanillaClass : IEquatable<VanillaClass>
     {
         public string Something { get; set; }
@@ -490,6 +519,7 @@ namespace OBeautifulCode.Serialization.Test
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Spelling/name is correct.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue", Justification = "Spelling/name is correct.")]
     [Flags]
+    [Serializable]
     public enum FlagsEnumeration
     {
         /// <summary>
@@ -509,12 +539,14 @@ namespace OBeautifulCode.Serialization.Test
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Spelling/name is correct.")]
+    [Serializable]
     public class ClassWithFlagsEnums
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Justification = "Spelling/name is correct.")]
         public FlagsEnumeration Flags { get; set; }
     }
 
+    [Serializable]
     public abstract class Field
     {
         protected Field(
@@ -530,6 +562,7 @@ namespace OBeautifulCode.Serialization.Test
         public string Title { get; set; }
     }
 
+    [Serializable]
     public abstract class DecimalField : Field
     {
         protected DecimalField(string id)
@@ -540,6 +573,7 @@ namespace OBeautifulCode.Serialization.Test
         public int NumberOfDecimalPlaces { get; set; }
     }
 
+    [Serializable]
     public class CurrencyField : DecimalField
     {
         public CurrencyField(string id)
@@ -560,6 +594,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
+    [Serializable]
     public class NumberField : DecimalField
     {
         public NumberField(string id)
@@ -580,6 +615,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
+    [Serializable]
     public class YearField : NumberField
     {
         public YearField(string id)
@@ -590,6 +626,7 @@ namespace OBeautifulCode.Serialization.Test
         public override FieldDataKind FieldDataKind => FieldDataKind.Year;
     }
 
+    [Serializable]
     public enum FieldDataKind
     {
         CurrencyWithDecimals,

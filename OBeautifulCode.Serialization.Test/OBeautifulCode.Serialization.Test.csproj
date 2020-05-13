@@ -189,6 +189,7 @@
     <Compile Include="ConfigurationTests\JsonSerializationConfigurationBaseTest.cs" />
     <Compile Include="ConfigurationTests\SerializationConfigurationManagerTest.cs" />
     <Compile Include="DateTimeConverterTest.cs" />
+    <Compile Include="Delegates.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.designer.cs">
       <DependentUpon>DynamicTypePlaceholderTest.cs</DependentUpon>

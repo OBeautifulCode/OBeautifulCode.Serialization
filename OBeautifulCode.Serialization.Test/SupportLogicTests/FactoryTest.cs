@@ -48,7 +48,6 @@ namespace OBeautifulCode.Serialization.Test
                 SerializationKind.Json,
                 SerializationFormat.String,
                 null,
-                UnregisteredTypeEncounteredStrategy.Default,
                 CompressionKind.None);
 
             // Act

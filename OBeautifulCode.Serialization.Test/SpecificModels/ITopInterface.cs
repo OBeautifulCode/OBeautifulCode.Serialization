@@ -6,6 +6,8 @@
 
 namespace OBeautifulCode.Serialization.Test
 {
+    using System;
+
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = "required for test")]
     public interface ITopInterface
     {
@@ -19,6 +21,7 @@ namespace OBeautifulCode.Serialization.Test
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = "required for test")]
+    [Serializable]
     public class BottomClass : IMiddleInterface
     {
         public string Species { get; set; }

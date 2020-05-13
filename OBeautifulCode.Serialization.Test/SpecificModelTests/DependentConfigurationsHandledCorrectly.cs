@@ -55,7 +55,6 @@ namespace OBeautifulCode.Serialization.Test
                 jsonConfigType,
                 bsonConfigType,
                 propBagConfigType,
-                UnregisteredTypeEncounteredStrategy.Throw,
                 true,
                 true,
                 true);
@@ -221,7 +220,7 @@ namespace OBeautifulCode.Serialization.Test
 
     public class TestingDependentPropBagSerializer : IStringSerializeAndDeserialize
     {
-        public SerializationConfigurationType SerializationConfigurationType => typeof(NullPropertyBagSerializationConfiguration).ToSerializationConfigurationType();
+        public SerializationConfigurationType SerializationConfigurationType => typeof(NullPropertyBagSerializationConfiguration).ToPropertyBagSerializationConfigurationType();
 
         public string SerializeToString(object objectToSerialize)
         {
