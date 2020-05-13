@@ -112,6 +112,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="ObcSerializer\ObcCompressingSerializer.cs" />
     <Compile Include="SerializationConfiguration\IIgnoreDefaultDependencies.cs" />
     <Compile Include="Interfaces\IStringSerialize.cs" />
     <Compile Include="Interfaces\IHaveSerializationKind.cs" />
