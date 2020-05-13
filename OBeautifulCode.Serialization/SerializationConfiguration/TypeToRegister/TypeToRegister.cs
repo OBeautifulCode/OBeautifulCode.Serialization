@@ -15,7 +15,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Specifies a type to register.
     /// </summary>
-    public class TypeToRegister
+    public abstract class TypeToRegister
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeToRegister"/> class with a type that is it's own origin.
@@ -23,7 +23,7 @@ namespace OBeautifulCode.Serialization
         /// <param name="type">The type to register.</param>
         /// <param name="memberTypesToInclude">Specifies which member types of <paramref name="type"/> that should also be registered.</param>
         /// <param name="relatedTypesToInclude">Specifies which types related to <paramref name="type"/> that should also be registered.</param>
-        public TypeToRegister(
+        protected TypeToRegister(
             Type type,
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude)
@@ -39,7 +39,7 @@ namespace OBeautifulCode.Serialization
         /// <param name="directOriginType">The type whose processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> directly resulted in the creation of this <see cref="TypeToRegister"/>.</param>
         /// <param name="memberTypesToInclude">Specifies which member types of <paramref name="type"/> that should also be registered.</param>
         /// <param name="relatedTypesToInclude">Specifies which types related to <paramref name="type"/> that should also be registered.</param>
-        public TypeToRegister(
+        protected TypeToRegister(
             Type type,
             Type recursiveOriginType,
             Type directOriginType,
@@ -95,18 +95,8 @@ namespace OBeautifulCode.Serialization
         /// <returns>
         /// The spawned <see cref="TypeToRegister"/>.
         /// </returns>
-        public virtual TypeToRegister CreateSpawnedTypeToRegister(
-            Type type)
-        {
-            if ((this.GetType() != typeof(TypeToRegister)) || this.GetType().IsAssignableTo(typeof(TypeToRegister<>), treatGenericTypeDefinitionAsAssignableTo: true))
-            {
-                throw new InvalidOperationException("Inheritors must override this method to properly spawn.");
-            }
-
-            var result = new TypeToRegister(type, this.RecursiveOriginType, this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude);
-
-            return result;
-        }
+        public abstract TypeToRegister CreateSpawnedTypeToRegister(
+            Type type);
 
         /// <inheritdoc />
         public override string ToString()

@@ -44,7 +44,8 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         protected SerializationConfigurationBase()
         {
-            this.SerializationConfigurationType = this.GetType().ToSerializationConfigurationType();
+            // ReSharper disable once VirtualMemberCallInConstructor
+            this.SerializationConfigurationType = this.GetSerializationConfigurationType();
         }
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace OBeautifulCode.Serialization
             //     THIS method on these types.  Assuming that the user is using the same config type for serialization and deserialization,
             //     serialization (per above) recurses thru all runtime types and would have thrown for unregistered, non-generic
             //     classes, and also throws if a generic class's generic type definition is not registered.
-            //     As mentioned above closed generic classes will be registered if needed.  So its unlikely chat calling this
+            //     As mentioned above closed generic classes will be registered if needed.  So its unlikely that calling this
             //     method to validate concrete classes being assigned to interface or base types will throw.
             //     What about generic classes that are NOT being deserialized into an interface or base class?
             //     If the top-level type, the type we are deserializing into, is a closed generic type then we'll register that type

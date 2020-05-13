@@ -9,7 +9,7 @@ namespace OBeautifulCode.Serialization.Test
     using System;
 
     using FluentAssertions;
-
+    using MongoDB.Bson;
     using OBeautifulCode.Serialization.Bson;
 
     using Xunit;
@@ -19,7 +19,7 @@ namespace OBeautifulCode.Serialization.Test
         [Fact]
         public static void Configure___Valid_type_as_generic___Works()
         {
-            SerializationConfigurationManager.GetOrAddSerializationConfiguration<TestConfigure>();
+            SerializationConfigurationManager.GetOrAddSerializationConfiguration(typeof(TestConfigure).ToBsonSerializationConfigurationType());
             TestConfigure.Configured.Should().BeTrue();
         }
     }

@@ -18,6 +18,20 @@ namespace OBeautifulCode.Serialization.Bson
     public class ObcBsonSerializer : ObcSerializerBase
     {
         /// <summary>
+        /// Gets the serialization configuration of the serializer being used for deserialization on the current thread.
+        /// </summary>
+        /// <remarks>
+        /// This is a hack to compensate for our inability to pass a context object into Mongo that gets passed
+        /// around during the lifecycle of a deserialization operation.  ObcBsonDiscriminatorConvention needs
+        /// the serialization configuration of the serializer that is performing the deserialization operation
+        /// so that it can call ThrowOnUnregisteredTypeIfAppropriate().
+        /// </remarks>
+        [ThreadStatic]
+        #pragma warning disable SA1401
+        public static SerializationConfigurationBase SerializationConfigurationInUseForDeserialization;
+        #pragma warning restore SA1401
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ObcBsonSerializer"/> class.
         /// </summary>
         /// <param name="bsonSerializationConfigurationType">Optional <see cref="BsonSerializationConfigurationBase"/> implementation to use; default is <see cref="NullBsonSerializationConfiguration"/>.</param>
@@ -53,7 +67,7 @@ namespace OBeautifulCode.Serialization.Bson
 
             var result = serializedBytes == null
                 ? default
-                : serializedBytes.Deserialize<T>();
+                : this.DeserializeSettingSerializationConfigurationInUse(serializedBytes.Deserialize<T>);
 
             return result;
         }
@@ -67,7 +81,9 @@ namespace OBeautifulCode.Serialization.Bson
 
             this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
 
-            var result = serializedBytes?.Deserialize(type);
+            var result = serializedBytes == null
+                ? null
+                : this.DeserializeSettingSerializationConfigurationInUse(() => serializedBytes.Deserialize(type));
 
             return result;
         }
@@ -114,7 +130,7 @@ namespace OBeautifulCode.Serialization.Bson
             {
                 var document = serializedString.ToBsonDocument();
 
-                result = document.DeserializeFromDocument<T>();
+                result = this.DeserializeSettingSerializationConfigurationInUse(() => document.DeserializeFromDocument<T>());
             }
 
             return result;
@@ -139,7 +155,7 @@ namespace OBeautifulCode.Serialization.Bson
             {
                 var document = serializedString.ToBsonDocument();
 
-                result = document.DeserializeFromDocument(type);
+                result = this.DeserializeSettingSerializationConfigurationInUse(() => document.DeserializeFromDocument(type));
             }
 
             return result;
@@ -156,6 +172,23 @@ namespace OBeautifulCode.Serialization.Bson
             }
 
             this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(objectType, serializationDirection, objectToSerialize);
+        }
+
+        private T DeserializeSettingSerializationConfigurationInUse<T>(
+            Func<T> deserializationOperation)
+        {
+            try
+            {
+                SerializationConfigurationInUseForDeserialization = this.SerializationConfiguration;
+
+                var result = deserializationOperation();
+
+                return result;
+            }
+            finally
+            {
+                SerializationConfigurationInUseForDeserialization = null;
+            }
         }
     }
 }

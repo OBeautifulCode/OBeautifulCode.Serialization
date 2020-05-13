@@ -30,9 +30,6 @@ namespace OBeautifulCode.Serialization.Bson
             concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(BsonSerializationConfigurationBase)).AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(BsonSerializationConfigurationBase)}")).Must().BeTrue();
         }
 
-        /// <inheritdoc />
-        public override SerializationKind SerializationKind => SerializationKind.Bson;
-
         /// <summary>
         /// Determines whether two objects of type <see cref="BsonSerializationConfigurationType"/> are equal.
         /// </summary>

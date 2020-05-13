@@ -17,13 +17,13 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// A wrapper for a concrete serialization configuration type (derives from <see cref="SerializationConfigurationBase"/>).
     /// </summary>
-    public class SerializationConfigurationType : IEquatable<SerializationConfigurationType>
+    public abstract class SerializationConfigurationType : IEquatable<SerializationConfigurationType>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializationConfigurationType"/> class.
         /// </summary>
         /// <param name="concreteSerializationConfigurationDerivativeType">The type of the concrete <see cref="SerializationConfigurationBase"/> derivative.</param>
-        public SerializationConfigurationType(
+        protected SerializationConfigurationType(
             Type concreteSerializationConfigurationDerivativeType)
         {
             new { concreteSerializationConfigurationDerivativeType }.AsArg().Must().NotBeNull();
@@ -38,11 +38,6 @@ namespace OBeautifulCode.Serialization
         /// Gets the type of the concrete <see cref="SerializationConfigurationBase"/> derivative.
         /// </summary>
         public Type ConcreteSerializationConfigurationDerivativeType { get; }
-
-        /// <summary>
-        /// Gets the <see cref="SerializationKind"/> of the serializer that will use this configuration type.
-        /// </summary>
-        public virtual SerializationKind SerializationKind => SerializationKind.Invalid;
 
         /// <summary>
         /// Determines whether two objects of type <see cref="SerializationConfigurationType"/> are equal.

@@ -17,11 +17,6 @@ namespace OBeautifulCode.Serialization.Bson
 
     public abstract partial class BsonSerializationConfigurationBase
     {
-        private readonly object syncSetupForSerializationOperations = new object();
-
-        // ReSharper disable once RedundantDefaultMemberInitializer
-        private bool isSetupForSerializationOperations = false;
-
         /// <inheritdoc />
         protected sealed override IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes => new[]
         {
@@ -36,28 +31,11 @@ namespace OBeautifulCode.Serialization.Bson
         protected sealed override IReadOnlyCollection<TypeToRegister> TypesToRegister => this.TypesToRegisterForBson;
 
         /// <inheritdoc />
-        public override void SetupForSerializationOperations()
+        protected sealed override SerializationConfigurationType GetSerializationConfigurationType()
         {
-            if (!this.isSetupForSerializationOperations)
-            {
-                lock (this.syncSetupForSerializationOperations)
-                {
-                    if (!this.isSetupForSerializationOperations)
-                    {
-                        foreach (var registrationDetails in this.RegisteredTypeToRegistrationDetailsMap.Values)
-                        {
-                            // See notes in ObcBsonDiscriminatorConvention.  We cannot process the registered types
-                            // until we are ready to serialize/de-serialize because, at that time, we know which
-                            // serialization configuration we're going to be using.  For BSON, SerializationConfigurationManager
-                            // guarantees that only one configuration type can used for operations (it'll throw if you
-                            // try to new-up a serializer with one config type, and then another with a different config type).
-                            this.ProcessTypeToRegisterForBson((TypeToRegisterForBson)registrationDetails.TypeToRegister);
-                        }
+            var result = this.GetType().ToBsonSerializationConfigurationType();
 
-                        this.isSetupForSerializationOperations = true;
-                    }
-                }
-            }
+            return result;
         }
 
         /// <inheritdoc />
@@ -85,10 +63,12 @@ namespace OBeautifulCode.Serialization.Bson
             new { registrationDetails }.AsArg().Must().NotBeNull();
             new { registrationTime }.AsArg().Must().NotBeEqualTo(RegistrationTime.Unknown);
 
-            // there's nothing to do if it's a generic type definition
-            // the concrete types will be registered post-initialization: upon serializing
-            // that's done by ObcSerializerBase recursing through the runtime types of the object
-            // being serialized.  upon deserialization this is handled by ObcBsonDiscriminatorConvention.
+            // There's nothing to do if it's a generic type definition.
+            // The closed generic types will be registered post-initialization.
+            // Upon serializing, the serializer will call this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate,
+            // which recurses through the runtime types of the object being serialized
+            // and registers any unregistered closed generic types it encounters.
+            // Upon deserialization this is handled by ObcBsonDiscriminatorConvention.
             if (registrationDetails.TypeToRegister.Type.IsGenericTypeDefinition)
             {
                 return;
@@ -96,18 +76,7 @@ namespace OBeautifulCode.Serialization.Bson
 
             if (registrationDetails.TypeToRegister is TypeToRegisterForBson typeToRegisterForBson)
             {
-                // during initialization, we have to hold-up on processing the type because
-                // we are not sure what the "top-level" config is yet.
-                // post-initialization we should just go ahead and process the type because the
-                // "top-level" config has already been established.
-                // note that checking registrationDetails.SerializationConfigurationType is to avoid double processing
-                // because this method will be called on the config that registered the type and all ancestors.
-                // See notes in ObcBsonDiscriminatorConvention.
-                // See notes in SerializationConfigurationManager.
-                if ((registrationTime == RegistrationTime.PostInitialization) && (registrationDetails.SerializationConfigurationType == this.SerializationConfigurationType))
-                {
-                    this.ProcessTypeToRegisterForBson(typeToRegisterForBson);
-                }
+                this.ProcessTypeToRegisterForBson(typeToRegisterForBson, registrationDetails.SerializationConfigurationType);
             }
             else
             {

@@ -30,9 +30,6 @@ namespace OBeautifulCode.Serialization.Json
             concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(JsonSerializationConfigurationBase)).AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(JsonSerializationConfigurationBase)}")).Must().BeTrue();
         }
 
-        /// <inheritdoc />
-        public override SerializationKind SerializationKind => SerializationKind.Json;
-
         /// <summary>
         /// Determines whether two objects of type <see cref="JsonSerializationConfigurationType"/> are equal.
         /// </summary>

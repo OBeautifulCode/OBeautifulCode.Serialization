@@ -112,14 +112,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\AttemptOnUnregisteredTypeSerializationConfiguration{T}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\ThrowOnUnregisteredTypeSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\IIgnoreDefaultDependencies.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterSerializationConfiguration{T1,T2}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterSerializationConfiguration{T}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\InternallyRequiredTypesToRegisterSerializationConfiguration.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\NullSerializationConfiguration.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlySerializationConfiguration{T1,T2}.cs" />
     <Compile Include="Interfaces\IStringSerialize.cs" />
     <Compile Include="Interfaces\IHaveSerializationKind.cs" />
     <Compile Include="Interfaces\IStringDeserialize.cs" />
@@ -153,7 +146,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="SerializationConfiguration\RegistrationDetails.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlySerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\RegistrationTime.cs" />
     <Compile Include="SerializationConfiguration\VersionlessOpenTypeConsolidatingTypeEqualityComparer.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationBase\SerializationConfigurationBase.Static.cs" />
@@ -162,7 +154,6 @@
     <Compile Include="SerializationConfiguration\SerializationConfigurationBase\SerializationConfigurationBase.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationManager.cs" />
     <Compile Include="Models\SerializerDescription.cs" />
-    <Compile Include="SerializationConfiguration\SerializationConfigurationExtensions.cs" />
     <Compile Include="Enums\SerializationDirection.cs" />
     <Compile Include="Enums\SerializationFormat.cs" />
     <Compile Include="Enums\SerializationKind.cs" />

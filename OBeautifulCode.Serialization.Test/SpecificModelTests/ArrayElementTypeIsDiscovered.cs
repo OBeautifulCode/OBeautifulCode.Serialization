@@ -7,9 +7,9 @@
 namespace OBeautifulCode.Serialization.Test
 {
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
+
     using FluentAssertions;
-    using OBeautifulCode.Representation.System;
+    using OBeautifulCode.Serialization.Json;
     using Xunit;
 
     public static class ArrayElementTypeIsDiscovered
@@ -18,7 +18,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void ElementTypeOfArrayIsOnlyTypeDiscovered()
         {
             // Arrange, Act
-            var configured = SerializationConfigurationManager.GetOrAddSerializationConfiguration<TypesToRegisterSerializationConfiguration<TypeWithObjectArray>>();
+            var configured = SerializationConfigurationManager.GetOrAddSerializationConfiguration(typeof(TypesToRegisterJsonSerializationConfiguration<TypeWithObjectArray>).ToJsonSerializationConfigurationType();
 
             // Assert
             configured.IsRegisteredType(typeof(TypeWithObjectArray)).Should().BeTrue();

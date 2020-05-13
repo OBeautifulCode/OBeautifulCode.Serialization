@@ -30,6 +30,14 @@ namespace OBeautifulCode.Serialization.PropertyBag
         protected sealed override IReadOnlyCollection<TypeToRegister> TypesToRegister => this.TypesToRegisterForPropertyBag;
 
         /// <inheritdoc />
+        protected sealed override SerializationConfigurationType GetSerializationConfigurationType()
+        {
+            var result = this.GetType().ToPropertyBagSerializationConfigurationType();
+
+            return result;
+        }
+
+        /// <inheritdoc />
         protected sealed override TypeToRegister BuildTypeToRegisterForPostInitializationRegistration(
             Type type,
             Type recursiveOriginType,

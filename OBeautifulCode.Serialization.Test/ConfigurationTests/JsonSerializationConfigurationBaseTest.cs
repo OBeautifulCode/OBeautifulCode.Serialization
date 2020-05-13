@@ -9,7 +9,7 @@ namespace OBeautifulCode.Serialization.Test
     using System.Collections.Generic;
 
     using FluentAssertions;
-
+    using MongoDB.Bson;
     using Newtonsoft.Json.Serialization;
 
     using OBeautifulCode.Serialization.Json;
@@ -23,7 +23,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void JsonSerializationConfigurationBase___With_contract_override___Works()
         {
             // Arrange & Act
-            var actual = SerializationConfigurationManager.GetOrAddSerializationConfiguration<DefaultTestConfiguration>();
+            var actual = (DefaultTestConfiguration)SerializationConfigurationManager.GetOrAddSerializationConfiguration(typeof(DefaultTestConfiguration).ToJsonSerializationConfigurationType());
 
             // Assert
             actual.Should().NotBeNull();
@@ -35,7 +35,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void JsonSerializationConfigurationBase___With_null_implementation___Works()
         {
             // Arrange & Act
-            var actual = SerializationConfigurationManager.GetOrAddSerializationConfiguration<NullJsonSerializationConfiguration>();
+            var actual = (NullJsonSerializationConfiguration)SerializationConfigurationManager.GetOrAddSerializationConfiguration(typeof(NullJsonSerializationConfiguration).ToJsonSerializationConfigurationType());
 
             // Assert
             actual.Should().NotBeNull();

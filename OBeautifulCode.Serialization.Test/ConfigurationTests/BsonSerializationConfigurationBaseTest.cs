@@ -154,7 +154,7 @@ namespace OBeautifulCode.Serialization.Test
         [Fact]
         public static void Configure___Provided_with_dependent_configs___Configures_dependents()
         {
-            void Action() => SerializationConfigurationManager.GetOrAddSerializationConfiguration<DependsOnCustomThrowsConfig>();
+            void Action() => SerializationConfigurationManager.GetOrAddSerializationConfiguration(typeof(DependsOnCustomThrowsConfig).ToBsonSerializationConfigurationType());
 
             // Act
             var exception = Record.Exception(Action);

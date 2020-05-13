@@ -35,12 +35,12 @@ namespace OBeautifulCode.Serialization
         protected virtual UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy => UnregisteredTypeEncounteredStrategy.Throw;
 
         /// <summary>
-        /// Performs any setup/logic prior to being used by a serializer for any operations.
+        /// Gets the serialization configuration type.
         /// </summary>
-        public virtual void SetupForSerializationOperations()
-        {
-            /* no-op - inheritors can use this to perform setup/logic (e.g. in BSON we need to register all discriminators) */
-        }
+        /// <returns>
+        /// The serialization configuration type.
+        /// </returns>
+        protected abstract SerializationConfigurationType GetSerializationConfigurationType();
 
         /// <summary>
         /// Builds a <see cref="TypeToRegister"/> to be used for post-initialization registration,

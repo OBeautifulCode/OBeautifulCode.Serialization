@@ -9,7 +9,6 @@ namespace OBeautifulCode.Serialization.Bson
     using System;
 
     using MongoDB.Bson.Serialization;
-    using MongoDB.Bson.Serialization.Conventions;
 
     using OBeautifulCode.Serialization;
 
@@ -20,43 +19,40 @@ namespace OBeautifulCode.Serialization.Bson
     /// </summary>
     public abstract partial class BsonSerializationConfigurationBase : SerializationConfigurationBase
     {
-        private IDiscriminatorConvention obcBsonDiscriminatorConvention;
-
         private void ProcessTypeToRegisterForBson(
-            TypeToRegisterForBson typeToRegisterForBson)
+            TypeToRegisterForBson typeToRegisterForBson,
+            SerializationConfigurationType registeringSerializationConfigurationType)
         {
             var type = typeToRegisterForBson.Type;
 
             var serializerBuilderFunc = typeToRegisterForBson.SerializerBuilderFunc;
 
-            if (serializerBuilderFunc == null)
+            if (registeringSerializationConfigurationType == this.SerializationConfigurationType)
             {
-                try
+                if (serializerBuilderFunc == null)
                 {
-                    if (type.IsClass)
+                    try
                     {
-                        var bsonClassMap = AutomaticallyBuildBsonClassMap(type, typeToRegisterForBson.PropertyNameWhitelist);
+                        if (type.IsClass)
+                        {
+                            var bsonClassMap = AutomaticallyBuildBsonClassMap(type, typeToRegisterForBson.PropertyNameWhitelist);
 
-                        BsonClassMap.RegisterClassMap(bsonClassMap);
+                            BsonClassMap.RegisterClassMap(bsonClassMap);
+                        }
+
+                        // we are not 100% sure whether interface types or abstract types need to be registered
+                        // but there doesn't seem to be any harm in doing so.
+                        BsonSerializer.RegisterDiscriminatorConvention(type, ObcBsonDiscriminatorConvention.Instance);
                     }
-
-                    // we are not 100% sure whether interface types or abstract types need to be registered
-                    // but there doesn't seem to be any harm in doing so.
-                    if (this.obcBsonDiscriminatorConvention == null)
+                    catch (Exception ex)
                     {
-                        this.obcBsonDiscriminatorConvention = new ObcBsonDiscriminatorConvention(this);
+                        throw new BsonSerializationConfigurationException(Invariant($"Failed to run {nameof(BsonClassMap.RegisterClassMap)} on {type.FullName}"), ex);
                     }
-
-                    BsonSerializer.RegisterDiscriminatorConvention(type, this.obcBsonDiscriminatorConvention);
                 }
-                catch (Exception ex)
+                else
                 {
-                    throw new BsonSerializationConfigurationException(Invariant($"Failed to run {nameof(BsonClassMap.RegisterClassMap)} on {type.FullName}"), ex);
+                    BsonSerializer.RegisterSerializer(type, serializerBuilderFunc());
                 }
-            }
-            else
-            {
-                BsonSerializer.RegisterSerializer(type, serializerBuilderFunc());
             }
         }
     }

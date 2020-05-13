@@ -31,6 +31,14 @@ namespace OBeautifulCode.Serialization.Json
         protected sealed override IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypes => this.DependentJsonSerializationConfigurationTypes;
 
         /// <inheritdoc />
+        protected sealed override SerializationConfigurationType GetSerializationConfigurationType()
+        {
+            var result = this.GetType().ToJsonSerializationConfigurationType();
+
+            return result;
+        }
+
+        /// <inheritdoc />
         protected sealed override TypeToRegister BuildTypeToRegisterForPostInitializationRegistration(
             Type type,
             Type recursiveOriginType,

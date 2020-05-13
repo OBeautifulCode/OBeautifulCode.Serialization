@@ -13,7 +13,6 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Conventions;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Type.Recipes;
 
@@ -27,19 +26,10 @@ namespace OBeautifulCode.Serialization.Bson
     /// </summary>
     public class ObcBsonDiscriminatorConvention : IDiscriminatorConvention
     {
-        private readonly SerializationConfigurationBase serializationConfiguration;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObcBsonDiscriminatorConvention"/> class.
+        /// Gets a static instance of this class.
         /// </summary>
-        /// <param name="serializationConfiguration">A reference to the serialization configuration instance that created this discriminator.</param>
-        public ObcBsonDiscriminatorConvention(
-            SerializationConfigurationBase serializationConfiguration)
-        {
-            new { serializationConfiguration }.AsArg().Must().NotBeNull();
-
-            this.serializationConfiguration = serializationConfiguration;
-        }
+        public static readonly ObcBsonDiscriminatorConvention Instance = new ObcBsonDiscriminatorConvention();
 
         /// <inheritdoc />
         public string ElementName => "_t";
@@ -87,23 +77,13 @@ namespace OBeautifulCode.Serialization.Bson
             bsonReader.ReturnToBookmark(bookmark);
 
             // See notes in ThrowOnUnregisteredTypeIfAppropriate for the need to make this call.
-            // Note that this isn't a 100% complete solution.  Ideally this discriminator would know
+            // Note that this is a sub-par solution.  Ideally this discriminator would know
             // which serializer (and hence which serialization configuration) is being used for deserializing,
             // because it is passed as a parameter to this method.  Because that's not an option in Mongo,
-            // we have to construct this discriminator with a config and thus we have to choose which single config
-            // to use.  See notes in BsonSerializationConfigurationBase.  Upon the first attempt to serialize
-            // or de-serialize, we will consider THAT serializer's config to be the top-level config,
-            // we will iterate thru all registered types, creating discriminators and use that config when
-            // constructing those discriminators.  In that way, we ensure that ThrowOnUnregisteredTypeIfAppropriate
-            // is being called on the "front-door"/oldest-ancestor config.  This has two problems:
-            //    1. Another serializer can be instantiated with an even older ancestor config after the fact,
-            //       and we have no way to re-point to that config here.
-            //    2. Another serializer can be instantiated with a config that is in a completely different
-            //       inheritance tree than this.serializationConfiguration, but still registers the same
-            //       interface or base class type that this discriminator was created for.
-            // To avoid these problems, we disallow serializers from requesting two different configs in
-            // SerializationConfigurationManager.  First one wins, others will throw.
-            this.serializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(result, SerializationDirection.Deserialize, null);
+            // we have to use ObcBsonSerializer.SerializationConfigurationInUseForDeserialization, which
+            // tracks the thread being used for the deserialize operation and associates the serialization
+            // configuration in-use with the thread.
+            ObcBsonSerializer.SerializationConfigurationInUseForDeserialization.ThrowOnUnregisteredTypeIfAppropriate(result, SerializationDirection.Deserialize, null);
 
             return result;
         }
