@@ -140,7 +140,7 @@ namespace OBeautifulCode.Serialization.Test
                            + "}";
 
             var test = new TestObject { Property1 = property1, Property2 = property2, Property3 = property3, };
-            var serializer = new ObcJsonSerializer(formattingKind: JsonFormattingKind.Compact);
+            var serializer = new ObcJsonSerializer<CompactFormatJsonSerializationConfiguration<NullJsonSerializationConfiguration>>();
 
             // Act
             var actual = serializer.SerializeToString(test);
@@ -155,7 +155,7 @@ namespace OBeautifulCode.Serialization.Test
             // If Compact is being used then there should be no new lines
             var dog = new Dog(5, "spud", FurColor.Brindle);
 
-            var json = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType(), formattingKind: JsonFormattingKind.Compact).SerializeToString(dog);
+            var json = new ObcJsonSerializer(typeof(CompactFormatJsonSerializationConfiguration<TypesToRegisterJsonSerializationConfiguration<Animal>>).ToJsonSerializationConfigurationType()).SerializeToString(dog);
 
             var assemblyVersion = typeof(ObcJsonSerializerTest).Assembly.GetName().Version.ToString();
 
@@ -170,7 +170,7 @@ namespace OBeautifulCode.Serialization.Test
             // If Compact is being used then strict constructor matching will result in a Dog and not a Mouse
             var dogJson = "{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}";
 
-            var dog = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType(), formattingKind: JsonFormattingKind.Compact).Deserialize<Animal>(dogJson) as Dog;
+            var dog = new ObcJsonSerializer(typeof(CompactFormatJsonSerializationConfiguration<TypesToRegisterJsonSerializationConfiguration<Animal>>).ToJsonSerializationConfigurationType()).Deserialize<Animal>(dogJson) as Dog;
 
             dog.Should().NotBeNull();
             dog.Name.Should().Be("Barney");
@@ -185,7 +185,7 @@ namespace OBeautifulCode.Serialization.Test
             // If Compact is being used then strict constructor matching will result in a Dog and not a Mouse
             var dogJson = "{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}";
 
-            var dog = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType(), formattingKind: JsonFormattingKind.Compact).Deserialize(dogJson, typeof(Animal)) as Dog;
+            var dog = new ObcJsonSerializer(typeof(CompactFormatJsonSerializationConfiguration<TypesToRegisterJsonSerializationConfiguration<Animal>>).ToJsonSerializationConfigurationType()).Deserialize(dogJson, typeof(Animal)) as Dog;
 
             dog.Should().NotBeNull();
             dog.Name.Should().Be("Barney");
@@ -199,7 +199,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var dogJson = "{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}";
 
-            var dog = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType(), JsonFormattingKind.Compact).Deserialize<dynamic>(dogJson) as JObject;
+            var dog = new ObcJsonSerializer(typeof(CompactFormatJsonSerializationConfiguration<TypesToRegisterJsonSerializationConfiguration<Animal>>).ToJsonSerializationConfigurationType()).Deserialize<dynamic>(dogJson) as JObject;
 
             dog.Properties().Count().Should().Be(3);
             dog["name"].ToString().Should().Be("Barney");
@@ -222,7 +222,7 @@ namespace OBeautifulCode.Serialization.Test
                            + "}";
 
             var test = new TestObject { Property1 = property1, Property2 = property2, Property3 = property3, };
-            var serializer = new ObcJsonSerializer(formattingKind: JsonFormattingKind.Minimal);
+            var serializer = new ObcJsonSerializer<MinimalFormatJsonSerializationConfiguration<NullJsonSerializationConfiguration>>();
 
             // Act
             var actual = serializer.SerializeToString(test);
@@ -237,7 +237,7 @@ namespace OBeautifulCode.Serialization.Test
             // If Minimal is being used then the null Nickname property won't be serialized
             var dog = new Dog(5, "spud", FurColor.Brindle);
 
-            var json = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType(), formattingKind: JsonFormattingKind.Minimal).SerializeToString(dog);
+            var json = new ObcJsonSerializer(typeof(MinimalFormatJsonSerializationConfiguration<TypesToRegisterJsonSerializationConfiguration<Animal>>).ToJsonSerializationConfigurationType()).SerializeToString(dog);
 
             json.Should().Be("{\"name\":\"spud\",\"furColor\":\"brindle\",\"dogTag\":\"my name is spud\",\"age\":5}");
         }
@@ -249,7 +249,7 @@ namespace OBeautifulCode.Serialization.Test
             // otherwise, out-of-the-box json.net will create an anonymous object
             var lightingJson = "{}";
 
-            var lighting = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Lighting>).ToJsonSerializationConfigurationType(), formattingKind: JsonFormattingKind.Minimal).Deserialize<Lighting>(lightingJson) as NoLighting;
+            var lighting = new ObcJsonSerializer(typeof(MinimalFormatJsonSerializationConfiguration<TypesToRegisterJsonSerializationConfiguration<Lighting>>).ToJsonSerializationConfigurationType()).Deserialize<Lighting>(lightingJson) as NoLighting;
 
             lighting.Should().NotBeNull();
         }
@@ -261,7 +261,7 @@ namespace OBeautifulCode.Serialization.Test
             // otherwise, out-of-the-box json.net will create an anonymous object
             var lightingJson = "{}";
 
-            var lighting = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Lighting>).ToJsonSerializationConfigurationType(), formattingKind: JsonFormattingKind.Minimal).Deserialize(lightingJson, typeof(Lighting)) as NoLighting;
+            var lighting = new ObcJsonSerializer(typeof(MinimalFormatJsonSerializationConfiguration<TypesToRegisterJsonSerializationConfiguration<Lighting>>).ToJsonSerializationConfigurationType()).Deserialize(lightingJson, typeof(Lighting)) as NoLighting;
 
             lighting.Should().NotBeNull();
         }
@@ -271,7 +271,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             var dogJson = "{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}";
 
-            var dog = new ObcJsonSerializer(formattingKind: JsonFormattingKind.Minimal).Deserialize<dynamic>(dogJson) as JObject;
+            var dog = new ObcJsonSerializer<MinimalFormatJsonSerializationConfiguration<NullJsonSerializationConfiguration>>().Deserialize<dynamic>(dogJson) as JObject;
 
             dog.Properties().Count().Should().Be(3);
             dog["name"].ToString().Should().Be("Barney");

@@ -13,10 +13,8 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcJsonSerializer{TJsonSerializationConfiguration}"/> class.
         /// </summary>
-        /// <param name="formattingKind">Optional type of formatting to use; DEFAULT is <see cref="JsonFormattingKind.Default" />.</param>
-        public ObcJsonSerializer(
-            JsonFormattingKind formattingKind = JsonFormattingKind.Default)
-            : base(typeof(TJsonSerializationConfiguration).ToJsonSerializationConfigurationType(), formattingKind)
+        public ObcJsonSerializer()
+            : base(typeof(TJsonSerializationConfiguration).ToJsonSerializationConfigurationType())
         {
         }
     }

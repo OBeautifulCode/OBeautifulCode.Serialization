@@ -13,6 +13,11 @@ namespace OBeautifulCode.Serialization.Json
     public abstract partial class JsonSerializationConfigurationBase
     {
         /// <summary>
+        /// Gets the kind of formatting to use.
+        /// </summary>
+        public virtual JsonFormattingKind JsonFormattingKind => JsonFormattingKind.Default;
+
+        /// <summary>
         /// Gets the <see cref="JsonSerializationConfigurationBase"/>s that are needed for the current implementation of <see cref="JsonSerializationConfigurationBase"/>.  Optionally overrideable, DEFAULT is empty collection.
         /// </summary>
         protected virtual IReadOnlyCollection<JsonSerializationConfigurationType> DependentJsonSerializationConfigurationTypes => new JsonSerializationConfigurationType[0];
