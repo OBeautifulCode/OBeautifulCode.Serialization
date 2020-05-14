@@ -9,7 +9,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to serialize to and from a byte array or string.
     /// </summary>
-    public interface ISerialize : IStringSerialize, IBinarySerialize, IHaveSerializationKind
+    public interface ISerialize : IStringSerialize, IBinarySerialize
     {
     }
 }

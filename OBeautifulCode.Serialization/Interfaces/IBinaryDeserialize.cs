@@ -14,7 +14,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to deserialize from a byte array.
     /// </summary>
-    public interface IBinaryDeserialize : IHaveSerializationConfigurationType
+    public interface IBinaryDeserialize
     {
         /// <summary>
         /// Deserializes the byte array into an object.

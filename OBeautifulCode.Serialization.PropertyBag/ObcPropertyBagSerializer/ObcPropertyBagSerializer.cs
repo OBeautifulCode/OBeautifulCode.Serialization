@@ -18,6 +18,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Reflection.Recipes;
+    using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.PropertyBag.Internal;
     using OBeautifulCode.String.Recipes;
     using OBeautifulCode.Type.Recipes;
@@ -68,10 +69,15 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 this.propertyBagConfiguration.StringSerializationNullValueEncoding);
 
             this.configuredTypeToSerializerMap = this.propertyBagConfiguration.BuildConfiguredTypeToSerializerMap();
+
+            this.SerializerRepresentation = new SerializerRepresentation(SerializationKind.PropertyBag, propertyBagSerializationConfigurationType?.ConcreteSerializationConfigurationDerivativeType.ToRepresentation());
         }
 
         /// <inheritdoc />
         public override SerializationKind SerializationKind => SerializationKind.PropertyBag;
+
+        /// <inheritdoc />
+        public override SerializerRepresentation SerializerRepresentation { get; }
 
         /// <summary>
         /// Converts string into a byte array.
@@ -469,17 +475,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
                     return _.Name == "Parse" && parameters.Length == 1 && parameters.Single().ParameterType == typeof(string);
                 });
 
-                object result;
-
-                if (parseMethod == null)
-                {
-                    // nothing we can do here so return the string and hope...
-                    result = serializedString;
-                }
-                else
-                {
-                    result = parseMethod.Invoke(null, new object[] { serializedString });
-                }
+                var result = parseMethod == null
+                    ? serializedString
+                    : parseMethod.Invoke(null, new object[] { serializedString });
 
                 return result;
             }

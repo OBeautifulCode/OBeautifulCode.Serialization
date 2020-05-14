@@ -57,6 +57,11 @@ namespace OBeautifulCode.Serialization.Json
                 {
                     throw new ArgumentException(Invariant($"{nameof(jsonConverterBuilder)} is specified, but {nameof(Serialization.MemberTypesToInclude)} is not {MemberTypesToInclude.None}."));
                 }
+
+                if (type.IsGenericTypeDefinition)
+                {
+                    throw new NotSupportedException(Invariant($"{nameof(jsonConverterBuilder)} is specified, but underlying type to register is an open generic."));
+                }
             }
 
             this.JsonConverterBuilder = jsonConverterBuilder;

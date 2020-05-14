@@ -54,6 +54,7 @@ namespace OBeautifulCode.Serialization.Json
 
             return result;
         }
+
         /// <inheritdoc />
         protected sealed override void ProcessRegistrationDetailsPriorToRegistration(
             RegistrationDetails registrationDetails,
@@ -63,6 +64,17 @@ namespace OBeautifulCode.Serialization.Json
 
             if (registrationDetails.TypeToRegister is TypeToRegisterForJson typeToRegisterForJson)
             {
+                // There's nothing to do if it's a generic type definition.
+                // The closed generic types will be registered post-initialization.
+                // Upon serializing, the serializer will call this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate,
+                // which recurses through the runtime types of the object being serialized
+                // and registers any unregistered closed generic types it encounters.
+                // Upon deserialization this is handled by ObcBsonDiscriminatorConvention.
+                if (registrationDetails.TypeToRegister.Type.IsGenericTypeDefinition)
+                {
+                    return;
+                }
+
                 this.ProcessTypeToRegisterForJson(typeToRegisterForJson);
             }
             else

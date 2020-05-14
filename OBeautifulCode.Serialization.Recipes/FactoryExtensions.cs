@@ -11,7 +11,6 @@ namespace OBeautifulCode.Serialization.Recipes
 {
     using System.Diagnostics.CodeAnalysis;
 
-    using OBeautifulCode.Compression.Recipes;
     using OBeautifulCode.Representation.System;
 
     /// <summary>
@@ -31,7 +30,8 @@ namespace OBeautifulCode.Serialization.Recipes
         /// </summary>
         /// <typeparam name="T">Type of object to serialize.</typeparam>
         /// <param name="objectToPackageIntoDescribedSerialization">Object to serialize.</param>
-        /// <param name="serializerDescription">Description of the serializer to use.</param>
+        /// <param name="serializerRepresentation">Description of the serializer to use.</param>
+        /// <param name="serializationFormat">The serialization format to use.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
         /// Self described serialization.
@@ -39,13 +39,14 @@ namespace OBeautifulCode.Serialization.Recipes
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object", Justification = "Spelling/name is correct.")]
         public static DescribedSerialization ToDescribedSerialization<T>(
             this T objectToPackageIntoDescribedSerialization,
-            SerializerDescription serializerDescription,
+            SerializerRepresentation serializerRepresentation,
+            SerializationFormat serializationFormat,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
             var result = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificFactory(
-                serializerDescription,
+                serializerRepresentation,
                 SerializerFactory.Instance,
-                CompressorFactory.Instance,
+                serializationFormat,
                 assemblyMatchStrategy);
 
             return result;
@@ -65,7 +66,6 @@ namespace OBeautifulCode.Serialization.Recipes
         {
             var result =  describedSerialization.DeserializePayloadUsingSpecificFactory(
                 SerializerFactory.Instance,
-                CompressorFactory.Instance,
                 assemblyMatchStrategy);
 
             return result;
@@ -87,7 +87,6 @@ namespace OBeautifulCode.Serialization.Recipes
         {
             var result = describedSerialization.DeserializePayloadUsingSpecificFactory<T>(
                 SerializerFactory.Instance,
-                CompressorFactory.Instance,
                 assemblyMatchStrategy);
 
             return result;

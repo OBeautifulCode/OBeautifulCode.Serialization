@@ -13,7 +13,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to serialize to a byte array.
     /// </summary>
-    public interface IBinarySerialize : IHaveSerializationConfigurationType
+    public interface IBinarySerialize
     {
         /// <summary>
         /// Serializes an object into a byte array.

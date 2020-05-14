@@ -14,6 +14,7 @@ namespace OBeautifulCode.Serialization.Json
     using Newtonsoft.Json.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.Json.Internal;
     using OBeautifulCode.Type.Recipes;
 
@@ -41,10 +42,14 @@ namespace OBeautifulCode.Serialization.Json
             new { this.jsonConfiguration.JsonFormattingKind }.AsArg().Must().NotBeEqualTo(JsonFormattingKind.Invalid);
 
             this.anonymousWriteSerializationSettings = this.jsonConfiguration.BuildAnonymousJsonSerializerSettings(SerializationDirection.Serialize, this.jsonConfiguration.JsonFormattingKind);
+            this.SerializerRepresentation = new SerializerRepresentation(SerializationKind.Json, jsonSerializationConfigurationType?.ConcreteSerializationConfigurationDerivativeType.ToRepresentation());
         }
 
         /// <inheritdoc />
         public override SerializationKind SerializationKind => SerializationKind.Json;
+
+        /// <inheritdoc />
+        public override SerializerRepresentation SerializerRepresentation { get; }
 
         /// <summary>
         /// Converts JSON string into a byte array.

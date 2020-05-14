@@ -41,8 +41,8 @@
     <CodeAnalysisRuleSet />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OBeautifulCode.Compression, Version=1.0.13.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OBeautifulCode.Compression.1.0.13\lib\net462\OBeautifulCode.Compression.dll</HintPath>
+    <Reference Include="OBeautifulCode.Compression, Version=1.0.14.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OBeautifulCode.Compression.1.0.14\lib\net462\OBeautifulCode.Compression.dll</HintPath>
     </Reference>
     <Reference Include="OBeautifulCode.Representation.System, Version=1.0.46.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OBeautifulCode.Representation.System.1.0.46\lib\net462\OBeautifulCode.Representation.System.dll</HintPath>
@@ -112,6 +112,9 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="Interfaces\IHaveSerializerRepresentation.cs" />
+    <Compile Include="Interfaces\ISerializer.cs" />
+    <Compile Include="ObcSerializer\SerializerFactoryBase.cs" />
     <Compile Include="ObcSerializer\ObcCompressingSerializer.cs" />
     <Compile Include="SerializationConfiguration\IIgnoreDefaultDependencies.cs" />
     <Compile Include="Interfaces\IStringSerialize.cs" />
@@ -140,8 +143,8 @@
     <Compile Include="Models\DynamicTypePlaceholder.designer.cs">
       <DependentUpon>DynamicTypePlaceholder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\SerializerDescription.designer.cs">
-      <DependentUpon>SerializerDescription.cs</DependentUpon>
+    <Compile Include="Models\SerializerRepresentation.designer.cs">
+      <DependentUpon>SerializerRepresentation.cs</DependentUpon>
     </Compile>
     <Compile Include="Exceptions\ObcSerializationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -154,7 +157,7 @@
     <Compile Include="SerializationConfiguration\SerializationConfigurationType.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationBase\SerializationConfigurationBase.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationManager.cs" />
-    <Compile Include="Models\SerializerDescription.cs" />
+    <Compile Include="Models\SerializerRepresentation.cs" />
     <Compile Include="Enums\SerializationDirection.cs" />
     <Compile Include="Enums\SerializationFormat.cs" />
     <Compile Include="Enums\SerializationKind.cs" />
@@ -168,7 +171,7 @@
     <Compile Include="CustomSerializers\DateTime\SerializedDateTimeKind.cs" />
     <Compile Include="CustomSerializers\ObcDateTimeStringSerializer.cs" />
     <Compile Include="CustomSerializers\ObcDictionaryStringStringSerializer.cs" />
-    <Compile Include="CustomSerializers\ObcLambdaBackedSerializer.cs" />
+    <Compile Include="ObcSerializer\ObcLambdaBackedSerializer.cs" />
     <Compile Include="Exceptions\UnregisteredTypeAttemptException.cs" />
     <Compile Include="Enums\UnregisteredTypeEncounteredStrategy.cs" />
     <AdditionalFiles Include=".analyzers\stylecop.json" />

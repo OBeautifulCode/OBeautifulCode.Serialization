@@ -67,6 +67,11 @@ namespace OBeautifulCode.Serialization.Bson
                 {
                     throw new ArgumentException(Invariant($"{nameof(serializerBuilderFunc)} is specified, but {nameof(Serialization.MemberTypesToInclude)} is not {MemberTypesToInclude.None}."));
                 }
+
+                if (type.IsGenericTypeDefinition)
+                {
+                    throw new NotSupportedException(Invariant($"{nameof(serializerBuilderFunc)} is specified, but underlying type to register is an open generic."));
+                }
             }
 
             if (propertyNameWhitelist != null)
@@ -81,6 +86,11 @@ namespace OBeautifulCode.Serialization.Bson
                 if (relatedTypesToInclude != RelatedTypesToInclude.None)
                 {
                     throw new ArgumentException(Invariant($"{nameof(propertyNameWhitelist)} is specified, but {nameof(Serialization.RelatedTypesToInclude)} is not {RelatedTypesToInclude.None}."));
+                }
+
+                if (type.IsGenericTypeDefinition)
+                {
+                    throw new NotSupportedException(Invariant($"{nameof(propertyNameWhitelist)} is specified, but underlying type to register is an open generic."));
                 }
             }
 

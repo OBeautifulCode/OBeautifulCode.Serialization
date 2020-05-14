@@ -14,7 +14,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to serialize to a string.
     /// </summary>
-    public interface IPropertyBagSerialize : IHaveSerializationConfigurationType
+    public interface IPropertyBagSerialize
     {
         /// <summary>
         /// Serializes an object into a string.

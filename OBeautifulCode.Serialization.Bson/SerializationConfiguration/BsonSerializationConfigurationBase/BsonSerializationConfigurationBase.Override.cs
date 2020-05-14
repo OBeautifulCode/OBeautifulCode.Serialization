@@ -63,19 +63,19 @@ namespace OBeautifulCode.Serialization.Bson
             new { registrationDetails }.AsArg().Must().NotBeNull();
             new { registrationTime }.AsArg().Must().NotBeEqualTo(RegistrationTime.Unknown);
 
-            // There's nothing to do if it's a generic type definition.
-            // The closed generic types will be registered post-initialization.
-            // Upon serializing, the serializer will call this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate,
-            // which recurses through the runtime types of the object being serialized
-            // and registers any unregistered closed generic types it encounters.
-            // Upon deserialization this is handled by ObcBsonDiscriminatorConvention.
-            if (registrationDetails.TypeToRegister.Type.IsGenericTypeDefinition)
-            {
-                return;
-            }
-
             if (registrationDetails.TypeToRegister is TypeToRegisterForBson typeToRegisterForBson)
             {
+                // There's nothing to do if it's a generic type definition.
+                // The closed generic types will be registered post-initialization.
+                // Upon serializing, the serializer will call this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate,
+                // which recurses through the runtime types of the object being serialized
+                // and registers any unregistered closed generic types it encounters.
+                // Upon deserialization this is handled by ObcBsonDiscriminatorConvention.
+                if (typeToRegisterForBson.Type.IsGenericTypeDefinition)
+                {
+                    return;
+                }
+
                 this.ProcessTypeToRegisterForBson(typeToRegisterForBson, registrationDetails.SerializationConfigurationType);
             }
             else

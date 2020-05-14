@@ -12,6 +12,7 @@ namespace OBeautifulCode.Serialization.Recipes
     using System;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Compression;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
@@ -29,15 +30,18 @@ namespace OBeautifulCode.Serialization.Recipes
 #else
     public
 #endif
-    sealed class SerializerFactory : ISerializerFactory
+    sealed class SerializerFactory : SerializerFactoryBase
     {
         private static readonly SerializerFactory InternalInstance = new SerializerFactory();
 
-        private readonly object sync = new object();
-
-        private SerializerFactory()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyBagSerializerFactory"/> class.
+        /// </summary>
+        /// <param name="compressorFactory">Optional compressor factory to use.  DEFAULT is to use OBeautifulCode.Compression.Recipes.CompressorFactory.Instance.</param>
+        public SerializerFactory(
+            ICompressorFactory compressorFactory = null)
+            : base(compressorFactory)
         {
-            /* no-op to make sure this can only be accessed via instance property */
         }
 
         /// <summary>
@@ -46,28 +50,35 @@ namespace OBeautifulCode.Serialization.Recipes
         public static ISerializerFactory Instance => InternalInstance;
 
         /// <inheritdoc />
-        public ISerializeAndDeserialize BuildSerializer(
-            SerializerDescription serializerDescription, 
+        public override ISerializer BuildSerializer(
+            SerializerRepresentation serializerRepresentation,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            new { serializerDescription }.AsArg().Must().NotBeNull();
+            new { serializerRepresentation }.AsArg().Must().NotBeNull();
 
-            lock (this.sync)
+            // ReSharper disable once RedundantArgumentDefaultValue
+            var configurationType = serializerRepresentation.SerializationConfigType?.ResolveFromLoadedTypes(assemblyMatchStrategy, throwIfCannotResolve: true);
+
+            ISerializer serializer;
+
+            switch (serializerRepresentation.SerializationKind)
             {
-                var configurationType = serializerDescription.SerializationConfigType?.ResolveFromLoadedTypes(assemblyMatchStrategy, throwIfCannotResolve: true);
-
-                switch (serializerDescription.SerializationKind)
-                {
-                    case SerializationKind.Bson: 
-                        return new ObcBsonSerializer(configurationType?.ToBsonSerializationConfigurationType());
-                    case SerializationKind.Json: 
-                        return new ObcJsonSerializer(configurationType?.ToJsonSerializationConfigurationType());
-                    case SerializationKind.PropertyBag: 
-                        return new ObcPropertyBagSerializer(configurationType?.ToPropertyBagSerializationConfigurationType());
-                    default: 
-                        throw new NotSupportedException(Invariant($"{nameof(serializerDescription)} from enumeration {nameof(SerializationKind)} of {serializerDescription.SerializationKind} is not supported."));
-                }
+                case SerializationKind.Bson:
+                    serializer = new ObcBsonSerializer(configurationType?.ToBsonSerializationConfigurationType());
+                    break;
+                case SerializationKind.Json:
+                    serializer = new ObcJsonSerializer(configurationType?.ToJsonSerializationConfigurationType());
+                    break;
+                case SerializationKind.PropertyBag:
+                    serializer = new ObcPropertyBagSerializer(configurationType?.ToPropertyBagSerializationConfigurationType());
+                    break;
+                default:
+                    throw new NotSupportedException(Invariant($"{nameof(serializerRepresentation)} from enumeration {nameof(SerializationKind)} of {serializerRepresentation.SerializationKind} is not supported."));
             }
+
+            var result = this.WrapInCompressingSerializerIfAppropriate(serializer, serializerRepresentation.CompressionKind);
+
+            return result;
         }
     }
 }

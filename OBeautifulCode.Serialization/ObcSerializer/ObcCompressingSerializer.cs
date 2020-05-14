@@ -10,43 +10,48 @@ namespace OBeautifulCode.Serialization
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Compression;
+    using OBeautifulCode.Representation.System;
 
     /// <summary>
     /// A serializer that compresses after serialization and decompresses before de-serialization.
     /// </summary>
-    public class ObcCompressingSerializer : ISerializeAndDeserialize
+    public class ObcCompressingSerializer : ISerializer
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcCompressingSerializer"/> class.
         /// </summary>
         /// <param name="serializer">The underlying serializer to use.</param>
         /// <param name="compressor">The compressor to use.</param>
-        protected ObcCompressingSerializer(
-            ISerializeAndDeserialize serializer,
-            ICompressAndDecompress compressor)
+        public ObcCompressingSerializer(
+            ISerializer serializer,
+            ICompressor compressor)
         {
             new { serializer }.AsArg().Must().NotBeNull();
             new { compressor }.AsArg().Must().NotBeNull();
 
             this.Serializer = serializer;
             this.Compressor = compressor;
+            this.SerializerRepresentation = new SerializerRepresentation(serializer.SerializationKind, serializer.SerializationConfigurationType?.ConcreteSerializationConfigurationDerivativeType.ToRepresentation(), compressor.CompressionKind);
         }
 
         /// <summary>
         /// Gets the underlying serializer to use.
         /// </summary>
-        public ISerializeAndDeserialize Serializer { get; }
+        public ISerializer Serializer { get; }
 
         /// <summary>
         /// Gets the compressor to use.
         /// </summary>
-        public ICompressAndDecompress Compressor { get; }
+        public ICompressor Compressor { get; }
 
         /// <inheritdoc />
         public SerializationConfigurationType SerializationConfigurationType => this.Serializer.SerializationConfigurationType;
 
         /// <inheritdoc />
         public SerializationKind SerializationKind => this.Serializer.SerializationKind;
+
+        /// <inheritdoc />
+        public SerializerRepresentation SerializerRepresentation { get; }
 
         /// <inheritdoc />
         public byte[] SerializeToBytes(

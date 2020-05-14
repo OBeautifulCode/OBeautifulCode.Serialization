@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IDeserialize.cs" company="OBeautifulCode">
+// <copyright file="IHaveSerializerRepresentation.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,9 +7,13 @@
 namespace OBeautifulCode.Serialization
 {
     /// <summary>
-    /// Interface to deserialize to and from a byte array or string.
+    /// Represents a serializer that has a <see cref="SerializerRepresentation"/>.
     /// </summary>
-    public interface IDeserialize : IStringDeserialize, IBinaryDeserialize
+    public interface IHaveSerializerRepresentation
     {
+        /// <summary>
+        /// Gets the <see cref="SerializerRepresentation"/>.
+        /// </summary>
+        SerializerRepresentation SerializerRepresentation { get; }
     }
 }

@@ -10,8 +10,6 @@ namespace OBeautifulCode.Serialization
     using System.Diagnostics.CodeAnalysis;
 
     using OBeautifulCode.Assertion.Recipes;
-    using OBeautifulCode.Compression;
-    using OBeautifulCode.Compression.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.Internal;
     using OBeautifulCode.Type.Recipes;
@@ -24,13 +22,28 @@ namespace OBeautifulCode.Serialization
     public static class DomainExtensions
     {
         /// <summary>
+        /// Gets the representation of the specified serializer.
+        /// </summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>
+        /// The representation.
+        /// </returns>
+        public static SerializerRepresentation ToRepresentation(
+            this ISerializer serializer)
+        {
+            var result = serializer.SerializerRepresentation;
+
+            return result;
+        }
+
+        /// <summary>
         /// Converts an object to a self described serialization to persist or share.
         /// </summary>
         /// <typeparam name="T">Type of object to serialize.</typeparam>
         /// <param name="objectToPackageIntoDescribedSerialization">Object to serialize.</param>
-        /// <param name="serializerDescription">Description of the serializer to use.</param>
+        /// <param name="serializerRepresentation">Representation of the serializer to use.</param>
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
-        /// <param name="compressorFactory">Implementation of <see cref="ICompressorFactory" /> that can resolve the compressor.</param>
+        /// <param name="serializationFormat">The serialization format to use.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
         /// Self described serialization.
@@ -38,20 +51,18 @@ namespace OBeautifulCode.Serialization
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
         public static DescribedSerialization ToDescribedSerializationUsingSpecificFactory<T>(
             this T objectToPackageIntoDescribedSerialization,
-            SerializerDescription serializerDescription,
+            SerializerRepresentation serializerRepresentation,
             ISerializerFactory serializerFactory,
-            ICompressorFactory compressorFactory,
+            SerializationFormat serializationFormat,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            new { serializerDescription }.AsArg().Must().NotBeNull();
+            new { serializerRepresentation }.AsArg().Must().NotBeNull();
             new { serializerFactory }.AsArg().Must().NotBeNull();
-            new { compressorFactory }.AsArg().Must().NotBeNull();
+            new { serializationFormat }.AsArg().Must().NotBeEqualTo(SerializationFormat.Invalid);
 
-            var serializer = serializerFactory.BuildSerializer(serializerDescription, assemblyMatchStrategy);
+            var serializer = serializerFactory.BuildSerializer(serializerRepresentation, assemblyMatchStrategy);
 
-            var compressor = compressorFactory.BuildCompressor(serializerDescription.CompressionKind);
-
-            var ret = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificSerializer(serializerDescription, serializer, compressor);
+            var ret = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificSerializer(serializer, serializationFormat);
 
             return ret;
         }
@@ -61,39 +72,32 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <typeparam name="T">Type of object to serialize.</typeparam>
         /// <param name="objectToPackageIntoDescribedSerialization">Object to serialize.</param>
-        /// <param name="serializerDescription">Description of the serializer to use.</param>
         /// <param name="serializer">Serializer to use.</param>
-        /// <param name="compressor">Optional compressor to use; DEFAULT is null.</param>
+        /// <param name="serializationFormat">The serialization format to use.</param>
         /// <returns>
         /// Self described serialization.
         /// </returns>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
         public static DescribedSerialization ToDescribedSerializationUsingSpecificSerializer<T>(
             this T objectToPackageIntoDescribedSerialization,
-            SerializerDescription serializerDescription,
-            ISerialize serializer,
-            ICompress compressor = null)
+            ISerializer serializer,
+            SerializationFormat serializationFormat)
         {
-            new { serializerDescription }.AsArg().Must().NotBeNull();
             new { serializer }.AsArg().Must().NotBeNull();
-
-            var localCompressor = compressor ?? new NullCompressor();
-
-            localCompressor.CompressionKind.AsArg(Invariant($"{nameof(serializerDescription)}.{nameof(serializerDescription.CompressionKind)}-Must-match-{nameof(compressor)}.{nameof(compressor.CompressionKind)}")).Must().BeEqualTo(serializerDescription.CompressionKind);
+            new { serializationFormat }.AsArg().Must().NotBeEqualTo(SerializationFormat.Invalid);
 
             string payload;
 
-            switch (serializerDescription.SerializationFormat)
+            switch (serializationFormat)
             {
                 case SerializationFormat.Binary:
-                    var rawBytes = serializer.SerializeToBytes(objectToPackageIntoDescribedSerialization);
-                    var compressedBytes = localCompressor.CompressBytes(rawBytes);
-                    payload = Convert.ToBase64String(compressedBytes);
+                    var bytes = serializer.SerializeToBytes(objectToPackageIntoDescribedSerialization);
+                    payload = Convert.ToBase64String(bytes);
                     break;
                 case SerializationFormat.String:
                     payload = serializer.SerializeToString(objectToPackageIntoDescribedSerialization);
                     break;
-                default: throw new NotSupportedException(Invariant($"{nameof(SerializationFormat)} - {serializerDescription.SerializationFormat} is not supported."));
+                default: throw new NotSupportedException(Invariant($"{nameof(SerializationFormat)} - {serializationFormat} is not supported."));
             }
 
             var payloadType = objectToPackageIntoDescribedSerialization?.GetType() ?? typeof(T);
@@ -103,7 +107,7 @@ namespace OBeautifulCode.Serialization
                 payloadType = typeof(DynamicTypePlaceholder);
             }
 
-            var result = new DescribedSerialization(payloadType.ToRepresentation(), payload, serializerDescription);
+            var result = new DescribedSerialization(payloadType.ToRepresentation(), payload, serializer.SerializerRepresentation, serializationFormat);
 
             return result;
         }
@@ -113,7 +117,6 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="describedSerialization">Self described serialized object.</param>
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
-        /// <param name="compressorFactory">Implementation of <see cref="ICompressorFactory" /> that can resolve the compressor.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
         /// Originally serialized object.
@@ -121,18 +124,14 @@ namespace OBeautifulCode.Serialization
         public static object DeserializePayloadUsingSpecificFactory(
             this DescribedSerialization describedSerialization,
             ISerializerFactory serializerFactory,
-            ICompressorFactory compressorFactory,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
             new { describedSerialization }.AsArg().Must().NotBeNull();
             new { serializerFactory }.AsArg().Must().NotBeNull();
-            new { compressorFactory }.AsArg().Must().NotBeNull();
 
-            var serializer = serializerFactory.BuildSerializer(describedSerialization.SerializerDescription, assemblyMatchStrategy);
+            var serializer = serializerFactory.BuildSerializer(describedSerialization.SerializerRepresentation, assemblyMatchStrategy);
 
-            var compressor = compressorFactory.BuildCompressor(describedSerialization.SerializerDescription.CompressionKind);
-
-            var result = describedSerialization.DeserializePayloadUsingSpecificSerializer(serializer, compressor, assemblyMatchStrategy);
+            var result = describedSerialization.DeserializePayloadUsingSpecificSerializer(serializer, assemblyMatchStrategy);
 
             return result;
         }
@@ -142,40 +141,34 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="describedSerialization">Self described serialized object.</param>
         /// <param name="deserializer">Deserializer to use.</param>
-        /// <param name="decompressor">Optional compressor to use; DEFAULT is null.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
         /// Originally serialized object.
         /// </returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "deserializer", Justification = ObcSuppressBecause.CA1704_IdentifiersShouldBeSpelledCorrectly_SpellingIsCorrectInContextOfTheDomain)]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "decompressor", Justification = ObcSuppressBecause.CA1704_IdentifiersShouldBeSpelledCorrectly_SpellingIsCorrectInContextOfTheDomain)]
         public static object DeserializePayloadUsingSpecificSerializer(
             this DescribedSerialization describedSerialization,
             IDeserialize deserializer,
-            IDecompress decompressor = null,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
             new { describedSerialization }.AsArg().Must().NotBeNull();
             new { deserializer }.AsArg().Must().NotBeNull();
 
-            var localDecompressor = decompressor ?? new NullCompressor();
-
             var targetType = describedSerialization.PayloadTypeRepresentation.ResolveFromLoadedTypes(assemblyMatchStrategy);
 
             object result;
 
-            switch (describedSerialization.SerializerDescription.SerializationFormat)
+            switch (describedSerialization.SerializationFormat)
             {
                 case SerializationFormat.Binary:
-                    var rawBytes = Convert.FromBase64String(describedSerialization.SerializedPayload);
-                    var decompressedBytes = localDecompressor.DecompressBytes(rawBytes);
-                    result = deserializer.Deserialize(decompressedBytes, targetType);
+                    var bytes = Convert.FromBase64String(describedSerialization.SerializedPayload);
+                    result = deserializer.Deserialize(bytes, targetType);
                     break;
                 case SerializationFormat.String:
                     result = deserializer.Deserialize(describedSerialization.SerializedPayload, targetType);
                     break;
                 default:
-                    throw new NotSupportedException(Invariant($"{nameof(SerializationFormat)} - {describedSerialization.SerializerDescription.SerializationFormat} is not supported."));
+                    throw new NotSupportedException(Invariant($"{nameof(SerializationFormat)} - {describedSerialization.SerializationFormat} is not supported."));
             }
 
             return result;
@@ -186,7 +179,6 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="describedSerialization">Self described serialized object.</param>
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
-        /// <param name="compressorFactory">Implementation of <see cref="ICompressorFactory" /> that can resolve the compressor.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <typeparam name="T">Expected return type.</typeparam>
         /// <returns>
@@ -195,10 +187,9 @@ namespace OBeautifulCode.Serialization
         public static T DeserializePayloadUsingSpecificFactory<T>(
             this DescribedSerialization describedSerialization,
             ISerializerFactory serializerFactory,
-            ICompressorFactory compressorFactory,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            var result = (T)DeserializePayloadUsingSpecificFactory(describedSerialization, serializerFactory, compressorFactory, assemblyMatchStrategy);
+            var result = (T)DeserializePayloadUsingSpecificFactory(describedSerialization, serializerFactory, assemblyMatchStrategy);
 
             return result;
         }

@@ -49,6 +49,11 @@ namespace OBeautifulCode.Serialization.PropertyBag
             Func<IStringSerializeAndDeserialize> stringSerializerBuilderFunc)
             : base(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude)
         {
+            if (type.IsGenericTypeDefinition)
+            {
+                throw new NotSupportedException(Invariant($"Open generics are not supported."));
+            }
+
             if (stringSerializerBuilderFunc != null)
             {
                 if (memberTypesToInclude != MemberTypesToInclude.None)

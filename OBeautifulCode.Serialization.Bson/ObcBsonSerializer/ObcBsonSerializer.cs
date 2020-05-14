@@ -11,6 +11,7 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Representation.System;
 
     /// <summary>
     /// BSON serializer with optional configuration type.
@@ -39,10 +40,14 @@ namespace OBeautifulCode.Serialization.Bson
             BsonSerializationConfigurationType bsonSerializationConfigurationType = null)
             : base(bsonSerializationConfigurationType ?? typeof(NullBsonSerializationConfiguration).ToBsonSerializationConfigurationType())
         {
+            this.SerializerRepresentation = new SerializerRepresentation(SerializationKind.Bson, bsonSerializationConfigurationType?.ConcreteSerializationConfigurationDerivativeType.ToRepresentation());
         }
 
         /// <inheritdoc />
         public override SerializationKind SerializationKind => SerializationKind.Bson;
+
+        /// <inheritdoc />
+        public override SerializerRepresentation SerializerRepresentation { get; }
 
         /// <inheritdoc />
         public override byte[] SerializeToBytes(

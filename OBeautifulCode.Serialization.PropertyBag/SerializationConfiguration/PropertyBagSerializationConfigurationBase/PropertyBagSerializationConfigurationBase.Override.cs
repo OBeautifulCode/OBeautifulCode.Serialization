@@ -53,6 +53,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
             return result;
         }
+
         /// <inheritdoc />
         protected sealed override void ProcessRegistrationDetailsPriorToRegistration(
             RegistrationDetails registrationDetails,
@@ -62,6 +63,11 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
             if (registrationDetails.TypeToRegister is TypeToRegisterForPropertyBag typeToRegisterForPropertyBag)
             {
+                // TypeToRegisterForPropertyBag throws NotSupportedException on generic type definitions
+                // if (registrationDetails.TypeToRegister.Type.IsGenericTypeDefinition)
+                // {
+                //     throw new NotSupportedException(Invariant($"Registering generic type definitions is not supported in {nameof(PropertyBagSerializationConfigurationBase)}."));
+                // }
                 this.ProcessTypeToRegisterForPropertyBag(typeToRegisterForPropertyBag);
             }
             else

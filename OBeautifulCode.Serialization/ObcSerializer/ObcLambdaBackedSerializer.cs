@@ -7,13 +7,14 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
+    using System.Collections.Generic;
 
     using OBeautifulCode.Assertion.Recipes;
 
     /// <summary>
     /// Serializer that is backed by <see cref="Func{T1,TResult}" />.
     /// </summary>
-    public class ObcLambdaBackedSerializer : ISerializeAndDeserialize
+    public class ObcLambdaBackedSerializer : ISerializer
     {
         private readonly Func<object, string> serializeString;
         private readonly Func<string, Type, object> deserializeString;
@@ -27,11 +28,13 @@ namespace OBeautifulCode.Serialization
         /// <param name="deserializeString">Deserialize object from string.</param>
         /// <param name="serializeBytes">Serialize object to bytes.</param>
         /// <param name="deserializeBytes">Deserialize object from bytes.</param>
+        /// <param name="id">Optional identifier to be stored in metadata of <see cref="SerializerRepresentation"/>.  DEFAULT is null.</param>
         public ObcLambdaBackedSerializer(
             Func<object, string> serializeString,
             Func<string, Type, object> deserializeString,
             Func<object, byte[]> serializeBytes,
-            Func<byte[], Type, object> deserializeBytes)
+            Func<byte[], Type, object> deserializeBytes,
+            string id = null)
         {
             new { serializeString }.AsArg().Must().NotBeNull();
             new { deserializeString }.AsArg().Must().NotBeNull();
@@ -42,6 +45,8 @@ namespace OBeautifulCode.Serialization
             this.deserializeString = deserializeString;
             this.serializeBytes = serializeBytes;
             this.deserializeBytes = deserializeBytes;
+
+            this.SerializerRepresentation = new SerializerRepresentation(SerializationKind.LambdaBacked, metadata: new Dictionary<string, string> { { nameof(id), id } });
         }
 
         /// <inheritdoc />
@@ -49,6 +54,9 @@ namespace OBeautifulCode.Serialization
 
         /// <inheritdoc />
         public SerializationKind SerializationKind => SerializationKind.LambdaBacked;
+
+        /// <inheritdoc />
+        public SerializerRepresentation SerializerRepresentation { get; }
 
         /// <inheritdoc />
         public byte[] SerializeToBytes(

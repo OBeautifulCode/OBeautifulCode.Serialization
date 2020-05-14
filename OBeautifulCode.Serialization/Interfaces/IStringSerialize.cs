@@ -13,7 +13,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to serialize to a string.
     /// </summary>
-    public interface IStringSerialize : IHaveSerializationConfigurationType
+    public interface IStringSerialize
     {
         /// <summary>
         /// Serializes an object into a string.

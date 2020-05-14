@@ -14,15 +14,15 @@ namespace OBeautifulCode.Serialization
     public interface ISerializerFactory
     {
         /// <summary>
-        /// Builds the correct implementation of <see cref="ISerializeAndDeserialize" /> based on the description.
+        /// Builds the correct implementation of <see cref="ISerializer" /> based on the description.
         /// </summary>
-        /// <param name="serializerDescription">Description of the serializer.</param>
+        /// <param name="serializerRepresentation">Representation of the serializer.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
-        /// Correct implementation of <see cref="ISerializeAndDeserialize" /> based on the description.
+        /// Correct implementation of <see cref="ISerializer" /> based on the description.
         /// </returns>
-        ISerializeAndDeserialize BuildSerializer(
-            SerializerDescription serializerDescription,
+        ISerializer BuildSerializer(
+            SerializerRepresentation serializerRepresentation,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion);
     }
 }

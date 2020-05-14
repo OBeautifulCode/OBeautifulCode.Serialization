@@ -13,7 +13,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Serializer that utilizes a fully configured <see cref="SerializationConfigurationBase"/>.
     /// </summary>
-    public abstract class ObcSerializerBase : ISerializeAndDeserialize
+    public abstract class ObcSerializerBase : ISerializer
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcSerializerBase"/> class.
@@ -38,6 +38,9 @@ namespace OBeautifulCode.Serialization
 
         /// <inheritdoc />
         public abstract SerializationKind SerializationKind { get; }
+
+        /// <inheritdoc />
+        public abstract SerializerRepresentation SerializerRepresentation { get; }
 
         /// <inheritdoc />
         public abstract byte[] SerializeToBytes(

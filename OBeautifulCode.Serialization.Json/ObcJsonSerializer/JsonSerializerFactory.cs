@@ -9,6 +9,7 @@ namespace OBeautifulCode.Serialization.Json
     using System;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Compression;
     using OBeautifulCode.Representation.System;
 
     using static System.FormattableString;
@@ -16,41 +17,42 @@ namespace OBeautifulCode.Serialization.Json
     /// <summary>
     /// Default implementation of <see cref="ISerializerFactory" />.
     /// </summary>
-    public sealed class JsonSerializerFactory : ISerializerFactory
+    public sealed class JsonSerializerFactory : SerializerFactoryBase
     {
-        private static readonly JsonSerializerFactory InternalInstance = new JsonSerializerFactory();
-
-        private readonly object sync = new object();
-
-        private JsonSerializerFactory()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JsonSerializerFactory"/> class.
+        /// </summary>
+        /// <param name="compressorFactory">Optional compressor factory to use.  DEFAULT is to use OBeautifulCode.Compression.Recipes.CompressorFactory.Instance.</param>
+        public JsonSerializerFactory(
+            ICompressorFactory compressorFactory = null)
+            : base(compressorFactory)
         {
-            /* no-op to make sure this can only be accessed via instance property */
         }
 
-        /// <summary>
-        /// Gets the singleton entry point to the code.
-        /// </summary>
-        public static ISerializerFactory Instance => InternalInstance;
-
         /// <inheritdoc />
-        public ISerializeAndDeserialize BuildSerializer(
-            SerializerDescription serializerDescription,
+        public override ISerializer BuildSerializer(
+            SerializerRepresentation serializerRepresentation,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            new { serializerDescription }.AsArg().Must().NotBeNull();
+            new { serializerRepresentation }.AsArg().Must().NotBeNull();
 
-            lock (this.sync)
+            // ReSharper disable once RedundantArgumentDefaultValue
+            var configurationType = serializerRepresentation.SerializationConfigType?.ResolveFromLoadedTypes(assemblyMatchStrategy, throwIfCannotResolve: true);
+
+            ISerializer serializer;
+
+            switch (serializerRepresentation.SerializationKind)
             {
-                var configurationType = serializerDescription.SerializationConfigType?.ResolveFromLoadedTypes(assemblyMatchStrategy, throwIfCannotResolve: true);
-
-                switch (serializerDescription.SerializationKind)
-                {
-                    case SerializationKind.Json:
-                        return new ObcJsonSerializer(configurationType?.ToJsonSerializationConfigurationType());
-                    default:
-                        throw new NotSupportedException(Invariant($"{nameof(serializerDescription)} from enumeration {nameof(SerializationKind)} of {serializerDescription.SerializationKind} is not supported."));
-                }
+                case SerializationKind.Json:
+                    serializer = new ObcJsonSerializer(configurationType?.ToJsonSerializationConfigurationType());
+                    break;
+                default:
+                    throw new NotSupportedException(Invariant($"{nameof(serializerRepresentation)} from enumeration {nameof(SerializationKind)} of {serializerRepresentation.SerializationKind} is not supported."));
             }
+
+            var result = this.WrapInCompressingSerializerIfAppropriate(serializer, serializerRepresentation.CompressionKind);
+
+            return result;
         }
     }
 }

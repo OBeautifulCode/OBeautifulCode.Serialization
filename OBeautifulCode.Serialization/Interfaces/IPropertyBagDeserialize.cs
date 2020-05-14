@@ -12,7 +12,7 @@ namespace OBeautifulCode.Serialization
     /// <summary>
     /// Interface to deserialize from a string.
     /// </summary>
-    public interface IPropertyBagDeserialize : IHaveSerializationConfigurationType
+    public interface IPropertyBagDeserialize
     {
         /// <summary>
         /// Deserializes the property bag into an object.

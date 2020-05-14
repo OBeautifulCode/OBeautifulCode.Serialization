@@ -22,23 +22,27 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="payloadTypeRepresentation">A description of the type of object serialized.</param>
         /// <param name="serializedPayload">The object serialized to a string.</param>
-        /// <param name="serializerDescription">The serializer used to generate the payload.</param>
+        /// <param name="serializerRepresentation">The serializer used to generate the payload.</param>
+        /// <param name="serializationFormat">The format that the object was serialized into.</param>
         /// <exception cref="ArgumentNullException"><paramref name="payloadTypeRepresentation"/> is null.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="serializedPayload"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="serializedPayload"/> is whitespace.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="serializerDescription"/> is null.</exception>
-        /// <exception cref="ArgumentException"><paramref name="serializerDescription"/> is whitespace.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="serializerRepresentation"/> is null.</exception>
+        /// <exception cref="ArgumentException"><paramref name="serializerRepresentation"/> is whitespace.</exception>
         public DescribedSerialization(
             TypeRepresentation payloadTypeRepresentation,
             string serializedPayload,
-            SerializerDescription serializerDescription)
+            SerializerRepresentation serializerRepresentation,
+            SerializationFormat serializationFormat)
         {
             new { payloadTypeRepresentation }.AsArg().Must().NotBeNull();
-            new { serializerDescription }.AsArg().Must().NotBeNull();
+            new { serializerRepresentation }.AsArg().Must().NotBeNull();
+            new { serializationFormat }.AsArg().Must().NotBeEqualTo(SerializationFormat.Invalid);
 
             this.PayloadTypeRepresentation = payloadTypeRepresentation;
             this.SerializedPayload = serializedPayload;
-            this.SerializerDescription = serializerDescription;
+            this.SerializerRepresentation = serializerRepresentation;
+            this.SerializationFormat = serializationFormat;
         }
 
         /// <summary>
@@ -52,8 +56,13 @@ namespace OBeautifulCode.Serialization
         public string SerializedPayload { get; private set; }
 
         /// <summary>
-        /// Gets the description of the serializer used to generate the payload.
+        /// Gets the representation of the serializer used to generate the payload.
         /// </summary>
-        public SerializerDescription SerializerDescription { get; private set; }
+        public SerializerRepresentation SerializerRepresentation { get; private set; }
+
+        /// <summary>
+        /// Gets the format that the object was serialized into.
+        /// </summary>
+        public SerializationFormat SerializationFormat { get; private set; }
     }
 }
