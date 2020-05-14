@@ -112,8 +112,11 @@
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
     <Compile Include="CamelStrictConstructorContractResolver.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\ThrowOnUnregisteredTypeJsonSerializationConfiguration{T}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\AttemptOnUnregisteredTypeJsonSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\DefaultFormatJsonSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\MinimalFormatJsonSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\CompactFormatJsonSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\ThrowOnUnregisteredTypeJsonSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\AttemptOnUnregisteredTypeJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\Delegates.cs" />
     <Compile Include="Converters\DateTimeJsonConverter.cs" />
     <Compile Include="Converters\Dictionary\DictionaryJsonConverter.cs" />
@@ -140,12 +143,12 @@
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationType.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationExtensions.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationType{T}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlyJsonSerializationConfiguration{T1,T2}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\DependencyOnlyJsonSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\Dependency\DependencyOnlyJsonSerializationConfiguration{T1,T2}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\Dependency\DependencyOnlyJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\InternallyRequiredTypesToRegisterJsonSerializationConfiguration.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\NullJsonSerializationConfiguration.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterJsonSerializationConfiguration{T1,T2}.cs" />
-    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegisterJsonSerializationConfiguration{T}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegister\TypesToRegisterJsonSerializationConfiguration{T1,T2}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegister\TypesToRegisterJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\TypeToRegister\TypeToRegisterForJson.cs" />
     <Compile Include="SerializationConfiguration\TypeToRegister\TypeToRegisterForJson{T}.cs" />
     <AdditionalFiles Include=".analyzers\stylecop.json" />
@@ -169,6 +172,7 @@
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\OBeautifulCode.Build.Analyzers.1.1.105\build\OBeautifulCode.Build.Analyzers.targets" Condition="Exists('..\packages\OBeautifulCode.Build.Analyzers.1.1.105\build\OBeautifulCode.Build.Analyzers.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
