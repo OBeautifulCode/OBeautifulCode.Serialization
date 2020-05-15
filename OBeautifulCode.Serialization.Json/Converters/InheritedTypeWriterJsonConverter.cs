@@ -7,6 +7,7 @@
 namespace OBeautifulCode.Serialization.Json
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
 
     using Newtonsoft.Json;
@@ -25,10 +26,10 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Initializes a new instance of the <see cref="InheritedTypeWriterJsonConverter"/> class.
         /// </summary>
-        /// <param name="typesToHandle">Types that when encountered should trigger usage of the converter.</param>
+        /// <param name="getTypesToHandleFunc">A func that gets the types that, when encountered, should trigger usage of the converter.</param>
         public InheritedTypeWriterJsonConverter(
-            IReadOnlyCollection<Type> typesToHandle)
-            : base(typesToHandle)
+            Func<ConcurrentDictionary<Type, object>> getTypesToHandleFunc)
+            : base(getTypesToHandleFunc)
         {
         }
 
@@ -39,8 +40,13 @@ namespace OBeautifulCode.Serialization.Json
         public override bool CanWrite => true;
 
         /// <inheritdoc />
-        public override bool CanConvert(Type objectType)
+        public override bool CanConvert(
+            Type objectType)
         {
+            // objectType will be the runtime type, NOT the declared type.
+            // so if you have an abstract Animal and a derived Dog and you have a property of type Animal,
+            // objectType will never be Animal, you'll only "see" Dog.
+
             // WriteJson needs to use the JsonSerializer passed to the method so that the various
             // settings in the serializer are utilized for writing.  Using the serializer as-is,
             // however, will cause infinite recursion because this Converter is utilized by the serializer.
@@ -76,6 +82,12 @@ namespace OBeautifulCode.Serialization.Json
             object value,
             JsonSerializer serializer)
         {
+            // We write the concrete type regardless of whether the declared type is an interface/base class
+            // or a derivative class.  That's because, as noted in CanConvert(), we aren't told what the declared
+            // type is.  So, unlike Mongo (which handles this through a Discriminator), we have no way of knowing
+            // whether we need to write the concrete type.  It always gets written if the runtime type participates
+            // in a hierarchy, even if the declared type IS the runtime type and thus the extra concrete type could
+            // be excluded.
             new { value }.AsArg().Must().NotBeNull();
 
             var typeName = value.GetType().ToRepresentation().RemoveAssemblyVersions().BuildAssemblyQualifiedName();

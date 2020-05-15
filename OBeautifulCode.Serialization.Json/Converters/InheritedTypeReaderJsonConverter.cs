@@ -26,6 +26,8 @@ namespace OBeautifulCode.Serialization.Json
     /// </summary>
     internal class InheritedTypeReaderJsonConverter : InheritedTypeJsonConverterBase
     {
+        private readonly JsonSerializationConfigurationBase jsonSerializationConfiguration;
+
         private readonly ConcurrentDictionary<Type, IReadOnlyCollection<Type>> assignableTypesCache =
             new ConcurrentDictionary<Type, IReadOnlyCollection<Type>>();
 
@@ -34,11 +36,14 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Initializes a new instance of the <see cref="InheritedTypeReaderJsonConverter"/> class.
         /// </summary>
-        /// <param name="typesToHandle">Types that when encountered should trigger usage of the converter.</param>
+        /// <param name="getTypesToHandleFunc">A func that gets the types that, when encountered, should trigger usage of the converter.</param>
+        /// <param name="jsonSerializationConfiguration">The serialization configuration in-use.</param>
         public InheritedTypeReaderJsonConverter(
-            IReadOnlyCollection<Type> typesToHandle)
-            : base(typesToHandle)
+            Func<ConcurrentDictionary<Type, object>> getTypesToHandleFunc,
+            JsonSerializationConfigurationBase jsonSerializationConfiguration)
+            : base(getTypesToHandleFunc)
         {
+            this.jsonSerializationConfiguration = jsonSerializationConfiguration;
         }
 
         /// <inheritdoc />
@@ -64,6 +69,7 @@ namespace OBeautifulCode.Serialization.Json
             // the same overall (thru the front-door) deserialization operation.
             if (this.readJsonCalled)
             {
+                // at this point, objectType is the concrete type, which was determined by the prior call to ReadJson()
                 this.readJsonCalled = false;
 
                 return false;
@@ -71,6 +77,7 @@ namespace OBeautifulCode.Serialization.Json
 
             var result = this.ShouldBeHandledByThisConverter(objectType);
 
+            // at this point, if result == true, then objectType is the declared type, which may or may not be the concrete type
             return result;
         }
 
@@ -132,8 +139,10 @@ namespace OBeautifulCode.Serialization.Json
                 return annotatedConcreteTypeResult;
             }
 
+            // ------------------------------------------------------------------------------------------------------------
             // All of the below code exists to support legacy persisted payloads that do not have the concrete type written.
             // Going-forward, we always write the concrete type.
+            // ------------------------------------------------------------------------------------------------------------
             if (objectType == typeof(object))
             {
                 throw new JsonSerializationException(Invariant($"Type has too many assignable types (requires annotated concrete type).  target type: {objectType}, json payload {jsonObject}."));
@@ -285,7 +294,7 @@ namespace OBeautifulCode.Serialization.Json
             if (!this.assignableTypesCache.ContainsKey(type))
             {
                 var assignableTypes = allTypes
-                    .Where(_ => _.IsClosedNonAnonymousClassType() && _ != type && _.IsAssignableTo(type))
+                    .Where(_ => _.IsClosedNonAnonymousClassType() && (_ != type) && _.IsAssignableTo(type))
                     .ToList();
 
                 this.assignableTypesCache.AddOrUpdate(type, assignableTypes, (t, cts) => assignableTypes);
@@ -301,6 +310,10 @@ namespace OBeautifulCode.Serialization.Json
             Type type,
             JsonSerializer serializer)
         {
+            // If called from TryDeserializeCandidates() then there's a chance that a closed generic gets registered
+            // for a candidate that isn't chosen and there's no way to de-register it.  Seems like a super edge case.
+            this.jsonSerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
+
             var reader = jsonObject.CreateReader();
 
             this.readJsonCalled = true;
@@ -325,9 +338,7 @@ namespace OBeautifulCode.Serialization.Json
                 {
                     deserializedObject = this.Deserialize(jsonObject, candidate.Type, serializer);
                 }
-#pragma warning disable 168 // Want to keep variable here for use in debugger.
                 catch (Exception)
-#pragma warning restore 168
                 {
                 }
 

@@ -11,7 +11,6 @@ namespace OBeautifulCode.Serialization.Json
     using System.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
-    using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Serialization;
     using OBeautifulCode.Type.Recipes;
 
@@ -65,18 +64,22 @@ namespace OBeautifulCode.Serialization.Json
 
             if (registrationDetails.TypeToRegister is TypeToRegisterForJson typeToRegisterForJson)
             {
-                // There's nothing to do if it's a generic type definition.
-                // The closed generic types will be registered post-initialization.
-                // Upon serializing, the serializer will call this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate,
-                // which recurses through the runtime types of the object being serialized
-                // and registers any unregistered closed generic types it encounters.
-                // Upon deserialization this is handled by ObcBsonDiscriminatorConvention.
-                if (registrationDetails.TypeToRegister.Type.IsGenericTypeDefinition)
-                {
-                    return;
-                }
-
                 this.ProcessTypeToRegisterForJson(typeToRegisterForJson);
+
+                // During initialization, we wait until FinalizeInitialization() so that we have ALL
+                // of the registered types on hand, to determine which ones participate in a hierarchy.
+                // This is required because ParticipatesInHierarchy() requires the whole set of registered
+                // types (and specifically to look for a non-abstract class that has inheritors, which
+                // is rare/a design smell).  Post-initialization, we are looking at a closed generic type
+                // and should determine if it participates in a hierarchy.  There is potentially the case
+                // where a non-abstract closed generic class shows up first, we determine it does not
+                // participate in a hierarchy because it has no inheritors, and subsequently another
+                // closed generic class shows up that inherits from the first type.  Should be rare;
+                // cross that bridge when we get there.
+                if (registrationTime == RegistrationTime.PostInitialization)
+                {
+                    this.AddHierarchyParticipatingTypes(new[] { registrationDetails.TypeToRegister.Type });
+                }
             }
             else
             {
@@ -87,14 +90,26 @@ namespace OBeautifulCode.Serialization.Json
         /// <inheritdoc />
         protected sealed override void FinalizeInitialization()
         {
-            var types = this.RegisteredTypeToRegistrationDetailsMap.Keys.Where(_ => !_.ContainsGenericParameters).ToList();
+            var registeredTypes = this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList();
 
-            var inheritedTypeConverterTypes = types.Where(t =>
-                (!InheritedTypeConverterBlackList.Contains(t)) &&
-                (t.IsAbstract || t.IsInterface || types.Any(a => (a != t) && (t.IsAssignableTo(a) || a.IsAssignableTo(t))))).Distinct().ToList();
+            this.AddHierarchyParticipatingTypes(registeredTypes);
+        }
 
-            // TODO: what info do we want to capture here? should we give registration details?
-            this.HierarchyParticipatingTypes.AddRange(inheritedTypeConverterTypes.Except(this.TypesWithConverters));
+        private void AddHierarchyParticipatingTypes(
+            IReadOnlyCollection<Type> typesToInspect)
+        {
+            var registeredTypes = this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList();
+
+            var hierarchyParticipatingTypes =
+                typesToInspect
+                    .Except(this.TypesWithConverters)
+                    .Where(_ => ParticipatesInHierarchy(_, registeredTypes))
+                    .ToList();
+
+            foreach (var hierarchyParticipatingType in hierarchyParticipatingTypes)
+            {
+                this.HierarchyParticipatingTypes.TryAdd(hierarchyParticipatingType, null);
+            }
         }
     }
 }

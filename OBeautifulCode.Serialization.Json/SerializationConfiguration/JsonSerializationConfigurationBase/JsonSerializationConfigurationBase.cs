@@ -7,6 +7,7 @@
 namespace OBeautifulCode.Serialization.Json
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -30,7 +31,7 @@ namespace OBeautifulCode.Serialization.Json
 
         private IList<JsonConverterBuilder> JsonConverterBuilders { get; } = new List<JsonConverterBuilder>();
 
-        private HashSet<Type> HierarchyParticipatingTypes { get; } = new HashSet<Type>();
+        private ConcurrentDictionary<Type, object> HierarchyParticipatingTypes { get; } = new ConcurrentDictionary<Type, object>();
 
         /// <summary>
         /// Build <see cref="JsonSerializerSettings" /> to use for serialization using Newtonsoft.
@@ -50,7 +51,7 @@ namespace OBeautifulCode.Serialization.Json
 
             var jsonSerializerSettingsBuilder = JsonFormattingKindToSettingsSelectorByDirection[jsonFormattingKind](SerializationDirection.Serialize);
 
-            var result = jsonSerializerSettingsBuilder(this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList());
+            var result = jsonSerializerSettingsBuilder(() => this.RegisteredTypeToRegistrationDetailsMap);
 
             var specifiedConverters = this.JsonConverterBuilders.Select(_ => _.GetJsonConverterBuilderFuncBySerializationDirection(serializationDirection)()).ToList();
 
@@ -70,7 +71,7 @@ namespace OBeautifulCode.Serialization.Json
 
                 new { overrideResolver }.AsArg().Must().NotBeNull();
 
-                result.ContractResolver = overrideResolver.ContractResolverBuilder(this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList());
+                result.ContractResolver = overrideResolver.ContractResolverBuilder(() => this.RegisteredTypeToRegistrationDetailsMap);
             }
 
             return result;
@@ -89,9 +90,9 @@ namespace OBeautifulCode.Serialization.Json
             JsonFormattingKind formattingKind)
         {
             // this is a hack to not mess with casing since the case must match for dynamic deserialization...
-            var resultBuilder = JsonFormattingKindToSettingsSelectorByDirection[formattingKind](serializationDirection);
+            var jsonSerializerSettingsBuilder = JsonFormattingKindToSettingsSelectorByDirection[formattingKind](serializationDirection);
 
-            var result = resultBuilder(this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList());
+            var result = jsonSerializerSettingsBuilder(() => this.RegisteredTypeToRegistrationDetailsMap);
 
             result.ContractResolver = new DefaultContractResolver();
 
@@ -105,6 +106,8 @@ namespace OBeautifulCode.Serialization.Json
         {
             var type = typeToRegisterForJson.Type;
 
+            // generic type definitions are not a problem here because
+            // TypeToRegisterForJson doesn't allow generic type definitions to be associated with converters.
             var jsonConverterBuilder = typeToRegisterForJson.JsonConverterBuilder;
 
             if (jsonConverterBuilder != null)
@@ -151,7 +154,7 @@ namespace OBeautifulCode.Serialization.Json
                         new SecureStringJsonConverter(),
                     }).Concat(formattingKind == JsonFormattingKind.Minimal
                     ? new JsonConverter[0]
-                    : new[] { new InheritedTypeWriterJsonConverter(this.HierarchyParticipatingTypes) })
+                    : new[] { new InheritedTypeWriterJsonConverter(() => this.HierarchyParticipatingTypes) })
                 .Concat(
                     new JsonConverter[]
                     {
@@ -172,7 +175,7 @@ namespace OBeautifulCode.Serialization.Json
                     new DateTimeJsonConverter(),
                     new StringEnumConverter { CamelCaseText = true },
                     new SecureStringJsonConverter(),
-                    new InheritedTypeReaderJsonConverter(this.HierarchyParticipatingTypes),
+                    new InheritedTypeReaderJsonConverter(() => this.HierarchyParticipatingTypes, this),
                     new DictionaryJsonConverter(this.TypesWithStringConverters),
                     new KeyValueArrayDictionaryJsonConverter(this.TypesWithStringConverters),
                 }).ToList();

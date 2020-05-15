@@ -40,25 +40,26 @@ namespace OBeautifulCode.Serialization.Json
     public class CamelStrictConstructorContractResolver
         : CamelCasePropertyNamesContractResolver
     {
+        private readonly Func<IReadOnlyDictionary<Type, RegistrationDetails>> getRegisteredTypesFunc;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CamelStrictConstructorContractResolver"/> class.
         /// </summary>
-        /// <param name="registeredTypes">The registered types.</param>
+        /// <param name="getRegisteredTypesFunc">
+        /// A func that gets the registered types mapped to the registration details.
+        /// Note that this is a func so that we can always get the latest registered types.
+        /// That set can get mutated with post-initialization registrations.
+        /// </param>
         public CamelStrictConstructorContractResolver(
-            IReadOnlyCollection<Type> registeredTypes)
+            Func<IReadOnlyDictionary<Type, RegistrationDetails>> getRegisteredTypesFunc)
         {
-            new { registeredTypes }.AsArg().Must().NotBeNull().And().NotContainAnyNullElements();
+            new { getRegisteredTypesFunc }.AsArg().Must().NotBeNull();
 
             // this will cause dictionary keys to be lowercased if set to true (or you can set to true and set a dictionary key resolver.
             this.NamingStrategy.ProcessDictionaryKeys = false;
 
-            this.RegisteredTypes = new HashSet<Type>(registeredTypes);
+            this.getRegisteredTypesFunc = getRegisteredTypesFunc;
         }
-
-        /// <summary>
-        /// Gets the registered types.
-        /// </summary>
-        public HashSet<Type> RegisteredTypes { get; }
 
         /// <inheritdoc />
         /// <remarks>
@@ -99,7 +100,7 @@ namespace OBeautifulCode.Serialization.Json
             var result = base.CreateObjectContract(objectType);
 
             // only apply the heuristic on registered types
-            if (this.RegisteredTypes.Contains(objectType))
+            if (this.getRegisteredTypesFunc().ContainsKey(objectType))
             {
                 var createdType = Nullable.GetUnderlyingType(objectType) ?? objectType;
 
@@ -225,7 +226,7 @@ namespace OBeautifulCode.Serialization.Json
             {
                 var constructorMessage = constructor == null
                     ? string.Empty
-                    : constructor.DeclaringType.FullName;
+                    : constructor.DeclaringType?.FullName;
 
                 var parameterMessage = parameterInfo == null
                     ? "all parameters"

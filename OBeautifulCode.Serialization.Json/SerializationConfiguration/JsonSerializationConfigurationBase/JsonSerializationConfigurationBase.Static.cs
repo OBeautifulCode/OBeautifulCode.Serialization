@@ -8,6 +8,7 @@ namespace OBeautifulCode.Serialization.Json
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Newtonsoft.Json;
 
@@ -65,77 +66,100 @@ namespace OBeautifulCode.Serialization.Json
                 },
             };
 
-        private static readonly IReadOnlyCollection<Type> InheritedTypeConverterBlackList =
-            new[]
-            {
-                typeof(string),
-                typeof(object),
-            };
-
         private static readonly JsonSerializerSettingsBuilder DefaultDeserializingSettingsBuilder =
-            registeredTypes =>
+            getRegisteredTypesToRegistrationDetailsMapFunc =>
                 new JsonSerializerSettings
                 {
                     Formatting = Formatting.Indented,
                     NullValueHandling = NullValueHandling.Include,
-                    ContractResolver = new CamelStrictConstructorContractResolver(registeredTypes),
+                    ContractResolver = new CamelStrictConstructorContractResolver(getRegisteredTypesToRegistrationDetailsMapFunc),
                     DateParseHandling = DateParseHandling.None,
                     FloatParseHandling = FloatParseHandling.Decimal,
                 };
 
         private static readonly JsonSerializerSettingsBuilder DefaultSerializingSettingsBuilder =
-            registeredTypes =>
+            getRegisteredTypesToRegistrationDetailsMapFunc =>
                 new JsonSerializerSettings
                 {
                     Formatting = Formatting.Indented,
                     NullValueHandling = NullValueHandling.Include,
-                    ContractResolver = new CamelStrictConstructorContractResolver(registeredTypes),
+                    ContractResolver = new CamelStrictConstructorContractResolver(getRegisteredTypesToRegistrationDetailsMapFunc),
                     DateParseHandling = DateParseHandling.None,
                     FloatParseHandling = FloatParseHandling.Decimal,
                 };
 
         private static readonly JsonSerializerSettingsBuilder CompactDeserializingSettingsBuilder =
-            registeredTypes =>
+            getRegisteredTypesToRegistrationDetailsMapFunc =>
                 new JsonSerializerSettings
                 {
                     Formatting = Formatting.None,
                     NullValueHandling = NullValueHandling.Include,
-                    ContractResolver = new CamelStrictConstructorContractResolver(registeredTypes),
+                    ContractResolver = new CamelStrictConstructorContractResolver(getRegisteredTypesToRegistrationDetailsMapFunc),
                     DateParseHandling = DateParseHandling.None,
                     FloatParseHandling = FloatParseHandling.Decimal,
                 };
 
         private static readonly JsonSerializerSettingsBuilder CompactSerializingSettingsBuilder =
-            registeredTypes =>
+            getRegisteredTypesToRegistrationDetailsMapFunc =>
                 new JsonSerializerSettings
                 {
                     Formatting = Formatting.None,
                     NullValueHandling = NullValueHandling.Include,
-                    ContractResolver = new CamelStrictConstructorContractResolver(registeredTypes),
+                    ContractResolver = new CamelStrictConstructorContractResolver(getRegisteredTypesToRegistrationDetailsMapFunc),
                     DateParseHandling = DateParseHandling.None,
                     FloatParseHandling = FloatParseHandling.Decimal,
                 };
 
         private static readonly JsonSerializerSettingsBuilder MinimalDeserializingSettingsBuilder =
-            registeredTypes =>
+            getRegisteredTypesToRegistrationDetailsMapFunc =>
                 new JsonSerializerSettings
                 {
                     Formatting = Formatting.None,
                     NullValueHandling = NullValueHandling.Ignore,
-                    ContractResolver = new CamelStrictConstructorContractResolver(registeredTypes),
+                    ContractResolver = new CamelStrictConstructorContractResolver(getRegisteredTypesToRegistrationDetailsMapFunc),
                     DateParseHandling = DateParseHandling.None,
                     FloatParseHandling = FloatParseHandling.Decimal,
                 };
 
         private static readonly JsonSerializerSettingsBuilder MinimalSerializingSettingsBuilder =
-            registeredTypes =>
+            getRegisteredTypesToRegistrationDetailsMapFunc =>
                 new JsonSerializerSettings
                 {
                     Formatting = Formatting.None,
                     NullValueHandling = NullValueHandling.Ignore,
-                    ContractResolver = new CamelStrictConstructorContractResolver(registeredTypes),
+                    ContractResolver = new CamelStrictConstructorContractResolver(getRegisteredTypesToRegistrationDetailsMapFunc),
                     DateParseHandling = DateParseHandling.None,
                     FloatParseHandling = FloatParseHandling.Decimal,
                 };
+
+        private static bool ParticipatesInHierarchy(
+            Type type,
+            IReadOnlyCollection<Type> registeredTypes)
+        {
+            if (type.IsAbstract)
+            {
+                return true;
+            }
+
+            if (type.IsInterface)
+            {
+                return true;
+            }
+
+            // has a base class
+            var baseType = type.BaseType;
+            if ((baseType != null) && (baseType != typeof(object)))
+            {
+                return true;
+            }
+
+            // not abstract, but is the base class of some other class
+            if (registeredTypes.Any(registeredType => (type != registeredType) && type.IsAssignableFrom(registeredType)))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

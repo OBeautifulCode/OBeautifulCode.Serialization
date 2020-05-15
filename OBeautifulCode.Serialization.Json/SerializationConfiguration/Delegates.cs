@@ -6,6 +6,7 @@
 
 namespace OBeautifulCode.Serialization.Json
 {
+    using System;
     using System.Collections.Generic;
 
     using Newtonsoft.Json;
@@ -16,20 +17,28 @@ namespace OBeautifulCode.Serialization.Json
     /// <summary>
     /// Builds a contract resolver.
     /// </summary>
-    /// <param name="registeredTypes">The registered types.</param>
+    /// <param name="getRegisteredTypesToRegistrationDetailsMapFunc">
+    /// A func that gets the registered types mapped to the registration details.
+    /// Note that this is a func so that we can always get the latest registered types.
+    /// That set can get mutated with post-initialization registrations.
+    /// </param>
     /// <returns>
     /// The contract resolver.
     /// </returns>
     public delegate IContractResolver ContractResolverBuilder(
-        IReadOnlyCollection<Type> registeredTypes);
+        Func<IReadOnlyDictionary<Type, RegistrationDetails>> getRegisteredTypesToRegistrationDetailsMapFunc);
 
     /// <summary>
     /// Builds a JSON serializer settings.
     /// </summary>
-    /// <param name="registeredTypes">The registered types.</param>
+    /// <param name="getRegisteredTypesToRegistrationDetailsMapFunc">
+    /// A func that gets the registered types mapped to the registration details.
+    /// Note that this is a func so that we can always get the latest registered types.
+    /// That set can get mutated with post-initialization registrations.
+    /// </param>
     /// <returns>
     /// The JSON serializer settings.
     /// </returns>
     public delegate JsonSerializerSettings JsonSerializerSettingsBuilder(
-        IReadOnlyCollection<Type> registeredTypes);
+        Func<IReadOnlyDictionary<Type, RegistrationDetails>> getRegisteredTypesToRegistrationDetailsMapFunc);
 }

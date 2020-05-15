@@ -7,10 +7,11 @@
 namespace OBeautifulCode.Serialization.Json
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using System.Collections.Concurrent;
 
     using Newtonsoft.Json;
+
+    using OBeautifulCode.Assertion.Recipes;
 
     /// <summary>
     /// A converter that handles inherited types.
@@ -22,16 +23,22 @@ namespace OBeautifulCode.Serialization.Json
         /// </summary>
         protected const string ConcreteTypeTokenName = "$concreteType";
 
-        private readonly IReadOnlyCollection<Type> typesToHandle;
+        private readonly Func<ConcurrentDictionary<Type, object>> getTypesToHandleFunc;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InheritedTypeJsonConverterBase"/> class.
         /// </summary>
-        /// <param name="typesToHandle">Types that when encountered should trigger usage of the converter.</param>
+        /// <param name="getTypesToHandleFunc">
+        /// A func that returns the set types that, when encountered, should trigger usage of the converter.
+        /// Note that this is a func so that we can always get the latest types to handle.  That set can get mutated
+        /// with post-initialization registrations.
+        /// </param>
         protected InheritedTypeJsonConverterBase(
-            IReadOnlyCollection<Type> typesToHandle)
+            Func<ConcurrentDictionary<Type, object>> getTypesToHandleFunc)
         {
-            this.typesToHandle = typesToHandle ?? new List<Type>();
+            new { getTypesToHandleFunc }.AsArg().Must().NotBeNull();
+
+            this.getTypesToHandleFunc = getTypesToHandleFunc;
         }
 
         /// <summary>
@@ -44,7 +51,7 @@ namespace OBeautifulCode.Serialization.Json
         protected bool ShouldBeHandledByThisConverter(
             Type objectType)
         {
-            var result = this.typesToHandle.Contains(objectType);
+            var result = this.getTypesToHandleFunc().ContainsKey(objectType);
 
             return result;
         }
