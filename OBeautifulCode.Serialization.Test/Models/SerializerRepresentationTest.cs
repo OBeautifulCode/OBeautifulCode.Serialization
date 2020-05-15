@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SerializerDescriptionTest.cs" company="OBeautifulCode">
+// <copyright file="SerializerRepresentationTest.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -17,24 +17,23 @@ namespace OBeautifulCode.Serialization.Test
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.Test.Internal;
 
-    public static partial class SerializerDescriptionTest
+    public static partial class SerializerRepresentationTest
     {
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = ObcSuppressBecause.CA1810_InitializeReferenceTypeStaticFieldsInline_FieldsDeclaredInCodeGeneratedPartialTestClass)]
-        static SerializerDescriptionTest()
+        static SerializerRepresentationTest()
         {
             ConstructorArgumentValidationTestScenarios
                 .RemoveAllScenarios()
                 .AddScenario(() =>
-                    new ConstructorArgumentValidationTestScenario<SerializerDescription>
+                    new ConstructorArgumentValidationTestScenario<SerializerRepresentation>
                     {
                         Name = "constructor should throw ArgumentException when parameter 'serializationKind' is SerializationKind.Invalid scenario",
                         ConstructionFunc = () =>
                         {
-                            var referenceObject = A.Dummy<SerializerDescription>();
+                            var referenceObject = A.Dummy<SerializerRepresentation>();
 
-                            var result = new SerializerDescription(
+                            var result = new SerializerRepresentation(
                                 SerializationKind.Invalid,
-                                referenceObject.SerializationFormat,
                                 A.Dummy<TypeRepresentation>(),
                                 referenceObject.CompressionKind,
                                 referenceObject.Metadata);
@@ -42,39 +41,18 @@ namespace OBeautifulCode.Serialization.Test
                             return result;
                         },
                         ExpectedExceptionType = typeof(ArgumentOutOfRangeException),
-                        ExpectedExceptionMessageContains = new[] { "serializationKind" },
+                        ExpectedExceptionMessageContains = new[] { "serializationKind", "Invalid" },
                     })
                 .AddScenario(() =>
-                    new ConstructorArgumentValidationTestScenario<SerializerDescription>
-                    {
-                        Name = "constructor should throw ArgumentException when parameter 'serializationFormat' is SerializationFormat.Invalid scenario",
-                        ConstructionFunc = () =>
-                        {
-                            var referenceObject = A.Dummy<SerializerDescription>();
-
-                            var result = new SerializerDescription(
-                                referenceObject.SerializationKind,
-                                SerializationFormat.Invalid,
-                                A.Dummy<TypeRepresentation>(),
-                                referenceObject.CompressionKind,
-                                referenceObject.Metadata);
-
-                            return result;
-                        },
-                        ExpectedExceptionType = typeof(ArgumentOutOfRangeException),
-                        ExpectedExceptionMessageContains = new[] { "serializationFormat" },
-                    })
-                .AddScenario(() =>
-                    new ConstructorArgumentValidationTestScenario<SerializerDescription>
+                    new ConstructorArgumentValidationTestScenario<SerializerRepresentation>
                     {
                         Name = "constructor should throw ArgumentException when parameter 'compressionKind' is CompressionKind.Invalid scenario",
                         ConstructionFunc = () =>
                         {
-                            var referenceObject = A.Dummy<SerializerDescription>();
+                            var referenceObject = A.Dummy<SerializerRepresentation>();
 
-                            var result = new SerializerDescription(
+                            var result = new SerializerRepresentation(
                                 referenceObject.SerializationKind,
-                                referenceObject.SerializationFormat,
                                 A.Dummy<TypeRepresentation>(),
                                 CompressionKind.Invalid,
                                 referenceObject.Metadata);
@@ -82,23 +60,22 @@ namespace OBeautifulCode.Serialization.Test
                             return result;
                         },
                         ExpectedExceptionType = typeof(ArgumentOutOfRangeException),
-                        ExpectedExceptionMessageContains = new[] { "compressionKind" },
+                        ExpectedExceptionMessageContains = new[] { "compressionKind", "Invalid" },
                     });
 
             ConstructorPropertyAssignmentTestScenarios
                 .AddScenario(() =>
-                    new ConstructorPropertyAssignmentTestScenario<SerializerDescription>
+                    new ConstructorPropertyAssignmentTestScenario<SerializerRepresentation>
                     {
                         Name = "ConfigurationTypeRepresentation should return null passed to constructor parameter 'serializationConfigType' when getting",
                         SystemUnderTestExpectedPropertyValueFunc = () =>
                         {
-                            var referenceObject = A.Dummy<SerializerDescription>();
+                            var referenceObject = A.Dummy<SerializerRepresentation>();
 
-                            var result = new SystemUnderTestExpectedPropertyValue<SerializerDescription>
+                            var result = new SystemUnderTestExpectedPropertyValue<SerializerRepresentation>
                             {
-                                SystemUnderTest = new SerializerDescription(
+                                SystemUnderTest = new SerializerRepresentation(
                                     referenceObject.SerializationKind,
-                                    referenceObject.SerializationFormat,
                                     null,
                                     referenceObject.CompressionKind,
                                     referenceObject.Metadata),
@@ -107,21 +84,20 @@ namespace OBeautifulCode.Serialization.Test
 
                             return result;
                         },
-                        PropertyName = nameof(SerializerDescription.SerializationConfigType),
+                        PropertyName = nameof(SerializerRepresentation.SerializationConfigType),
                     })
                 .AddScenario(() =>
-                    new ConstructorPropertyAssignmentTestScenario<SerializerDescription>
+                    new ConstructorPropertyAssignmentTestScenario<SerializerRepresentation>
                     {
                         Name = "Metadata should return empty Dictionary<string, string> when null is passed to constructor parameter 'metadata' when getting",
                         SystemUnderTestExpectedPropertyValueFunc = () =>
                         {
-                            var referenceObject = A.Dummy<SerializerDescription>();
+                            var referenceObject = A.Dummy<SerializerRepresentation>();
 
-                            var result = new SystemUnderTestExpectedPropertyValue<SerializerDescription>
+                            var result = new SystemUnderTestExpectedPropertyValue<SerializerRepresentation>
                             {
-                                SystemUnderTest = new SerializerDescription(
+                                SystemUnderTest = new SerializerRepresentation(
                                     referenceObject.SerializationKind,
-                                    referenceObject.SerializationFormat,
                                     referenceObject.SerializationConfigType,
                                     referenceObject.CompressionKind,
                                     null),
@@ -130,7 +106,7 @@ namespace OBeautifulCode.Serialization.Test
 
                             return result;
                         },
-                        PropertyName = nameof(SerializerDescription.Metadata),
+                        PropertyName = nameof(SerializerRepresentation.Metadata),
                         CompareActualToExpectedUsing = CompareActualToExpectedUsing.ValueEquality,
                     });
         }

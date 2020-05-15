@@ -11,6 +11,7 @@ namespace OBeautifulCode.Serialization.Json
     using System.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Serialization;
     using OBeautifulCode.Type.Recipes;
 
@@ -86,7 +87,14 @@ namespace OBeautifulCode.Serialization.Json
         /// <inheritdoc />
         protected sealed override void FinalizeInitialization()
         {
-            this.AddHierarchyParticipatingTypes(this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList());
+            var types = this.RegisteredTypeToRegistrationDetailsMap.Keys.Where(_ => !_.ContainsGenericParameters).ToList();
+
+            var inheritedTypeConverterTypes = types.Where(t =>
+                (!InheritedTypeConverterBlackList.Contains(t)) &&
+                (t.IsAbstract || t.IsInterface || types.Any(a => (a != t) && (t.IsAssignableTo(a) || a.IsAssignableTo(t))))).Distinct().ToList();
+
+            // TODO: what info do we want to capture here? should we give registration details?
+            this.HierarchyParticipatingTypes.AddRange(inheritedTypeConverterTypes.Except(this.TypesWithConverters));
         }
     }
 }

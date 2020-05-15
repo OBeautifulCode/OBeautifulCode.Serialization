@@ -58,7 +58,7 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Gets the registered types.
         /// </summary>
-        public HashSet<Type> RegisteredTypes { get; private set; }
+        public HashSet<Type> RegisteredTypes { get; }
 
         /// <inheritdoc />
         /// <remarks>

@@ -32,7 +32,8 @@ namespace OBeautifulCode.Serialization.Test
                             var result = new DescribedSerialization(
                                                  null,
                                                  referenceObject.SerializedPayload,
-                                                 referenceObject.SerializerDescription);
+                                                 referenceObject.SerializerRepresentation,
+                                                 referenceObject.SerializationFormat);
 
                             return result;
                         },
@@ -42,7 +43,7 @@ namespace OBeautifulCode.Serialization.Test
                 .AddScenario(() =>
                     new ConstructorArgumentValidationTestScenario<DescribedSerialization>
                     {
-                        Name = "constructor should throw ArgumentNullException when parameter 'serializerDescription' is null scenario",
+                        Name = "constructor should throw ArgumentNullException when parameter 'serializerRepresentation' is null scenario",
                         ConstructionFunc = () =>
                         {
                             var referenceObject = A.Dummy<DescribedSerialization>();
@@ -50,12 +51,32 @@ namespace OBeautifulCode.Serialization.Test
                             var result = new DescribedSerialization(
                                                  referenceObject.PayloadTypeRepresentation,
                                                  referenceObject.SerializedPayload,
-                                                 null);
+                                                 null,
+                                                 referenceObject.SerializationFormat);
 
                             return result;
                         },
                         ExpectedExceptionType = typeof(ArgumentNullException),
-                        ExpectedExceptionMessageContains = new[] { "serializerDescription" },
+                        ExpectedExceptionMessageContains = new[] { "serializerRepresentation" },
+                    })
+                .AddScenario(() =>
+                    new ConstructorArgumentValidationTestScenario<DescribedSerialization>
+                    {
+                        Name = "constructor should throw ArgumentException when parameter 'serializationFormat' is SerializationFormat.Invalid scenario",
+                        ConstructionFunc = () =>
+                        {
+                            var referenceObject = A.Dummy<DescribedSerialization>();
+
+                            var result = new DescribedSerialization(
+                                referenceObject.PayloadTypeRepresentation,
+                                referenceObject.SerializedPayload,
+                                referenceObject.SerializerRepresentation,
+                                SerializationFormat.Invalid);
+
+                            return result;
+                        },
+                        ExpectedExceptionType = typeof(ArgumentOutOfRangeException),
+                        ExpectedExceptionMessageContains = new[] { "serializationFormat", "Invalid" },
                     });
         }
     }

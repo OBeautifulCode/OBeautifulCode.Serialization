@@ -34,15 +34,15 @@ namespace OBeautifulCode.Serialization.Test
                 () => new DescribedSerialization(
                                  A.Dummy<TypeRepresentation>(),
                                  A.Dummy<string>(),
-                                 A.Dummy<SerializerDescription>()));
+                                 A.Dummy<SerializerRepresentation>(),
+                                 A.Dummy<SerializationFormat>()));
 
             AutoFixtureBackedDummyFactory.AddDummyCreator(
                 () => new DynamicTypePlaceholder());
 
             AutoFixtureBackedDummyFactory.AddDummyCreator(
-                () => new SerializerDescription(
+                () => new SerializerRepresentation(
                                  A.Dummy<SerializationKind>(),
-                                 A.Dummy<SerializationFormat>(),
                                  A.Dummy<TypeRepresentation>(),
                                  A.Dummy<CompressionKind>(),
                                  A.Dummy<IReadOnlyDictionary<string, string>>()));

@@ -39,25 +39,25 @@ namespace OBeautifulCode.Serialization.Json
         /// Build <see cref="JsonSerializerSettings" /> to use for serialization using Newtonsoft.
         /// </summary>
         /// <param name="serializationDirection">Direction of serialization.</param>
-        /// <param name="formattingKind">Kind of formatting to use.</param>
+        /// <param name="jsonSerializationConfiguration">The serialization configuration in use.</param>
         /// <returns>
         /// Prepared settings to use with Newtonsoft.
         /// </returns>
         public JsonSerializerSettings BuildJsonSerializerSettings(
             SerializationDirection serializationDirection,
-            JsonFormattingKind formattingKind = JsonFormattingKind.Default)
+            JsonSerializationConfigurationBase jsonSerializationConfiguration)
         {
-            (serializationDirection == SerializationDirection.Serialize || serializationDirection == SerializationDirection.Deserialize)
-                .AsArg(Invariant($"{nameof(serializationDirection)}-must-be-{nameof(SerializationDirection.Serialize)}-or{nameof(SerializationDirection.Serialize)}"))
-                .Must().BeTrue();
+            new { serializationDirection }.AsArg().Must().NotBeEqualTo(SerializationDirection.Unknown);
 
-            var resultBuilder = SerializationKindToSettingsSelectorByDirection[formattingKind](SerializationDirection.Serialize);
+            var jsonFormattingKind = jsonSerializationConfiguration.JsonFormattingKind;
 
-            var result = resultBuilder(this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList());
+            var jsonSerializerSettingsBuilder = JsonFormattingKindToSettingsSelectorByDirection[jsonFormattingKind](SerializationDirection.Serialize);
+
+            var result = jsonSerializerSettingsBuilder(this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList());
 
             var specifiedConverters = this.JsonConverterBuilders.Select(_ => _.GetJsonConverterBuilderFuncBySerializationDirection(serializationDirection)()).ToList();
 
-            var defaultConverters = this.GetDefaultConverters(serializationDirection, formattingKind);
+            var defaultConverters = this.GetDefaultConverters(serializationDirection, jsonFormattingKind);
 
             var converters = new JsonConverter[0]
                 .Concat(specifiedConverters)
@@ -67,7 +67,7 @@ namespace OBeautifulCode.Serialization.Json
             // TODO: We may need this sorted differently; as in does it need to reverse?
             result.Converters = converters;
 
-            if (this.OverrideContractResolver != null && this.OverrideContractResolver.ContainsKey(serializationDirection))
+            if ((this.OverrideContractResolver != null) && this.OverrideContractResolver.ContainsKey(serializationDirection))
             {
                 var overrideResolver = this.OverrideContractResolver[serializationDirection];
 
@@ -87,13 +87,12 @@ namespace OBeautifulCode.Serialization.Json
         /// <returns>
         /// Prepared settings to use with Newtonsoft.
         /// </returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Keeping like other to offer option in the future of access to this.")]
         public JsonSerializerSettings BuildAnonymousJsonSerializerSettings(
             SerializationDirection serializationDirection,
-            JsonFormattingKind formattingKind = JsonFormattingKind.Default)
+            JsonFormattingKind formattingKind)
         {
             // this is a hack to not mess with casing since the case must match for dynamic deserialization...
-            var resultBuilder = SerializationKindToSettingsSelectorByDirection[formattingKind](serializationDirection);
+            var resultBuilder = JsonFormattingKindToSettingsSelectorByDirection[formattingKind](serializationDirection);
 
             var result = resultBuilder(this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList());
 
@@ -125,17 +124,6 @@ namespace OBeautifulCode.Serialization.Json
                     this.JsonConverterBuilders.Add(jsonConverterBuilder);
                 }
             }
-        }
-
-        private void AddHierarchyParticipatingTypes(
-            IReadOnlyCollection<Type> types)
-        {
-            var inheritedTypeConverterTypes = types.Where(t =>
-                (!InheritedTypeConverterBlackList.Contains(t)) &&
-                (t.IsAbstract || t.IsInterface || types.Any(a => (a != t) && (t.IsAssignableTo(a) || a.IsAssignableTo(t))))).Distinct().ToList();
-
-            // TODO: what info do we want to capture here? should we give registration details?
-            this.HierarchyParticipatingTypes.AddRange(inheritedTypeConverterTypes.Except(this.TypesWithConverters));
         }
 
         private IList<JsonConverter> GetDefaultConverters(

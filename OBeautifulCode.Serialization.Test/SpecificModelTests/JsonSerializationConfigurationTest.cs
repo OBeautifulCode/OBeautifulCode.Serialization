@@ -683,7 +683,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var jsonWithConcreteType = serializer.SerializeToString(year);
 
-            var settings = new NullJsonSerializationConfiguration().BuildJsonSerializerSettings(SerializationDirection.Deserialize);
+            var settings = new NullJsonSerializationConfiguration().BuildJsonSerializerSettings(SerializationDirection.Deserialize, (JsonSerializationConfigurationBase)serializer.SerializationConfiguration);
             settings.Converters = new JsonConverter[0];
 
             // Act

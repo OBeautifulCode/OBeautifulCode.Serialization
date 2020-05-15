@@ -31,39 +31,38 @@ namespace OBeautifulCode.Serialization.Test
 
     using static global::System.FormattableString;
 
-    public static partial class SerializerDescriptionTest
+    public static partial class SerializerRepresentationTest
     {
-        private static readonly StringRepresentationTestScenarios<SerializerDescription> StringRepresentationTestScenarios = new StringRepresentationTestScenarios<SerializerDescription>()
+        private static readonly StringRepresentationTestScenarios<SerializerRepresentation> StringRepresentationTestScenarios = new StringRepresentationTestScenarios<SerializerRepresentation>()
             .AddScenario(() =>
-                new StringRepresentationTestScenario<SerializerDescription>
+                new StringRepresentationTestScenario<SerializerRepresentation>
                 {
                     Name = "Default Code Generated Scenario",
                     SystemUnderTestExpectedStringRepresentationFunc = () =>
                     {
-                        var systemUnderTest = A.Dummy<SerializerDescription>();
+                        var systemUnderTest = A.Dummy<SerializerRepresentation>();
 
-                        var result = new SystemUnderTestExpectedStringRepresentation<SerializerDescription>
+                        var result = new SystemUnderTestExpectedStringRepresentation<SerializerRepresentation>
                         {
                             SystemUnderTest = systemUnderTest,
-                            ExpectedStringRepresentation = Invariant($"OBeautifulCode.Serialization.SerializerDescription: SerializationKind = {systemUnderTest.SerializationKind.ToString() ?? "<null>"}, SerializationFormat = {systemUnderTest.SerializationFormat.ToString() ?? "<null>"}, SerializationConfigType = {systemUnderTest.SerializationConfigType?.ToString() ?? "<null>"}, CompressionKind = {systemUnderTest.CompressionKind.ToString() ?? "<null>"}, Metadata = {systemUnderTest.Metadata?.ToString() ?? "<null>"}."),
+                            ExpectedStringRepresentation = Invariant($"OBeautifulCode.Serialization.SerializerRepresentation: SerializationKind = {systemUnderTest.SerializationKind.ToString() ?? "<null>"}, SerializationConfigType = {systemUnderTest.SerializationConfigType?.ToString() ?? "<null>"}, CompressionKind = {systemUnderTest.CompressionKind.ToString() ?? "<null>"}, Metadata = {systemUnderTest.Metadata?.ToString() ?? "<null>"}."),
                         };
 
                         return result;
                     },
                 });
 
-        private static readonly ConstructorArgumentValidationTestScenarios<SerializerDescription> ConstructorArgumentValidationTestScenarios = new ConstructorArgumentValidationTestScenarios<SerializerDescription>()
+        private static readonly ConstructorArgumentValidationTestScenarios<SerializerRepresentation> ConstructorArgumentValidationTestScenarios = new ConstructorArgumentValidationTestScenarios<SerializerRepresentation>()
             .AddScenario(() =>
-                new ConstructorArgumentValidationTestScenario<SerializerDescription>
+                new ConstructorArgumentValidationTestScenario<SerializerRepresentation>
                 {
                     Name = "constructor should throw ArgumentNullException when parameter 'serializationConfigType' is null scenario",
                     ConstructionFunc = () =>
                     {
-                        var referenceObject = A.Dummy<SerializerDescription>();
+                        var referenceObject = A.Dummy<SerializerRepresentation>();
 
-                        var result = new SerializerDescription(
+                        var result = new SerializerRepresentation(
                                              referenceObject.SerializationKind,
-                                             referenceObject.SerializationFormat,
                                              null,
                                              referenceObject.CompressionKind,
                                              referenceObject.Metadata);
@@ -74,16 +73,15 @@ namespace OBeautifulCode.Serialization.Test
                     ExpectedExceptionMessageContains = new[] { "serializationConfigType" },
                 })
             .AddScenario(() =>
-                new ConstructorArgumentValidationTestScenario<SerializerDescription>
+                new ConstructorArgumentValidationTestScenario<SerializerRepresentation>
                 {
                     Name = "constructor should throw ArgumentNullException when parameter 'metadata' is null scenario",
                     ConstructionFunc = () =>
                     {
-                        var referenceObject = A.Dummy<SerializerDescription>();
+                        var referenceObject = A.Dummy<SerializerRepresentation>();
 
-                        var result = new SerializerDescription(
+                        var result = new SerializerRepresentation(
                                              referenceObject.SerializationKind,
-                                             referenceObject.SerializationFormat,
                                              referenceObject.SerializationConfigType,
                                              referenceObject.CompressionKind,
                                              null);
@@ -94,16 +92,15 @@ namespace OBeautifulCode.Serialization.Test
                     ExpectedExceptionMessageContains = new[] { "metadata" },
                 })
             .AddScenario(() =>
-                new ConstructorArgumentValidationTestScenario<SerializerDescription>
+                new ConstructorArgumentValidationTestScenario<SerializerRepresentation>
                 {
                     Name = "constructor should throw ArgumentException when parameter 'metadata' is an empty dictionary scenario",
                     ConstructionFunc = () =>
                     {
-                        var referenceObject = A.Dummy<SerializerDescription>();
+                        var referenceObject = A.Dummy<SerializerRepresentation>();
 
-                        var result = new SerializerDescription(
+                        var result = new SerializerRepresentation(
                                              referenceObject.SerializationKind,
-                                             referenceObject.SerializationFormat,
                                              referenceObject.SerializationConfigType,
                                              referenceObject.CompressionKind,
                                              new Dictionary<string, string>());
@@ -114,12 +111,12 @@ namespace OBeautifulCode.Serialization.Test
                     ExpectedExceptionMessageContains = new[] { "metadata", "is an empty dictionary" },
                 })
             .AddScenario(() =>
-                new ConstructorArgumentValidationTestScenario<SerializerDescription>
+                new ConstructorArgumentValidationTestScenario<SerializerRepresentation>
                 {
                     Name = "constructor should throw ArgumentException when parameter 'metadata' contains a key-value pair with a null value scenario",
                     ConstructionFunc = () =>
                     {
-                        var referenceObject = A.Dummy<SerializerDescription>();
+                        var referenceObject = A.Dummy<SerializerRepresentation>();
 
                         var dictionaryWithNullValue = referenceObject.Metadata.ToDictionary(_ => _.Key, _ => _.Value);
 
@@ -127,9 +124,8 @@ namespace OBeautifulCode.Serialization.Test
 
                         dictionaryWithNullValue[randomKey] = null;
 
-                        var result = new SerializerDescription(
+                        var result = new SerializerRepresentation(
                                              referenceObject.SerializationKind,
-                                             referenceObject.SerializationFormat,
                                              referenceObject.SerializationConfigType,
                                              referenceObject.CompressionKind,
                                              dictionaryWithNullValue);
@@ -140,20 +136,19 @@ namespace OBeautifulCode.Serialization.Test
                     ExpectedExceptionMessageContains = new[] { "metadata", "contains at least one key-value pair with a null value" },
                 });
 
-        private static readonly ConstructorPropertyAssignmentTestScenarios<SerializerDescription> ConstructorPropertyAssignmentTestScenarios = new ConstructorPropertyAssignmentTestScenarios<SerializerDescription>()
+        private static readonly ConstructorPropertyAssignmentTestScenarios<SerializerRepresentation> ConstructorPropertyAssignmentTestScenarios = new ConstructorPropertyAssignmentTestScenarios<SerializerRepresentation>()
             .AddScenario(() =>
-                new ConstructorPropertyAssignmentTestScenario<SerializerDescription>
+                new ConstructorPropertyAssignmentTestScenario<SerializerRepresentation>
                 {
                     Name = "SerializationKind should return same 'serializationKind' parameter passed to constructor when getting",
                     SystemUnderTestExpectedPropertyValueFunc = () =>
                     {
-                        var referenceObject = A.Dummy<SerializerDescription>();
+                        var referenceObject = A.Dummy<SerializerRepresentation>();
 
-                        var result = new SystemUnderTestExpectedPropertyValue<SerializerDescription>
+                        var result = new SystemUnderTestExpectedPropertyValue<SerializerRepresentation>
                         {
-                            SystemUnderTest = new SerializerDescription(
+                            SystemUnderTest = new SerializerRepresentation(
                                                       referenceObject.SerializationKind,
-                                                      referenceObject.SerializationFormat,
                                                       referenceObject.SerializationConfigType,
                                                       referenceObject.CompressionKind,
                                                       referenceObject.Metadata),
@@ -165,41 +160,17 @@ namespace OBeautifulCode.Serialization.Test
                     PropertyName = "SerializationKind",
                 })
             .AddScenario(() =>
-                new ConstructorPropertyAssignmentTestScenario<SerializerDescription>
-                {
-                    Name = "SerializationFormat should return same 'serializationFormat' parameter passed to constructor when getting",
-                    SystemUnderTestExpectedPropertyValueFunc = () =>
-                    {
-                        var referenceObject = A.Dummy<SerializerDescription>();
-
-                        var result = new SystemUnderTestExpectedPropertyValue<SerializerDescription>
-                        {
-                            SystemUnderTest = new SerializerDescription(
-                                                      referenceObject.SerializationKind,
-                                                      referenceObject.SerializationFormat,
-                                                      referenceObject.SerializationConfigType,
-                                                      referenceObject.CompressionKind,
-                                                      referenceObject.Metadata),
-                            ExpectedPropertyValue = referenceObject.SerializationFormat,
-                        };
-
-                        return result;
-                    },
-                    PropertyName = "SerializationFormat",
-                })
-            .AddScenario(() =>
-                new ConstructorPropertyAssignmentTestScenario<SerializerDescription>
+                new ConstructorPropertyAssignmentTestScenario<SerializerRepresentation>
                 {
                     Name = "SerializationConfigType should return same 'serializationConfigType' parameter passed to constructor when getting",
                     SystemUnderTestExpectedPropertyValueFunc = () =>
                     {
-                        var referenceObject = A.Dummy<SerializerDescription>();
+                        var referenceObject = A.Dummy<SerializerRepresentation>();
 
-                        var result = new SystemUnderTestExpectedPropertyValue<SerializerDescription>
+                        var result = new SystemUnderTestExpectedPropertyValue<SerializerRepresentation>
                         {
-                            SystemUnderTest = new SerializerDescription(
+                            SystemUnderTest = new SerializerRepresentation(
                                                       referenceObject.SerializationKind,
-                                                      referenceObject.SerializationFormat,
                                                       referenceObject.SerializationConfigType,
                                                       referenceObject.CompressionKind,
                                                       referenceObject.Metadata),
@@ -211,18 +182,17 @@ namespace OBeautifulCode.Serialization.Test
                     PropertyName = "SerializationConfigType",
                 })
             .AddScenario(() =>
-                new ConstructorPropertyAssignmentTestScenario<SerializerDescription>
+                new ConstructorPropertyAssignmentTestScenario<SerializerRepresentation>
                 {
                     Name = "CompressionKind should return same 'compressionKind' parameter passed to constructor when getting",
                     SystemUnderTestExpectedPropertyValueFunc = () =>
                     {
-                        var referenceObject = A.Dummy<SerializerDescription>();
+                        var referenceObject = A.Dummy<SerializerRepresentation>();
 
-                        var result = new SystemUnderTestExpectedPropertyValue<SerializerDescription>
+                        var result = new SystemUnderTestExpectedPropertyValue<SerializerRepresentation>
                         {
-                            SystemUnderTest = new SerializerDescription(
+                            SystemUnderTest = new SerializerRepresentation(
                                                       referenceObject.SerializationKind,
-                                                      referenceObject.SerializationFormat,
                                                       referenceObject.SerializationConfigType,
                                                       referenceObject.CompressionKind,
                                                       referenceObject.Metadata),
@@ -234,18 +204,17 @@ namespace OBeautifulCode.Serialization.Test
                     PropertyName = "CompressionKind",
                 })
             .AddScenario(() =>
-                new ConstructorPropertyAssignmentTestScenario<SerializerDescription>
+                new ConstructorPropertyAssignmentTestScenario<SerializerRepresentation>
                 {
                     Name = "Metadata should return same 'metadata' parameter passed to constructor when getting",
                     SystemUnderTestExpectedPropertyValueFunc = () =>
                     {
-                        var referenceObject = A.Dummy<SerializerDescription>();
+                        var referenceObject = A.Dummy<SerializerRepresentation>();
 
-                        var result = new SystemUnderTestExpectedPropertyValue<SerializerDescription>
+                        var result = new SystemUnderTestExpectedPropertyValue<SerializerRepresentation>
                         {
-                            SystemUnderTest = new SerializerDescription(
+                            SystemUnderTest = new SerializerRepresentation(
                                                       referenceObject.SerializationKind,
-                                                      referenceObject.SerializationFormat,
                                                       referenceObject.SerializationConfigType,
                                                       referenceObject.CompressionKind,
                                                       referenceObject.Metadata),
@@ -257,19 +226,19 @@ namespace OBeautifulCode.Serialization.Test
                     PropertyName = "Metadata",
                 });
 
-        private static readonly DeepCloneWithTestScenarios<SerializerDescription> DeepCloneWithTestScenarios = new DeepCloneWithTestScenarios<SerializerDescription>()
+        private static readonly DeepCloneWithTestScenarios<SerializerRepresentation> DeepCloneWithTestScenarios = new DeepCloneWithTestScenarios<SerializerRepresentation>()
             .AddScenario(() =>
-                new DeepCloneWithTestScenario<SerializerDescription>
+                new DeepCloneWithTestScenario<SerializerRepresentation>
                 {
                     Name = "DeepCloneWithSerializationKind should deep clone object and replace SerializationKind with the provided serializationKind",
                     WithPropertyName = "SerializationKind",
                     SystemUnderTestDeepCloneWithValueFunc = () =>
                     {
-                        var systemUnderTest = A.Dummy<SerializerDescription>();
+                        var systemUnderTest = A.Dummy<SerializerRepresentation>();
 
-                        var referenceObject = A.Dummy<SerializerDescription>().ThatIs(_ => !systemUnderTest.SerializationKind.IsEqualTo(_.SerializationKind));
+                        var referenceObject = A.Dummy<SerializerRepresentation>().ThatIs(_ => !systemUnderTest.SerializationKind.IsEqualTo(_.SerializationKind));
 
-                        var result = new SystemUnderTestDeepCloneWithValue<SerializerDescription>
+                        var result = new SystemUnderTestDeepCloneWithValue<SerializerRepresentation>
                         {
                             SystemUnderTest = systemUnderTest,
                             DeepCloneWithValue = referenceObject.SerializationKind,
@@ -279,37 +248,17 @@ namespace OBeautifulCode.Serialization.Test
                     },
                 })
             .AddScenario(() =>
-                new DeepCloneWithTestScenario<SerializerDescription>
-                {
-                    Name = "DeepCloneWithSerializationFormat should deep clone object and replace SerializationFormat with the provided serializationFormat",
-                    WithPropertyName = "SerializationFormat",
-                    SystemUnderTestDeepCloneWithValueFunc = () =>
-                    {
-                        var systemUnderTest = A.Dummy<SerializerDescription>();
-
-                        var referenceObject = A.Dummy<SerializerDescription>().ThatIs(_ => !systemUnderTest.SerializationFormat.IsEqualTo(_.SerializationFormat));
-
-                        var result = new SystemUnderTestDeepCloneWithValue<SerializerDescription>
-                        {
-                            SystemUnderTest = systemUnderTest,
-                            DeepCloneWithValue = referenceObject.SerializationFormat,
-                        };
-
-                        return result;
-                    },
-                })
-            .AddScenario(() =>
-                new DeepCloneWithTestScenario<SerializerDescription>
+                new DeepCloneWithTestScenario<SerializerRepresentation>
                 {
                     Name = "DeepCloneWithSerializationConfigType should deep clone object and replace SerializationConfigType with the provided serializationConfigType",
                     WithPropertyName = "SerializationConfigType",
                     SystemUnderTestDeepCloneWithValueFunc = () =>
                     {
-                        var systemUnderTest = A.Dummy<SerializerDescription>();
+                        var systemUnderTest = A.Dummy<SerializerRepresentation>();
 
-                        var referenceObject = A.Dummy<SerializerDescription>().ThatIs(_ => !systemUnderTest.SerializationConfigType.IsEqualTo(_.SerializationConfigType));
+                        var referenceObject = A.Dummy<SerializerRepresentation>().ThatIs(_ => !systemUnderTest.SerializationConfigType.IsEqualTo(_.SerializationConfigType));
 
-                        var result = new SystemUnderTestDeepCloneWithValue<SerializerDescription>
+                        var result = new SystemUnderTestDeepCloneWithValue<SerializerRepresentation>
                         {
                             SystemUnderTest = systemUnderTest,
                             DeepCloneWithValue = referenceObject.SerializationConfigType,
@@ -319,17 +268,17 @@ namespace OBeautifulCode.Serialization.Test
                     },
                 })
             .AddScenario(() =>
-                new DeepCloneWithTestScenario<SerializerDescription>
+                new DeepCloneWithTestScenario<SerializerRepresentation>
                 {
                     Name = "DeepCloneWithCompressionKind should deep clone object and replace CompressionKind with the provided compressionKind",
                     WithPropertyName = "CompressionKind",
                     SystemUnderTestDeepCloneWithValueFunc = () =>
                     {
-                        var systemUnderTest = A.Dummy<SerializerDescription>();
+                        var systemUnderTest = A.Dummy<SerializerRepresentation>();
 
-                        var referenceObject = A.Dummy<SerializerDescription>().ThatIs(_ => !systemUnderTest.CompressionKind.IsEqualTo(_.CompressionKind));
+                        var referenceObject = A.Dummy<SerializerRepresentation>().ThatIs(_ => !systemUnderTest.CompressionKind.IsEqualTo(_.CompressionKind));
 
-                        var result = new SystemUnderTestDeepCloneWithValue<SerializerDescription>
+                        var result = new SystemUnderTestDeepCloneWithValue<SerializerRepresentation>
                         {
                             SystemUnderTest = systemUnderTest,
                             DeepCloneWithValue = referenceObject.CompressionKind,
@@ -339,17 +288,17 @@ namespace OBeautifulCode.Serialization.Test
                     },
                 })
             .AddScenario(() =>
-                new DeepCloneWithTestScenario<SerializerDescription>
+                new DeepCloneWithTestScenario<SerializerRepresentation>
                 {
                     Name = "DeepCloneWithMetadata should deep clone object and replace Metadata with the provided metadata",
                     WithPropertyName = "Metadata",
                     SystemUnderTestDeepCloneWithValueFunc = () =>
                     {
-                        var systemUnderTest = A.Dummy<SerializerDescription>();
+                        var systemUnderTest = A.Dummy<SerializerRepresentation>();
 
-                        var referenceObject = A.Dummy<SerializerDescription>().ThatIs(_ => !systemUnderTest.Metadata.IsEqualTo(_.Metadata));
+                        var referenceObject = A.Dummy<SerializerRepresentation>().ThatIs(_ => !systemUnderTest.Metadata.IsEqualTo(_.Metadata));
 
-                        var result = new SystemUnderTestDeepCloneWithValue<SerializerDescription>
+                        var result = new SystemUnderTestDeepCloneWithValue<SerializerRepresentation>
                         {
                             SystemUnderTest = systemUnderTest,
                             DeepCloneWithValue = referenceObject.Metadata,
@@ -359,55 +308,44 @@ namespace OBeautifulCode.Serialization.Test
                     },
                 });
 
-        private static readonly SerializerDescription ReferenceObjectForEquatableTestScenarios = A.Dummy<SerializerDescription>();
+        private static readonly SerializerRepresentation ReferenceObjectForEquatableTestScenarios = A.Dummy<SerializerRepresentation>();
 
-        private static readonly EquatableTestScenarios<SerializerDescription> EquatableTestScenarios = new EquatableTestScenarios<SerializerDescription>()
+        private static readonly EquatableTestScenarios<SerializerRepresentation> EquatableTestScenarios = new EquatableTestScenarios<SerializerRepresentation>()
             .AddScenario(() =>
-                new EquatableTestScenario<SerializerDescription>
+                new EquatableTestScenario<SerializerRepresentation>
                 {
                     Name = "Default Code Generated Scenario",
                     ReferenceObject = ReferenceObjectForEquatableTestScenarios,
-                    ObjectsThatAreEqualToButNotTheSameAsReferenceObject = new SerializerDescription[]
+                    ObjectsThatAreEqualToButNotTheSameAsReferenceObject = new SerializerRepresentation[]
                     {
-                        new SerializerDescription(
+                        new SerializerRepresentation(
                                 ReferenceObjectForEquatableTestScenarios.SerializationKind,
-                                ReferenceObjectForEquatableTestScenarios.SerializationFormat,
                                 ReferenceObjectForEquatableTestScenarios.SerializationConfigType,
                                 ReferenceObjectForEquatableTestScenarios.CompressionKind,
                                 ReferenceObjectForEquatableTestScenarios.Metadata),
                     },
-                    ObjectsThatAreNotEqualToReferenceObject = new SerializerDescription[]
+                    ObjectsThatAreNotEqualToReferenceObject = new SerializerRepresentation[]
                     {
-                        new SerializerDescription(
-                                A.Dummy<SerializerDescription>().Whose(_ => !_.SerializationKind.IsEqualTo(ReferenceObjectForEquatableTestScenarios.SerializationKind)).SerializationKind,
-                                ReferenceObjectForEquatableTestScenarios.SerializationFormat,
+                        new SerializerRepresentation(
+                                A.Dummy<SerializerRepresentation>().Whose(_ => !_.SerializationKind.IsEqualTo(ReferenceObjectForEquatableTestScenarios.SerializationKind)).SerializationKind,
                                 ReferenceObjectForEquatableTestScenarios.SerializationConfigType,
                                 ReferenceObjectForEquatableTestScenarios.CompressionKind,
                                 ReferenceObjectForEquatableTestScenarios.Metadata),
-                        new SerializerDescription(
+                        new SerializerRepresentation(
                                 ReferenceObjectForEquatableTestScenarios.SerializationKind,
-                                A.Dummy<SerializerDescription>().Whose(_ => !_.SerializationFormat.IsEqualTo(ReferenceObjectForEquatableTestScenarios.SerializationFormat)).SerializationFormat,
-                                ReferenceObjectForEquatableTestScenarios.SerializationConfigType,
+                                A.Dummy<SerializerRepresentation>().Whose(_ => !_.SerializationConfigType.IsEqualTo(ReferenceObjectForEquatableTestScenarios.SerializationConfigType)).SerializationConfigType,
                                 ReferenceObjectForEquatableTestScenarios.CompressionKind,
                                 ReferenceObjectForEquatableTestScenarios.Metadata),
-                        new SerializerDescription(
+                        new SerializerRepresentation(
                                 ReferenceObjectForEquatableTestScenarios.SerializationKind,
-                                ReferenceObjectForEquatableTestScenarios.SerializationFormat,
-                                A.Dummy<SerializerDescription>().Whose(_ => !_.SerializationConfigType.IsEqualTo(ReferenceObjectForEquatableTestScenarios.SerializationConfigType)).SerializationConfigType,
-                                ReferenceObjectForEquatableTestScenarios.CompressionKind,
-                                ReferenceObjectForEquatableTestScenarios.Metadata),
-                        new SerializerDescription(
-                                ReferenceObjectForEquatableTestScenarios.SerializationKind,
-                                ReferenceObjectForEquatableTestScenarios.SerializationFormat,
                                 ReferenceObjectForEquatableTestScenarios.SerializationConfigType,
-                                A.Dummy<SerializerDescription>().Whose(_ => !_.CompressionKind.IsEqualTo(ReferenceObjectForEquatableTestScenarios.CompressionKind)).CompressionKind,
+                                A.Dummy<SerializerRepresentation>().Whose(_ => !_.CompressionKind.IsEqualTo(ReferenceObjectForEquatableTestScenarios.CompressionKind)).CompressionKind,
                                 ReferenceObjectForEquatableTestScenarios.Metadata),
-                        new SerializerDescription(
+                        new SerializerRepresentation(
                                 ReferenceObjectForEquatableTestScenarios.SerializationKind,
-                                ReferenceObjectForEquatableTestScenarios.SerializationFormat,
                                 ReferenceObjectForEquatableTestScenarios.SerializationConfigType,
                                 ReferenceObjectForEquatableTestScenarios.CompressionKind,
-                                A.Dummy<SerializerDescription>().Whose(_ => !_.Metadata.IsEqualTo(ReferenceObjectForEquatableTestScenarios.Metadata)).Metadata),
+                                A.Dummy<SerializerRepresentation>().Whose(_ => !_.Metadata.IsEqualTo(ReferenceObjectForEquatableTestScenarios.Metadata)).Metadata),
                     },
                     ObjectsThatAreNotOfTheSameTypeAsReferenceObject = new object[]
                     {
@@ -437,12 +375,12 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void SerializerDescription___Should_implement_IModel_of_SerializerDescription___When_reflecting()
+            public static void SerializerRepresentation___Should_implement_IModel_of_SerializerRepresentation___When_reflecting()
             {
                 // Arrange
-                var type = typeof(SerializerDescription);
+                var type = typeof(SerializerRepresentation);
 
-                var expectedModelMethods = typeof(IModel<SerializerDescription>)
+                var expectedModelMethods = typeof(IModel<SerializerRepresentation>)
                                           .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
                                           .ToList();
 
@@ -454,7 +392,7 @@ namespace OBeautifulCode.Serialization.Test
                 var actualModelMethodHashes = actualModelMethods.Select(_ => _.GetSignatureHash());
 
                 // Assert
-                actualInterfaces.AsTest().Must().ContainElement(typeof(IModel<SerializerDescription>));
+                actualInterfaces.AsTest().Must().ContainElement(typeof(IModel<SerializerRepresentation>));
                 expectedModelMethodHashes.Except(actualModelMethodHashes).AsTest().Must().BeEmptyEnumerable();
             }
 
@@ -472,10 +410,10 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void SerializerDescription___Should_be_attributed_with_Serializable____When_reflecting()
+            public static void SerializerRepresentation___Should_be_attributed_with_Serializable____When_reflecting()
             {
                 // Arrange
-                var type = typeof(SerializerDescription);
+                var type = typeof(SerializerRepresentation);
 
                 // Act
                 var actualAttributes = type.GetCustomAttributes(typeof(SerializableAttribute), false);
@@ -648,10 +586,10 @@ namespace OBeautifulCode.Serialization.Test
             public static void Clone___Should_clone_object___When_called()
             {
                 // Arrange
-                var systemUnderTest = A.Dummy<SerializerDescription>();
+                var systemUnderTest = A.Dummy<SerializerRepresentation>();
 
                 // Act
-                var actual = (SerializerDescription)systemUnderTest.Clone();
+                var actual = (SerializerRepresentation)systemUnderTest.Clone();
 
                 // Assert
                 actual.AsTest().Must().BeEqualTo(systemUnderTest);
@@ -675,7 +613,7 @@ namespace OBeautifulCode.Serialization.Test
             public static void DeepClone___Should_deep_clone_object___When_called()
             {
                 // Arrange
-                var systemUnderTest = A.Dummy<SerializerDescription>();
+                var systemUnderTest = A.Dummy<SerializerRepresentation>();
 
                 // Act
                 var actual = systemUnderTest.DeepClone();
@@ -719,7 +657,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
             public static void DeepCloneWith___Should_deep_clone_object_and_replace_the_associated_property_with_the_provided_value___When_called()
             {
-                var propertyNames = new string[] { "SerializationKind", "SerializationFormat", "SerializationConfigType", "CompressionKind", "Metadata" };
+                var propertyNames = new string[] { "SerializationKind", "SerializationConfigType", "CompressionKind", "Metadata" };
 
                 var scenarios = DeepCloneWithTestScenarios.ValidateAndPrepareForTesting();
 
@@ -736,12 +674,12 @@ namespace OBeautifulCode.Serialization.Test
                     }
 
                     // Act
-                    var actual = (SerializerDescription)scenario.DeepCloneWithMethod.Invoke(scenario.SystemUnderTest, new[] { scenario.WithValue });
+                    var actual = (SerializerRepresentation)scenario.DeepCloneWithMethod.Invoke(scenario.SystemUnderTest, new[] { scenario.WithValue });
 
                     // Assert
                     foreach(var propertyName in propertyNames)
                     {
-                        var property = typeof(SerializerDescription).GetProperty(propertyName);
+                        var property = typeof(SerializerRepresentation).GetProperty(propertyName);
 
                         var propertyType = property.PropertyType;
 
@@ -809,8 +747,8 @@ namespace OBeautifulCode.Serialization.Test
             public static void EqualsOperator___Should_return_true___When_both_sides_of_operator_are_null()
             {
                 // Arrange
-                SerializerDescription systemUnderTest1 = null;
-                SerializerDescription systemUnderTest2 = null;
+                SerializerRepresentation systemUnderTest1 = null;
+                SerializerRepresentation systemUnderTest2 = null;
 
                 // Act
                 var actual = systemUnderTest1 == systemUnderTest2;
@@ -840,7 +778,7 @@ namespace OBeautifulCode.Serialization.Test
                 foreach (var scenario in scenarios)
                 {
                     // Arrange
-                    SerializerDescription systemUnderTest = null;
+                    SerializerRepresentation systemUnderTest = null;
 
                     // Act
                     var actual1 = systemUnderTest == scenario.ReferenceObject;
@@ -989,8 +927,8 @@ namespace OBeautifulCode.Serialization.Test
             public static void NotEqualsOperator___Should_return_false___When_both_sides_of_operator_are_null()
             {
                 // Arrange
-                SerializerDescription systemUnderTest1 = null;
-                SerializerDescription systemUnderTest2 = null;
+                SerializerRepresentation systemUnderTest1 = null;
+                SerializerRepresentation systemUnderTest2 = null;
 
                 // Act
                 var actual = systemUnderTest1 != systemUnderTest2;
@@ -1020,7 +958,7 @@ namespace OBeautifulCode.Serialization.Test
                 foreach (var scenario in scenarios)
                 {
                     // Arrange
-                    SerializerDescription systemUnderTest = null;
+                    SerializerRepresentation systemUnderTest = null;
 
                     // Act
                     var actual1 = systemUnderTest != scenario.ReferenceObject;
@@ -1166,14 +1104,14 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_SerializerDescription___Should_return_false___When_parameter_other_is_null()
+            public static void Equals_with_SerializerRepresentation___Should_return_false___When_parameter_other_is_null()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 
                 foreach (var scenario in scenarios)
                 {
                     // Arrange
-                    SerializerDescription systemUnderTest = null;
+                    SerializerRepresentation systemUnderTest = null;
 
                     // Act
                     var actual = scenario.ReferenceObject.Equals(systemUnderTest);
@@ -1197,7 +1135,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_SerializerDescription___Should_return_true___When_parameter_other_is_same_object()
+            public static void Equals_with_SerializerRepresentation___Should_return_true___When_parameter_other_is_same_object()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 
@@ -1225,7 +1163,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_SerializerDescription___Should_return_false___When_parameter_other_is_derived_from_the_same_type_but_is_not_of_the_same_type_as_this_object()
+            public static void Equals_with_SerializerRepresentation___Should_return_false___When_parameter_other_is_derived_from_the_same_type_but_is_not_of_the_same_type_as_this_object()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 
@@ -1253,7 +1191,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_SerializerDescription___Should_return_false___When_objects_being_compared_have_different_property_values()
+            public static void Equals_with_SerializerRepresentation___Should_return_false___When_objects_being_compared_have_different_property_values()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 
@@ -1281,7 +1219,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_SerializerDescription___Should_return_true___When_objects_being_compared_have_same_property_values()
+            public static void Equals_with_SerializerRepresentation___Should_return_true___When_objects_being_compared_have_same_property_values()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 

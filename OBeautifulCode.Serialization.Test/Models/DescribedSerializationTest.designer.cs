@@ -44,7 +44,7 @@ namespace OBeautifulCode.Serialization.Test
                         var result = new SystemUnderTestExpectedStringRepresentation<DescribedSerialization>
                         {
                             SystemUnderTest = systemUnderTest,
-                            ExpectedStringRepresentation = Invariant($"OBeautifulCode.Serialization.DescribedSerialization: PayloadTypeRepresentation = {systemUnderTest.PayloadTypeRepresentation?.ToString() ?? "<null>"}, SerializedPayload = {systemUnderTest.SerializedPayload?.ToString(CultureInfo.InvariantCulture) ?? "<null>"}, SerializerDescription = {systemUnderTest.SerializerDescription?.ToString() ?? "<null>"}."),
+                            ExpectedStringRepresentation = Invariant($"OBeautifulCode.Serialization.DescribedSerialization: PayloadTypeRepresentation = {systemUnderTest.PayloadTypeRepresentation?.ToString() ?? "<null>"}, SerializedPayload = {systemUnderTest.SerializedPayload?.ToString(CultureInfo.InvariantCulture) ?? "<null>"}, SerializerRepresentation = {systemUnderTest.SerializerRepresentation?.ToString() ?? "<null>"}, SerializationFormat = {systemUnderTest.SerializationFormat.ToString() ?? "<null>"}."),
                         };
 
                         return result;
@@ -63,7 +63,8 @@ namespace OBeautifulCode.Serialization.Test
                         var result = new DescribedSerialization(
                                              null,
                                              referenceObject.SerializedPayload,
-                                             referenceObject.SerializerDescription);
+                                             referenceObject.SerializerRepresentation,
+                                             referenceObject.SerializationFormat);
 
                         return result;
                     },
@@ -81,7 +82,8 @@ namespace OBeautifulCode.Serialization.Test
                         var result = new DescribedSerialization(
                                              referenceObject.PayloadTypeRepresentation,
                                              null,
-                                             referenceObject.SerializerDescription);
+                                             referenceObject.SerializerRepresentation,
+                                             referenceObject.SerializationFormat);
 
                         return result;
                     },
@@ -99,7 +101,8 @@ namespace OBeautifulCode.Serialization.Test
                         var result = new DescribedSerialization(
                                              referenceObject.PayloadTypeRepresentation,
                                              Invariant($"  {Environment.NewLine}  "),
-                                             referenceObject.SerializerDescription);
+                                             referenceObject.SerializerRepresentation,
+                                             referenceObject.SerializationFormat);
 
                         return result;
                     },
@@ -109,7 +112,7 @@ namespace OBeautifulCode.Serialization.Test
             .AddScenario(() =>
                 new ConstructorArgumentValidationTestScenario<DescribedSerialization>
                 {
-                    Name = "constructor should throw ArgumentNullException when parameter 'serializerDescription' is null scenario",
+                    Name = "constructor should throw ArgumentNullException when parameter 'serializerRepresentation' is null scenario",
                     ConstructionFunc = () =>
                     {
                         var referenceObject = A.Dummy<DescribedSerialization>();
@@ -117,12 +120,13 @@ namespace OBeautifulCode.Serialization.Test
                         var result = new DescribedSerialization(
                                              referenceObject.PayloadTypeRepresentation,
                                              referenceObject.SerializedPayload,
-                                             null);
+                                             null,
+                                             referenceObject.SerializationFormat);
 
                         return result;
                     },
                     ExpectedExceptionType = typeof(ArgumentNullException),
-                    ExpectedExceptionMessageContains = new[] { "serializerDescription" },
+                    ExpectedExceptionMessageContains = new[] { "serializerRepresentation" },
                 });
 
         private static readonly ConstructorPropertyAssignmentTestScenarios<DescribedSerialization> ConstructorPropertyAssignmentTestScenarios = new ConstructorPropertyAssignmentTestScenarios<DescribedSerialization>()
@@ -139,7 +143,8 @@ namespace OBeautifulCode.Serialization.Test
                             SystemUnderTest = new DescribedSerialization(
                                                       referenceObject.PayloadTypeRepresentation,
                                                       referenceObject.SerializedPayload,
-                                                      referenceObject.SerializerDescription),
+                                                      referenceObject.SerializerRepresentation,
+                                                      referenceObject.SerializationFormat),
                             ExpectedPropertyValue = referenceObject.PayloadTypeRepresentation,
                         };
 
@@ -160,7 +165,8 @@ namespace OBeautifulCode.Serialization.Test
                             SystemUnderTest = new DescribedSerialization(
                                                       referenceObject.PayloadTypeRepresentation,
                                                       referenceObject.SerializedPayload,
-                                                      referenceObject.SerializerDescription),
+                                                      referenceObject.SerializerRepresentation,
+                                                      referenceObject.SerializationFormat),
                             ExpectedPropertyValue = referenceObject.SerializedPayload,
                         };
 
@@ -171,7 +177,7 @@ namespace OBeautifulCode.Serialization.Test
             .AddScenario(() =>
                 new ConstructorPropertyAssignmentTestScenario<DescribedSerialization>
                 {
-                    Name = "SerializerDescription should return same 'serializerDescription' parameter passed to constructor when getting",
+                    Name = "SerializerRepresentation should return same 'serializerRepresentation' parameter passed to constructor when getting",
                     SystemUnderTestExpectedPropertyValueFunc = () =>
                     {
                         var referenceObject = A.Dummy<DescribedSerialization>();
@@ -181,13 +187,36 @@ namespace OBeautifulCode.Serialization.Test
                             SystemUnderTest = new DescribedSerialization(
                                                       referenceObject.PayloadTypeRepresentation,
                                                       referenceObject.SerializedPayload,
-                                                      referenceObject.SerializerDescription),
-                            ExpectedPropertyValue = referenceObject.SerializerDescription,
+                                                      referenceObject.SerializerRepresentation,
+                                                      referenceObject.SerializationFormat),
+                            ExpectedPropertyValue = referenceObject.SerializerRepresentation,
                         };
 
                         return result;
                     },
-                    PropertyName = "SerializerDescription",
+                    PropertyName = "SerializerRepresentation",
+                })
+            .AddScenario(() =>
+                new ConstructorPropertyAssignmentTestScenario<DescribedSerialization>
+                {
+                    Name = "SerializationFormat should return same 'serializationFormat' parameter passed to constructor when getting",
+                    SystemUnderTestExpectedPropertyValueFunc = () =>
+                    {
+                        var referenceObject = A.Dummy<DescribedSerialization>();
+
+                        var result = new SystemUnderTestExpectedPropertyValue<DescribedSerialization>
+                        {
+                            SystemUnderTest = new DescribedSerialization(
+                                                      referenceObject.PayloadTypeRepresentation,
+                                                      referenceObject.SerializedPayload,
+                                                      referenceObject.SerializerRepresentation,
+                                                      referenceObject.SerializationFormat),
+                            ExpectedPropertyValue = referenceObject.SerializationFormat,
+                        };
+
+                        return result;
+                    },
+                    PropertyName = "SerializationFormat",
                 });
 
         private static readonly DeepCloneWithTestScenarios<DescribedSerialization> DeepCloneWithTestScenarios = new DeepCloneWithTestScenarios<DescribedSerialization>()
@@ -234,18 +263,38 @@ namespace OBeautifulCode.Serialization.Test
             .AddScenario(() =>
                 new DeepCloneWithTestScenario<DescribedSerialization>
                 {
-                    Name = "DeepCloneWithSerializerDescription should deep clone object and replace SerializerDescription with the provided serializerDescription",
-                    WithPropertyName = "SerializerDescription",
+                    Name = "DeepCloneWithSerializerRepresentation should deep clone object and replace SerializerRepresentation with the provided serializerRepresentation",
+                    WithPropertyName = "SerializerRepresentation",
                     SystemUnderTestDeepCloneWithValueFunc = () =>
                     {
                         var systemUnderTest = A.Dummy<DescribedSerialization>();
 
-                        var referenceObject = A.Dummy<DescribedSerialization>().ThatIs(_ => !systemUnderTest.SerializerDescription.IsEqualTo(_.SerializerDescription));
+                        var referenceObject = A.Dummy<DescribedSerialization>().ThatIs(_ => !systemUnderTest.SerializerRepresentation.IsEqualTo(_.SerializerRepresentation));
 
                         var result = new SystemUnderTestDeepCloneWithValue<DescribedSerialization>
                         {
                             SystemUnderTest = systemUnderTest,
-                            DeepCloneWithValue = referenceObject.SerializerDescription,
+                            DeepCloneWithValue = referenceObject.SerializerRepresentation,
+                        };
+
+                        return result;
+                    },
+                })
+            .AddScenario(() =>
+                new DeepCloneWithTestScenario<DescribedSerialization>
+                {
+                    Name = "DeepCloneWithSerializationFormat should deep clone object and replace SerializationFormat with the provided serializationFormat",
+                    WithPropertyName = "SerializationFormat",
+                    SystemUnderTestDeepCloneWithValueFunc = () =>
+                    {
+                        var systemUnderTest = A.Dummy<DescribedSerialization>();
+
+                        var referenceObject = A.Dummy<DescribedSerialization>().ThatIs(_ => !systemUnderTest.SerializationFormat.IsEqualTo(_.SerializationFormat));
+
+                        var result = new SystemUnderTestDeepCloneWithValue<DescribedSerialization>
+                        {
+                            SystemUnderTest = systemUnderTest,
+                            DeepCloneWithValue = referenceObject.SerializationFormat,
                         };
 
                         return result;
@@ -265,22 +314,31 @@ namespace OBeautifulCode.Serialization.Test
                         new DescribedSerialization(
                                 ReferenceObjectForEquatableTestScenarios.PayloadTypeRepresentation,
                                 ReferenceObjectForEquatableTestScenarios.SerializedPayload,
-                                ReferenceObjectForEquatableTestScenarios.SerializerDescription),
+                                ReferenceObjectForEquatableTestScenarios.SerializerRepresentation,
+                                ReferenceObjectForEquatableTestScenarios.SerializationFormat),
                     },
                     ObjectsThatAreNotEqualToReferenceObject = new DescribedSerialization[]
                     {
                         new DescribedSerialization(
                                 A.Dummy<DescribedSerialization>().Whose(_ => !_.PayloadTypeRepresentation.IsEqualTo(ReferenceObjectForEquatableTestScenarios.PayloadTypeRepresentation)).PayloadTypeRepresentation,
                                 ReferenceObjectForEquatableTestScenarios.SerializedPayload,
-                                ReferenceObjectForEquatableTestScenarios.SerializerDescription),
+                                ReferenceObjectForEquatableTestScenarios.SerializerRepresentation,
+                                ReferenceObjectForEquatableTestScenarios.SerializationFormat),
                         new DescribedSerialization(
                                 ReferenceObjectForEquatableTestScenarios.PayloadTypeRepresentation,
                                 A.Dummy<DescribedSerialization>().Whose(_ => !_.SerializedPayload.IsEqualTo(ReferenceObjectForEquatableTestScenarios.SerializedPayload)).SerializedPayload,
-                                ReferenceObjectForEquatableTestScenarios.SerializerDescription),
+                                ReferenceObjectForEquatableTestScenarios.SerializerRepresentation,
+                                ReferenceObjectForEquatableTestScenarios.SerializationFormat),
                         new DescribedSerialization(
                                 ReferenceObjectForEquatableTestScenarios.PayloadTypeRepresentation,
                                 ReferenceObjectForEquatableTestScenarios.SerializedPayload,
-                                A.Dummy<DescribedSerialization>().Whose(_ => !_.SerializerDescription.IsEqualTo(ReferenceObjectForEquatableTestScenarios.SerializerDescription)).SerializerDescription),
+                                A.Dummy<DescribedSerialization>().Whose(_ => !_.SerializerRepresentation.IsEqualTo(ReferenceObjectForEquatableTestScenarios.SerializerRepresentation)).SerializerRepresentation,
+                                ReferenceObjectForEquatableTestScenarios.SerializationFormat),
+                        new DescribedSerialization(
+                                ReferenceObjectForEquatableTestScenarios.PayloadTypeRepresentation,
+                                ReferenceObjectForEquatableTestScenarios.SerializedPayload,
+                                ReferenceObjectForEquatableTestScenarios.SerializerRepresentation,
+                                A.Dummy<DescribedSerialization>().Whose(_ => !_.SerializationFormat.IsEqualTo(ReferenceObjectForEquatableTestScenarios.SerializationFormat)).SerializationFormat),
                     },
                     ObjectsThatAreNotOfTheSameTypeAsReferenceObject = new object[]
                     {
@@ -566,13 +624,13 @@ namespace OBeautifulCode.Serialization.Test
                     actual.PayloadTypeRepresentation.AsTest().Must().NotBeSameReferenceAs(systemUnderTest.PayloadTypeRepresentation);
                 }
 
-                if (systemUnderTest.SerializerDescription == null)
+                if (systemUnderTest.SerializerRepresentation == null)
                 {
-                    actual.SerializerDescription.AsTest().Must().BeNull();
+                    actual.SerializerRepresentation.AsTest().Must().BeNull();
                 }
                 else
                 {
-                    actual.SerializerDescription.AsTest().Must().NotBeSameReferenceAs(systemUnderTest.SerializerDescription);
+                    actual.SerializerRepresentation.AsTest().Must().NotBeSameReferenceAs(systemUnderTest.SerializerRepresentation);
                 }
             }
 
@@ -592,7 +650,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
             public static void DeepCloneWith___Should_deep_clone_object_and_replace_the_associated_property_with_the_provided_value___When_called()
             {
-                var propertyNames = new string[] { "PayloadTypeRepresentation", "SerializedPayload", "SerializerDescription" };
+                var propertyNames = new string[] { "PayloadTypeRepresentation", "SerializedPayload", "SerializerRepresentation", "SerializationFormat" };
 
                 var scenarios = DeepCloneWithTestScenarios.ValidateAndPrepareForTesting();
 

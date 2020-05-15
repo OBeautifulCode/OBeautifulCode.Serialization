@@ -132,6 +132,8 @@ namespace OBeautifulCode.Serialization.Json
                 return annotatedConcreteTypeResult;
             }
 
+            // All of the below code exists to support legacy persisted payloads that do not have the concrete type written.
+            // Going-forward, we always write the concrete type.
             if (objectType == typeof(object))
             {
                 throw new JsonSerializationException(Invariant($"Type has too many assignable types (requires annotated concrete type).  target type: {objectType}, json payload {jsonObject}."));

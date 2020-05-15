@@ -47,52 +47,48 @@ namespace OBeautifulCode.Serialization.Test
         {
             new { validationCallback }.AsArg().Must().NotBeNull();
 
-            var formatUnspecifiedSerializerDescriptions = new List<SerializerDescription>();
+            var serializerRepresentations = new List<SerializerRepresentation>();
 
             if (testJson)
             {
-                var serializerDescription = new SerializerDescription(SerializationKind.Json, SerializationFormat.String, jsonSerializationConfigurationType?.ToRepresentation());
+                var serializerRepresentation = new SerializerRepresentation(SerializationKind.Json, jsonSerializationConfigurationType?.ToRepresentation());
 
-                formatUnspecifiedSerializerDescriptions.Add(serializerDescription);
+                serializerRepresentations.Add(serializerRepresentation);
             }
 
             if (testBson)
             {
-                var serializerDescription = new SerializerDescription(SerializationKind.Bson, SerializationFormat.String, bsonSerializationConfigurationType?.ToRepresentation());
+                var serializerDescription = new SerializerRepresentation(SerializationKind.Bson, bsonSerializationConfigurationType?.ToRepresentation());
 
-                formatUnspecifiedSerializerDescriptions.Add(serializerDescription);
+                serializerRepresentations.Add(serializerDescription);
             }
 
             if (testPropertyBag)
             {
-                var serializerDescription = new SerializerDescription(SerializationKind.PropertyBag, SerializationFormat.String, propertyBagSerializationConfigurationType?.ToRepresentation());
+                var serializerDescription = new SerializerRepresentation(SerializationKind.PropertyBag, propertyBagSerializationConfigurationType?.ToRepresentation());
 
-                formatUnspecifiedSerializerDescriptions.Add(serializerDescription);
+                serializerRepresentations.Add(serializerDescription);
             }
 
-            if (!formatUnspecifiedSerializerDescriptions.Any())
+            if (!serializerRepresentations.Any())
             {
                 throw new InvalidOperationException("No serializers are being tested.");
             }
 
-            Func<SerializerDescription, object, DescribedSerialization> serializeFunc = Serialize;
+            Func<SerializerRepresentation, SerializationFormat, object, DescribedSerialization> serializeFunc = Serialize;
 
             Func<DescribedSerialization, T> deserializeFunc = Deserialize<T>;
 
-            Func<SerializerDescription, object, Tuple<DescribedSerialization, T>> serializeAndDeserializeFunc = SerializeAndDeserialize<T>;
+            Func<SerializerRepresentation, SerializationFormat, object, Tuple<DescribedSerialization, T>> serializeAndDeserializeFunc = SerializeAndDeserialize<T>;
 
-            foreach (var formatUnspecifiedSerializerDescription in formatUnspecifiedSerializerDescriptions)
+            foreach (var serializerRepresentation in serializerRepresentations)
             {
-                var stringSerializerDescription = formatUnspecifiedSerializerDescription.DeepCloneWithSerializationFormat(SerializationFormat.String);
+                var formats = new[] { SerializationFormat.String, SerializationFormat.Binary };
 
-                var binarySerializerDescription = formatUnspecifiedSerializerDescription.DeepCloneWithSerializationFormat(SerializationFormat.Binary);
-
-                var serializerDescriptions = new[] { stringSerializerDescription, binarySerializerDescription };
-
-                foreach (var serializerDescription in serializerDescriptions)
+                foreach (var format in formats)
                 {
                     // serialize in a new app domain
-                    var describedSerialization = serializeFunc.ExecuteInNewAppDomain(serializerDescription, expected);
+                    var describedSerialization = serializeFunc.ExecuteInNewAppDomain(serializerRepresentation, format, expected);
 
                     // deserialize in a new app domain
                     var actual = deserializeFunc.ExecuteInNewAppDomain(describedSerialization);
@@ -103,11 +99,11 @@ namespace OBeautifulCode.Serialization.Test
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(Invariant($"Failed to roundtrip specified object to/from {serializerDescription.SerializationKind} {serializerDescription.SerializationFormat} using {serializerDescription.SerializationConfigType.ResolveFromLoadedTypes().ToStringReadable()} when serializing in a new AppDomain and deserializing in a new AppDomain.  Deserialized object is: {actual}."), ex);
+                        throw new Exception(Invariant($"Failed to roundtrip specified object to/from {serializerRepresentation.SerializationKind} {format} using {serializerRepresentation.SerializationConfigType.ResolveFromLoadedTypes().ToStringReadable()} when serializing in a new AppDomain and deserializing in a new AppDomain.  Deserialized object is: {actual}."), ex);
                     }
 
                     // serialize and deserialize in the same, new app domain
-                    var describedSerializationAndActual = serializeAndDeserializeFunc.ExecuteInNewAppDomain(serializerDescription, expected);
+                    var describedSerializationAndActual = serializeAndDeserializeFunc.ExecuteInNewAppDomain(serializerRepresentation, format, expected);
 
                     try
                     {
@@ -115,17 +111,18 @@ namespace OBeautifulCode.Serialization.Test
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(Invariant($"Failed to roundtrip specified object to/from {serializerDescription.SerializationKind} {serializerDescription.SerializationFormat} using {serializerDescription.SerializationConfigType.ResolveFromLoadedTypes().ToStringReadable()} when serializing and deserializing in the same, new AppDomain.  Deserialized object is: {actual}."), ex);
+                        throw new Exception(Invariant($"Failed to roundtrip specified object to/from {serializerRepresentation.SerializationKind} {format} using {serializerRepresentation.SerializationConfigType.ResolveFromLoadedTypes().ToStringReadable()} when serializing and deserializing in the same, new AppDomain.  Deserialized object is: {actual}."), ex);
                     }
                 }
             }
         }
 
         private static DescribedSerialization Serialize(
-            SerializerDescription serializerDescription,
+            SerializerRepresentation serializerRepresentation,
+            SerializationFormat serializationFormat,
             object objectToSerialize)
         {
-            var result = objectToSerialize.ToDescribedSerialization(serializerDescription);
+            var result = objectToSerialize.ToDescribedSerialization(serializerRepresentation, serializationFormat);
 
             return result;
         }
@@ -139,10 +136,11 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         private static Tuple<DescribedSerialization, T> SerializeAndDeserialize<T>(
-            SerializerDescription serializerDescription,
+            SerializerRepresentation serializerRepresentation,
+            SerializationFormat serializationFormat,
             object objectToSerialize)
         {
-            var describedSerialization = objectToSerialize.ToDescribedSerialization(serializerDescription);
+            var describedSerialization = objectToSerialize.ToDescribedSerialization(serializerRepresentation, serializationFormat);
 
             var actual = describedSerialization.DeserializePayload<T>();
 

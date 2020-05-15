@@ -27,8 +27,8 @@ namespace OBeautifulCode.Serialization.Test
 
             // Assert
             actual.Should().NotBeNull();
-            actual.BuildJsonSerializerSettings(SerializationDirection.Serialize).ContractResolver.Should().BeOfType<DefaultContractResolver>();
-            actual.BuildJsonSerializerSettings(SerializationDirection.Deserialize).ContractResolver.Should().BeOfType<DefaultContractResolver>();
+            actual.BuildJsonSerializerSettings(SerializationDirection.Serialize, actual).ContractResolver.Should().BeOfType<DefaultContractResolver>();
+            actual.BuildJsonSerializerSettings(SerializationDirection.Deserialize, actual).ContractResolver.Should().BeOfType<DefaultContractResolver>();
         }
 
         [Fact]
@@ -39,8 +39,8 @@ namespace OBeautifulCode.Serialization.Test
 
             // Assert
             actual.Should().NotBeNull();
-            actual.BuildJsonSerializerSettings(SerializationDirection.Serialize).ContractResolver.GetType().FullName.Should().Be("OBeautifulCode.Serialization.Json.CamelStrictConstructorContractResolver"); // this type is not public so we can't use nameof()
-            actual.BuildJsonSerializerSettings(SerializationDirection.Deserialize).ContractResolver.GetType().FullName.Should().Be("OBeautifulCode.Serialization.Json.CamelStrictConstructorContractResolver"); // this type is not public so we can't use nameof()
+            actual.BuildJsonSerializerSettings(SerializationDirection.Serialize, actual).ContractResolver.GetType().FullName.Should().Be("OBeautifulCode.Serialization.Json.CamelStrictConstructorContractResolver"); // this type is not public so we can't use nameof()
+            actual.BuildJsonSerializerSettings(SerializationDirection.Deserialize, actual).ContractResolver.GetType().FullName.Should().Be("OBeautifulCode.Serialization.Json.CamelStrictConstructorContractResolver"); // this type is not public so we can't use nameof()
         }
     }
 
