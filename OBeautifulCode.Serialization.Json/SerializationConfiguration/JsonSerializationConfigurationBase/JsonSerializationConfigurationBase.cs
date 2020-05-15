@@ -8,7 +8,6 @@ namespace OBeautifulCode.Serialization.Json
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     using Newtonsoft.Json;
@@ -16,9 +15,7 @@ namespace OBeautifulCode.Serialization.Json
     using Newtonsoft.Json.Serialization;
 
     using OBeautifulCode.Assertion.Recipes;
-    using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Serialization;
-    using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
 
@@ -59,12 +56,12 @@ namespace OBeautifulCode.Serialization.Json
 
             var defaultConverters = this.GetDefaultConverters(serializationDirection, jsonFormattingKind);
 
+            // Newtonsoft uses the converters in the order they are provided, so specifiedConverters will have priority because they come first
             var converters = new JsonConverter[0]
                 .Concat(specifiedConverters)
                 .Concat(defaultConverters)
                 .ToList();
 
-            // TODO: We may need this sorted differently; as in does it need to reverse?
             result.Converters = converters;
 
             if ((this.OverrideContractResolver != null) && this.OverrideContractResolver.ContainsKey(serializationDirection))
@@ -144,6 +141,8 @@ namespace OBeautifulCode.Serialization.Json
         private IList<JsonConverter> GetDefaultSerializingConverters(
             JsonFormattingKind formattingKind)
         {
+            // Newtonsoft uses the converters in the order they are specified.
+            // So, it will first try the DateTimeJsonConverter, then the StringEnumConverter, and so on.
             var result = new JsonConverter[0].Concat(
                     new JsonConverter[]
                     {
@@ -165,6 +164,8 @@ namespace OBeautifulCode.Serialization.Json
 
         private IList<JsonConverter> GetDefaultDeserializingConverters()
         {
+            // Newtonsoft uses the converters in the order they are specified.
+            // So, it will first try the DateTimeJsonConverter, then the StringEnumConverter, and so on.
             var result = new JsonConverter[0].Concat(
                 new JsonConverter[]
                 {
