@@ -11,15 +11,16 @@ namespace OBeautifulCode.Serialization.Bson
     using OBeautifulCode.Serialization;
 
     /// <summary>
-    /// A BSON serialization configuration that populates <see cref="DependentBsonSerializationConfigurationTypes"/> with typeof(T),
-    /// and sets <see cref="SerializationConfigurationBase.UnregisteredTypeEncounteredStrategy"/> to <see cref="UnregisteredTypeEncounteredStrategy.Attempt"/>.
+    /// A BSON serialization configuration that sets <see cref="DependentBsonSerializationConfigurationTypes"/> to typeof(T),
+    /// sets <see cref="SerializationConfigurationBase.UnregisteredTypeEncounteredStrategy"/> to <see cref="UnregisteredTypeEncounteredStrategy.Attempt"/>,
+    /// and sets the remaining public/overrideable properties to the corresponding properties on the dependent serialization configuration.
     /// </summary>
     /// <typeparam name="T">The dependent BSON serialization configuration type.</typeparam>
     public sealed class AttemptOnUnregisteredTypeBsonSerializationConfiguration<T> : BsonSerializationConfigurationBase
         where T : BsonSerializationConfigurationBase
     {
         /// <inheritdoc />
-        protected override UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy => UnregisteredTypeEncounteredStrategy.Attempt;
+        public override UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy => UnregisteredTypeEncounteredStrategy.Attempt;
 
         /// <inheritdoc />
         protected override IReadOnlyCollection<BsonSerializationConfigurationType> DependentBsonSerializationConfigurationTypes => new[] { typeof(T).ToBsonSerializationConfigurationType() };

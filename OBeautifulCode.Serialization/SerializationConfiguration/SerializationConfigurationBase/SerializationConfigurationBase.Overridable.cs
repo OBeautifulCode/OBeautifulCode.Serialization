@@ -12,6 +12,11 @@ namespace OBeautifulCode.Serialization
     public abstract partial class SerializationConfigurationBase
     {
         /// <summary>
+        /// Gets the strategy to use with when attempting to serialize or deserialize using this configuration and encountering a type that has not been registered.
+        /// </summary>
+        public virtual UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy => UnregisteredTypeEncounteredStrategy.Throw;
+
+        /// <summary>
         /// Gets the serialization configuration types that are needed for this serialization configuration to work.
         /// </summary>
         protected abstract IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypes { get; }
@@ -28,11 +33,6 @@ namespace OBeautifulCode.Serialization
         /// Gets the types to register along with additional information about other types that this type should "pull-in" to registration.
         /// </summary>
         protected virtual IReadOnlyCollection<TypeToRegister> TypesToRegister => new TypeToRegister[0];
-
-        /// <summary>
-        /// Gets the strategy to use with when attempting to serialize or deserialize using this configuration and encountering a type that has not been registered.
-        /// </summary>
-        protected virtual UnregisteredTypeEncounteredStrategy UnregisteredTypeEncounteredStrategy => UnregisteredTypeEncounteredStrategy.Throw;
 
         /// <summary>
         /// Gets the serialization configuration type.
