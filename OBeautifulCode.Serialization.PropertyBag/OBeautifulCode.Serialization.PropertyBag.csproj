@@ -112,6 +112,7 @@
     <Compile Include="ObcPropertyBagSerializer\ObcPropertyBagSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegister\TypesToRegisterPropertyBagSerializationConfiguration.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\ThrowOnUnregisteredTypePropertyBagSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\AttemptOnUnregisteredTypePropertyBagSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\PropertyBagSerializationConfigurationBase\PropertyBagSerializationConfigurationBase.Override.cs" />

@@ -52,8 +52,8 @@ namespace OBeautifulCode.Serialization.Test
             // Act & Assert
             expected.RoundtripSerializeWithCallback(
                 ThrowIfObjectsDiffer,
-                jsonConfigType,
                 bsonConfigType,
+                jsonConfigType,
                 propBagConfigType,
                 true,
                 true,
@@ -262,16 +262,19 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
+    [Serializable]
     public class TestingDependentConfigType
     {
         public string SomeValue { get; set; }
     }
 
+    [Serializable]
     public abstract class TestingDependentConfigAbstractType
     {
         public TestingDependentConfigType Property { get; set; }
     }
 
+    [Serializable]
     public class TestingDependentConfigAbstractTypeInheritor : TestingDependentConfigAbstractType
     {
     }

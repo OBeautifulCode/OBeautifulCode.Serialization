@@ -34,10 +34,11 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
     }
 
+    [Serializable]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Params", Justification = "Name/spelling is correct.")]
     public class ObjectWithParamsConstructor : IEquatable<ObjectWithParamsConstructor>
     {
@@ -89,6 +90,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
+    [Serializable]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Params", Justification = "Name/spelling is correct.")]
     public class ObjectWithParamsConstructorElement : IEquatable<ObjectWithParamsConstructorElement>
     {

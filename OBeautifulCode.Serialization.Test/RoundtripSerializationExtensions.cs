@@ -23,23 +23,46 @@ namespace OBeautifulCode.Serialization.Test
 
     public static class RoundtripSerializationExtensions
     {
+        public static void RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion<T>(
+            this T expected,
+            bool testBson = true,
+            bool testJson = true,
+            bool testPropertyBag = false)
+        {
+            expected.RoundtripSerializeWithEquatableAssertion<T>(
+                typeof(TypesToRegisterBsonSerializationConfiguration<T>),
+                typeof(TypesToRegisterJsonSerializationConfiguration<T>),
+                typeof(TypesToRegisterPropertyBagSerializationConfiguration<T>),
+                testBson,
+                testJson,
+                testPropertyBag);
+        }
+
         public static void RoundtripSerializeWithEquatableAssertion<T>(
             this T expected,
-            bool shouldUseSerializationConfiguration = true)
-            where T : IEquatable<T>
+            Type bsonSerializationConfigurationType = null,
+            Type jsonSerializationConfigurationType = null,
+            Type propertyBagSerializationConfigurationType = null,
+            bool testBson = true,
+            bool testJson = true,
+            bool testPropertyBag = false)
         {
             RoundtripSerializeWithCallback(
                 expected,
                 (yieldedDescribedSerialization, deserializedObject) => deserializedObject.AsTest().Must().BeEqualTo(expected),
-                shouldUseSerializationConfiguration ? typeof(TypesToRegisterJsonSerializationConfiguration<T>) : null,
-                shouldUseSerializationConfiguration ? typeof(TypesToRegisterBsonSerializationConfiguration<T>) : null);
+                bsonSerializationConfigurationType,
+                jsonSerializationConfigurationType,
+                propertyBagSerializationConfigurationType,
+                testBson,
+                testJson,
+                testPropertyBag);
         }
 
         public static void RoundtripSerializeWithCallback<T>(
             this T expected,
             RoundtripSerializationCallback<T> validationCallback,
-            Type jsonSerializationConfigurationType = null,
             Type bsonSerializationConfigurationType = null,
+            Type jsonSerializationConfigurationType = null,
             Type propertyBagSerializationConfigurationType = null,
             bool testBson = true,
             bool testJson = true,
@@ -49,18 +72,18 @@ namespace OBeautifulCode.Serialization.Test
 
             var serializerRepresentations = new List<SerializerRepresentation>();
 
-            if (testJson)
-            {
-                var serializerRepresentation = new SerializerRepresentation(SerializationKind.Json, jsonSerializationConfigurationType?.ToRepresentation());
-
-                serializerRepresentations.Add(serializerRepresentation);
-            }
-
             if (testBson)
             {
                 var serializerDescription = new SerializerRepresentation(SerializationKind.Bson, bsonSerializationConfigurationType?.ToRepresentation());
 
                 serializerRepresentations.Add(serializerDescription);
+            }
+
+            if (testJson)
+            {
+                var serializerRepresentation = new SerializerRepresentation(SerializationKind.Json, jsonSerializationConfigurationType?.ToRepresentation());
+
+                serializerRepresentations.Add(serializerRepresentation);
             }
 
             if (testPropertyBag)

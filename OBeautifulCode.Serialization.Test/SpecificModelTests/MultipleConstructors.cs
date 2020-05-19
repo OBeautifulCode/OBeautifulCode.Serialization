@@ -41,7 +41,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -74,8 +74,8 @@ namespace OBeautifulCode.Serialization.Test
             var expectedParameter = new UnchainedDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>());
 
             // Act & Assert
-            expectedParameter.RoundtripSerializeWithEquatableAssertion();
-            expectedParameterless.RoundtripSerializeWithEquatableAssertion();
+            expectedParameter.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
+            expectedParameterless.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
         }
 
         [Fact]
@@ -86,8 +86,8 @@ namespace OBeautifulCode.Serialization.Test
             var expectedParameter = new ChainedDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>());
 
             // Act & Assert
-            expectedParameter.RoundtripSerializeWithEquatableAssertion();
-            expectedParameterless.RoundtripSerializeWithEquatableAssertion();
+            expectedParameter.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
+            expectedParameterless.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
         }
 
         [Fact]
@@ -98,8 +98,8 @@ namespace OBeautifulCode.Serialization.Test
             var expectedParameter = new AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>());
 
             // Act & Assert
-            expectedParameter.RoundtripSerializeWithEquatableAssertion();
-            expectedParameterless.RoundtripSerializeWithEquatableAssertion();
+            expectedParameter.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
+            expectedParameterless.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
         }
 
         [Fact]
@@ -110,8 +110,8 @@ namespace OBeautifulCode.Serialization.Test
             var expectedParameter2 = new AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>(), A.Dummy<string>());
 
             // Act & Assert
-            expectedParameter1.RoundtripSerializeWithEquatableAssertion();
-            expectedParameter2.RoundtripSerializeWithEquatableAssertion();
+            expectedParameter1.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
+            expectedParameter2.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
         }
 
         [Fact(Skip = "Some models with initialized getter-only properties (e.g. public DateTime MyProperty { get; } = DateTime.Now) do not roundtrip to/from BSON. JSON seems to work just fine.  In BSON, the issue is specifically with models that do not have a default constructor (regardless of whether there are multiple constructors or a single parameterized constructor).  If there is no default constructor the initialized property is not initialized.")]
@@ -145,6 +145,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
+    [Serializable]
     public class UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel
     {
         public UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel(
@@ -169,6 +170,7 @@ namespace OBeautifulCode.Serialization.Test
         public DateTime ExpressionBodiedProperty => new DateTime(2020, 1, 5, 3, 4, 9, DateTimeKind.Utc);
     }
 
+    [Serializable]
     public class ChainedNoDefaultConstructorWithExpressionBodyPropertyModel
     {
         public ChainedNoDefaultConstructorWithExpressionBodyPropertyModel(
@@ -192,6 +194,7 @@ namespace OBeautifulCode.Serialization.Test
         public DateTime ExpressionBodiedProperty => new DateTime(2020, 1, 5, 3, 4, 9, DateTimeKind.Utc);
     }
 
+    [Serializable]
     public class UnchainedDefaultConstructorWithExpressionBodyPropertyModel : IEquatable<UnchainedDefaultConstructorWithExpressionBodyPropertyModel>
     {
         private const string ParameterlessConstructorValue = "OhNos";
@@ -258,6 +261,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
+    [Serializable]
     public class ChainedDefaultConstructorWithExpressionBodyPropertyModel : IEquatable<ChainedDefaultConstructorWithExpressionBodyPropertyModel>
     {
         private const string ParameterlessConstructorValue = "OhNos";
@@ -324,6 +328,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
+    [Serializable]
     public class AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel : IEquatable<AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel>
     {
         private const string ParameterlessConstructorValue = "OhNos";
@@ -391,6 +396,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
+    [Serializable]
     public class AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel : IEquatable<AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel>
     {
         private const string ParameterlessConstructorValue = "OhNos";

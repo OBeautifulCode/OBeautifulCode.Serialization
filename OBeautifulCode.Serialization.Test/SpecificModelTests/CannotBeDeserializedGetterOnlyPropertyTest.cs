@@ -23,8 +23,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_InitializedNoConstructor___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedNoConstructor>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedNoConstructor>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedNoConstructor, AssemblyMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedNoConstructor, AssemblyMatchStrategy>);
 
             var expected = A.Dummy<InitializedNoConstructor>();
 
@@ -38,15 +38,15 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
         public static void Deserialize___Should_roundtrip_a_serialized_ExpressionBodyNoConstructor___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodyNoConstructor>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodyNoConstructor>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodyNoConstructor, AssemblyMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodyNoConstructor, AssemblyMatchStrategy>);
 
             var expected = A.Dummy<ExpressionBodyNoConstructor>();
 
@@ -60,15 +60,15 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact(Skip = "Throws in JSON, see note in CamelStrictConstructorContractResolver.CreateObjectContract.  In BSON, the issue is specifically with models that do not have a default constructor (regardless of whether there are multiple constructors or a single parameterized constructor).")]
         public static void Deserialize___Should_roundtrip_a_serialized_InitializedSingleParameterizedConstructor___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedSingleParameterizedConstructor>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedSingleParameterizedConstructor>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedSingleParameterizedConstructor, AssemblyMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedSingleParameterizedConstructor, AssemblyMatchStrategy>);
 
             var expected = A.Dummy<InitializedSingleParameterizedConstructor>();
 
@@ -84,15 +84,15 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact(Skip = "Throws in JSON, see note in CamelStrictConstructorContractResolver.CreateObjectContract.  Works fine in BSON.")]
         public static void Deserialize___Should_roundtrip_a_serialized_ExpressionBodySingleParameterizedConstructor___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodySingleParameterizedConstructor>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodySingleParameterizedConstructor>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodySingleParameterizedConstructor, AssemblyMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodySingleParameterizedConstructor, AssemblyMatchStrategy>);
 
             var expected = A.Dummy<ExpressionBodySingleParameterizedConstructor>();
 
@@ -108,15 +108,15 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact(Skip = "Throws in JSON, see note in CamelStrictConstructorContractResolver.CreateObjectContract.  Works fine in BSON.")]
         public static void Deserialize___Should_roundtrip_a_serialized_InitializedMultipleConstructorsWithDefault___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedMultipleConstructorsWithDefault>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedMultipleConstructorsWithDefault>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedMultipleConstructorsWithDefault, AssemblyMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedMultipleConstructorsWithDefault, AssemblyMatchStrategy>);
 
             var expected = A.Dummy<InitializedMultipleConstructorsWithDefault>();
 
@@ -132,15 +132,15 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact(Skip = "Throws in JSON, see note in CamelStrictConstructorContractResolver.CreateObjectContract.  Works fine in BSON.")]
         public static void Deserialize___Should_roundtrip_a_serialized_ExpressionBodyMultipleConstructorsWithDefault___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithDefault>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithDefault>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithDefault, AssemblyMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithDefault, AssemblyMatchStrategy>);
 
             var expected = A.Dummy<ExpressionBodyMultipleConstructorsWithDefault>();
 
@@ -156,15 +156,15 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact(Skip = "Throws in JSON, see note in CamelStrictConstructorContractResolver.CreateObjectContract.  In BSON, the issue is specifically with models that do not have a default constructor (regardless of whether there are multiple constructors or a single parameterized constructor).")]
         public static void Deserialize___Should_roundtrip_a_serialized_InitializedMultipleConstructorsWithoutDefault___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedMultipleConstructorsWithoutDefault>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedMultipleConstructorsWithoutDefault>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedMultipleConstructorsWithoutDefault, AssemblyMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedMultipleConstructorsWithoutDefault, AssemblyMatchStrategy>);
 
             var expected = A.Dummy<InitializedMultipleConstructorsWithoutDefault>();
 
@@ -180,15 +180,15 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact(Skip = "Throws in JSON, see note in CamelStrictConstructorContractResolver.CreateObjectContract.  Works fine in BSON.")]
         public static void Deserialize___Should_roundtrip_a_serialized_ExpressionBodyMultipleConstructorsWithoutDefault___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithoutDefault>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithoutDefault>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithoutDefault, AssemblyMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithoutDefault, AssemblyMatchStrategy>);
 
             var expected = A.Dummy<ExpressionBodyMultipleConstructorsWithoutDefault>();
 
@@ -204,10 +204,11 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
     }
 
+    [Serializable]
     public class InitializedNoConstructor
     {
         public string OtherProperty { get; set; }
@@ -215,6 +216,7 @@ namespace OBeautifulCode.Serialization.Test
         public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
     }
 
+    [Serializable]
     public class ExpressionBodyNoConstructor
     {
         public string OtherProperty { get; set; }
@@ -222,6 +224,7 @@ namespace OBeautifulCode.Serialization.Test
         public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
     }
 
+    [Serializable]
     public class InitializedSingleParameterizedConstructor
     {
         public InitializedSingleParameterizedConstructor(
@@ -237,6 +240,7 @@ namespace OBeautifulCode.Serialization.Test
         public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
     }
 
+    [Serializable]
     public class ExpressionBodySingleParameterizedConstructor
     {
         public ExpressionBodySingleParameterizedConstructor(
@@ -252,6 +256,7 @@ namespace OBeautifulCode.Serialization.Test
         public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
     }
 
+    [Serializable]
     public class InitializedMultipleConstructorsWithDefault
     {
         public InitializedMultipleConstructorsWithDefault()
@@ -273,6 +278,7 @@ namespace OBeautifulCode.Serialization.Test
         public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
     }
 
+    [Serializable]
     public class ExpressionBodyMultipleConstructorsWithDefault
     {
         public ExpressionBodyMultipleConstructorsWithDefault()
@@ -294,6 +300,7 @@ namespace OBeautifulCode.Serialization.Test
         public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
     }
 
+    [Serializable]
     public class InitializedMultipleConstructorsWithoutDefault
     {
         public InitializedMultipleConstructorsWithoutDefault(
@@ -317,6 +324,7 @@ namespace OBeautifulCode.Serialization.Test
         public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
     }
 
+    [Serializable]
     public class ExpressionBodyMultipleConstructorsWithoutDefault
     {
         public ExpressionBodyMultipleConstructorsWithoutDefault(
@@ -340,6 +348,7 @@ namespace OBeautifulCode.Serialization.Test
         public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
     }
 
+    [Serializable]
     public class InitializedPublicSetProperty
     {
         public InitializedPublicSetProperty(
@@ -359,6 +368,7 @@ namespace OBeautifulCode.Serialization.Test
         public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
     }
 
+    [Serializable]
     public class ExpressionBodyPublicSetProperty
     {
         public ExpressionBodyPublicSetProperty(

@@ -48,7 +48,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -141,7 +141,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -204,7 +204,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -276,10 +276,11 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, jsonConfigType, bsonConfigType);
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
     }
 
+    [Serializable]
     [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix", Justification = "Just need a type to test.")]
     public class TestWithDictionaryKeyedOnEnum
     {
@@ -287,11 +288,13 @@ namespace OBeautifulCode.Serialization.Test
         public IDictionary<TestEnumeration, string> TestDictionary { get; set; }
     }
 
+    [Serializable]
     public class TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums
     {
         public IReadOnlyDictionary<TestEnumeration, IReadOnlyCollection<AnotherEnumeration>> TestDictionary { get; set; }
     }
 
+    [Serializable]
     public class TestWithDictionaryOfEnumToReadOnlyCollectionOfEnumsConfig : BsonSerializationConfigurationBase
     {
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[]
@@ -300,6 +303,7 @@ namespace OBeautifulCode.Serialization.Test
         };
     }
 
+    [Serializable]
     public class TestDictionaryFields
     {
         // add datetime key, guid
@@ -327,6 +331,7 @@ namespace OBeautifulCode.Serialization.Test
         public IDictionary<AnotherEnumeration, string> IDictionaryEnumString { get; set; }
     }
 
+    [Serializable]
     public class TestDictionaryMixedKeyValues
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
@@ -476,6 +481,7 @@ namespace OBeautifulCode.Serialization.Test
         public ConcurrentDictionary<DateTime?, int> ConcurrentDictionaryNullableDateTime { get; set; }
     }
 
+    [Serializable]
     public class KeyOrValueObjectWithPrivateSetter
     {
         public KeyOrValueObjectWithPrivateSetter(string privateValue)
@@ -519,6 +525,7 @@ namespace OBeautifulCode.Serialization.Test
                 .Value;
     }
 
+    [Serializable]
     public abstract class KeyOrValueObjectHierarchyBase
     {
         public string Message { get; set; }
@@ -559,6 +566,7 @@ namespace OBeautifulCode.Serialization.Test
         public abstract override int GetHashCode();
     }
 
+    [Serializable]
     public class KeyOrValueObjectHierarchyOne : KeyOrValueObjectHierarchyBase
     {
         public string One { get; set; }
@@ -600,6 +608,7 @@ namespace OBeautifulCode.Serialization.Test
                 .Value;
     }
 
+    [Serializable]
     public class KeyOrValueObjectHierarchyTwo : KeyOrValueObjectHierarchyBase
     {
         public string Two { get; set; }

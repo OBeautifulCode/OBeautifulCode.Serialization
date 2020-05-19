@@ -47,7 +47,7 @@ namespace OBeautifulCode.Serialization.Test
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Called via reflection.")]
     internal class DefaultTestConfiguration : JsonSerializationConfigurationBase
     {
-        protected override IReadOnlyDictionary<SerializationDirection, RegisteredContractResolver> OverrideContractResolver =>
+        public override IReadOnlyDictionary<SerializationDirection, RegisteredContractResolver> OverrideContractResolver =>
             new Dictionary<SerializationDirection, RegisteredContractResolver>
             {
                 { SerializationDirection.Serialize, new RegisteredContractResolver(_ => new DefaultContractResolver()) },

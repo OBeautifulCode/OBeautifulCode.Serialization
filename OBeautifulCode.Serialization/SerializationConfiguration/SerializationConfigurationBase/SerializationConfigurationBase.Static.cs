@@ -76,7 +76,7 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Gets the types that need to be registered for any and all serialization.
         /// </summary>
-        protected static IReadOnlyCollection<Type> InternallyRequiredTypes => new[]
+        public static IReadOnlyCollection<Type> InternallyRequiredTypes => new[]
         {
             // OBC.Type
             typeof(UtcDateTimeRangeInclusive),
@@ -93,6 +93,7 @@ namespace OBeautifulCode.Serialization
             typeof(ConstructorInfoRepresentation),
             typeof(MemberInfoRepresentation),
             typeof(MethodInfoRepresentation),
+            typeof(UnknownTypePlaceholder),
 
             // OBC.Serialization:
             typeof(SerializerRepresentation),

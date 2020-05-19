@@ -116,6 +116,7 @@
     <Compile Include="Exceptions\BsonSerializationConfigurationException.cs" />
     <Compile Include="ObcBsonSerializer\BsonSerializerFactory.cs" />
     <Compile Include="CustomSerializers\ObcBsonColorSerializer.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegister\TypesToRegisterBsonSerializationConfiguration.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\ThrowOnUnregisteredTypeBsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\AttemptOnUnregisteredTypeBsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\NetDrawingBsonSerializationConfiguration.cs" />
