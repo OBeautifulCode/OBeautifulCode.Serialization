@@ -65,8 +65,8 @@
     <Reference Include="OBeautifulCode.Compression, Version=1.0.14.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OBeautifulCode.Compression.1.0.14\lib\net462\OBeautifulCode.Compression.dll</HintPath>
     </Reference>
-    <Reference Include="OBeautifulCode.Representation.System, Version=1.0.46.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OBeautifulCode.Representation.System.1.0.46\lib\net462\OBeautifulCode.Representation.System.dll</HintPath>
+    <Reference Include="OBeautifulCode.Representation.System, Version=1.0.47.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OBeautifulCode.Representation.System.1.0.47\lib\net462\OBeautifulCode.Representation.System.dll</HintPath>
     </Reference>
     <Reference Include="OBeautifulCode.Type, Version=1.0.51.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OBeautifulCode.Type.1.0.51\lib\net462\OBeautifulCode.Type.dll</HintPath>
@@ -169,9 +169,7 @@
     <Compile Include=".recipes\OBeautifulCode.Reflection\DisposableAppDomain.cs" />
     <Compile Include=".recipes\OBeautifulCode.Reflection\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Representation\RepresentationSystemDummyFactory.cs" />
-    <Compile Include=".recipes\OBeautifulCode.Representation\RepresentationSystemDummyFactory.designer.cs">
-      <DependentUpon>RepresentationSystemDummyFactory.cs</DependentUpon>
-    </Compile>
+    <Compile Include=".recipes\OBeautifulCode.Representation\RepresentationSystemDummyFactory.designer.cs" />
     <Compile Include=".recipes\OBeautifulCode.Representation\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.String\StringExtensions.cs" />
     <Compile Include=".recipes\OBeautifulCode.String\SuppressBecause.cs" />
