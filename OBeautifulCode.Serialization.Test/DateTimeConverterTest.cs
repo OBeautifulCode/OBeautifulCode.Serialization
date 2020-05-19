@@ -10,8 +10,6 @@ namespace OBeautifulCode.Serialization.Test
 
     using FluentAssertions;
 
-    using OBeautifulCode.Serialization.Json;
-
     using Xunit;
 
     public static class DateTimeConverterTest
@@ -21,15 +19,15 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var expected = DateTime.UtcNow;
-            var serializer = new ObcJsonSerializer();
 
-            // Act
-            var serialized = serializer.SerializeToString(expected);
-            var actual = serializer.Deserialize<DateTime>(serialized);
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, DateTime deserialized)
+            {
+                deserialized.Kind.Should().Be(expected.Kind);
+                deserialized.Should().Be(expected);
+            }
 
-            // Assert
-            actual.Kind.Should().Be(expected.Kind);
-            actual.Should().Be(expected);
+            // Act, Assert
+            expected.RoundtripSerializeViaJsonWithCallback(ThrowIfObjectsDiffer);
         }
 
         [Fact]
@@ -37,15 +35,15 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var expected = DateTime.UtcNow.ToUnspecified();
-            var serializer = new ObcJsonSerializer();
 
-            // Act
-            var serialized = serializer.SerializeToString(expected);
-            var actual = serializer.Deserialize<DateTime>(serialized);
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, DateTime deserialized)
+            {
+                deserialized.Kind.Should().Be(expected.Kind);
+                deserialized.Should().Be(expected);
+            }
 
-            // Assert
-            actual.Kind.Should().Be(expected.Kind);
-            actual.Should().Be(expected);
+            // Act, Assert
+            expected.RoundtripSerializeViaJsonWithCallback(ThrowIfObjectsDiffer);
         }
 
         [Fact]
@@ -53,15 +51,15 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var expected = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time"));
-            var serializer = new ObcJsonSerializer();
 
-            // Act
-            var serialized = serializer.SerializeToString(expected);
-            var actual = serializer.Deserialize<DateTime>(serialized);
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, DateTime deserialized)
+            {
+                deserialized.Kind.Should().Be(expected.Kind);
+                deserialized.Should().Be(expected);
+            }
 
-            // Assert
-            actual.Kind.Should().Be(expected.Kind);
-            actual.Should().Be(expected);
+            // Act, Assert
+            expected.RoundtripSerializeViaJsonWithCallback(ThrowIfObjectsDiffer);
         }
 
         [Fact]
@@ -69,15 +67,15 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var expected = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("New Zealand Standard Time"));
-            var serializer = new ObcJsonSerializer();
 
-            // Act
-            var serialized = serializer.SerializeToString(expected);
-            var actual = serializer.Deserialize<DateTime>(serialized);
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, DateTime deserialized)
+            {
+                deserialized.Kind.Should().Be(expected.Kind);
+                deserialized.Should().Be(expected);
+            }
 
-            // Assert
-            actual.Kind.Should().Be(expected.Kind);
-            actual.Should().Be(expected);
+            // Act, Assert
+            expected.RoundtripSerializeViaJsonWithCallback(ThrowIfObjectsDiffer);
         }
 
         [Fact]
@@ -85,15 +83,15 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             var expected = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
-            var serializer = new ObcJsonSerializer();
 
-            // Act
-            var serialized = serializer.SerializeToString(expected);
-            var actual = serializer.Deserialize<DateTime>(serialized);
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, DateTime deserialized)
+            {
+                deserialized.Kind.Should().Be(expected.Kind);
+                deserialized.Should().Be(expected);
+            }
 
-            // Assert
-            actual.Kind.Should().Be(expected.Kind);
-            actual.Should().Be(expected);
+            // Act, Assert
+            expected.RoundtripSerializeViaJsonWithCallback(ThrowIfObjectsDiffer);
         }
     }
 }

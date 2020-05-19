@@ -9,57 +9,64 @@ namespace OBeautifulCode.Serialization.Test
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using FakeItEasy;
+
     using FluentAssertions;
+
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
+
     using Xunit;
 
     public static class CollectionsWorkDirectlyWithRegistrationOfGenericTypes
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "bsonSerializer", Justification = "Adding bson support later.")]
         [Fact]
         public static void ElementTypeOfArrayIsOnlyTypeDiscovered()
         {
             // Arrange
-            var bsonConfig = typeof(TypesToRegisterBsonSerializationConfiguration<RegisteredKey, RegisteredValue>);
-            var bsonSerializer = new ObcBsonSerializer(bsonConfig.ToBsonSerializationConfigurationType());
-
-            var jsonConfig = typeof(TypesToRegisterJsonSerializationConfiguration<RegisteredKey, RegisteredValue>);
-            var jsonSerializer = new ObcJsonSerializer(jsonConfig.ToJsonSerializationConfigurationType());
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<RegisteredKey, RegisteredValue>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<RegisteredKey, RegisteredValue>);
 
             var expectedKey = new RegisteredKey { Property = A.Dummy<string>() };
             var expectedValue = new RegisteredValue { Property = A.Dummy<string>() };
-
             var expectedTuple = new Tuple<RegisteredKey, RegisteredValue>(expectedKey, expectedValue);
             var expectedDictionary = new Dictionary<RegisteredKey, RegisteredValue> { { expectedKey, expectedValue } };
             var expectedList = new List<RegisteredKey>(new[] { expectedKey });
             var expectedArray = new[] { expectedValue };
 
-            // Act
-            // var tupleBsonString = bsonSerializer.SerializeToString(expectedTuple);
-            // var tupleBson = bsonSerializer.Deserialize<Tuple<RegisteredKey, RegisteredValue>>(tupleBsonString);
-            var tupleJsonString = jsonSerializer.SerializeToString(expectedTuple);
-            var tupleJson = jsonSerializer.Deserialize<Tuple<RegisteredKey, RegisteredValue>>(tupleJsonString);
-            var dictionaryJsonString = jsonSerializer.SerializeToString(expectedDictionary);
-            var dictionaryJson = jsonSerializer.Deserialize<Dictionary<RegisteredKey, RegisteredValue>>(dictionaryJsonString);
-            var listJsonString = jsonSerializer.SerializeToString(expectedList);
-            var listJson = jsonSerializer.Deserialize<List<RegisteredKey>>(listJsonString);
-            var arrayJsonString = jsonSerializer.SerializeToString(expectedArray);
-            var arrayJson = jsonSerializer.Deserialize<RegisteredValue[]>(arrayJsonString);
+            // Act, Assert
+            void ThrowIfTuplesDiffer(DescribedSerialization serialized, Tuple<RegisteredKey, RegisteredValue> deserialized)
+            {
+                deserialized.Item1.Property.Should().Be(expectedTuple.Item1.Property);
+                deserialized.Item2.Property.Should().Be(expectedTuple.Item2.Property);
+            }
 
-            // Assert
+            void ThrowIfDictionariesDiffer(DescribedSerialization serialized, Dictionary<RegisteredKey, RegisteredValue> deserialized)
+            {
+                deserialized.Single().Key.Property.Should().Be(expectedDictionary.Single().Key.Property);
+                deserialized.Single().Value.Property.Should().Be(expectedDictionary.Single().Value.Property);
+            }
 
-            // tupleBson.Should().BeEquivalentTo(expectedTuple);
-            tupleJson.Item1.Property.Should().Be(expectedTuple.Item1.Property);
-            tupleJson.Item2.Property.Should().Be(expectedTuple.Item2.Property);
-            dictionaryJson.Single().Key.Property.Should().Be(expectedDictionary.Single().Key.Property);
-            dictionaryJson.Single().Value.Property.Should().Be(expectedDictionary.Single().Value.Property);
-            listJson.Single().Property.Should().Be(expectedList.Single().Property);
-            arrayJson.Single().Property.Should().Be(expectedArray.Single().Property);
+            void ThrowIfListsDiffer(DescribedSerialization serialized, List<RegisteredKey> deserialized)
+            {
+                deserialized.Single().Property.Should().Be(expectedList.Single().Property);
+            }
+
+            void ThrowIfArraysDiffer(DescribedSerialization serialized, RegisteredValue[] deserialized)
+            {
+                deserialized.Single().Property.Should().Be(expectedArray.Single().Property);
+            }
+
+            // Act, Assert
+            expectedTuple.RoundtripSerializeViaJsonWithCallback(ThrowIfTuplesDiffer, jsonConfigType);
+            expectedDictionary.RoundtripSerializeViaJsonWithCallback(ThrowIfDictionariesDiffer, jsonConfigType);
+            expectedList.RoundtripSerializeWithCallback(ThrowIfListsDiffer, bsonConfigType, jsonConfigType);
+            expectedArray.RoundtripSerializeWithCallback(ThrowIfArraysDiffer, bsonConfigType, jsonConfigType);
         }
     }
 
+    [Serializable]
     public class RegisteredKey : IEquatable<RegisteredKey>
     {
         public string Property { get; set; }
@@ -105,6 +112,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
+    [Serializable]
     public class RegisteredValue
     {
         public string Property { get; set; }

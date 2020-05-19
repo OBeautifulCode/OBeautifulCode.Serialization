@@ -6,22 +6,14 @@
 
 namespace OBeautifulCode.Serialization.Test
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
+
     using FakeItEasy;
 
-    using FluentAssertions;
-
-    using OBeautifulCode.Representation.System;
-    using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
 
     using Xunit;
-
-    using static System.FormattableString;
 
     public static class ParallelSerializationTest
     {

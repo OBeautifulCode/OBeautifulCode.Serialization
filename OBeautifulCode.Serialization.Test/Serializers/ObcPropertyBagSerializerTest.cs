@@ -30,8 +30,8 @@ namespace OBeautifulCode.Serialization.Test
 #pragma warning disable SA1136 // Enum values should be on separate lines
 #pragma warning disable SA1502 // Element should not be on a single line
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "RoundTrip", Justification = "Name/spelling is correct.")]
         [Fact]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "RoundTrip", Justification = "Name/spelling is correct.")]
         public static void RoundTrip___Supported_scenarios___Works()
         {
             // Arrange
@@ -39,7 +39,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var serializer = new ObcPropertyBagSerializer(serializationConfigurationType.ToPropertyBagSerializationConfigurationType());
 
-            var input = new ComplicatedObject
+            var expected = new ComplicatedObject
             {
                 NullableDecimal = 29m,
                 BaseVersion = new InheritTypeDerive(),
@@ -66,123 +66,119 @@ namespace OBeautifulCode.Serialization.Test
                 StringCollectionWithNulls = new[] { string.Empty, A.Dummy<string>(), null, string.Empty, null, A.Dummy<string>() },
             };
 
-            // Act
-            var serializedPropertyBag = serializer.SerializeToPropertyBag(input);
-            var serializedString = serializer.SerializeToString(input);
-            var serializedBytes = serializer.SerializeToBytes(input);
-
-            var actualPropertyBag = serializer.Deserialize<ComplicatedObject>(serializedPropertyBag);
-            var actualString = serializer.Deserialize<ComplicatedObject>(serializedString);
-            var actualBytes = serializer.Deserialize<ComplicatedObject>(serializedBytes);
-
-            // Assert
-            void AssertCorrect(ComplicatedObject actual)
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, ComplicatedObject deserialized)
             {
-                actual.NullableDecimal.Should().Be(input.NullableDecimal);
-                actual.NullableDecimalDefault.Should().BeNull();
-                actual.BaseVersion.Should().NotBeNull();
-                actual.DeriveVersion.Should().NotBeNull();
-                actual.DeriveVersionArray.Count().Should().Be(input.DeriveVersionArray.Count());
-                actual.DeriveVersionCollection.Count().Should().Be(input.DeriveVersionCollection.Count());
-                actual.String.Should().Be(input.String);
-                actual.Int.Should().Be(input.Int);
-                actual.TimeSpan.Should().Be(input.TimeSpan);
-                actual.DateTime.Should().Be(input.DateTime);
-                actual.DateTimeNullable.Should().Be(input.DateTimeNullable);
-                actual.CustomWithoutInterface.Should().NotBeNull();
-                actual.CustomWithInterface.Should().NotBeNull();
-                actual.StringDefault.Should().BeNull();
-                actual.IntDefault.Should().Be(default(int));
-                actual.TimeSpanDefault.Should().Be(default(TimeSpan));
-                actual.DateTimeDefault.Should().Be(default(DateTime));
-                actual.DateTimeNullableDefault.Should().BeNull();
-                actual.CustomWithoutInterfaceDefault.Should().BeNull();
-                actual.CustomWithInterfaceDefault.Should().BeNull();
-                actual.StringArray.Should().Equal(input.StringArray);
-                actual.StringCollection.Should().Equal(input.StringCollection);
-                actual.IntCollection.Should().Equal(input.IntCollection);
-                actual.TimeSpanCollection.Should().Equal(input.TimeSpanCollection);
-                actual.DateTimeCollection.Should().Equal(input.DateTimeCollection);
-                actual.CustomWithoutInterfaceCollection.Should().HaveCount(input.CustomWithoutInterfaceCollection.Count());
-                actual.CustomWithInterfaceCollection.Should().HaveCount(input.CustomWithInterfaceCollection.Count());
-                actual.EnumParseCollection.Should().Equal(input.EnumParseCollection);
-                actual.EnumDefault.Should().Be(EnumParse.Default);
-                actual.EnumParse.Should().Be(input.EnumParse);
-                actual.StringCollectionDefault.Should().BeNull();
-                actual.StringCollectionWithSingleEmptyString.Should().Equal(input.StringCollectionWithSingleEmptyString);
-                actual.StringCollectionWithNulls.Should().Equal(input.StringCollectionWithNulls);
+                deserialized.NullableDecimal.Should().Be(expected.NullableDecimal);
+                deserialized.NullableDecimalDefault.Should().BeNull();
+                deserialized.BaseVersion.Should().NotBeNull();
+                deserialized.DeriveVersion.Should().NotBeNull();
+                deserialized.DeriveVersionArray.Count().Should().Be(expected.DeriveVersionArray.Count());
+                deserialized.DeriveVersionCollection.Count().Should().Be(expected.DeriveVersionCollection.Count());
+                deserialized.String.Should().Be(expected.String);
+                deserialized.Int.Should().Be(expected.Int);
+                deserialized.TimeSpan.Should().Be(expected.TimeSpan);
+                deserialized.DateTime.Should().Be(expected.DateTime);
+                deserialized.DateTimeNullable.Should().Be(expected.DateTimeNullable);
+                deserialized.CustomWithoutInterface.Should().NotBeNull();
+                deserialized.CustomWithInterface.Should().NotBeNull();
+                deserialized.StringDefault.Should().BeNull();
+                deserialized.IntDefault.Should().Be(default(int));
+                deserialized.TimeSpanDefault.Should().Be(default(TimeSpan));
+                deserialized.DateTimeDefault.Should().Be(default(DateTime));
+                deserialized.DateTimeNullableDefault.Should().BeNull();
+                deserialized.CustomWithoutInterfaceDefault.Should().BeNull();
+                deserialized.CustomWithInterfaceDefault.Should().BeNull();
+                deserialized.StringArray.Should().Equal(expected.StringArray);
+                deserialized.StringCollection.Should().Equal(expected.StringCollection);
+                deserialized.IntCollection.Should().Equal(expected.IntCollection);
+                deserialized.TimeSpanCollection.Should().Equal(expected.TimeSpanCollection);
+                deserialized.DateTimeCollection.Should().Equal(expected.DateTimeCollection);
+                deserialized.CustomWithoutInterfaceCollection.Should().HaveCount(expected.CustomWithoutInterfaceCollection.Count());
+                deserialized.CustomWithInterfaceCollection.Should().HaveCount(expected.CustomWithInterfaceCollection.Count());
+                deserialized.EnumParseCollection.Should().Equal(expected.EnumParseCollection);
+                deserialized.EnumDefault.Should().Be(EnumParse.Default);
+                deserialized.EnumParse.Should().Be(expected.EnumParse);
+                deserialized.StringCollectionDefault.Should().BeNull();
+                deserialized.StringCollectionWithSingleEmptyString.Should().Equal(expected.StringCollectionWithSingleEmptyString);
+                deserialized.StringCollectionWithNulls.Should().Equal(expected.StringCollectionWithNulls);
             }
 
-            AssertCorrect(actualPropertyBag);
-            AssertCorrect(actualString);
-            AssertCorrect(actualBytes);
+            var serializedPropertyBag = serializer.SerializeToPropertyBag(expected);
+
+            // Act, Assert
+            expected.RoundtripSerializeViaPropertyBagWithCallback(ThrowIfObjectsDiffer, serializationConfigurationType);
+
+            var actualPropertyBag = serializer.Deserialize<ComplicatedObject>(serializedPropertyBag);
+            ThrowIfObjectsDiffer(null, actualPropertyBag);
         }
 
         [Fact]
         public static void Deserializing_constructors___When_properties_exist___Works()
         {
             // Arrange
-            var serializer = new ObcPropertyBagSerializer();
-            var input = new ConstructorWithProperties(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>());
+            var expected = new ConstructorWithProperties(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>());
 
             // Act
-            var serializedString = serializer.SerializeToString(input);
-            var actual = serializer.Deserialize<ConstructorWithProperties>(serializedString);
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, ConstructorWithProperties deserialized)
+            {
+                deserialized.PropertyGetOnly.Should().Be(expected.PropertyGetOnly);
+                deserialized.PropertyPrivateSet.Should().Be(expected.PropertyPrivateSet);
+                deserialized.PropertyPublicSet.Should().Be(expected.PropertyPublicSet);
+            }
 
-            // Act
-            actual.PropertyGetOnly.Should().Be(input.PropertyGetOnly);
-            actual.PropertyPrivateSet.Should().Be(input.PropertyPrivateSet);
-            actual.PropertyPublicSet.Should().Be(input.PropertyPublicSet);
+            // Act, Assert
+            expected.RoundtripSerializeViaPropertyBagWithCallback(ThrowIfObjectsDiffer);
         }
 
         [Fact]
         public static void Deserializing_collections___When_serialized_string_has_a_comma___Works()
         {
             // Arrange
-            var serializer = new ObcPropertyBagSerializer();
-            var input = new HasSerializesWithComma { WithCommas = new[] { new SerializesWithComma(), new SerializesWithComma() }.ToList() };
+            var expected = new HasSerializesWithComma { WithCommas = new[] { new SerializesWithComma(), new SerializesWithComma() }.ToList() };
 
-            // Act
-            var serializedString = serializer.SerializeToString(input);
-            var actual = serializer.Deserialize<HasSerializesWithComma>(serializedString);
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, HasSerializesWithComma deserialized)
+            {
+                deserialized.WithCommas.Count.Should().Be(expected.WithCommas.Count);
+                deserialized.WithCommas.ToList().ForEach(_ => _.Should().NotBeNull());
+            }
 
-            // Act
-            actual.WithCommas.Count.Should().Be(input.WithCommas.Count);
-            actual.WithCommas.ToList().ForEach(_ => _.Should().NotBeNull());
+            // Act, Assert
+            expected.RoundtripSerializeViaPropertyBagWithCallback(ThrowIfObjectsDiffer);
         }
 
         [Fact]
         public static void Deserializing_constructors___When_properties_do_not_exist___Throws()
         {
             // Arrange
-            var serializer = new ObcPropertyBagSerializer();
-            var input = new ConstructorWithoutProperties(A.Dummy<string>(), A.Dummy<string>());
+            var expected = new ConstructorWithoutProperties(A.Dummy<string>(), A.Dummy<string>());
 
             // Act
-            var serializedString = serializer.SerializeToString(input);
-            var exception = Record.Exception(() => serializer.Deserialize<ConstructorWithProperties>(serializedString));
+            var actual1 = Record.Exception(() => expected.RoundtripSerializeViaPropertyBagWithCallback(null, formats: new[] { SerializationFormat.String }));
+            var actual2 = Record.Exception(() => expected.RoundtripSerializeViaPropertyBagWithCallback(null, formats: new[] { SerializationFormat.Binary }));
 
-            // Act
-            exception.Should().NotBeNull();
-            exception.Message.Should().Be("Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: OBeautifulCode.Serialization.Test.ObcPropertyBagSerializerTest+ConstructorWithoutProperties, properties: Property,ToString,GetType.");
+            // Assert
+            actual1.Message.Should().Be("Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: OBeautifulCode.Serialization.Test.ObcPropertyBagSerializerTest+ConstructorWithoutProperties, properties: Property,ToString,GetType.");
+            actual2.Message.Should().Be("Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: OBeautifulCode.Serialization.Test.ObcPropertyBagSerializerTest+ConstructorWithoutProperties, properties: Property,ToString,GetType.");
         }
 
         [Fact]
         public static void Configuration___Specifying_type___Works()
         {
             // Arrange
-            var serializer = new ObcPropertyBagSerializer<AttemptOnUnregisteredTypePropertyBagSerializationConfiguration<PropertyBagConfig>>();
-            var input = new TypeWithCustomPropertyBagSerializerWrapper { CustomTypeWrapper = new TypeWithCustomPropertyBagSerializer() };
+            var propertyBagConfig = typeof(AttemptOnUnregisteredTypePropertyBagSerializationConfiguration<PropertyBagConfig>);
 
-            // Act
-            var serializedString = serializer.SerializeToString(input);
+            var expected = new TypeWithCustomPropertyBagSerializerWrapper { CustomTypeWrapper = new TypeWithCustomPropertyBagSerializer() };
 
-            var actual = Record.Exception(() => serializer.Deserialize<TypeWithCustomPropertyBagSerializerWrapper>(serializedString));
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, TypeWithCustomPropertyBagSerializerWrapper deserialized)
+            {
+            }
 
-            actual.Should().BeNull();
+            // Act, Assert
+            expected.RoundtripSerializeViaPropertyBagWithCallback(ThrowIfObjectsDiffer, propertyBagConfig);
         }
 
-        private class ConstructorWithProperties
+        [Serializable]
+        public class ConstructorWithProperties
         {
             public ConstructorWithProperties(string propertyGetOnly, string propertyPrivateSet, string propertyPublicSet)
             {
@@ -198,7 +194,8 @@ namespace OBeautifulCode.Serialization.Test
             public string PropertyPublicSet { get; set; }
         }
 
-        private class ConstructorWithoutProperties
+        [Serializable]
+        public class ConstructorWithoutProperties
         {
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyDoesNotExist", Justification = "Here to test reflection.")]
             public ConstructorWithoutProperties(string property, string propertyDoesNotExist)
@@ -210,18 +207,21 @@ namespace OBeautifulCode.Serialization.Test
             public string Property { get; }
         }
 
+        [Serializable]
         [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = ObcSuppressBecause.CA1812_AvoidUninstantiatedInternalClasses_ClassExistsToUseItsTypeInUnitTests)]
-        private class PropertyBagConfig : PropertyBagSerializationConfigurationBase
+        public class PropertyBagConfig : PropertyBagSerializationConfigurationBase
         {
             protected override IReadOnlyCollection<PropertyBagSerializationConfigurationType> DependentPropertyBagSerializationConfigurationTypes => new[] { typeof(PropertyBagConfigDepend).ToPropertyBagSerializationConfigurationType() };
         }
 
+        [Serializable]
         [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class TypeWithCustomPropertyBagSerializer
         {
         }
 
-        private class PropertyBagConfigDepend : PropertyBagSerializationConfigurationBase
+        [Serializable]
+        public class PropertyBagConfigDepend : PropertyBagSerializationConfigurationBase
         {
             protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => new TypeToRegisterForPropertyBag[]
             {
@@ -229,7 +229,8 @@ namespace OBeautifulCode.Serialization.Test
             };
         }
 
-        private class PropertyBagConfigForInheritTypeBase : PropertyBagSerializationConfigurationBase
+        [Serializable]
+        public class PropertyBagConfigForInheritTypeBase : PropertyBagSerializationConfigurationBase
         {
             protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => new TypeToRegisterForPropertyBag[]
             {
@@ -239,7 +240,8 @@ namespace OBeautifulCode.Serialization.Test
             };
         }
 
-        private class InheritTestSerializer : IStringSerializeAndDeserialize
+        [Serializable]
+        public class InheritTestSerializer : IStringSerializeAndDeserialize
         {
             public const string CustomSerializedString = "We have a serializer inherited.";
 
@@ -263,12 +265,14 @@ namespace OBeautifulCode.Serialization.Test
             }
         }
 
-        private class TypeWithCustomPropertyBagSerializerWrapper
+        [Serializable]
+        public class TypeWithCustomPropertyBagSerializerWrapper
         {
             public TypeWithCustomPropertyBagSerializer CustomTypeWrapper { get; set; }
         }
 
-        private class ComplicatedObject
+        [Serializable]
+        public class ComplicatedObject
         {
             public decimal? NullableDecimal { get; set; }
 
@@ -351,7 +355,8 @@ namespace OBeautifulCode.Serialization.Test
 
         public enum EnumAttributeProperty { Default, Value, Replaced, }
 
-        private class TypeWithCustomPropertyBagSerializerSerializer : IStringSerializeAndDeserialize
+        [Serializable]
+        public class TypeWithCustomPropertyBagSerializerSerializer : IStringSerializeAndDeserialize
         {
             public const string CustomSerializedString = "This is the string representation of a TypeWithCustomPropertyBagSerializer object.";
 
@@ -378,12 +383,14 @@ namespace OBeautifulCode.Serialization.Test
             }
         }
 
-        private class HasSerializesWithComma
+        [Serializable]
+        public class HasSerializesWithComma
         {
             public IReadOnlyCollection<SerializesWithComma> WithCommas { get; set; }
         }
 
-        private class SerializesWithComma
+        [Serializable]
+        public class SerializesWithComma
         {
             public const string CustomToString = "This is my tostring with a , comma...";
 
@@ -400,7 +407,8 @@ namespace OBeautifulCode.Serialization.Test
             }
         }
 
-        private class CustomWithoutInterface
+        [Serializable]
+        public class CustomWithoutInterface
         {
             public const string CustomToString = "This is my default tostring.";
 
@@ -417,7 +425,8 @@ namespace OBeautifulCode.Serialization.Test
             }
         }
 
-        private class CustomWithInterface : ISerializeToString
+        [Serializable]
+        public class CustomWithInterface : ISerializeToString
         {
             public const string CustomToString = "This is my default tostring.";
 
@@ -441,7 +450,8 @@ namespace OBeautifulCode.Serialization.Test
             }
         }
 
-        private abstract class InheritTypeBase
+        [Serializable]
+        public abstract class InheritTypeBase
         {
             public override string ToString()
             {
@@ -449,7 +459,8 @@ namespace OBeautifulCode.Serialization.Test
             }
         }
 
-        private class InheritTypeDerive : InheritTypeBase
+        [Serializable]
+        public class InheritTypeDerive : InheritTypeBase
         {
             public override string ToString()
             {

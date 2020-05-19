@@ -7,9 +7,12 @@
 namespace OBeautifulCode.Serialization.Test
 {
     using System;
+
     using FluentAssertions;
+
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
+
     using Xunit;
 
     public static class DirectStringSerializationIsNotSupported
@@ -18,7 +21,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void BsonSerializer()
         {
             // Arrange, Act
-            var actual = Record.Exception(() => new ObcBsonSerializer<TypesToRegisterBsonSerializationConfiguration<string>>());
+            var actual = Record.Exception(() => SerializationConfigurationManager.GetOrAddSerializationConfiguration(typeof(TypesToRegisterBsonSerializationConfiguration<string>).ToBsonSerializationConfigurationType()));
 
             // Assert
             actual.Should().BeOfType<InvalidOperationException>();
@@ -29,7 +32,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void JsonSerializer()
         {
             // Arrange, Act
-            var actual = Record.Exception(() => new ObcJsonSerializer<TypesToRegisterJsonSerializationConfiguration<string>>());
+            var actual = Record.Exception(() => SerializationConfigurationManager.GetOrAddSerializationConfiguration(typeof(TypesToRegisterJsonSerializationConfiguration<string>).ToJsonSerializationConfigurationType()));
 
             // Assert
             actual.Should().BeOfType<InvalidOperationException>();

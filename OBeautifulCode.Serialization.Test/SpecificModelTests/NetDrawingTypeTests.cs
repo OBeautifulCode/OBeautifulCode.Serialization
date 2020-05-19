@@ -6,10 +6,13 @@
 
 namespace OBeautifulCode.Serialization.Test
 {
+    using System;
     using System.Drawing;
+
     using FakeItEasy;
+
     using FluentAssertions;
-    using OBeautifulCode.Serialization.Bson;
+
     using Xunit;
 
     public static class NetDrawingTypeTests
@@ -18,7 +21,6 @@ namespace OBeautifulCode.Serialization.Test
         public static void RegularColorRoundtrip()
         {
             // Arrange
-            var serializer = new ObcBsonSerializer();
             var expected = new ObjectWithNetDrawingTypes
             {
                 Color = A.Dummy<Color>(),
@@ -26,17 +28,19 @@ namespace OBeautifulCode.Serialization.Test
                 NullableWithoutValueColor = null,
             };
 
-            // Act
-            var actualString = serializer.SerializeToString(expected);
-            var actual = serializer.Deserialize<ObjectWithNetDrawingTypes>(actualString);
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, ObjectWithNetDrawingTypes deserialized)
+            {
+                deserialized.Color.Should().Be(expected.Color);
+                deserialized.NullableWithValueColor.Should().Be(expected.NullableWithValueColor);
+                deserialized.NullableWithoutValueColor.Should().BeNull();
+            }
 
-            // Assert
-            actual.Color.Should().Be(expected.Color);
-            actual.NullableWithValueColor.Should().Be(expected.NullableWithValueColor);
-            actual.NullableWithoutValueColor.Should().BeNull();
+            // Act, Assert
+            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer);
         }
     }
 
+    [Serializable]
     public class ObjectWithNetDrawingTypes
     {
         public Color Color { get; set; }

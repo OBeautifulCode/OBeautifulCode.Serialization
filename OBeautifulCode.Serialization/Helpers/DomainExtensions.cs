@@ -92,7 +92,7 @@ namespace OBeautifulCode.Serialization
             {
                 case SerializationFormat.Binary:
                     var bytes = serializer.SerializeToBytes(objectToPackageIntoDescribedSerialization);
-                    payload = Convert.ToBase64String(bytes);
+                    payload = bytes == null ? null : Convert.ToBase64String(bytes);
                     break;
                 case SerializationFormat.String:
                     payload = serializer.SerializeToString(objectToPackageIntoDescribedSerialization);
@@ -202,7 +202,7 @@ namespace OBeautifulCode.Serialization
             switch (describedSerialization.SerializationFormat)
             {
                 case SerializationFormat.Binary:
-                    var bytes = Convert.FromBase64String(describedSerialization.SerializedPayload);
+                    var bytes = describedSerialization.SerializedPayload == null ? null : Convert.FromBase64String(describedSerialization.SerializedPayload);
                     result = deserializer.Deserialize(bytes, targetType);
                     break;
                 case SerializationFormat.String:
