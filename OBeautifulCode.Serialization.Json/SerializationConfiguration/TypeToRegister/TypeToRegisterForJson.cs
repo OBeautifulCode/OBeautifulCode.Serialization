@@ -10,6 +10,8 @@ namespace OBeautifulCode.Serialization.Json
 
     using Newtonsoft.Json;
 
+    using OBeautifulCode.Assertion.Recipes;
+
     using static System.FormattableString;
 
     /// <summary>
@@ -51,6 +53,10 @@ namespace OBeautifulCode.Serialization.Json
             JsonConverterBuilder jsonConverterBuilder)
             : base(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude)
         {
+            new { type }.AsArg().Must().NotBeNull();
+            new { recursiveOriginType }.AsArg().Must().NotBeNull();
+            new { directOriginType }.AsArg().Must().NotBeNull();
+
             if (jsonConverterBuilder != null)
             {
                 if (memberTypesToInclude != MemberTypesToInclude.None)

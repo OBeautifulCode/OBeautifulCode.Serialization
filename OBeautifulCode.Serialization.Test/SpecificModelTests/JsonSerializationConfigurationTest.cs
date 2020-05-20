@@ -121,8 +121,6 @@ namespace OBeautifulCode.Serialization.Test
 
             var result = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<InheritedTypeBase>).ToJsonSerializationConfigurationType()).SerializeToString(value);
 
-            var assemblyVersion = typeof(JsonSerializationConfigurationTest).Assembly.GetName().Version.ToString();
-
             var serializedValue = Invariant($"[\r\n  {{\r\n    \"child1\": \"Child1\",\r\n    \"base\": \"Base\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+InheritedType1, OBeautifulCode.Serialization.Test\"\r\n  }},\r\n  {{\r\n    \"child2\": \"my child 2\",\r\n    \"base\": \"my base\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+InheritedType2, OBeautifulCode.Serialization.Test\"\r\n  }}\r\n]");
 
             result.Should().Be(serializedValue);
@@ -495,8 +493,6 @@ namespace OBeautifulCode.Serialization.Test
             var crab = new Crab(SeaCreatureSize.Large);
             var salmon = new Salmon(SeaCreatureSize.Medium, "brown");
 
-            var assemblyVersion = typeof(JsonSerializationConfigurationTest).Assembly.GetName().Version.ToString();
-
             var expectedStarfishJson = Invariant($"{{\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Starfish, OBeautifulCode.Serialization.Test\"\r\n}}");
             var expectedCrabJson = Invariant($"{{\r\n  \"size\": \"large\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Crab, OBeautifulCode.Serialization.Test\"\r\n}}");
             var expectedSalmonJson = Invariant($"{{\r\n  \"color\": \"brown\",\r\n  \"size\": \"medium\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Salmon, OBeautifulCode.Serialization.Test\"\r\n}}");
@@ -544,8 +540,6 @@ namespace OBeautifulCode.Serialization.Test
         {
             var whale = new Whale("willy", new LowCalorie(50000));
 
-            var assemblyVersion = typeof(JsonSerializationConfigurationTest).Assembly.GetName().Version.ToString();
-
             var expectedWhaleJson = Invariant($"{{\r\n  \"name\": \"willy\",\r\n  \"diet\": {{\r\n    \"maxCalories\": 50000,\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+LowCalorie, OBeautifulCode.Serialization.Test\"\r\n  }},\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Whale, OBeautifulCode.Serialization.Test\"\r\n}}");
 
             var actualWhaleJson = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature, Diet>).ToJsonSerializationConfigurationType()).SerializeToString(whale);
@@ -573,8 +567,6 @@ namespace OBeautifulCode.Serialization.Test
             var tuna = new Tuna(SeaCreatureSize.Medium, "black");
             var shark = new Shark("sammy", tuna);
 
-            var assemblyVersion = typeof(JsonSerializationConfigurationTest).Assembly.GetName().Version.ToString();
-
             var expectedSharkJson = Invariant($"{{\r\n  \"name\": \"sammy\",\r\n  \"likesToEat\": {{\r\n    \"color\": \"black\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Tuna, OBeautifulCode.Serialization.Test\"\r\n  }},\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Shark, OBeautifulCode.Serialization.Test\"\r\n}}");
 
             var actualSharkJson = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature>).ToJsonSerializationConfigurationType()).SerializeToString(shark);
@@ -601,8 +593,6 @@ namespace OBeautifulCode.Serialization.Test
         public static void Serializer_serializes_OneWay_bindable_type_that_embeds_a_TwoWay_bindable_type_using_specified_serializer()
         {
             var seafoodDiet = new SeafoodDiet(new Salmon(SeaCreatureSize.Medium, "red"), 345);
-
-            var assemblyVersion = typeof(JsonSerializationConfigurationTest).Assembly.GetName().Version.ToString();
 
             var expectedSeafoodDietJson = Invariant($"{{\r\n  \"seaCreature\": {{\r\n    \"color\": \"red\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+Salmon, OBeautifulCode.Serialization.Test\"\r\n  }},\r\n  \"amount\": 345,\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.JsonSerializationConfigurationTest+SeafoodDiet, OBeautifulCode.Serialization.Test\"\r\n}}");
 

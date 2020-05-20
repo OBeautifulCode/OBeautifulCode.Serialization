@@ -7,13 +7,16 @@
 namespace OBeautifulCode.Serialization.Bson
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     using MongoDB.Bson;
     using MongoDB.Bson.IO;
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Conventions;
 
+    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Representation.System;
+    using OBeautifulCode.Serialization.Bson.Internal;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -29,6 +32,7 @@ namespace OBeautifulCode.Serialization.Bson
         /// <summary>
         /// Gets a static instance of this class.
         /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = ObcSuppressBecause.CA2104_DoNotDeclareReadOnlyMutableReferenceTypes_TypeIsImmutable)]
         public static readonly ObcBsonDiscriminatorConvention Instance = new ObcBsonDiscriminatorConvention();
 
         /// <inheritdoc />
@@ -39,6 +43,9 @@ namespace OBeautifulCode.Serialization.Bson
             IBsonReader bsonReader,
             Type nominalType)
         {
+            new { bsonReader }.AsArg().Must().NotBeNull();
+            new { nominalType }.AsArg().Must().NotBeNull();
+
             var bookmark = bsonReader.GetBookmark();
 
             bsonReader.ReadStartDocument();
@@ -83,7 +90,7 @@ namespace OBeautifulCode.Serialization.Bson
             // we have to use ObcBsonSerializer.SerializationConfigurationInUseForDeserialization, which
             // tracks the thread being used for the deserialize operation and associates the serialization
             // configuration in-use with the thread.
-            ObcBsonSerializer.SerializationConfigurationInUseForDeserialization.ThrowOnUnregisteredTypeIfAppropriate(result, SerializationDirection.Deserialize, null);
+            ObcBsonSerializer.GetSerializationConfigurationInUseForDeserialization().ThrowOnUnregisteredTypeIfAppropriate(result, SerializationDirection.Deserialize, null);
 
             return result;
         }

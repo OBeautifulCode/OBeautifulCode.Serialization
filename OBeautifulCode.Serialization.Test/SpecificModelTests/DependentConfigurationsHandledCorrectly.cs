@@ -8,8 +8,12 @@ namespace OBeautifulCode.Serialization.Test
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+
     using FakeItEasy;
+
     using FluentAssertions;
+
     using MongoDB.Bson;
     using MongoDB.Bson.IO;
     using MongoDB.Bson.Serialization;
@@ -238,7 +242,7 @@ namespace OBeautifulCode.Serialization.Test
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.Convert.ChangeType(System.Object,System.Type)", Justification = "This isn't real.")]
+        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.Convert.ChangeType(System.Object,System.Type)", Justification = "This isn't real.")]
         public T Deserialize<T>(string serializedString)
         {
             var result = this.Deserialize(serializedString, typeof(T));

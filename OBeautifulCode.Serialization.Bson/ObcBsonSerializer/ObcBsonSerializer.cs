@@ -7,7 +7,7 @@
 namespace OBeautifulCode.Serialization.Bson
 {
     using System;
-
+    using System.Diagnostics.CodeAnalysis;
     using MongoDB.Bson;
 
     using OBeautifulCode.Assertion.Recipes;
@@ -29,7 +29,7 @@ namespace OBeautifulCode.Serialization.Bson
         /// </remarks>
         [ThreadStatic]
         #pragma warning disable SA1401
-        public static SerializationConfigurationBase SerializationConfigurationInUseForDeserialization;
+        private static SerializationConfigurationBase serializationConfigurationInUseForDeserialization;
         #pragma warning restore SA1401
 
         /// <summary>
@@ -48,6 +48,19 @@ namespace OBeautifulCode.Serialization.Bson
 
         /// <inheritdoc />
         public override SerializerRepresentation SerializerRepresentation { get; }
+
+        /// <summary>
+        /// Gets the serialization configuration of the serializer being used for deserialization.
+        /// </summary>
+        /// <returns>
+        /// The serialization configuration of the serializer being used for deserialization.
+        /// </returns>
+        public static SerializationConfigurationBase GetSerializationConfigurationInUseForDeserialization()
+        {
+            var result = serializationConfigurationInUseForDeserialization;
+
+            return result;
+        }
 
         /// <inheritdoc />
         public override byte[] SerializeToBytes(
@@ -184,7 +197,7 @@ namespace OBeautifulCode.Serialization.Bson
         {
             try
             {
-                SerializationConfigurationInUseForDeserialization = this.SerializationConfiguration;
+                serializationConfigurationInUseForDeserialization = this.SerializationConfiguration;
 
                 var result = deserializationOperation();
 
@@ -192,7 +205,7 @@ namespace OBeautifulCode.Serialization.Bson
             }
             finally
             {
-                SerializationConfigurationInUseForDeserialization = null;
+                serializationConfigurationInUseForDeserialization = null;
             }
         }
     }

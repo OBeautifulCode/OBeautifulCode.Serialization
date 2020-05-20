@@ -31,7 +31,7 @@ namespace OBeautifulCode.Serialization.Bson
         protected sealed override IReadOnlyCollection<TypeToRegister> TypesToRegister => this.TypesToRegisterForBson;
 
         /// <inheritdoc />
-        protected sealed override SerializationConfigurationType GetSerializationConfigurationType()
+        protected sealed override SerializationConfigurationType BuildSerializationConfigurationType()
         {
             var result = this.GetType().ToBsonSerializationConfigurationType();
 
@@ -46,6 +46,10 @@ namespace OBeautifulCode.Serialization.Bson
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude)
         {
+            new { type }.AsArg().Must().NotBeNull();
+            new { recursiveOriginType }.AsArg().Must().NotBeNull();
+            new { directOriginType }.AsArg().Must().NotBeNull();
+
             var genericTypeDefinition = type.GetGenericTypeDefinition();
 
             var genericTypeDefinitionTypeToRegister = (TypeToRegisterForBson)this.RegisteredTypeToRegistrationDetailsMap[genericTypeDefinition].TypeToRegister;

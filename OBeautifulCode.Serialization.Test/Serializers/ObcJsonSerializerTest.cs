@@ -7,6 +7,7 @@
 namespace OBeautifulCode.Serialization.Test
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     using FakeItEasy;
@@ -73,8 +74,6 @@ namespace OBeautifulCode.Serialization.Test
 
             var json = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType()).SerializeToString(dog);
 
-            var assemblyVersion = typeof(ObcJsonSerializerTest).Assembly.GetName().Version.ToString();
-
             var expected = Invariant($"{{\r\n  \"name\": \"spud\",\r\n  \"furColor\": \"brindle\",\r\n  \"dogTag\": \"my name is spud\",\r\n  \"nickname\": null,\r\n  \"age\": 5,\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Test.Dog, OBeautifulCode.Serialization.Test\"\r\n}}");
 
             json.Should().Be(expected);
@@ -123,8 +122,8 @@ namespace OBeautifulCode.Serialization.Test
             dog["furColor"].ToString().Should().Be("brindle");
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "CompactUses", Justification = "Spelling/name is correct.")]
         [Fact]
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "CompactUses", Justification = "Spelling/name is correct.")]
         public static void ObcJsonSerializer___With_type_Compact___Uses_compact()
         {
             // Arrange
@@ -156,8 +155,6 @@ namespace OBeautifulCode.Serialization.Test
             var dog = new Dog(5, "spud", FurColor.Brindle);
 
             var json = new ObcJsonSerializer(typeof(CompactFormatJsonSerializationConfiguration<TypesToRegisterJsonSerializationConfiguration<Animal>>).ToJsonSerializationConfigurationType()).SerializeToString(dog);
-
-            var assemblyVersion = typeof(ObcJsonSerializerTest).Assembly.GetName().Version.ToString();
 
             var expected = Invariant($"{{\"name\":\"spud\",\"furColor\":\"brindle\",\"dogTag\":\"my name is spud\",\"nickname\":null,\"age\":5,\"$concreteType\":\"OBeautifulCode.Serialization.Test.Dog, OBeautifulCode.Serialization.Test\"}}");
 

@@ -8,9 +8,11 @@ namespace OBeautifulCode.Serialization
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Representation.System;
+    using OBeautifulCode.Serialization.Internal;
 
     /// <summary>
     /// Compares two objects of type <see cref="Type"/> for equality, ignoring assembly version
@@ -28,21 +30,23 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// An instance.
         /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = ObcSuppressBecause.CA2104_DoNotDeclareReadOnlyMutableReferenceTypes_TypeIsImmutable)]
         public static readonly VersionlessOpenTypeConsolidatingTypeEqualityComparer Instance = new VersionlessOpenTypeConsolidatingTypeEqualityComparer();
 
         /// <inheritdoc />
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = ObcSuppressBecause.CA1065_DoNotRaiseExceptionsInUnexpectedLocations_ThrowNotSupportedExceptionForUnreachableCodePath)]
         public bool Equals(
             Type x,
             Type y)
         {
             if (x == null)
             {
-                throw new ArgumentNullException(nameof(x));
+                throw new NotSupportedException("null types not support.  x is null");
             }
 
             if (y == null)
             {
-                throw new ArgumentNullException(nameof(y));
+                throw new NotSupportedException("null types not support.  y is null");
             }
 
             bool result;

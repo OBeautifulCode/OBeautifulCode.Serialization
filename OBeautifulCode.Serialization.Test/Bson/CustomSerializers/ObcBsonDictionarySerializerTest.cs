@@ -10,10 +10,12 @@ namespace OBeautifulCode.Serialization.Test
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization.Bson;
+    using OBeautifulCode.Serialization.Test.Internal;
 
     using Xunit;
 
@@ -78,18 +80,23 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Serializable]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class SystemDictionariesModel
         {
             // ReSharper disable once InconsistentNaming
+            [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = ObcSuppressBecause.CA2227_CollectionPropertiesShouldBeReadOnly_SetterIsRequiredForTesting)]
             public IDictionary<DateTime, DateTime> IDictionaryOfDateTime { get; set; }
 
             // ReSharper disable once InconsistentNaming
             public IReadOnlyDictionary<DateTime, DateTime> IReadOnlyDictionaryOfDateTime { get; set; }
 
+            [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = ObcSuppressBecause.CA2227_CollectionPropertiesShouldBeReadOnly_SetterIsRequiredForTesting)]
             public Dictionary<DateTime, DateTime> DictionaryOfDateTime { get; set; }
 
+            [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = ObcSuppressBecause.CA2227_CollectionPropertiesShouldBeReadOnly_SetterIsRequiredForTesting)]
             public ReadOnlyDictionary<DateTime, DateTime> ReadOnlyDictionaryDateTime { get; set; }
 
+            [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = ObcSuppressBecause.CA2227_CollectionPropertiesShouldBeReadOnly_SetterIsRequiredForTesting)]
             public ConcurrentDictionary<DateTime, DateTime> ConcurrentDictionaryOfDateTime { get; set; }
         }
     }

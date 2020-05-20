@@ -460,7 +460,7 @@ namespace OBeautifulCode.Serialization
                 type.Namespace.StartsWith("Newtonsoft", StringComparison.Ordinal) ||
                 type.Namespace.StartsWith("MongoDB", StringComparison.Ordinal) ||
                 type.Namespace.StartsWith("Xunit", StringComparison.Ordinal) ||
-                type.Name.StartsWith("<>c"))
+                type.Name.StartsWith("<>c", StringComparison.Ordinal))
             {
                 return false;
             }

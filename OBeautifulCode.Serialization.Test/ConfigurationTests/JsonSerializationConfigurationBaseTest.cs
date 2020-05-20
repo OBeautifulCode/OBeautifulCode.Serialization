@@ -7,13 +7,13 @@
 namespace OBeautifulCode.Serialization.Test
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using FluentAssertions;
-    using MongoDB.Bson;
+
     using Newtonsoft.Json.Serialization;
 
     using OBeautifulCode.Serialization.Json;
-    using OBeautifulCode.Type;
 
     using Xunit;
 
@@ -44,7 +44,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Called via reflection.")]
+    [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Called via reflection.")]
     internal class DefaultTestConfiguration : JsonSerializationConfigurationBase
     {
         public override IReadOnlyDictionary<SerializationDirection, RegisteredContractResolver> OverrideContractResolver =>

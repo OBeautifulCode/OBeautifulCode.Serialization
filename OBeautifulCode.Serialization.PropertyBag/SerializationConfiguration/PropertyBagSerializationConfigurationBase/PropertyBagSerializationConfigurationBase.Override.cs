@@ -30,7 +30,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         protected sealed override IReadOnlyCollection<TypeToRegister> TypesToRegister => this.TypesToRegisterForPropertyBag;
 
         /// <inheritdoc />
-        protected sealed override SerializationConfigurationType GetSerializationConfigurationType()
+        protected sealed override SerializationConfigurationType BuildSerializationConfigurationType()
         {
             var result = this.GetType().ToPropertyBagSerializationConfigurationType();
 
@@ -45,6 +45,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude)
         {
+            new { type }.AsArg().Must().NotBeNull();
+            new { recursiveOriginType }.AsArg().Must().NotBeNull();
+            new { directOriginType }.AsArg().Must().NotBeNull();
+
             var genericTypeDefinition = type.GetGenericTypeDefinition();
 
             var genericTypeDefinitionTypeToRegister = (TypeToRegisterForPropertyBag)this.RegisteredTypeToRegistrationDetailsMap[genericTypeDefinition].TypeToRegister;

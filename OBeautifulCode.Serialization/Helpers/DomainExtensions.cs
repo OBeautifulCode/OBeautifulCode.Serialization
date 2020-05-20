@@ -29,8 +29,10 @@ namespace OBeautifulCode.Serialization
         /// The representation.
         /// </returns>
         public static SerializerRepresentation ToRepresentation(
-            this ISerializer serializer)
+            this IHaveSerializerRepresentation serializer)
         {
+            new { serializer }.AsArg().Must().NotBeNull();
+
             var result = serializer.SerializerRepresentation;
 
             return result;

@@ -57,7 +57,7 @@ namespace OBeautifulCode.Serialization.Test
 
     public class CustomNoPublicConstructor : BsonSerializationConfigurationBase
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "notUsed", Justification = "Needed for testing.")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "notUsed", Justification = "Needed for testing.")]
         public CustomNoPublicConstructor(string notUsed)
         {
         }
@@ -78,16 +78,16 @@ namespace OBeautifulCode.Serialization.Test
     public class TestConfigWithSettableFields : BsonSerializationConfigurationBase
     {
 #pragma warning disable SA1401 // Fields should be private
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "For testing.")]
+        [SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "For testing.")]
         public IReadOnlyCollection<Type> SettableClassTypesToRegister = new Type[0];
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "For testing.")]
+        [SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "For testing.")]
         public IReadOnlyCollection<Type> SettableTypesToAutoRegister = new Type[0];
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "For testing.")]
+        [SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "For testing.")]
         public IReadOnlyCollection<Type> SettableClassTypesToRegisterAlongWithInheritors = new Type[0];
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "For testing.")]
+        [SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "For testing.")]
         public IReadOnlyCollection<Type> SettableInterfaceTypesToRegisterImplementationOf = new Type[0];
 
 #pragma warning restore SA1401 // Fields should be private

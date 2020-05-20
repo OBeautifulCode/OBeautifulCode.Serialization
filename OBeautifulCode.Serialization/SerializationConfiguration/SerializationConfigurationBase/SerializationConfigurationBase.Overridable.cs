@@ -8,7 +8,11 @@ namespace OBeautifulCode.Serialization
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
+    using OBeautifulCode.Serialization.Internal;
+
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = ObcSuppressBecause.CA1502_AvoidExcessiveComplexity_DisagreeWithAssessment)]
     public abstract partial class SerializationConfigurationBase
     {
         /// <summary>
@@ -40,7 +44,7 @@ namespace OBeautifulCode.Serialization
         /// <returns>
         /// The serialization configuration type.
         /// </returns>
-        protected abstract SerializationConfigurationType GetSerializationConfigurationType();
+        protected abstract SerializationConfigurationType BuildSerializationConfigurationType();
 
         /// <summary>
         /// Builds a <see cref="TypeToRegister"/> to be used for post-initialization registration,

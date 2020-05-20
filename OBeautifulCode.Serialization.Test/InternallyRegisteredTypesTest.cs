@@ -26,7 +26,7 @@ namespace OBeautifulCode.Serialization.Test
         {
             // Arrange
             // this is required to load all of the internal types
-            var throwaway = SerializationConfigurationBase.InternallyRequiredTypes;
+            Console.Write(SerializationConfigurationBase.InternallyRequiredTypes);
 
             // NOTE: as new open generic types are added to internally required types, specify some corresponding closed types
             // this is not something we can automate

@@ -250,7 +250,7 @@ namespace OBeautifulCode.Serialization.Test
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(Invariant($"Failed to roundtrip specified object to/from {serializerRepresentation.SerializationKind} {format} using {serializerRepresentation.SerializationConfigType.ResolveFromLoadedTypes().ToStringReadable()} when serializing in a new AppDomain and deserializing in a new AppDomain.  Deserialized object is: {actual}."), ex);
+                        throw new InvalidOperationException(Invariant($"Failed to roundtrip specified object to/from {serializerRepresentation.SerializationKind} {format} using {serializerRepresentation.SerializationConfigType.ResolveFromLoadedTypes().ToStringReadable()} when serializing in a new AppDomain and deserializing in a new AppDomain.  Deserialized object is: {actual}."), ex);
                     }
 
                     // serialize and deserialize in the same, new app domain
@@ -262,7 +262,7 @@ namespace OBeautifulCode.Serialization.Test
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(Invariant($"Failed to roundtrip specified object to/from {serializerRepresentation.SerializationKind} {format} using {serializerRepresentation.SerializationConfigType.ResolveFromLoadedTypes().ToStringReadable()} when serializing and deserializing in the same, new AppDomain.  Deserialized object is: {actual}."), ex);
+                        throw new InvalidOperationException(Invariant($"Failed to roundtrip specified object to/from {serializerRepresentation.SerializationKind} {format} using {serializerRepresentation.SerializationConfigType.ResolveFromLoadedTypes().ToStringReadable()} when serializing and deserializing in the same, new AppDomain.  Deserialized object is: {actual}."), ex);
                     }
                 }
             }

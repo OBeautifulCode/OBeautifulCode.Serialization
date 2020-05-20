@@ -7,10 +7,13 @@
 namespace OBeautifulCode.Serialization.Json
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.InteropServices;
     using System.Security;
 
     using Newtonsoft.Json;
+
+    using OBeautifulCode.Serialization.Json.Internal;
 
     /// <summary>
     /// Class that enables the Json serializer to construct SecureString instances.
@@ -97,8 +100,9 @@ namespace OBeautifulCode.Serialization.Json
         /// </summary>
         /// <param name="source">The source string.</param>
         /// <returns>A secure version of the source string.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Caller is expected to dispose of object.")]
-        public static SecureString ToSecureString(this string source)
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = ObcSuppressBecause.CA2000_DisposeObjectsBeforeLosingScope_DisposableObjectIsMethodReturnObject)]
+        public static SecureString ToSecureString(
+            this string source)
         {
             if (source == null)
             {

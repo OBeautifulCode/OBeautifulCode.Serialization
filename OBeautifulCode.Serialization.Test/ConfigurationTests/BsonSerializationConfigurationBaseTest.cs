@@ -7,6 +7,7 @@
 namespace OBeautifulCode.Serialization.Test
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     using FluentAssertions;
@@ -150,8 +151,8 @@ namespace OBeautifulCode.Serialization.Test
             expectedTypes.Select(_ => config.IsRegisteredType(_)).AsTest().Must().Each().BeTrue();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "configs", Justification = "Name/spelling is correct.")]
         [Fact]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "configs", Justification = "Name/spelling is correct.")]
         public static void Configure___Provided_with_dependent_configs___Configures_dependents()
         {
             void Action() => SerializationConfigurationManager.GetOrAddSerializationConfiguration(typeof(DependsOnCustomThrowsConfig).ToBsonSerializationConfigurationType());

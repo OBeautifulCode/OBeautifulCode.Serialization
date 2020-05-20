@@ -10,7 +10,9 @@ namespace OBeautifulCode.Serialization.Bson
     using System.Collections.Generic;
 
     using MongoDB.Bson.Serialization;
+
     using OBeautifulCode.Assertion.Recipes;
+
     using static System.FormattableString;
 
     /// <summary>
@@ -56,6 +58,10 @@ namespace OBeautifulCode.Serialization.Bson
             IReadOnlyCollection<string> propertyNameWhitelist)
             : base(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude)
         {
+            new { type }.AsArg().Must().NotBeNull();
+            new { recursiveOriginType }.AsArg().Must().NotBeNull();
+            new { directOriginType }.AsArg().Must().NotBeNull();
+
             if ((serializerBuilderFunc != null) && (propertyNameWhitelist != null))
             {
                 throw new ArgumentException(Invariant($"{nameof(serializerBuilderFunc)} and {nameof(propertyNameWhitelist)} cannot both be specified."));

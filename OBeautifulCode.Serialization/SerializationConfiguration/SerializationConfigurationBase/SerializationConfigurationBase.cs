@@ -10,12 +10,14 @@ namespace OBeautifulCode.Serialization
     using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Reflection.Recipes;
+    using OBeautifulCode.Serialization.Internal;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -42,10 +44,11 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializationConfigurationBase"/> class.
         /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = ObcSuppressBecause.CA2214_DoNotCallOverridableMethodsInConstructors_OverriddenMethodDoesNotRelyOnInitializationNorOtherConfigurationInConstructor)]
         protected SerializationConfigurationBase()
         {
             // ReSharper disable once VirtualMemberCallInConstructor
-            this.SerializationConfigurationType = this.GetSerializationConfigurationType();
+            this.SerializationConfigurationType = this.BuildSerializationConfigurationType();
         }
 
         /// <summary>
@@ -125,6 +128,7 @@ namespace OBeautifulCode.Serialization
         /// <param name="type">Type to check.</param>
         /// <param name="serializationDirection">The serialization direction.</param>
         /// <param name="objectToSerialize">OPTIONAL object to serialize if serializing.  DEFAULT is null, assumes deserialization.</param>
+        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
         public void ThrowOnUnregisteredTypeIfAppropriate(
             Type type,
             SerializationDirection serializationDirection,

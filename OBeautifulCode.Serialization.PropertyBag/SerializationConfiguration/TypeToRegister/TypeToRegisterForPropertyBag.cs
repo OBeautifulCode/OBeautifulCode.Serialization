@@ -8,6 +8,8 @@ namespace OBeautifulCode.Serialization.PropertyBag
 {
     using System;
 
+    using OBeautifulCode.Assertion.Recipes;
+
     using static System.FormattableString;
 
     /// <summary>
@@ -49,6 +51,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
             Func<IStringSerializeAndDeserialize> stringSerializerBuilderFunc)
             : base(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude)
         {
+            new { type }.AsArg().Must().NotBeNull();
+            new { recursiveOriginType }.AsArg().Must().NotBeNull();
+            new { directOriginType }.AsArg().Must().NotBeNull();
+
             if (type.IsGenericTypeDefinition)
             {
                 throw new NotSupportedException(Invariant($"Open generics are not supported."));

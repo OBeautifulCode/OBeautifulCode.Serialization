@@ -46,6 +46,7 @@ namespace OBeautifulCode.Serialization.Json
             JsonSerializationConfigurationBase jsonSerializationConfiguration)
         {
             new { serializationDirection }.AsArg().Must().NotBeEqualTo(SerializationDirection.Unknown);
+            new { jsonSerializationConfiguration }.AsArg().Must().NotBeNull();
 
             var jsonFormattingKind = jsonSerializationConfiguration.JsonFormattingKind;
 

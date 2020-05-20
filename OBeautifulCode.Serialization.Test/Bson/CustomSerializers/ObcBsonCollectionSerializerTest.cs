@@ -9,9 +9,11 @@ namespace OBeautifulCode.Serialization.Test
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization.Bson;
+    using OBeautifulCode.Serialization.Test.Internal;
 
     using Xunit;
 
@@ -76,24 +78,31 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Serializable]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class SystemCollectionsModel
         {
             // ReSharper disable once InconsistentNaming
+            [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = ObcSuppressBecause.CA2227_CollectionPropertiesShouldBeReadOnly_SetterIsRequiredForTesting)]
             public ICollection<DateTime> ICollectionOfDateTime { get; set; }
 
             // ReSharper disable once InconsistentNaming
             public IReadOnlyCollection<DateTime> IReadOnlyCollectionOfDateTime { get; set; }
 
             // ReSharper disable once InconsistentNaming
+            [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = ObcSuppressBecause.CA2227_CollectionPropertiesShouldBeReadOnly_SetterIsRequiredForTesting)]
             public IList<DateTime> IListOfDateTime { get; set; }
 
             // ReSharper disable once InconsistentNaming
             public IReadOnlyList<DateTime> IReadOnlyListOfDateTime { get; set; }
 
+            [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = ObcSuppressBecause.CA1002_DoNotExposeGenericLists_GenericListRequiredForTesting)]
+            [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = ObcSuppressBecause.CA2227_CollectionPropertiesShouldBeReadOnly_SetterIsRequiredForTesting)]
             public List<DateTime> ListOfDateTime { get; set; }
 
+            [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = ObcSuppressBecause.CA2227_CollectionPropertiesShouldBeReadOnly_SetterIsRequiredForTesting)]
             public Collection<DateTime> CollectionOfDateTime { get; set; }
 
+            [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = ObcSuppressBecause.CA2227_CollectionPropertiesShouldBeReadOnly_SetterIsRequiredForTesting)]
             public ReadOnlyCollection<DateTime> ReadOnlyCollectionOfDateTime { get; set; }
         }
     }

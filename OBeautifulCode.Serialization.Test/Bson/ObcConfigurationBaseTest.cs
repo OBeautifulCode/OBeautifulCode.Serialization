@@ -8,10 +8,12 @@ namespace OBeautifulCode.Serialization.Test
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization.Bson;
+    using OBeautifulCode.Serialization.Test.Internal;
 
     using Xunit;
 
@@ -21,11 +23,11 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_recurse_through_OBC_serializers_for_generic_arguments___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<MultiLevelGenericsModel>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<MultilevelGenericsModel>);
 
             var dateTime = new DateTime(DateTime.UtcNow.Ticks, DateTimeKind.Unspecified);
 
-            var expected = new MultiLevelGenericsModel
+            var expected = new MultilevelGenericsModel
             {
                 ListOfDictionary = new List<IReadOnlyDictionary<DateTime, string>>
                 {
@@ -53,7 +55,7 @@ namespace OBeautifulCode.Serialization.Test
                 },
             };
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, MultiLevelGenericsModel deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerialization serialized, MultilevelGenericsModel deserialized)
             {
                 // note that in older version of Serialization these assertions would have
                 // failed because our the ObcBsonDateTimeSerializer was not being called at
@@ -75,7 +77,8 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Serializable]
-        public class MultiLevelGenericsModel
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
+        public class MultilevelGenericsModel
         {
             public IReadOnlyList<IReadOnlyDictionary<DateTime, string>> ListOfDictionary { get; set; }
 
