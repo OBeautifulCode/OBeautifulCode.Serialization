@@ -23,6 +23,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OBeautifulCode.Serializatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OBeautifulCode.Serialization.Recipes", "OBeautifulCode.Serialization.Recipes\OBeautifulCode.Serialization.Recipes.csproj", "{324605C9-A32E-4604-95E6-D0DC4252199C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OBeautifulCode.Serialization.Bson.Test", "OBeautifulCode.Serialization.Bson.Test\OBeautifulCode.Serialization.Bson.Test.csproj", "{C539F9E1-D89D-4650-9DDB-E3EC20BAE21B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OBeautifulCode.Serialization.Json.Test", "OBeautifulCode.Serialization.Json.Test\OBeautifulCode.Serialization.Json.Test.csproj", "{D6DCA557-9BCD-4F77-9007-0623A1E95520}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OBeautifulCode.Serialization.PropertyBag.Test", "OBeautifulCode.Serialization.PropertyBag.Test\OBeautifulCode.Serialization.PropertyBag.Test.csproj", "{96459742-AFB4-4F66-9963-CBAC30C8D09B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OBeautifulCode.Serialization.Recipes.Test", "OBeautifulCode.Serialization.Recipes.Test\OBeautifulCode.Serialization.Recipes.Test.csproj", "{61268D6D-5A04-4E76-9BF6-533D569E7EE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +61,22 @@ Global
 		{324605C9-A32E-4604-95E6-D0DC4252199C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{324605C9-A32E-4604-95E6-D0DC4252199C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{324605C9-A32E-4604-95E6-D0DC4252199C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C539F9E1-D89D-4650-9DDB-E3EC20BAE21B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C539F9E1-D89D-4650-9DDB-E3EC20BAE21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C539F9E1-D89D-4650-9DDB-E3EC20BAE21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C539F9E1-D89D-4650-9DDB-E3EC20BAE21B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6DCA557-9BCD-4F77-9007-0623A1E95520}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6DCA557-9BCD-4F77-9007-0623A1E95520}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6DCA557-9BCD-4F77-9007-0623A1E95520}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6DCA557-9BCD-4F77-9007-0623A1E95520}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96459742-AFB4-4F66-9963-CBAC30C8D09B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96459742-AFB4-4F66-9963-CBAC30C8D09B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96459742-AFB4-4F66-9963-CBAC30C8D09B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96459742-AFB4-4F66-9963-CBAC30C8D09B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61268D6D-5A04-4E76-9BF6-533D569E7EE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61268D6D-5A04-4E76-9BF6-533D569E7EE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61268D6D-5A04-4E76-9BF6-533D569E7EE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61268D6D-5A04-4E76-9BF6-533D569E7EE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

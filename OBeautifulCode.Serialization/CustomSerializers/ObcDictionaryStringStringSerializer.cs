@@ -234,7 +234,7 @@ namespace OBeautifulCode.Serialization
                 }
                 catch (Exception ex)
                 {
-                    throw new ObcSerializationException(Invariant($"Failed to deserialize '{serializedString}'"), ex);
+                    throw new InvalidOperationException(Invariant($"Failed to deserialize '{serializedString}'"), ex);
                 }
             }
 

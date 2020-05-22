@@ -129,7 +129,6 @@
     <Compile Include="Interfaces\IHaveSerializationConfigurationType.cs" />
     <Compile Include="Models\DescribedSerialization.cs" />
     <Compile Include="Helpers\DomainExtensions.cs" />
-    <Compile Include="Exceptions\DuplicateRegistrationException.cs" />
     <Compile Include="Models\DescribedSerialization.designer.cs">
       <DependentUpon>DescribedSerialization.cs</DependentUpon>
     </Compile>
@@ -146,7 +145,6 @@
     <Compile Include="Models\SerializerRepresentation.designer.cs">
       <DependentUpon>SerializerRepresentation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Exceptions\ObcSerializationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="SerializationConfiguration\RegistrationDetails.cs" />
@@ -172,7 +170,6 @@
     <Compile Include="CustomSerializers\ObcDateTimeStringSerializer.cs" />
     <Compile Include="CustomSerializers\ObcDictionaryStringStringSerializer.cs" />
     <Compile Include="ObcSerializer\ObcLambdaBackedSerializer.cs" />
-    <Compile Include="Exceptions\UnregisteredTypeAttemptException.cs" />
     <Compile Include="Enums\UnregisteredTypeEncounteredStrategy.cs" />
     <AdditionalFiles Include=".analyzers\stylecop.json" />
     <None Include=".analyzers\release.ruleset" />
@@ -189,6 +186,7 @@
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\OBeautifulCode.Build.Analyzers.1.1.112\build\OBeautifulCode.Build.Analyzers.targets" Condition="Exists('..\packages\OBeautifulCode.Build.Analyzers.1.1.112\build\OBeautifulCode.Build.Analyzers.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

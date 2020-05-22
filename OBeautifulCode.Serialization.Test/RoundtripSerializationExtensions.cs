@@ -23,33 +23,6 @@ namespace OBeautifulCode.Serialization.Test
 
     public static class RoundtripSerializationExtensions
     {
-        public static void RoundtripSerializeViaBsonUsingTypesToRegisterConfigWithEquatableAssertion<T>(
-            this T expected,
-            IReadOnlyCollection<SerializationFormat> formats = null)
-        {
-            expected.RoundtripSerializeViaBsonWithEquatableAssertion(
-                typeof(TypesToRegisterBsonSerializationConfiguration<T>),
-                formats);
-        }
-
-        public static void RoundtripSerializeViaJsonUsingTypesToRegisterConfigWithEquatableAssertion<T>(
-            this T expected,
-            IReadOnlyCollection<SerializationFormat> formats = null)
-        {
-            expected.RoundtripSerializeViaJsonWithEquatableAssertion(
-                typeof(TypesToRegisterJsonSerializationConfiguration<T>),
-                formats);
-        }
-
-        public static void RoundtripSerializeViaPropertyBagUsingTypesToRegisterConfigWithEquatableAssertion<T>(
-            this T expected,
-            IReadOnlyCollection<SerializationFormat> formats = null)
-        {
-            expected.RoundtripSerializeViaPropertyBagWithEquatableAssertion(
-                typeof(TypesToRegisterPropertyBagSerializationConfiguration<T>),
-                formats);
-        }
-
         public static void RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion<T>(
             this T expected,
             bool testBson = true,
@@ -64,51 +37,6 @@ namespace OBeautifulCode.Serialization.Test
                 testBson,
                 testJson,
                 testPropertyBag,
-                formats);
-        }
-
-        public static void RoundtripSerializeViaBsonWithEquatableAssertion<T>(
-            this T expected,
-            Type bsonSerializationConfigurationType = null,
-            IReadOnlyCollection<SerializationFormat> formats = null)
-        {
-            expected.RoundtripSerializeWithEquatableAssertion(
-                bsonSerializationConfigurationType,
-                null,
-                null,
-                true,
-                false,
-                false,
-                formats);
-        }
-
-        public static void RoundtripSerializeViaJsonWithEquatableAssertion<T>(
-            this T expected,
-            Type jsonSerializationConfigurationType = null,
-            IReadOnlyCollection<SerializationFormat> formats = null)
-        {
-            expected.RoundtripSerializeWithEquatableAssertion(
-                null,
-                jsonSerializationConfigurationType,
-                null,
-                false,
-                true,
-                false,
-                formats);
-        }
-
-        public static void RoundtripSerializeViaPropertyBagWithEquatableAssertion<T>(
-            this T expected,
-            Type propertyBagSerializationConfigurationType = null,
-            IReadOnlyCollection<SerializationFormat> formats = null)
-        {
-            expected.RoundtripSerializeWithEquatableAssertion(
-                null,
-                null,
-                propertyBagSerializationConfigurationType,
-                false,
-                false,
-                true,
                 formats);
         }
 
@@ -131,57 +59,6 @@ namespace OBeautifulCode.Serialization.Test
                 testBson,
                 testJson,
                 testPropertyBag,
-                formats);
-        }
-
-        public static void RoundtripSerializeViaBsonWithCallback<T>(
-            this T expected,
-            RoundtripSerializationCallback<T> validationCallback,
-            Type bsonSerializationConfigurationType = null,
-            IReadOnlyCollection<SerializationFormat> formats = null)
-        {
-            expected.RoundtripSerializeWithCallback(
-                validationCallback,
-                bsonSerializationConfigurationType,
-                null,
-                null,
-                true,
-                false,
-                false,
-                formats);
-        }
-
-        public static void RoundtripSerializeViaJsonWithCallback<T>(
-            this T expected,
-            RoundtripSerializationCallback<T> validationCallback,
-            Type jsonSerializationConfigurationType = null,
-            IReadOnlyCollection<SerializationFormat> formats = null)
-        {
-            expected.RoundtripSerializeWithCallback(
-                validationCallback,
-                null,
-                jsonSerializationConfigurationType,
-                null,
-                false,
-                true,
-                false,
-                formats);
-        }
-
-        public static void RoundtripSerializeViaPropertyBagWithCallback<T>(
-            this T expected,
-            RoundtripSerializationCallback<T> validationCallback,
-            Type propertyBagSerializationConfigurationType = null,
-            IReadOnlyCollection<SerializationFormat> formats = null)
-        {
-            expected.RoundtripSerializeWithCallback(
-                validationCallback,
-                null,
-                null,
-                propertyBagSerializationConfigurationType,
-                false,
-                false,
-                true,
                 formats);
         }
 

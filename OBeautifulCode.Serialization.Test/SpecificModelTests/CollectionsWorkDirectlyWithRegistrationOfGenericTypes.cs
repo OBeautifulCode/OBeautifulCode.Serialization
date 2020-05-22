@@ -30,24 +30,10 @@ namespace OBeautifulCode.Serialization.Test
 
             var expectedKey = new RegisteredKey { Property = A.Dummy<string>() };
             var expectedValue = new RegisteredValue { Property = A.Dummy<string>() };
-            var expectedTuple = new Tuple<RegisteredKey, RegisteredValue>(expectedKey, expectedValue);
-            var expectedDictionary = new Dictionary<RegisteredKey, RegisteredValue> { { expectedKey, expectedValue } };
             var expectedList = new List<RegisteredKey>(new[] { expectedKey });
             var expectedArray = new[] { expectedValue };
 
             // Act, Assert
-            void ThrowIfTuplesDiffer(DescribedSerialization serialized, Tuple<RegisteredKey, RegisteredValue> deserialized)
-            {
-                deserialized.Item1.Property.Should().Be(expectedTuple.Item1.Property);
-                deserialized.Item2.Property.Should().Be(expectedTuple.Item2.Property);
-            }
-
-            void ThrowIfDictionariesDiffer(DescribedSerialization serialized, Dictionary<RegisteredKey, RegisteredValue> deserialized)
-            {
-                deserialized.Single().Key.Property.Should().Be(expectedDictionary.Single().Key.Property);
-                deserialized.Single().Value.Property.Should().Be(expectedDictionary.Single().Value.Property);
-            }
-
             void ThrowIfListsDiffer(DescribedSerialization serialized, List<RegisteredKey> deserialized)
             {
                 deserialized.Single().Property.Should().Be(expectedList.Single().Property);
@@ -59,8 +45,6 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act, Assert
-            expectedTuple.RoundtripSerializeViaJsonWithCallback(ThrowIfTuplesDiffer, jsonConfigType);
-            expectedDictionary.RoundtripSerializeViaJsonWithCallback(ThrowIfDictionariesDiffer, jsonConfigType);
             expectedList.RoundtripSerializeWithCallback(ThrowIfListsDiffer, bsonConfigType, jsonConfigType);
             expectedArray.RoundtripSerializeWithCallback(ThrowIfArraysDiffer, bsonConfigType, jsonConfigType);
         }

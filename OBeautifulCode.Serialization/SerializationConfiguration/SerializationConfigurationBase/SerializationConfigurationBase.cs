@@ -123,7 +123,7 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <summary>
-        /// Throw an <see cref="UnregisteredTypeAttemptException" /> if appropriate.
+        /// Throw on an unregistered type, if appropriate given the <see cref="UnregisteredTypeEncounteredStrategy"/>.
         /// </summary>
         /// <param name="type">Type to check.</param>
         /// <param name="serializationDirection">The serialization direction.</param>
@@ -430,11 +430,11 @@ namespace OBeautifulCode.Serialization
             {
                 if (originalType == typeToValidate)
                 {
-                    throw new UnregisteredTypeAttemptException(Invariant($"Attempted to perform operation on unregistered type '{originalType.ToStringReadable()}'."), originalType);
+                    throw new InvalidOperationException(Invariant($"Attempted to perform operation on unregistered type '{originalType.ToStringReadable()}'."));
                 }
                 else
                 {
-                    throw new UnregisteredTypeAttemptException(Invariant($"Attempted to perform operation on type '{originalType.ToStringReadable()}', which contains the unregistered type '{typeToValidate.ToStringReadable()}'."), originalType);
+                    throw new InvalidOperationException(Invariant($"Attempted to perform operation on type '{originalType.ToStringReadable()}', which contains the unregistered type '{typeToValidate.ToStringReadable()}'."));
                 }
             }
         }
