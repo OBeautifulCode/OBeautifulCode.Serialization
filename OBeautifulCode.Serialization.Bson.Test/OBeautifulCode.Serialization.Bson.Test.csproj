@@ -120,15 +120,15 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
-    <Compile Include="BsonSerializationConfigurationBaseTest.cs" />
-    <Compile Include="BsonSerializationConfigurationTestAutoConstrainedType.cs" />
-    <Compile Include="CustomSerializers\ObcBsonCollectionSerializerTest.cs" />
-    <Compile Include="CustomSerializers\ObcBsonDictionarySerializerTest.cs" />
-    <Compile Include="ObcConfigurationBaseTest.cs" />
+    <Compile Include="Z-Legacy\BsonSerializationConfigurationBaseTest.cs" />
+    <Compile Include="Z-Legacy\BsonSerializationConfigurationTestAutoConstrainedType.cs" />
+    <Compile Include="Z-Legacy\CustomSerializers\ObcBsonCollectionSerializerTest.cs" />
+    <Compile Include="Z-Legacy\CustomSerializers\ObcBsonDictionarySerializerTest.cs" />
+    <Compile Include="Z-Legacy\ObcConfigurationBaseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="RoundtripBsonSerializationExtensions.cs" />
-    <Compile Include="SerializingAndDeserializingBehaviorOfNull.cs" />
+    <Compile Include="RoundtripSerialization\RoundtripBsonSerializationExtensions.cs" />
+    <Compile Include="Z-Legacy\SerializingAndDeserializingBehaviorOfNull.cs" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include=".analyzers\stylecop.json" />
@@ -158,6 +158,7 @@
       <Name>OBeautifulCode.Serialization</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

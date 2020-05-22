@@ -119,11 +119,11 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
-    <Compile Include="ObcPropertyBagSerializerTest.cs" />
+    <Compile Include="Z-Legacy\ObcPropertyBagSerializerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="RoundtripPropertyBagSerializationExtensions.cs" />
-    <Compile Include="SerializingAndDeserializingBehaviorOfNull.cs" />
+    <Compile Include="RoundtripSerialization\RoundtripPropertyBagSerializationExtensions.cs" />
+    <Compile Include="Z-Legacy\SerializingAndDeserializingBehaviorOfNull.cs" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include=".analyzers\stylecop.json" />
@@ -153,6 +153,7 @@
       <Name>OBeautifulCode.Serialization</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

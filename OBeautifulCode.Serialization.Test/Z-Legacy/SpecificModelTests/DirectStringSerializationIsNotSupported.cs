@@ -18,7 +18,7 @@ namespace OBeautifulCode.Serialization.Test
     public static class DirectStringSerializationIsNotSupported
     {
         [Fact]
-        public static void BsonSerializer()
+        public static void BsonSerializationConfiguration()
         {
             // Arrange, Act
             var actual = Record.Exception(() => SerializationConfigurationManager.GetOrAddSerializationConfiguration(typeof(TypesToRegisterBsonSerializationConfiguration<string>).ToBsonSerializationConfigurationType()));
@@ -29,7 +29,7 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
-        public static void JsonSerializer()
+        public static void JsonSerializationConfiguration()
         {
             // Arrange, Act
             var actual = Record.Exception(() => SerializationConfigurationManager.GetOrAddSerializationConfiguration(typeof(TypesToRegisterJsonSerializationConfiguration<string>).ToJsonSerializationConfigurationType()));

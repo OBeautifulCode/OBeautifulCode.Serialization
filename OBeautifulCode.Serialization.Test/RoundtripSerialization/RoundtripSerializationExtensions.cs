@@ -21,6 +21,10 @@ namespace OBeautifulCode.Serialization.Test
 
     using static System.FormattableString;
 
+    public delegate void RoundtripSerializationCallback<in T>(
+        DescribedSerialization yieldedDescribedSerialization,
+        T deserializedObject);
+
     public static class RoundtripSerializationExtensions
     {
         public static void RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion<T>(

@@ -179,13 +179,12 @@
     <Compile Include=".recipes\OBeautifulCode.Type\TypeDummyFactory.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeDummyFactory.designer.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
-    <Compile Include="SerializationConfiguration\SerializationConfigurationManagerTest.cs" />
-    <Compile Include="Delegates.cs" />
+    <Compile Include="Z-Legacy\SerializationConfiguration\SerializationConfigurationManagerTest.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.designer.cs">
       <DependentUpon>DynamicTypePlaceholderTest.cs</DependentUpon>
     </Compile>
-    <Compile Include="InternallyRegisteredTypesTest.cs" />
+    <Compile Include="RoundtripSerialization\InternallyRegisteredTypesTest.cs" />
     <Compile Include="Models\DescribedSerializationTest.designer.cs">
       <DependentUpon>DescribedSerializationTest.cs</DependentUpon>
     </Compile>
@@ -194,7 +193,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="RoundtripSerializationExtensions.cs" />
+    <Compile Include="RoundtripSerialization\RoundtripSerializationExtensions.cs" />
     <Compile Include="SerializationDummyFactory.cs" />
     <Compile Include="SerializationDummyFactory.designer.cs">
       <DependentUpon>SerializationDummyFactory.cs</DependentUpon>
@@ -204,27 +203,27 @@
       <DependentUpon>SerializationDummyFactoryTest.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomSerializers\ObcDateTimeStringSerializerTest.cs" />
-    <Compile Include="ObcSerializer\ObcLambdaBackedSerializerTest.cs" />
+    <Compile Include="Z-Legacy\ObcSerializer\ObcLambdaBackedSerializerTest.cs" />
     <Compile Include="SharedExtensions.cs" />
-    <Compile Include="SpecificModels\ITopInterface.cs" />
-    <Compile Include="SpecificModels\ModelWithNullableProperties.cs" />
-    <Compile Include="SpecificModels\TestMapping.cs" />
-    <Compile Include="SpecificModelTests\CannotBeDeserializedGetterOnlyPropertyTest.cs" />
-    <Compile Include="SpecificModelTests\MultipleConstructors.cs" />
-    <Compile Include="SpecificModelTests\ArrayElementTypeIsDiscovered.cs" />
-    <Compile Include="SpecificModelTests\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />
-    <Compile Include="SpecificModelTests\DependentConfigurationsHandledCorrectly.cs" />
-    <Compile Include="SpecificModelTests\DictionaryFlavorSupportTest.cs" />
-    <Compile Include="SpecificModelTests\DirectStringSerializationIsNotSupported.cs" />
-    <Compile Include="SpecificModelTests\MultilevelDependencyTest.cs" />
-    <Compile Include="SpecificModelTests\NetDrawingTypeTests.cs" />
-    <Compile Include="SpecificModelTests\ParallelSerializationTest.cs" />
-    <Compile Include="SpecificModelTests\ParamsConstructorCollectionProperty.cs" />
-    <Compile Include="SpecificModelTests\RoundtripSerializationTest.cs" />
-    <Compile Include="SpecificModelTests\SerializingAndDeserializingBehaviorOfNull.cs" />
+    <Compile Include="Z-Legacy\SpecificModels\ITopInterface.cs" />
+    <Compile Include="Z-Legacy\SpecificModels\ModelWithNullableProperties.cs" />
+    <Compile Include="Z-Legacy\SpecificModels\TestMapping.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\CannotBeDeserializedGetterOnlyPropertyTest.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\MultipleConstructors.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\ArrayElementTypeIsDiscovered.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\DependentConfigurationsHandledCorrectly.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\DictionaryFlavorSupportTest.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\DirectStringSerializationIsNotSupported.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\MultilevelDependencyTest.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\NetDrawingTypeTests.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\ParallelSerializationTest.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\ParamsConstructorCollectionProperty.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\RoundtripSerializationTest.cs" />
+    <Compile Include="Z-Legacy\SpecificModelTests\SerializingAndDeserializingBehaviorOfNull.cs" />
     <Compile Include="Models\DescribedSerializationTest.cs" />
-    <Compile Include="Helpers\DomainExtensionsTest.cs" />
-    <Compile Include="SupportLogicTests\FactoryTest.cs" />
+    <Compile Include="Z-Legacy\Helpers\DomainExtensionsTest.cs" />
+    <Compile Include="Z-Legacy\SupportLogicTests\FactoryTest.cs" />
     <Compile Include="Models\SerializerRepresentationTest.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@ namespace OBeautifulCode.Serialization.Test
     using System;
 
     using FluentAssertions;
-    using MongoDB.Bson;
+
     using OBeautifulCode.Serialization.Bson;
 
     using Xunit;

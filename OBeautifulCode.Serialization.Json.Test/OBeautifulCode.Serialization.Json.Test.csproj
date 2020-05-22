@@ -128,17 +128,17 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
-    <Compile Include="Animal.cs" />
-    <Compile Include="CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />
-    <Compile Include="DateTimeConverterTest.cs" />
-    <Compile Include="JsonSerializationConfigurationBaseTest.cs" />
-    <Compile Include="JsonSerializationConfigurationTest.cs" />
-    <Compile Include="Lighting.cs" />
-    <Compile Include="ObcJsonSerializerTest.cs" />
+    <Compile Include="Z-Legacy\Animal.cs" />
+    <Compile Include="Z-Legacy\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />
+    <Compile Include="Z-Legacy\DateTimeConverterTest.cs" />
+    <Compile Include="Z-Legacy\JsonSerializationConfigurationBaseTest.cs" />
+    <Compile Include="Z-Legacy\JsonSerializationConfigurationTest.cs" />
+    <Compile Include="Z-Legacy\Lighting.cs" />
+    <Compile Include="Z-Legacy\ObcJsonSerializerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="RoundtripJsonSerializationExtensions.cs" />
-    <Compile Include="SerializingAndDeserializingBehaviorOfNull.cs" />
+    <Compile Include="RoundtripSerialization\RoundtripJsonSerializationExtensions.cs" />
+    <Compile Include="Z-Legacy\SerializingAndDeserializingBehaviorOfNull.cs" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include=".analyzers\stylecop.json" />
@@ -168,6 +168,7 @@
       <Name>OBeautifulCode.Serialization</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
