@@ -9,10 +9,15 @@ namespace OBeautifulCode.Serialization.Test
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using FakeItEasy;
+
     using FluentAssertions;
+
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
+    using OBeautifulCode.Serialization.Recipes;
+
     using Xunit;
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Params", Justification = "Name/spelling is correct.")]
@@ -34,7 +39,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
+            expected.RoundtripSerializeWithCallbackVerification(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
     }
 

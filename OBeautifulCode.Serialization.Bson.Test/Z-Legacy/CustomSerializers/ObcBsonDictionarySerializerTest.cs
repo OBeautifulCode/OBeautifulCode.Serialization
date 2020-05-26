@@ -16,6 +16,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Bson.Test.Internal;
+    using OBeautifulCode.Serialization.Recipes;
 
     using Xunit;
 
@@ -76,7 +77,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
             }
 
             // Act, Assert
-            expected.RoundtripSerializeViaBsonWithCallback(ThrowIfObjectsDiffer, bsonConfigType);
+            expected.RoundtripSerializeViaBsonWithCallbackVerification(ThrowIfObjectsDiffer, bsonConfigType);
         }
 
         [Serializable]

@@ -11,6 +11,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
 
     using FluentAssertions;
 
+    using OBeautifulCode.Serialization.Recipes;
     using OBeautifulCode.String.Recipes;
 
     using Xunit;
@@ -42,11 +43,11 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             }
 
             // Act
-            var exception1 = Record.Exception(() => SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaPropertyBagWithCallback(null, formats: new[] { SerializationFormat.String }));
-            var exception2 = Record.Exception(() => SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaPropertyBagWithCallback(null, formats: new[] { SerializationFormat.Binary }));
+            var exception1 = Record.Exception(() => SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaPropertyBagWithCallbackVerification(null, formats: new[] { SerializationFormat.String }));
+            var exception2 = Record.Exception(() => SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaPropertyBagWithCallbackVerification(null, formats: new[] { SerializationFormat.Binary }));
 
             // Assert
-            expected.RoundtripSerializeViaPropertyBagWithCallback(ThrowIfObjectsDiffer);
+            expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(ThrowIfObjectsDiffer);
 
             exception1.Should().BeOfType<NotSupportedException>();
             exception1.Message.Should().Be("String is not supported as a type for this serializer.");

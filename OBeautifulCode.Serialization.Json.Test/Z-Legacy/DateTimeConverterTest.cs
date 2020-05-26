@@ -10,6 +10,7 @@ namespace OBeautifulCode.Serialization.Json.Test
 
     using FluentAssertions;
 
+    using OBeautifulCode.Serialization.Recipes;
     using OBeautifulCode.Serialization.Test;
 
     using Xunit;
@@ -29,7 +30,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             }
 
             // Act, Assert
-            expected.RoundtripSerializeViaJsonWithCallback(ThrowIfObjectsDiffer);
+            expected.RoundtripSerializeViaJsonWithCallbackVerification(ThrowIfObjectsDiffer);
         }
 
         [Fact]
@@ -45,7 +46,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             }
 
             // Act, Assert
-            expected.RoundtripSerializeViaJsonWithCallback(ThrowIfObjectsDiffer);
+            expected.RoundtripSerializeViaJsonWithCallbackVerification(ThrowIfObjectsDiffer);
         }
 
         [Fact]
@@ -61,7 +62,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             }
 
             // Act, Assert
-            expected.RoundtripSerializeViaJsonWithCallback(ThrowIfObjectsDiffer);
+            expected.RoundtripSerializeViaJsonWithCallbackVerification(ThrowIfObjectsDiffer);
         }
 
         [Fact]
@@ -77,7 +78,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             }
 
             // Act, Assert
-            expected.RoundtripSerializeViaJsonWithCallback(ThrowIfObjectsDiffer);
+            expected.RoundtripSerializeViaJsonWithCallbackVerification(ThrowIfObjectsDiffer);
         }
 
         [Fact]
@@ -93,7 +94,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             }
 
             // Act, Assert
-            expected.RoundtripSerializeViaJsonWithCallback(ThrowIfObjectsDiffer);
+            expected.RoundtripSerializeViaJsonWithCallbackVerification(ThrowIfObjectsDiffer);
         }
     }
 }

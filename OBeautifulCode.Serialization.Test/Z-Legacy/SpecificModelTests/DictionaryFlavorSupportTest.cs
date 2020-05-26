@@ -20,6 +20,7 @@ namespace OBeautifulCode.Serialization.Test
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
+    using OBeautifulCode.Serialization.Recipes;
 
     using Xunit;
 
@@ -48,7 +49,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
+            expected.RoundtripSerializeWithCallbackVerification(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -120,7 +121,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
+            expected.RoundtripSerializeWithCallbackVerification(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -141,7 +142,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
+            expected.RoundtripSerializeWithCallbackVerification(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -178,7 +179,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
+            expected.RoundtripSerializeWithCallbackVerification(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -204,7 +205,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
+            expected.RoundtripSerializeWithCallbackVerification(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -276,7 +277,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
+            expected.RoundtripSerializeWithCallbackVerification(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
     }
 

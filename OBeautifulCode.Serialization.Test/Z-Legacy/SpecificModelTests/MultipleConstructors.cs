@@ -16,6 +16,7 @@ namespace OBeautifulCode.Serialization.Test
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
+    using OBeautifulCode.Serialization.Recipes;
     using OBeautifulCode.Type;
 
     using Xunit;
@@ -41,7 +42,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
+            expected.RoundtripSerializeWithCallbackVerification(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -63,7 +64,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act & Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
+            expected.RoundtripSerializeWithCallbackVerification(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
         }
 
         [Fact]
@@ -74,8 +75,8 @@ namespace OBeautifulCode.Serialization.Test
             var expectedParameter = new UnchainedDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>());
 
             // Act & Assert
-            expectedParameter.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
-            expectedParameterless.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
+            expectedParameter.RoundtripSerializeUsingTypesToRegisterConfigWithBeEqualToAssertion();
+            expectedParameterless.RoundtripSerializeUsingTypesToRegisterConfigWithBeEqualToAssertion();
         }
 
         [Fact]
@@ -86,8 +87,8 @@ namespace OBeautifulCode.Serialization.Test
             var expectedParameter = new ChainedDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>());
 
             // Act & Assert
-            expectedParameter.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
-            expectedParameterless.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
+            expectedParameter.RoundtripSerializeUsingTypesToRegisterConfigWithBeEqualToAssertion();
+            expectedParameterless.RoundtripSerializeUsingTypesToRegisterConfigWithBeEqualToAssertion();
         }
 
         [Fact]
@@ -98,8 +99,8 @@ namespace OBeautifulCode.Serialization.Test
             var expectedParameter = new AttributedUnchainedDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>());
 
             // Act & Assert
-            expectedParameter.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
-            expectedParameterless.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
+            expectedParameter.RoundtripSerializeUsingTypesToRegisterConfigWithBeEqualToAssertion();
+            expectedParameterless.RoundtripSerializeUsingTypesToRegisterConfigWithBeEqualToAssertion();
         }
 
         [Fact]
@@ -110,8 +111,8 @@ namespace OBeautifulCode.Serialization.Test
             var expectedParameter2 = new AttributedChainedNoDefaultConstructorWithExpressionBodyPropertyModel(A.Dummy<string>(), A.Dummy<string>());
 
             // Act & Assert
-            expectedParameter1.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
-            expectedParameter2.RoundtripSerializeUsingTypesToRegisterConfigWithEquatableAssertion();
+            expectedParameter1.RoundtripSerializeUsingTypesToRegisterConfigWithBeEqualToAssertion();
+            expectedParameter2.RoundtripSerializeUsingTypesToRegisterConfigWithBeEqualToAssertion();
         }
 
         [Fact(Skip = "Some models with initialized getter-only properties (e.g. public DateTime MyProperty { get; } = DateTime.Now) do not roundtrip to/from BSON. JSON seems to work just fine.  In BSON, the issue is specifically with models that do not have a default constructor (regardless of whether there are multiple constructors or a single parameterized constructor).  If there is no default constructor the initialized property is not initialized.")]

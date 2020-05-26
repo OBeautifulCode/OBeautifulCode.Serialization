@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>OBeautifulCode.Serialization.Recipes.RoundtripSerializationExtensions</id>
+    <description>Performs roundtrip serialization testing.</description>
+    <tags>serialization roundtrip test</tags>
+    <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.Recipes/nuget-icon.png</iconUrl>
+    <dependencies>
+      <dependency id="OBeautifulCode.Assertion.Recipes.Must" version="1.0.15" />
+      <dependency id="OBeautifulCode.Serialization.Bson" version="$version$" />
+      <dependency id="OBeautifulCode.Serialization.Json" version="$version$" />
+      <dependency id="OBeautifulCode.Serialization.PropertyBag" version="$version$" />
+      <dependency id="OBeautifulCode.Serialization.Recipes.Factory" version="$version$" />
+      <dependency id="OBeautifulCode.Reflection.Recipes.AppDomainHelper" version="1.0.83" />
+      <dependency id="OBeautifulCode.Representation.System" version="1.0.47" />
+      <dependency id="OBeautifulCode.Type.Recipes.TypeExtensions" version="1.0.51" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src=".analyzers\SuppressBecause.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SuppressBecause.cs" />
+    <file src="RoundtripSerialization\FactoryExtensions.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\FactoryExtensions.cs" />
+  </files>
+</package>

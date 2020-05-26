@@ -137,7 +137,6 @@
     <Compile Include="Z-Legacy\ObcJsonSerializerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="RoundtripSerialization\RoundtripJsonSerializationExtensions.cs" />
     <Compile Include="Z-Legacy\SerializingAndDeserializingBehaviorOfNull.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +157,10 @@
     <ProjectReference Include="..\OBeautifulCode.Serialization.Json\OBeautifulCode.Serialization.Json.csproj">
       <Project>{02387b02-46f8-4271-b78a-76fb7bf08f7c}</Project>
       <Name>OBeautifulCode.Serialization.Json</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OBeautifulCode.Serialization.Recipes\OBeautifulCode.Serialization.Recipes.csproj">
+      <Project>{324605c9-a32e-4604-95e6-d0dc4252199c}</Project>
+      <Name>OBeautifulCode.Serialization.Recipes</Name>
     </ProjectReference>
     <ProjectReference Include="..\OBeautifulCode.Serialization.Test\OBeautifulCode.Serialization.Test.csproj">
       <Project>{9be9cb99-0918-4aed-95c7-56f9dcc8b513}</Project>

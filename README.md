@@ -10,5 +10,7 @@
 
 [![Nuget status](https://img.shields.io/nuget/v/OBeautifulCode.Serialization.Recipes.Factory.svg)](https://www.nuget.org/packages/OBeautifulCode.Serialization.Recipes.Factory)  OBeautifulCode.Serialization.Recipes.Factory
 
+[![Nuget status](https://img.shields.io/nuget/v/OBeautifulCode.Serialization.Recipes.RoundtripSerializationExtensions.svg)](https://www.nuget.org/packages/OBeautifulCode.Serialization.Recipes.OBeautifulCode.Serialization.Recipes.RoundtripSerializationExtensions)  OBeautifulCode.Serialization.Recipes.RoundtripSerializationExtensions
+
 OBeautifulCode.Serialization
 ============================

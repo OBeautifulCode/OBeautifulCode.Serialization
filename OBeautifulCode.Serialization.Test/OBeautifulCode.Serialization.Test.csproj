@@ -162,11 +162,9 @@
     <Compile Include=".recipes\OBeautifulCode.Equality\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Math\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Math\ThreadSafeRandom.cs" />
-    <Compile Include=".recipes\OBeautifulCode.Reflection\AppDomainHelper.cs" />
     <Compile Include=".recipes\OBeautifulCode.Reflection\AssemblyHelper.cs" />
     <Compile Include=".recipes\OBeautifulCode.Reflection\AssemblyLoader.cs" />
     <Compile Include=".recipes\OBeautifulCode.Reflection\CompressionMethod.cs" />
-    <Compile Include=".recipes\OBeautifulCode.Reflection\DisposableAppDomain.cs" />
     <Compile Include=".recipes\OBeautifulCode.Reflection\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Representation\RepresentationSystemDummyFactory.cs" />
     <Compile Include=".recipes\OBeautifulCode.Representation\RepresentationSystemDummyFactory.designer.cs" />
@@ -193,7 +191,6 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="RoundtripSerialization\RoundtripSerializationExtensions.cs" />
     <Compile Include="SerializationDummyFactory.cs" />
     <Compile Include="SerializationDummyFactory.designer.cs">
       <DependentUpon>SerializationDummyFactory.cs</DependentUpon>

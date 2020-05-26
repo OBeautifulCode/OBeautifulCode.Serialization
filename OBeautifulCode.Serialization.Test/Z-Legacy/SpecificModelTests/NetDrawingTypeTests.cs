@@ -13,6 +13,8 @@ namespace OBeautifulCode.Serialization.Test
 
     using FluentAssertions;
 
+    using OBeautifulCode.Serialization.Recipes;
+
     using Xunit;
 
     public static class NetDrawingTypeTests
@@ -36,7 +38,7 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act, Assert
-            expected.RoundtripSerializeWithCallback(ThrowIfObjectsDiffer);
+            expected.RoundtripSerializeWithCallbackVerification(ThrowIfObjectsDiffer);
         }
     }
 

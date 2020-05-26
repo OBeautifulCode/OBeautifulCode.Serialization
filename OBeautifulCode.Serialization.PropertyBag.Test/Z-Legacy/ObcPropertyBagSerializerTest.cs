@@ -18,6 +18,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization.PropertyBag;
     using OBeautifulCode.Serialization.PropertyBag.Test.Internal;
+    using OBeautifulCode.Serialization.Recipes;
 
     using Xunit;
 
@@ -107,7 +108,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             var serializedPropertyBag = serializer.SerializeToPropertyBag(expected);
 
             // Act, Assert
-            expected.RoundtripSerializeViaPropertyBagWithCallback(ThrowIfObjectsDiffer, serializationConfigurationType);
+            expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(ThrowIfObjectsDiffer, serializationConfigurationType);
 
             var actualPropertyBag = serializer.Deserialize<ComplicatedObject>(serializedPropertyBag);
             ThrowIfObjectsDiffer(null, actualPropertyBag);
@@ -128,7 +129,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             }
 
             // Act, Assert
-            expected.RoundtripSerializeViaPropertyBagWithCallback(ThrowIfObjectsDiffer);
+            expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(ThrowIfObjectsDiffer);
         }
 
         [Fact]
@@ -144,7 +145,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             }
 
             // Act, Assert
-            expected.RoundtripSerializeViaPropertyBagWithCallback(ThrowIfObjectsDiffer);
+            expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(ThrowIfObjectsDiffer);
         }
 
         [Fact]
@@ -154,8 +155,8 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             var expected = new ConstructorWithoutProperties(A.Dummy<string>(), A.Dummy<string>());
 
             // Act
-            var actual1 = Record.Exception(() => expected.RoundtripSerializeViaPropertyBagWithCallback(null, formats: new[] { SerializationFormat.String }));
-            var actual2 = Record.Exception(() => expected.RoundtripSerializeViaPropertyBagWithCallback(null, formats: new[] { SerializationFormat.Binary }));
+            var actual1 = Record.Exception(() => expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(null, formats: new[] { SerializationFormat.String }));
+            var actual2 = Record.Exception(() => expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(null, formats: new[] { SerializationFormat.Binary }));
 
             // Assert
             actual1.Message.Should().Be("Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: OBeautifulCode.Serialization.PropertyBag.Test.ObcPropertyBagSerializerTest+ConstructorWithoutProperties, properties: Property,ToString,GetType.");
@@ -175,7 +176,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             }
 
             // Act, Assert
-            expected.RoundtripSerializeViaPropertyBagWithCallback(ThrowIfObjectsDiffer, propertyBagConfig);
+            expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(ThrowIfObjectsDiffer, propertyBagConfig);
         }
 
         [Serializable]

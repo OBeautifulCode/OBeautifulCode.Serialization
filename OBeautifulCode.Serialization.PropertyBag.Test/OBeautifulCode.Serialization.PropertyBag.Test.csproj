@@ -122,7 +122,6 @@
     <Compile Include="Z-Legacy\ObcPropertyBagSerializerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="RoundtripSerialization\RoundtripPropertyBagSerializationExtensions.cs" />
     <Compile Include="Z-Legacy\SerializingAndDeserializingBehaviorOfNull.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +142,10 @@
     <ProjectReference Include="..\OBeautifulCode.Serialization.PropertyBag\OBeautifulCode.Serialization.PropertyBag.csproj">
       <Project>{7c60b21d-9d91-4832-9c4e-c55bbc597165}</Project>
       <Name>OBeautifulCode.Serialization.PropertyBag</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OBeautifulCode.Serialization.Recipes\OBeautifulCode.Serialization.Recipes.csproj">
+      <Project>{324605c9-a32e-4604-95e6-d0dc4252199c}</Project>
+      <Name>OBeautifulCode.Serialization.Recipes</Name>
     </ProjectReference>
     <ProjectReference Include="..\OBeautifulCode.Serialization.Test\OBeautifulCode.Serialization.Test.csproj">
       <Project>{9be9cb99-0918-4aed-95c7-56f9dcc8b513}</Project>

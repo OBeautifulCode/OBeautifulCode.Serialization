@@ -10,6 +10,8 @@ namespace OBeautifulCode.Serialization.Bson.Test
 
     using FluentAssertions;
 
+    using OBeautifulCode.Serialization.Recipes;
+
     using Xunit;
 
     public static class SerializingAndDeserializingBehaviorOfNull
@@ -38,11 +40,11 @@ namespace OBeautifulCode.Serialization.Bson.Test
             }
 
             // Act
-            var exception1 = Record.Exception(() => SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaBsonWithCallback(null, formats: new[] { SerializationFormat.String }));
-            var exception2 = Record.Exception(() => SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaBsonWithCallback(null, formats: new[] { SerializationFormat.Binary }));
+            var exception1 = Record.Exception(() => SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaBsonWithCallbackVerification(null, formats: new[] { SerializationFormat.String }));
+            var exception2 = Record.Exception(() => SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaBsonWithCallbackVerification(null, formats: new[] { SerializationFormat.Binary }));
 
             // Assert
-            expected.RoundtripSerializeViaBsonWithCallback(ThrowIfObjectsDiffer);
+            expected.RoundtripSerializeViaBsonWithCallbackVerification(ThrowIfObjectsDiffer);
             exception1.Should().BeOfType<NotSupportedException>();
             exception2.Should().BeOfType<NotSupportedException>();
         }

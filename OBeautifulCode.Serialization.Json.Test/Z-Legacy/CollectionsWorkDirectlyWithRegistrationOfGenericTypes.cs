@@ -15,6 +15,7 @@ namespace OBeautifulCode.Serialization.Json.Test
     using FluentAssertions;
 
     using OBeautifulCode.Serialization.Json;
+    using OBeautifulCode.Serialization.Recipes;
     using OBeautifulCode.Serialization.Test;
 
     using Xunit;
@@ -46,8 +47,8 @@ namespace OBeautifulCode.Serialization.Json.Test
             }
 
             // Act, Assert
-            expectedTuple.RoundtripSerializeViaJsonWithCallback(ThrowIfTuplesDiffer, jsonConfigType);
-            expectedDictionary.RoundtripSerializeViaJsonWithCallback(ThrowIfDictionariesDiffer, jsonConfigType);
+            expectedTuple.RoundtripSerializeViaJsonWithCallbackVerification(ThrowIfTuplesDiffer, jsonConfigType);
+            expectedDictionary.RoundtripSerializeViaJsonWithCallbackVerification(ThrowIfDictionariesDiffer, jsonConfigType);
         }
     }
 }

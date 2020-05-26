@@ -14,6 +14,7 @@ namespace OBeautifulCode.Serialization.Test
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
+    using OBeautifulCode.Serialization.Recipes;
     using OBeautifulCode.Type;
     using OBeautifulCode.Type.Recipes;
 
@@ -55,7 +56,7 @@ namespace OBeautifulCode.Serialization.Test
 
                 var jsonConfigType = typeof(ThrowOnUnregisteredTypeJsonSerializationConfiguration<NullJsonSerializationConfiguration>);
 
-                expected.RoundtripSerializeWithEquatableAssertion(bsonConfigType, jsonConfigType);
+                expected.RoundtripSerializeWithBeEqualToAssertion(bsonConfigType, jsonConfigType);
             }
         }
     }

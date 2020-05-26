@@ -16,6 +16,7 @@ namespace OBeautifulCode.Serialization.Test
 
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
+    using OBeautifulCode.Serialization.Recipes;
 
     using Xunit;
 
@@ -45,8 +46,8 @@ namespace OBeautifulCode.Serialization.Test
             }
 
             // Act, Assert
-            expectedList.RoundtripSerializeWithCallback(ThrowIfListsDiffer, bsonConfigType, jsonConfigType);
-            expectedArray.RoundtripSerializeWithCallback(ThrowIfArraysDiffer, bsonConfigType, jsonConfigType);
+            expectedList.RoundtripSerializeWithCallbackVerification(ThrowIfListsDiffer, bsonConfigType, jsonConfigType);
+            expectedArray.RoundtripSerializeWithCallbackVerification(ThrowIfArraysDiffer, bsonConfigType, jsonConfigType);
         }
     }
 
