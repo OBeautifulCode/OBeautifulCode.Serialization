@@ -18,6 +18,9 @@
   </metadata>
   <files>
     <file src=".analyzers\SuppressBecause.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SuppressBecause.cs" />
-    <file src="RoundtripSerialization\FactoryExtensions.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\FactoryExtensions.cs" />
+    <file src="RoundtripSerialization\RoundtripSerializationExtensions.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\RoundtripSerializationExtensions.cs" />
+    <file src="RoundtripSerialization\RoundtripSerializationExtensions.Bson.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\RoundtripSerializationExtensions.Bson.cs" />
+    <file src="RoundtripSerialization\RoundtripSerializationExtensions.Json.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\RoundtripSerializationExtensions.Json.cs" />
+    <file src="RoundtripSerialization\RoundtripSerializationExtensions.PropertyBag.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\RoundtripSerializationExtensions.PropertyBag.cs" />
   </files>
 </package>

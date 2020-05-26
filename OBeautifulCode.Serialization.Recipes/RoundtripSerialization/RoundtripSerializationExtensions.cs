@@ -143,6 +143,8 @@ namespace OBeautifulCode.Serialization.Recipes
             bool testPropertyBag = false,
             IReadOnlyCollection<SerializationFormat> formats = null)
         {
+            new { verificationCallback }.AsArg().Must().NotBeNull();
+
             formats = formats ?? new[] { SerializationFormat.String, SerializationFormat.Binary };
 
             formats.AsArg().Must().NotBeNullNorEmptyEnumerable();
