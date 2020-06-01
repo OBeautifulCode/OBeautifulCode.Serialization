@@ -27,7 +27,8 @@ namespace OBeautifulCode.Serialization.Recipes
     /// Verifies that the object to serialize is equal to the resulting deserialized object.
     /// </summary>
     /// <typeparam name="T">The type being tested.</typeparam>
-    /// <param name="yieldedDescribedSerialization">The results of serialization.</param>
+    /// <param name="serializedPayload">The results of serialization.</param>
+    /// <param name="serializationFormat">The serialization format used.</param>
     /// <param name="deserializedObject">The deserialized object.</param>
 #if !OBeautifulCodeSerializationRecipesProject
     [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Recipes", "See package version number")]
@@ -36,7 +37,8 @@ namespace OBeautifulCode.Serialization.Recipes
     public
 #endif
     delegate void RoundtripSerializationVerification<in T>(
-        DescribedSerialization yieldedDescribedSerialization,
+        string serializedPayload,
+        SerializationFormat serializationFormat,
         T deserializedObject);
 
     /// <summary>
@@ -51,6 +53,8 @@ namespace OBeautifulCode.Serialization.Recipes
 #endif
     static partial class RoundtripSerializationExtensions
     {
+        private const AppDomainScenarios DefaultAppDomainScenarios = AppDomainScenarios.RoundtripInNewAppDomain | AppDomainScenarios.SerializeInNewAppDomainAndDeserializeInNewAppDomain;
+
         /// <summary>
         /// Test roundtrip serialization, asserting that the expected/provided value is equal to the deserialized value using
         /// <see cref="Verifications.BeEqualTo{T}(AssertionTracker, T, string, ApplyBecause, System.Collections.IDictionary)"/>.
@@ -63,14 +67,16 @@ namespace OBeautifulCode.Serialization.Recipes
         /// <param name="expected">The value to serialize, which should be equal to the resulting deserialized object.</param>
         /// <param name="testBson">Optional value indicating whether to test serialization to/from BSON.  DEFAULT is true.</param>
         /// <param name="testJson">Optional value indicating whether to test serialization to/from JSON.  DEFAULT is true.</param>
-        /// <param name="testPropertyBag">Option value indicating whether to test serialization to/from a Property Bag.  DEFAULT is false.</param>
+        /// <param name="testPropertyBag">Optional value indicating whether to test serialization to/from a Property Bag.  DEFAULT is false.</param>
         /// <param name="formats">The serialization formats to test.</param>
+        /// <param name="appDomainScenarios">Optional value that specifies various scenarios of serializing and de-serializing in the current App Domain or a new App Domain.  DEFAULT is test the roundtrip in a new App Domain and also to serialize in a new App Domain and de-serialize in a new, but different App Domain.</param>
         public static void RoundtripSerializeUsingTypesToRegisterConfigWithBeEqualToAssertion<T>(
             this T expected,
             bool testBson = true,
             bool testJson = true,
             bool testPropertyBag = false,
-            IReadOnlyCollection<SerializationFormat> formats = null)
+            IReadOnlyCollection<SerializationFormat> formats = null,
+            AppDomainScenarios appDomainScenarios = DefaultAppDomainScenarios)
         {
             expected.RoundtripSerializeWithBeEqualToAssertion(
                 typeof(TypesToRegisterBsonSerializationConfiguration<T>),
@@ -79,7 +85,8 @@ namespace OBeautifulCode.Serialization.Recipes
                 testBson,
                 testJson,
                 testPropertyBag,
-                formats);
+                formats,
+                appDomainScenarios);
         }
 
         /// <summary>
@@ -94,8 +101,9 @@ namespace OBeautifulCode.Serialization.Recipes
         /// <param name="propertyBagSerializationConfigurationType">Optional type of the serialization configuration to use for Property Bag testing.  DEFAULT is null; <see cref="NullPropertyBagSerializationConfiguration"/> will be used.</param>
         /// <param name="testBson">Optional value indicating whether to test serialization to/from BSON.  DEFAULT is true.</param>
         /// <param name="testJson">Optional value indicating whether to test serialization to/from JSON.  DEFAULT is true.</param>
-        /// <param name="testPropertyBag">Option value indicating whether to test serialization to/from a Property Bag.  DEFAULT is false.</param>
+        /// <param name="testPropertyBag">Optional value indicating whether to test serialization to/from a Property Bag.  DEFAULT is false.</param>
         /// <param name="formats">The serialization formats to test.</param>
+        /// <param name="appDomainScenarios">Optional value that specifies various scenarios of serializing and de-serializing in the current App Domain or a new App Domain.  DEFAULT is test the roundtrip in a new App Domain and also to serialize in a new App Domain and de-serialize in a new, but different App Domain.</param>
         public static void RoundtripSerializeWithBeEqualToAssertion<T>(
             this T expected,
             Type bsonSerializationConfigurationType = null,
@@ -104,18 +112,20 @@ namespace OBeautifulCode.Serialization.Recipes
             bool testBson = true,
             bool testJson = true,
             bool testPropertyBag = false,
-            IReadOnlyCollection<SerializationFormat> formats = null)
+            IReadOnlyCollection<SerializationFormat> formats = null,
+            AppDomainScenarios appDomainScenarios = DefaultAppDomainScenarios)
         {
             RoundtripSerializeWithCallbackVerification(
                 expected,
-                (yieldedDescribedSerialization, deserializedObject) => deserializedObject.AsTest().Must().BeEqualTo(expected),
+                (yieldedDescribedSerialization, serializationFormat, deserializedObject) => deserializedObject.AsTest().Must().BeEqualTo(expected),
                 bsonSerializationConfigurationType,
                 jsonSerializationConfigurationType,
                 propertyBagSerializationConfigurationType,
                 testBson,
                 testJson,
                 testPropertyBag,
-                formats);
+                formats,
+                appDomainScenarios);
         }
 
         /// <summary>
@@ -130,8 +140,9 @@ namespace OBeautifulCode.Serialization.Recipes
         /// <param name="propertyBagSerializationConfigurationType">Optional type of the serialization configuration to use for Property Bag testing.  DEFAULT is null; <see cref="NullPropertyBagSerializationConfiguration"/> will be used.</param>
         /// <param name="testBson">Optional value indicating whether to test serialization to/from BSON.  DEFAULT is true.</param>
         /// <param name="testJson">Optional value indicating whether to test serialization to/from JSON.  DEFAULT is true.</param>
-        /// <param name="testPropertyBag">Option value indicating whether to test serialization to/from a Property Bag.  DEFAULT is false.</param>
+        /// <param name="testPropertyBag">Optional value indicating whether to test serialization to/from a Property Bag.  DEFAULT is false.</param>
         /// <param name="formats">The serialization formats to test.</param>
+        /// <param name="appDomainScenarios">Optional value that specifies various scenarios of serializing and de-serializing in the current App Domain or a new App Domain.  DEFAULT is test the roundtrip in a new App Domain and also to serialize in a new App Domain and de-serialize in a new, but different App Domain.</param>
         public static void RoundtripSerializeWithCallbackVerification<T>(
             this T expected,
             RoundtripSerializationVerification<T> verificationCallback,
@@ -141,9 +152,10 @@ namespace OBeautifulCode.Serialization.Recipes
             bool testBson = true,
             bool testJson = true,
             bool testPropertyBag = false,
-            IReadOnlyCollection<SerializationFormat> formats = null)
+            IReadOnlyCollection<SerializationFormat> formats = null,
+            AppDomainScenarios appDomainScenarios = DefaultAppDomainScenarios)
         {
-            new { verificationCallback }.AsArg().Must().NotBeNull();
+            new { appDomainScenarios }.AsArg().Must().NotBeEqualTo(AppDomainScenarios.None);
 
             formats = formats ?? new[] { SerializationFormat.String, SerializationFormat.Binary };
 
@@ -181,39 +193,64 @@ namespace OBeautifulCode.Serialization.Recipes
 
             Func<DescribedSerialization, T> deserializeFunc = Deserialize<T>;
 
-            Func<SerializerRepresentation, SerializationFormat, object, Tuple<DescribedSerialization, T>> serializeAndDeserializeFunc = SerializeAndDeserialize<T>;
+            Func<SerializerRepresentation, SerializationFormat, T, Tuple<string, T>> serializeAndDeserializeFunc = SerializeAndDeserialize<T>;
 
             foreach (var serializerRepresentation in serializerRepresentations)
             {
                 foreach (var format in formats)
                 {
-                    // serialize in a new app domain
-                    var describedSerialization = serializeFunc.ExecuteInNewAppDomain(serializerRepresentation, format, expected);
-
-                    // deserialize in a new app domain
-                    var actual = deserializeFunc.ExecuteInNewAppDomain(describedSerialization);
-
-                    try
+                    if (appDomainScenarios.HasFlag(AppDomainScenarios.RoundtripInCurrentAppDomain))
                     {
-                        verificationCallback(describedSerialization, actual);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new InvalidOperationException(Invariant($"Failed to roundtrip specified object to/from {serializerRepresentation.SerializationKind} {format} using {serializerRepresentation.SerializationConfigType.ResolveFromLoadedTypes().ToStringReadable()} when serializing in a new AppDomain and deserializing in a new AppDomain.  Deserialized object is: {actual}."), ex);
+                        var serializeAndDeserializeResult = serializeAndDeserializeFunc(serializerRepresentation, format, expected);
+
+                        RunVerification(serializerRepresentation, format, verificationCallback, AppDomainScenarios.RoundtripInCurrentAppDomain, serializeAndDeserializeResult.Item1, serializeAndDeserializeResult.Item2);
                     }
 
-                    // serialize and deserialize in the same, new app domain
-                    var describedSerializationAndActual = serializeAndDeserializeFunc.ExecuteInNewAppDomain(serializerRepresentation, format, expected);
+                    if (appDomainScenarios.HasFlag(AppDomainScenarios.RoundtripInNewAppDomain))
+                    {
+                        var serializeAndDeserializeResult = serializeAndDeserializeFunc.ExecuteInNewAppDomain(serializerRepresentation, format, expected);
 
-                    try
-                    {
-                        verificationCallback(describedSerializationAndActual.Item1, describedSerializationAndActual.Item2);
+                        RunVerification(serializerRepresentation, format, verificationCallback, AppDomainScenarios.RoundtripInNewAppDomain, serializeAndDeserializeResult.Item1, serializeAndDeserializeResult.Item2);
                     }
-                    catch (Exception ex)
+
+                    if (appDomainScenarios.HasFlag(AppDomainScenarios.SerializeInCurrentAppDomainAndDeserializeInNewAppDomain))
                     {
-                        throw new InvalidOperationException(Invariant($"Failed to roundtrip specified object to/from {serializerRepresentation.SerializationKind} {format} using {serializerRepresentation.SerializationConfigType.ResolveFromLoadedTypes().ToStringReadable()} when serializing and deserializing in the same, new AppDomain.  Deserialized object is: {actual}."), ex);
+                        var describedSerialization = serializeFunc(serializerRepresentation, format, expected);
+
+                        var deserializedObject = deserializeFunc.ExecuteInNewAppDomain(describedSerialization);
+
+                        RunVerification(serializerRepresentation, format, verificationCallback, AppDomainScenarios.SerializeInCurrentAppDomainAndDeserializeInNewAppDomain, describedSerialization.SerializedPayload, deserializedObject);
+                    }
+
+                    if (appDomainScenarios.HasFlag(AppDomainScenarios.SerializeInNewAppDomainAndDeserializeInNewAppDomain))
+                    {
+                        var describedSerialization = serializeFunc.ExecuteInNewAppDomain(serializerRepresentation, format, expected);
+
+                        var deserializedObject = deserializeFunc.ExecuteInNewAppDomain(describedSerialization);
+
+                        RunVerification(serializerRepresentation, format, verificationCallback, AppDomainScenarios.SerializeInNewAppDomainAndDeserializeInNewAppDomain, describedSerialization.SerializedPayload, deserializedObject);
                     }
                 }
+            }
+        }
+
+        private static void RunVerification<T>(
+            SerializerRepresentation serializerRepresentation,
+            SerializationFormat serializationFormat,
+            RoundtripSerializationVerification<T> verificationCallback,
+            AppDomainScenarios appDomainScenario,
+            string serializedPayload,
+            T deserializedObject)
+        {
+            new { verificationCallback }.AsArg().Must().NotBeNull();
+
+            try
+            {
+                verificationCallback(serializedPayload, serializationFormat, deserializedObject);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(Invariant($"Failed to roundtrip specified object to/from {serializerRepresentation.SerializationKind} {serializationFormat} using {serializerRepresentation.SerializationConfigType.ResolveFromLoadedTypes().ToStringReadable()} with the App Domain Scenario '{appDomainScenario}'.  Serialized payload is: {serializedPayload}.  Deserialized object is: {deserializedObject}."), ex);
             }
         }
 
@@ -235,18 +272,20 @@ namespace OBeautifulCode.Serialization.Recipes
             return result;
         }
 
-        private static Tuple<DescribedSerialization, T> SerializeAndDeserialize<T>(
+        private static Tuple<string, T> SerializeAndDeserialize<T>(
             SerializerRepresentation serializerRepresentation,
             SerializationFormat serializationFormat,
-            object objectToSerialize)
+            T objectToSerialize)
         {
-            var describedSerialization = objectToSerialize.ToDescribedSerialization(serializerRepresentation, serializationFormat);
+            var serializer = SerializerFactory.Instance.BuildSerializer(serializerRepresentation);
 
-            var actual = describedSerialization.DeserializePayload<T>();
+            var describedSerialization = objectToSerialize.ToDescribedSerializationUsingSpecificSerializer(serializer, serializationFormat);
+
+            var deserializedObject = (T)describedSerialization.DeserializePayloadUsingSpecificSerializer(serializer);
 
             // note that we cannot return a ValueTuple (DescribedSerialization DescribedSerialization, T actual)
             // here because ValueTuple is not [Serializable]
-            var result = new Tuple<DescribedSerialization, T>(describedSerialization, actual);
+            var result = new Tuple<string, T>(describedSerialization.SerializedPayload, deserializedObject);
 
             return result;
         }

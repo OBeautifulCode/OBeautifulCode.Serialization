@@ -111,6 +111,7 @@
     <Compile Include="RoundtripSerialization\RoundtripSerializationExtensions.cs" />
     <Compile Include="Factory\SerializerFactory.cs" />
     <AdditionalFiles Include=".analyzers\stylecop.json" />
+    <Compile Include="RoundtripSerialization\AppDomainScenarios.cs" />
     <None Include=".analyzers\release.ruleset" />
     <None Include="RoundtripSerializationExtensions.recipe-nuspec" />
     <None Include="packages.config" />

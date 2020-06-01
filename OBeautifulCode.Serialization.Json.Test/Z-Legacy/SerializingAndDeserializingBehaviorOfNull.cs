@@ -24,25 +24,25 @@ namespace OBeautifulCode.Serialization.Json.Test
             // Arrange
             Serialization.Test.SerializingAndDeserializingBehaviorOfNull.NullableObject expected = null;
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, Serialization.Test.SerializingAndDeserializingBehaviorOfNull.NullableObject deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, Serialization.Test.SerializingAndDeserializingBehaviorOfNull.NullableObject deserialized)
             {
-                if (serialized.SerializationFormat == SerializationFormat.String)
+                if (format == SerializationFormat.String)
                 {
-                    serialized.SerializedPayload.Should().Be(SerializationConfigurationBase.NullSerializedStringValue);
+                    serialized.Should().Be(SerializationConfigurationBase.NullSerializedStringValue);
                 }
-                else if (serialized.SerializationFormat == SerializationFormat.Binary)
+                else if (format == SerializationFormat.Binary)
                 {
-                    serialized.SerializedPayload.Should().Be(Convert.ToBase64String(SerializationConfigurationBase.NullSerializedStringValue.ToBytes(Encoding.UTF8)));
+                    serialized.Should().Be(Convert.ToBase64String(SerializationConfigurationBase.NullSerializedStringValue.ToBytes(Encoding.UTF8)));
                 }
                 else
                 {
-                    throw new NotSupportedException("This format is not supported: " + serialized.SerializationFormat);
+                    throw new NotSupportedException("This format is not supported: " + format);
                 }
 
                 deserialized.Should().BeNull();
             }
 
-            void ThrowIfStringsDiffer(DescribedSerialization serialized, string deserialized)
+            void ThrowIfStringsDiffer(string serialized, SerializationFormat format, string deserialized)
             {
                 deserialized.Should().Be(SerializationConfigurationBase.NullSerializedStringValue);
             }

@@ -60,7 +60,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
                 }),
             };
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, SystemCollectionsModel deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, SystemCollectionsModel deserialized)
             {
                 // note that in older version of Serialization these assertions would have
                 // failed because our the ObcBsonDateTimeSerializer was not being called at

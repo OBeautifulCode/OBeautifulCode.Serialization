@@ -48,7 +48,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<TestingDependentConfigAbstractTypeInheritor>();
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, TestingDependentConfigAbstractTypeInheritor deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestingDependentConfigAbstractTypeInheritor deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.Property.SomeValue.Should().Be(expected.Property.SomeValue);

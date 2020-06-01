@@ -32,7 +32,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<ObjectWithParamsConstructor>();
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, ObjectWithParamsConstructor deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ObjectWithParamsConstructor deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.InputStuff.Should().Equal(expected.InputStuff);

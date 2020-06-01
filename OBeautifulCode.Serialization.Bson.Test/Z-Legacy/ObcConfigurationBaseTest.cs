@@ -56,7 +56,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
                 },
             };
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, MultilevelGenericsModel deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, MultilevelGenericsModel deserialized)
             {
                 // note that in older version of Serialization these assertions would have
                 // failed because our the ObcBsonDateTimeSerializer was not being called at

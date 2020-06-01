@@ -32,7 +32,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel>();
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, UnchainedNoDefaultConstructorWithExpressionBodyPropertyModel deserialized)
             {
                 deserialized.AsTest().Must().NotBeNull();
 
@@ -54,7 +54,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<ChainedNoDefaultConstructorWithExpressionBodyPropertyModel>();
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, ChainedNoDefaultConstructorWithExpressionBodyPropertyModel deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ChainedNoDefaultConstructorWithExpressionBodyPropertyModel deserialized)
             {
                 deserialized.AsTest().Must().NotBeNull();
 

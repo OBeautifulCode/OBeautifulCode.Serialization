@@ -54,7 +54,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
                 }),
             };
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, SystemDictionariesModel deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, SystemDictionariesModel deserialized)
             {
                 // note that in older version of Serialization these assertions would have
                 // passed UNLIKE the associated the test in ObcBsonCollectionSerializerTest

@@ -68,7 +68,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
                 StringCollectionWithNulls = new[] { string.Empty, A.Dummy<string>(), null, string.Empty, null, A.Dummy<string>() },
             };
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, ComplicatedObject deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ComplicatedObject deserialized)
             {
                 deserialized.NullableDecimal.Should().Be(expected.NullableDecimal);
                 deserialized.NullableDecimalDefault.Should().BeNull();
@@ -111,7 +111,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(ThrowIfObjectsDiffer, serializationConfigurationType);
 
             var actualPropertyBag = serializer.Deserialize<ComplicatedObject>(serializedPropertyBag);
-            ThrowIfObjectsDiffer(null, actualPropertyBag);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag);
         }
 
         [Fact]
@@ -121,7 +121,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             var expected = new ConstructorWithProperties(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>());
 
             // Act
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, ConstructorWithProperties deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ConstructorWithProperties deserialized)
             {
                 deserialized.PropertyGetOnly.Should().Be(expected.PropertyGetOnly);
                 deserialized.PropertyPrivateSet.Should().Be(expected.PropertyPrivateSet);
@@ -138,7 +138,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             // Arrange
             var expected = new HasSerializesWithComma { WithCommas = new[] { new SerializesWithComma(), new SerializesWithComma() }.ToList() };
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, HasSerializesWithComma deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, HasSerializesWithComma deserialized)
             {
                 deserialized.WithCommas.Count.Should().Be(expected.WithCommas.Count);
                 deserialized.WithCommas.ToList().ForEach(_ => _.Should().NotBeNull());
@@ -171,7 +171,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
 
             var expected = new TypeWithCustomPropertyBagSerializerWrapper { CustomTypeWrapper = new TypeWithCustomPropertyBagSerializer() };
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, TypeWithCustomPropertyBagSerializerWrapper deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TypeWithCustomPropertyBagSerializerWrapper deserialized)
             {
             }
 

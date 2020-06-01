@@ -34,13 +34,13 @@ namespace OBeautifulCode.Serialization.Json.Test
             var expectedDictionary = new Dictionary<RegisteredKey, RegisteredValue> { { expectedKey, expectedValue } };
 
             // Act, Assert
-            void ThrowIfTuplesDiffer(DescribedSerialization serialized, Tuple<RegisteredKey, RegisteredValue> deserialized)
+            void ThrowIfTuplesDiffer(string serialized, SerializationFormat format, Tuple<RegisteredKey, RegisteredValue> deserialized)
             {
                 deserialized.Item1.Property.Should().Be(expectedTuple.Item1.Property);
                 deserialized.Item2.Property.Should().Be(expectedTuple.Item2.Property);
             }
 
-            void ThrowIfDictionariesDiffer(DescribedSerialization serialized, Dictionary<RegisteredKey, RegisteredValue> deserialized)
+            void ThrowIfDictionariesDiffer(string serialized, SerializationFormat format, Dictionary<RegisteredKey, RegisteredValue> deserialized)
             {
                 deserialized.Single().Key.Property.Should().Be(expectedDictionary.Single().Key.Property);
                 deserialized.Single().Value.Property.Should().Be(expectedDictionary.Single().Value.Property);

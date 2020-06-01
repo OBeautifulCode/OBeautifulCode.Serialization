@@ -30,7 +30,7 @@ namespace OBeautifulCode.Serialization.Test
                 NullableWithoutValueColor = null,
             };
 
-            void ThrowIfObjectsDiffer(DescribedSerialization serialized, ObjectWithNetDrawingTypes deserialized)
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ObjectWithNetDrawingTypes deserialized)
             {
                 deserialized.Color.Should().Be(expected.Color);
                 deserialized.NullableWithValueColor.Should().Be(expected.NullableWithValueColor);
