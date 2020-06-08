@@ -35,8 +35,12 @@ namespace OBeautifulCode.Serialization.Bson
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = ObcSuppressBecause.CA2104_DoNotDeclareReadOnlyMutableReferenceTypes_TypeIsImmutable)]
         public static readonly ObcBsonDiscriminatorConvention Instance = new ObcBsonDiscriminatorConvention();
 
+        private const string ElementNameToUse = "_t";
+
+        private static readonly HierarchicalDiscriminatorConvention HierarchicalDiscriminatorConvention = new HierarchicalDiscriminatorConvention(ElementNameToUse);
+
         /// <inheritdoc />
-        public string ElementName => "_t";
+        public string ElementName => ElementNameToUse;
 
         /// <inheritdoc />
         public Type GetActualType(
@@ -64,10 +68,12 @@ namespace OBeautifulCode.Serialization.Bson
                 }
                 catch (ArgumentException)
                 {
+                    bsonReader.ReturnToBookmark(bookmark);
+
                     // previously persisted documents will have used Type.Name
                     // in that case ToTypeRepresentationFromAssemblyQualifiedName will throw.
                     // this is here for backward compatibility.
-                    result = TypeNameDiscriminator.GetActualType(value);
+                    result = HierarchicalDiscriminatorConvention.GetActualType(bsonReader, nominalType);
 
                     if (result == null)
                     {

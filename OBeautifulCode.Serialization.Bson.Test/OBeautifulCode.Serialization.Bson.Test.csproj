@@ -128,10 +128,14 @@
     <Compile Include=".recipes\OBeautifulCode.Equality\HashCodeHelper.cs" />
     <Compile Include=".recipes\OBeautifulCode.Equality\ReadOnlyDictionaryEqualityComparer.cs" />
     <Compile Include=".recipes\OBeautifulCode.Equality\SuppressBecause.cs" />
+    <Compile Include=".recipes\OBeautifulCode.Reflection\AppDomainHelper.cs" />
+    <Compile Include=".recipes\OBeautifulCode.Reflection\DisposableAppDomain.cs" />
+    <Compile Include=".recipes\OBeautifulCode.Reflection\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ArrayKind.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="SerializationConfiguration\ObcBsonDiscriminatorConventionTest.cs" />
     <Compile Include="Z-Legacy\BsonSerializationConfigurationBaseTest.cs" />
     <Compile Include="Z-Legacy\BsonSerializationConfigurationTestAutoConstrainedType.cs" />
     <Compile Include="Z-Legacy\CustomSerializers\ObcBsonCollectionSerializerTest.cs" />
@@ -173,6 +177,7 @@
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
