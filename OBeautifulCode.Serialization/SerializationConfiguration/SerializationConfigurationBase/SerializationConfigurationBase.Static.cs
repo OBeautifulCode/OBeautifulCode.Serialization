@@ -346,6 +346,12 @@ namespace OBeautifulCode.Serialization
         private static void DiscoverAncestorsAndDescendants(
             Queue<Type> typesQueue)
         {
+            // note: This algorithm does not directly identify types that are related to the specified
+            // generic or array types in a co-variant or contra-variant manner.
+            // For example, if we are exploring IDoSomething<Animal>, we will NOT identify IDoSomething<Dog>
+            // as a related type, regardless of whether IDoSomething<Dog> is assignable to IDoSomething<Animal>.
+            // The consumer CAN register IDoSomething<> and separately register Animal (with RelatedTypesToInclude.Descendants,
+            // which will pickup Dog) and then IDoSomething<Dog> will be considered to be a registered type.
             while (typesQueue.Any())
             {
                 var typeQueueItem = typesQueue.Dequeue();
