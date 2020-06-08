@@ -70,7 +70,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
         }
 
         [Serializable]
-        public class ModelObjectForDiscriminatorConventionTest : IEquatable<ModelObjectForDiscriminatorConventionTest>
+        private class ModelObjectForDiscriminatorConventionTest : IEquatable<ModelObjectForDiscriminatorConventionTest>
         {
             public ModelObjectForDiscriminatorConventionTest(
                 AbstractClassForDiscriminatorConventionTest abstractClass)
@@ -111,7 +111,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
         }
 
         [Serializable]
-        public abstract class AbstractClassForDiscriminatorConventionTest
+        private abstract class AbstractClassForDiscriminatorConventionTest
         {
             protected AbstractClassForDiscriminatorConventionTest(
                 string stringProperty)
@@ -123,7 +123,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
         }
 
         [Serializable]
-        public class ConcreteClassForDiscriminatorConventionTest : AbstractClassForDiscriminatorConventionTest
+        private class ConcreteClassForDiscriminatorConventionTest : AbstractClassForDiscriminatorConventionTest
         {
             public ConcreteClassForDiscriminatorConventionTest(
                 string stringProperty,

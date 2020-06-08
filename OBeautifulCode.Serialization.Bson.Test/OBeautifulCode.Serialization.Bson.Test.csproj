@@ -135,6 +135,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="ObcBsonSerializer\ObcBsonSerializerTest.cs" />
     <Compile Include="SerializationConfiguration\ObcBsonDiscriminatorConventionTest.cs" />
     <Compile Include="Z-Legacy\BsonSerializationConfigurationBaseTest.cs" />
     <Compile Include="Z-Legacy\BsonSerializationConfigurationTestAutoConstrainedType.cs" />

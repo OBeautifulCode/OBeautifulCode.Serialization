@@ -7,7 +7,7 @@
 namespace OBeautifulCode.Serialization.Bson
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
+
     using MongoDB.Bson;
 
     using OBeautifulCode.Assertion.Recipes;
