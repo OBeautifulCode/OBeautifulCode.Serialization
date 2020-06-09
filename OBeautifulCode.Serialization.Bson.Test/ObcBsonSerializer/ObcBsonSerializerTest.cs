@@ -8,11 +8,13 @@ namespace OBeautifulCode.Serialization.Bson.Test
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Serialization.Bson;
+    using OBeautifulCode.Serialization.Bson.Test.Internal;
 
     using Xunit;
 
@@ -65,6 +67,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
             test.ExecuteInNewAppDomain();
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = ObcSuppressBecause.CA1812_AvoidUninstantiatedInternalClasses_SerializationConfigurationClassInstantedBySerializer)]
         private class NotThrowingSerializationConfigurationForThreadStaticTest : BsonSerializationConfigurationBase
         {
             /// <inheritdoc />

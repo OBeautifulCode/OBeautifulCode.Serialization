@@ -11,7 +11,6 @@ namespace OBeautifulCode.Serialization
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Compression;
