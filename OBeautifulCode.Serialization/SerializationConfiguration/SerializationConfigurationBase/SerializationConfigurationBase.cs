@@ -270,7 +270,7 @@ namespace OBeautifulCode.Serialization
 
                         // apply the namespace filters
                         // ReSharper disable once PossibleNullReferenceException
-                        if ((!this.TypeToRegisterNamespacePrefixFilters.Any()) || this.TypeToRegisterNamespacePrefixFilters.Any(_ => typeToRegisterNamespace.StartsWith(_)))
+                        if ((!this.TypeToRegisterNamespacePrefixFilters.Any()) || this.TypeToRegisterNamespacePrefixFilters.Any(_ => typeToRegisterNamespace.StartsWith(_, StringComparison.Ordinal)))
                         {
                             this.RegisterType(typeToRegister, RegistrationTime.Initialization);
                         }
