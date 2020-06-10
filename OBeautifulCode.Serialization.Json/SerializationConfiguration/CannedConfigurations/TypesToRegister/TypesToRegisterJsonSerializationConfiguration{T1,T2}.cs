@@ -17,5 +17,8 @@ namespace OBeautifulCode.Serialization.Json
     {
         /// <inheritdoc />
         protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[] { typeof(T1).ToTypeToRegisterForJson(), typeof(T2).ToTypeToRegisterForJson() };
+
+        /// <inheritdoc />
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => new[] { typeof(T1).Namespace, typeof(T2).Namespace };
     }
 }

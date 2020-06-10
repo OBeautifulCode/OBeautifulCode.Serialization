@@ -17,5 +17,8 @@ namespace OBeautifulCode.Serialization.PropertyBag
     {
         /// <inheritdoc />
         protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => new[] { typeof(T1).ToTypeToRegisterForPropertyBag(), typeof(T2).ToTypeToRegisterForPropertyBag() };
+
+        /// <inheritdoc />
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => new[] { typeof(T1).Namespace, typeof(T2).Namespace };
     }
 }

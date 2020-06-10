@@ -22,5 +22,8 @@ namespace OBeautifulCode.Serialization.Bson
 
         /// <inheritdoc />
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => InternallyRequiredTypes.Select(_ => _.ToTypeToRegisterForBson()).ToList();
+
+        /// <inheritdoc />
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => InternallyRequiredTypes.Select(_ => _.Namespace).Distinct().ToList();
     }
 }

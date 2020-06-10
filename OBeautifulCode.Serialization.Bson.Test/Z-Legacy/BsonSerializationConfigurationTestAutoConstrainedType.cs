@@ -75,6 +75,8 @@ namespace OBeautifulCode.Serialization.Bson.Test
             typeof(TestConfigureActionBaseFromAuto).ToTypeToRegisterForBson(MemberTypesToInclude.None),
             typeof(ITestConfigureActionFromInterface).ToTypeToRegisterForBson(MemberTypesToInclude.None),
         };
+
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => this.TypesToRegisterForBson.Select(_ => _.Type.Namespace).Distinct().ToList();
     }
 
     public class TestConfigWithSettableFields : BsonSerializationConfigurationBase
@@ -100,6 +102,8 @@ namespace OBeautifulCode.Serialization.Bson.Test
             .Concat(this.SettableClassTypesToRegisterAlongWithInheritors.Select(_ => _.ToTypeToRegisterForBson(MemberTypesToInclude.None)))
             .Concat(this.SettableInterfaceTypesToRegisterImplementationOf.Select(_ => _.ToTypeToRegisterForBson(MemberTypesToInclude.None)))
             .ToList();
+
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => this.TypesToRegisterForBson.Select(_ => _.Type.Namespace).Distinct().ToList();
     }
 
     public class InvestigationConfiguration : BsonSerializationConfigurationBase
@@ -110,5 +114,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
             typeof(NamedInvestigator).ToTypeToRegisterForBson(MemberTypesToInclude.None),
             typeof(AnonymousInvestigator).ToTypeToRegisterForBson(MemberTypesToInclude.None),
         };
+
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => this.TypesToRegisterForBson.Select(_ => _.Type.Namespace).Distinct().ToList();
     }
 }

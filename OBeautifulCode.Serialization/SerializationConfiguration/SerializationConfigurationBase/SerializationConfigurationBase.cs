@@ -39,6 +39,9 @@ namespace OBeautifulCode.Serialization
 
         private readonly HashSet<string> visitedTypesToRegisterIds = new HashSet<string>();
 
+        // ReSharper disable once CollectionNeverQueried.Local
+        private readonly Dictionary<Type, TypeToRegister> typeToFilteredOutTypeToRegisterMap = new Dictionary<Type, TypeToRegister>();
+
         private bool initialized;
 
         /// <summary>
@@ -242,39 +245,45 @@ namespace OBeautifulCode.Serialization
 
             typesToRegister.All(_ => _.IsOriginatingType).AsOp(Invariant($"All {nameof(TypeToRegister)} objects in {nameof(this.TypesToRegister)} are originating {nameof(TypeToRegister)} objects.")).Must().BeTrue();
 
-            // this could have been done in the while loop below but we think the algorithm
-            // is easier to understand by registering these types upfront
-            foreach (var typeToRegister in typesToRegister)
-            {
-                // this.RegisterType will throw if the user specifies the same type twice or if type
-                // has already been registered by a dependent serialization configuration
-                this.RegisterType(typeToRegister, RegistrationTime.Initialization);
-            }
+            new { this.TypeToRegisterNamespacePrefixFilters }.Must().NotBeNull().And().Each().NotBeNullNorWhiteSpace();
 
             while (typesToRegister.Count > 0)
             {
                 var typeToRegister = typesToRegister.Dequeue();
 
-                // we already registered all originating types above so they should
-                // not be registered here.
-                // additionalTypesToInclude (variable below) is guaranteed to exclude
-                // typeToRegister.Type (dequeued value), and so it's not possible
-                // to create any more originating types.
-                if (!typeToRegister.IsOriginatingType)
+                // This type might be an originating type and already be registered by a dependent config.
+                // This typically occurs when the consumer wants to discover descendants in a new namespace
+                // (a different set of namespaces than dependent config is filtering on).
+                // OR
+                // The type was introduced by GetRelatedTypesToInclude() or GetMemberTypesToInclude().
+                // Recursive calls to those methods could result in traversing the same type multiple times.
+                // In both cases, just skip it.
+                if ((!this.registeredTypeToRegistrationDetailsMap.ContainsKey(typeToRegister.Type)) && (!this.typeToFilteredOutTypeToRegisterMap.ContainsKey(typeToRegister.Type)))
                 {
-                    // if we've gotten here and the type is already registered, it means that the
-                    // type was introduced by GetRelatedTypesToInclude() or GetMemberTypesToInclude()
-                    // We do not want to throw because recursive calls to those methods could result
-                    // in traversing the same type multiple times, so just skip the registration.
-                    if (!this.registeredTypeToRegistrationDetailsMap.ContainsKey(typeToRegister.Type))
+                    // these types need to be considered for spawning additional types to include
+                    // and thus need to be processed in the queue, but they themselves cannot be registered.
+                    // for example, if the type is List<List<MyModelType>>, we don't want to register it,
+                    // but we want to run member inclusion to get at MyModelType.
+                    if (IsTypeThatCanBeRegistered(typeToRegister))
                     {
-                        // these types need to be considered for spawning additional types to include
-                        // and thus need to be processed in the queue, but they themselves cannot be registered.
-                        // for example, if the type is List<List<MyModelType>>, we don't want to register it,
-                        // but we want to run member inclusion to get at MyModelType.
-                        if (IsTypeThatCanBeRegistered(typeToRegister))
+                        var typeToRegisterNamespace = typeToRegister.Type.Namespace;
+
+                        // apply the namespace filters
+                        // ReSharper disable once PossibleNullReferenceException
+                        if ((!this.TypeToRegisterNamespacePrefixFilters.Any()) || this.TypeToRegisterNamespacePrefixFilters.Any(_ => typeToRegisterNamespace.StartsWith(_)))
                         {
                             this.RegisterType(typeToRegister, RegistrationTime.Initialization);
+                        }
+                        else
+                        {
+                            this.typeToFilteredOutTypeToRegisterMap.Add(typeToRegister.Type, typeToRegister);
+                        }
+                    }
+                    else
+                    {
+                        if (typeToRegister.IsOriginatingType)
+                        {
+                            throw new InvalidOperationException(Invariant($"Serialization configuration {this.SerializationConfigurationType.ConcreteSerializationConfigurationDerivativeType.ToStringReadable()} is attempting to register the following type which cannot be registered: {typeToRegister.Type.ToStringReadable()}."));
                         }
                     }
                 }
@@ -289,6 +298,8 @@ namespace OBeautifulCode.Serialization
 
                     var memberTypes = GetMemberTypesToInclude(typeToRegister.Type, typeToRegister.MemberTypesToInclude);
 
+                    // This excludes typeToRegister.Type (the dequeued value),
+                    // so it's not possible to create any more originating types.
                     var additionalTypesToInclude = new Type[0]
                         .Concat(relatedTypes)
                         .Concat(memberTypes)

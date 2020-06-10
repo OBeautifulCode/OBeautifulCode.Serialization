@@ -34,9 +34,17 @@ namespace OBeautifulCode.Serialization
         protected abstract IReadOnlyCollection<SerializationConfigurationType> DefaultDependentSerializationConfigurationTypes { get; }
 
         /// <summary>
-        /// Gets the types to register along with additional information about other types that this type should "pull-in" to registration.
+        /// Gets the types to register along with additional information about other types that this type should "pull-in"/discover for registration.
         /// </summary>
         protected virtual IReadOnlyCollection<TypeToRegister> TypesToRegister => new TypeToRegister[0];
+
+        /// <summary>
+        /// Gets a set of namespace filters that determine whether a type (specified or discovered) is registered.
+        /// The default filter includes only types whose namespace starts with the namespace of this serialization configuration object.
+        /// If a type's namespace starts with any of the specified filters, then the type is registered.
+        /// An empty set means that no filtering occurs; all types specified or discovered are registered.
+        /// </summary>
+        protected virtual IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => new[] { this.GetType().Namespace };
 
         /// <summary>
         /// Gets the serialization configuration type.

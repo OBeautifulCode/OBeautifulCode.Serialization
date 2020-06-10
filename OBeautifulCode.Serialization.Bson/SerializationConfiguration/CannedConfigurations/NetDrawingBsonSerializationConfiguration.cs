@@ -19,5 +19,8 @@ namespace OBeautifulCode.Serialization.Bson
         {
             typeof(Color).ToTypeToRegisterForBson(MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new ObcBsonColorSerializer()),
         };
+
+        /// <inheritdoc />
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => new[] { typeof(Color).Namespace };
     }
 }

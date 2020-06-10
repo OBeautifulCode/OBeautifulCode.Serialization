@@ -17,5 +17,8 @@ namespace OBeautifulCode.Serialization.Bson
     {
         /// <inheritdoc />
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new[] { typeof(T1).ToTypeToRegisterForBson(), typeof(T2).ToTypeToRegisterForBson() };
+
+        /// <inheritdoc />
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => new[] { typeof(T1).Namespace, typeof(T2).Namespace };
     }
 }

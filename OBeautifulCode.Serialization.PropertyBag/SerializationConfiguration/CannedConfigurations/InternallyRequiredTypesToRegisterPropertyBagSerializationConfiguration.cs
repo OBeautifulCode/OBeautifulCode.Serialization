@@ -22,5 +22,8 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
         /// <inheritdoc />
         protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => new[] { new TypeToRegisterForPropertyBag(typeof(DateTime), MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new ObcDateTimeStringSerializer()) };
+
+        /// <inheritdoc />
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => new[] { typeof(DateTime).Namespace };
     }
 }
