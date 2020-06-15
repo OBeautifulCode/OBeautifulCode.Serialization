@@ -12,7 +12,12 @@ namespace OBeautifulCode.Serialization.Recipes
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization.Bson;
 
-    public static partial class RoundtripSerializationExtensions
+#if !OBeautifulCodeSerializationRecipesProject
+    internal
+#else
+    public
+#endif
+    static partial class RoundtripSerializationExtensions
     {
         /// <summary>
         /// Test roundtrip serialization to/from BSON, asserting that the expected/provided value is equal to the deserialized value using
