@@ -106,43 +106,6 @@ namespace OBeautifulCode.Serialization.Recipes
         /// <param name="appDomainScenarios">Optional value that specifies various scenarios of serializing and de-serializing in the current App Domain or a new App Domain.  DEFAULT is test the roundtrip in a new App Domain and also to serialize in a new App Domain and de-serialize in a new, but different App Domain.</param>
         public static void RoundtripSerializeWithBeEqualToAssertion<T>(
             this T expected,
-            BsonSerializationConfigurationType bsonSerializationConfigurationType = null,
-            JsonSerializationConfigurationType jsonSerializationConfigurationType = null,
-            PropertyBagSerializationConfigurationType propertyBagSerializationConfigurationType = null,
-            bool testBson = true,
-            bool testJson = true,
-            bool testPropertyBag = false,
-            IReadOnlyCollection<SerializationFormat> formats = null,
-            AppDomainScenarios appDomainScenarios = DefaultAppDomainScenarios)
-        {
-            expected.RoundtripSerializeWithBeEqualToAssertion(
-                bsonSerializationConfigurationType.ConcreteSerializationConfigurationDerivativeType,
-                jsonSerializationConfigurationType.ConcreteSerializationConfigurationDerivativeType,
-                propertyBagSerializationConfigurationType.ConcreteSerializationConfigurationDerivativeType,
-                testBson,
-                testJson,
-                testPropertyBag,
-                formats,
-                appDomainScenarios);
-        }
-
-        /// <summary>
-        /// Test roundtrip serialization, asserting that the expected/provided value is equal to the deserialized value using
-        /// <see cref="Verifications.BeEqualTo{T}(AssertionTracker, T, string, ApplyBecause, System.Collections.IDictionary)"/>,
-        /// with the serialization configuration type(s) specified.
-        /// </summary>
-        /// <typeparam name="T">The type being tested.</typeparam>
-        /// <param name="expected">The value to serialize, which should be equal to the resulting deserialized object.</param>
-        /// <param name="bsonSerializationConfigurationType">Optional type of the serialization configuration to use for BSON testing.  DEFAULT is null; <see cref="NullBsonSerializationConfiguration"/> will be used.</param>
-        /// <param name="jsonSerializationConfigurationType">Optional type of the serialization configuration to use for JSON testing.  DEFAULT is null; <see cref="NullJsonSerializationConfiguration"/> will be used.</param>
-        /// <param name="propertyBagSerializationConfigurationType">Optional type of the serialization configuration to use for Property Bag testing.  DEFAULT is null; <see cref="NullPropertyBagSerializationConfiguration"/> will be used.</param>
-        /// <param name="testBson">Optional value indicating whether to test serialization to/from BSON.  DEFAULT is true.</param>
-        /// <param name="testJson">Optional value indicating whether to test serialization to/from JSON.  DEFAULT is true.</param>
-        /// <param name="testPropertyBag">Optional value indicating whether to test serialization to/from a Property Bag.  DEFAULT is false.</param>
-        /// <param name="formats">The serialization formats to test.</param>
-        /// <param name="appDomainScenarios">Optional value that specifies various scenarios of serializing and de-serializing in the current App Domain or a new App Domain.  DEFAULT is test the roundtrip in a new App Domain and also to serialize in a new App Domain and de-serialize in a new, but different App Domain.</param>
-        public static void RoundtripSerializeWithBeEqualToAssertion<T>(
-            this T expected,
             Type bsonSerializationConfigurationType = null,
             Type jsonSerializationConfigurationType = null,
             Type propertyBagSerializationConfigurationType = null,
@@ -152,50 +115,12 @@ namespace OBeautifulCode.Serialization.Recipes
             IReadOnlyCollection<SerializationFormat> formats = null,
             AppDomainScenarios appDomainScenarios = DefaultAppDomainScenarios)
         {
-            expected.RoundtripSerializeWithCallbackVerification(
+            RoundtripSerializeWithCallbackVerification(
+                expected,
                 (yieldedDescribedSerialization, serializationFormat, deserializedObject) => deserializedObject.AsTest().Must().BeEqualTo(expected),
                 bsonSerializationConfigurationType,
                 jsonSerializationConfigurationType,
                 propertyBagSerializationConfigurationType,
-                testBson,
-                testJson,
-                testPropertyBag,
-                formats,
-                appDomainScenarios);
-        }
-
-        /// <summary>
-        /// Test roundtrip serialization, asserting that the expected/provided value is equal to the deserialized value using
-        /// the specified callback, with the serialization configuration type(s) specified.
-        /// </summary>
-        /// <typeparam name="T">The type being tested.</typeparam>
-        /// <param name="expected">The value to serialize, which should be equal to the resulting deserialized object.</param>
-        /// <param name="verificationCallback">Callback to verify that the expected/provided value is equal to the deserialized value.</param>
-        /// <param name="bsonSerializationConfigurationType">Optional type of the serialization configuration to use for BSON testing.  DEFAULT is null; <see cref="NullBsonSerializationConfiguration"/> will be used.</param>
-        /// <param name="jsonSerializationConfigurationType">Optional type of the serialization configuration to use for JSON testing.  DEFAULT is null; <see cref="NullJsonSerializationConfiguration"/> will be used.</param>
-        /// <param name="propertyBagSerializationConfigurationType">Optional type of the serialization configuration to use for Property Bag testing.  DEFAULT is null; <see cref="NullPropertyBagSerializationConfiguration"/> will be used.</param>
-        /// <param name="testBson">Optional value indicating whether to test serialization to/from BSON.  DEFAULT is true.</param>
-        /// <param name="testJson">Optional value indicating whether to test serialization to/from JSON.  DEFAULT is true.</param>
-        /// <param name="testPropertyBag">Optional value indicating whether to test serialization to/from a Property Bag.  DEFAULT is false.</param>
-        /// <param name="formats">The serialization formats to test.</param>
-        /// <param name="appDomainScenarios">Optional value that specifies various scenarios of serializing and de-serializing in the current App Domain or a new App Domain.  DEFAULT is test the roundtrip in a new App Domain and also to serialize in a new App Domain and de-serialize in a new, but different App Domain.</param>
-        public static void RoundtripSerializeWithCallbackVerification<T>(
-            this T expected,
-            RoundtripSerializationVerification<T> verificationCallback,
-            BsonSerializationConfigurationType bsonSerializationConfigurationType = null,
-            JsonSerializationConfigurationType jsonSerializationConfigurationType = null,
-            PropertyBagSerializationConfigurationType propertyBagSerializationConfigurationType = null,
-            bool testBson = true,
-            bool testJson = true,
-            bool testPropertyBag = false,
-            IReadOnlyCollection<SerializationFormat> formats = null,
-            AppDomainScenarios appDomainScenarios = DefaultAppDomainScenarios)
-        {
-            expected.RoundtripSerializeWithCallbackVerification(
-                verificationCallback,
-                bsonSerializationConfigurationType.ConcreteSerializationConfigurationDerivativeType,
-                jsonSerializationConfigurationType.ConcreteSerializationConfigurationDerivativeType,
-                propertyBagSerializationConfigurationType.ConcreteSerializationConfigurationDerivativeType,
                 testBson,
                 testJson,
                 testPropertyBag,
