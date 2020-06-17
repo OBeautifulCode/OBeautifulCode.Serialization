@@ -7,6 +7,7 @@
 namespace OBeautifulCode.Serialization.Bson
 {
     using System;
+    using System.Collections.Generic;
 
     using MongoDB.Bson.Serialization;
 
@@ -19,6 +20,8 @@ namespace OBeautifulCode.Serialization.Bson
     /// </summary>
     public abstract partial class BsonSerializationConfigurationBase : SerializationConfigurationBase
     {
+        private readonly Dictionary<Type, object> typesWithCustomSerializerOrPropertyNamesWhitelist = new Dictionary<Type, object>();
+
         private void ProcessTypeToRegisterForBson(
             TypeToRegisterForBson typeToRegisterForBson,
             SerializationConfigurationType registeringSerializationConfigurationType)
@@ -26,6 +29,8 @@ namespace OBeautifulCode.Serialization.Bson
             var type = typeToRegisterForBson.Type;
 
             var serializerBuilderFunc = typeToRegisterForBson.SerializerBuilderFunc;
+
+            var propertyNameWhitelist = typeToRegisterForBson.PropertyNameWhitelist;
 
             if (registeringSerializationConfigurationType == this.SerializationConfigurationType)
             {
@@ -35,7 +40,7 @@ namespace OBeautifulCode.Serialization.Bson
                     {
                         if (type.IsClass)
                         {
-                            var bsonClassMap = AutomaticallyBuildBsonClassMap(type, typeToRegisterForBson.PropertyNameWhitelist);
+                            var bsonClassMap = AutomaticallyBuildBsonClassMap(type, propertyNameWhitelist);
 
                             BsonClassMap.RegisterClassMap(bsonClassMap);
                         }
@@ -53,6 +58,16 @@ namespace OBeautifulCode.Serialization.Bson
                 {
                     BsonSerializer.RegisterSerializer(type, serializerBuilderFunc());
                 }
+            }
+
+            if (serializerBuilderFunc != null)
+            {
+                this.typesWithCustomSerializerOrPropertyNamesWhitelist.Add(type, null);
+            }
+
+            if (propertyNameWhitelist != null)
+            {
+                this.typesWithCustomSerializerOrPropertyNamesWhitelist.Add(type, null);
             }
         }
     }

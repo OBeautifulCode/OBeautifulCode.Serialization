@@ -30,6 +30,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
         protected sealed override IReadOnlyCollection<TypeToRegister> TypesToRegister => this.TypesToRegisterForPropertyBag;
 
         /// <inheritdoc />
+        protected sealed override IReadOnlyDictionary<Type, object> TypesPermittedToHaveUnregisteredMembers => this.typesWithCustomSerializers;
+
+        /// <inheritdoc />
         protected sealed override SerializationConfigurationType BuildSerializationConfigurationType()
         {
             var result = this.GetType().ToPropertyBagSerializationConfigurationType();

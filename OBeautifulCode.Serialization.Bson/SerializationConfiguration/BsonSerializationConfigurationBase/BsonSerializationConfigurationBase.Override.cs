@@ -31,6 +31,9 @@ namespace OBeautifulCode.Serialization.Bson
         protected sealed override IReadOnlyCollection<TypeToRegister> TypesToRegister => this.TypesToRegisterForBson;
 
         /// <inheritdoc />
+        protected sealed override IReadOnlyDictionary<Type, object> TypesPermittedToHaveUnregisteredMembers => this.typesWithCustomSerializerOrPropertyNamesWhitelist;
+
+        /// <inheritdoc />
         protected sealed override SerializationConfigurationType BuildSerializationConfigurationType()
         {
             var result = this.GetType().ToBsonSerializationConfigurationType();

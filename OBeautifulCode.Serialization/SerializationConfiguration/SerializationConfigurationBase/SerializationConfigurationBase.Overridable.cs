@@ -47,6 +47,14 @@ namespace OBeautifulCode.Serialization
         protected virtual IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => new[] { this.GetType().Namespace };
 
         /// <summary>
+        /// Gets the types that are permitted to have unregistered members.
+        /// These are typically types that are registered with custom serializers (e.g. IBsonSerializer, JsonConverter).
+        /// <see cref="ThrowOnUnregisteredTypeIfAppropriate(Type, SerializationDirection, object)"/> will not recurse through
+        /// the members of these types.
+        /// </summary>
+        protected abstract IReadOnlyDictionary<Type, object> TypesPermittedToHaveUnregisteredMembers { get; }
+
+        /// <summary>
         /// Gets the serialization configuration type.
         /// </summary>
         /// <returns>

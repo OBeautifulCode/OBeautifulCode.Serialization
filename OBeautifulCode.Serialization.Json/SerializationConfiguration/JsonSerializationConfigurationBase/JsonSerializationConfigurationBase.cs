@@ -25,13 +25,13 @@ namespace OBeautifulCode.Serialization.Json
     /// </summary>
     public abstract partial class JsonSerializationConfigurationBase : SerializationConfigurationBase
     {
-        private HashSet<Type> TypesWithConverters { get; } = new HashSet<Type>();
+        private readonly Dictionary<Type, object> typesWithConverters = new Dictionary<Type, object>();
 
-        private HashSet<Type> TypesWithStringConverters { get; } = new HashSet<Type>();
+        private readonly HashSet<Type> typesWithStringConverters = new HashSet<Type>();
 
-        private IList<JsonConverterBuilder> JsonConverterBuilders { get; } = new List<JsonConverterBuilder>();
+        private readonly IList<JsonConverterBuilder> jsonConverterBuilders = new List<JsonConverterBuilder>();
 
-        private ConcurrentDictionary<Type, object> HierarchyParticipatingTypes { get; } = new ConcurrentDictionary<Type, object>();
+        private readonly ConcurrentDictionary<Type, object> hierarchyParticipatingTypes = new ConcurrentDictionary<Type, object>();
 
         /// <summary>
         /// Build <see cref="JsonSerializerSettings" /> to use for serialization using Newtonsoft.
@@ -54,7 +54,7 @@ namespace OBeautifulCode.Serialization.Json
 
             var result = jsonSerializerSettingsBuilder(() => this.RegisteredTypeToRegistrationDetailsMap);
 
-            var specifiedConverters = this.JsonConverterBuilders.Select(_ => _.GetJsonConverterBuilderFuncBySerializationDirection(serializationDirection)()).ToList();
+            var specifiedConverters = this.jsonConverterBuilders.Select(_ => _.GetJsonConverterBuilderFuncBySerializationDirection(serializationDirection)()).ToList();
 
             var defaultConverters = this.GetDefaultConverters(serializationDirection, jsonFormattingKind);
 
@@ -113,16 +113,16 @@ namespace OBeautifulCode.Serialization.Json
 
             if (jsonConverterBuilder != null)
             {
-                this.TypesWithConverters.Add(type);
+                this.typesWithConverters.Add(type, null);
 
                 if (jsonConverterBuilder.OutputKind == JsonConverterOutputKind.String)
                 {
-                    this.TypesWithStringConverters.Add(type);
+                    this.typesWithStringConverters.Add(type);
                 }
 
-                if (this.JsonConverterBuilders.All(_ => _.Id != jsonConverterBuilder.Id))
+                if (this.jsonConverterBuilders.All(_ => _.Id != jsonConverterBuilder.Id))
                 {
-                    this.JsonConverterBuilders.Add(jsonConverterBuilder);
+                    this.jsonConverterBuilders.Add(jsonConverterBuilder);
                 }
             }
         }
@@ -155,12 +155,12 @@ namespace OBeautifulCode.Serialization.Json
                         new SecureStringJsonConverter(),
                     }).Concat(formattingKind == JsonFormattingKind.Minimal
                     ? new JsonConverter[0]
-                    : new[] { new InheritedTypeWriterJsonConverter(() => this.HierarchyParticipatingTypes) })
+                    : new[] { new InheritedTypeWriterJsonConverter(() => this.hierarchyParticipatingTypes) })
                 .Concat(
                     new JsonConverter[]
                     {
                         // new DictionaryJsonConverter(this.TypesWithStringConverters) - this converter cannot write (CanWrite => false)
-                        new KeyValueArrayDictionaryJsonConverter(this.TypesWithStringConverters),
+                        new KeyValueArrayDictionaryJsonConverter(this.typesWithStringConverters),
                     }).ToList();
 
             return result;
@@ -176,9 +176,9 @@ namespace OBeautifulCode.Serialization.Json
                     new DateTimeJsonConverter(),
                     new StringEnumConverter { CamelCaseText = true },
                     new SecureStringJsonConverter(),
-                    new InheritedTypeReaderJsonConverter(() => this.HierarchyParticipatingTypes, this),
-                    new DictionaryJsonConverter(this.TypesWithStringConverters),
-                    new KeyValueArrayDictionaryJsonConverter(this.TypesWithStringConverters),
+                    new InheritedTypeReaderJsonConverter(() => this.hierarchyParticipatingTypes, this),
+                    new DictionaryJsonConverter(this.typesWithStringConverters),
+                    new KeyValueArrayDictionaryJsonConverter(this.typesWithStringConverters),
                 }).ToList();
 
             return result;

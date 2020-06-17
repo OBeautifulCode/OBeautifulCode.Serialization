@@ -380,7 +380,10 @@ namespace OBeautifulCode.Serialization
             // So if we get there with a System type, there's nothing to do.
             if (!typeToValidate.IsSystemType())
             {
-                this.ValidateMembersAreRegistered(originalType, typeToValidate, serializationDirection, objectToSerialize);
+                if (!this.TypesPermittedToHaveUnregisteredMembers.ContainsKey(typeToValidate))
+                {
+                    this.ValidateMembersAreRegistered(originalType, typeToValidate, serializationDirection, objectToSerialize);
+                }
             }
         }
 

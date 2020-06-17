@@ -31,6 +31,9 @@ namespace OBeautifulCode.Serialization.Json
         protected sealed override IReadOnlyCollection<SerializationConfigurationType> DependentSerializationConfigurationTypes => this.DependentJsonSerializationConfigurationTypes;
 
         /// <inheritdoc />
+        protected sealed override IReadOnlyDictionary<Type, object> TypesPermittedToHaveUnregisteredMembers => this.typesWithConverters;
+
+        /// <inheritdoc />
         protected sealed override SerializationConfigurationType BuildSerializationConfigurationType()
         {
             var result = this.GetType().ToJsonSerializationConfigurationType();
@@ -104,15 +107,15 @@ namespace OBeautifulCode.Serialization.Json
         {
             var registeredTypes = this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList();
 
-            var hierarchyParticipatingTypes =
+            var hierarchyTypes =
                 typesToInspect
-                    .Except(this.TypesWithConverters)
+                    .Except(this.typesWithConverters.Keys)
                     .Where(_ => ParticipatesInHierarchy(_, registeredTypes))
                     .ToList();
 
-            foreach (var hierarchyParticipatingType in hierarchyParticipatingTypes)
+            foreach (var hierarchyType in hierarchyTypes)
             {
-                this.HierarchyParticipatingTypes.TryAdd(hierarchyParticipatingType, null);
+                this.hierarchyParticipatingTypes.TryAdd(hierarchyType, null);
             }
         }
     }

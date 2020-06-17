@@ -16,10 +16,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
     /// </summary>
     public abstract partial class PropertyBagSerializationConfigurationBase : SerializationConfigurationBase
     {
-        /// <summary>
-        /// Gets the map of type to specific serializer.
-        /// </summary>
-        private Dictionary<Type, IStringSerializeAndDeserialize> TypeToSerializerMap { get; } = new Dictionary<Type, IStringSerializeAndDeserialize>();
+        private readonly Dictionary<Type, IStringSerializeAndDeserialize> typeToSerializerMap = new Dictionary<Type, IStringSerializeAndDeserialize>();
+
+        private readonly Dictionary<Type, object> typesWithCustomSerializers = new Dictionary<Type, object>();
 
         /// <summary>
         /// Builds a map of type to serializer.
@@ -29,7 +28,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// </returns>
         public IReadOnlyDictionary<Type, IStringSerializeAndDeserialize> BuildConfiguredTypeToSerializerMap()
         {
-            var result = this.TypeToSerializerMap;
+            var result = this.typeToSerializerMap;
 
             return result;
         }
@@ -43,7 +42,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
             if (stringSerializerBuilderFunc != null)
             {
-                this.TypeToSerializerMap.Add(type, stringSerializerBuilderFunc());
+                this.typeToSerializerMap.Add(type, stringSerializerBuilderFunc());
+
+                this.typesWithCustomSerializers.Add(type, null);
             }
         }
     }
