@@ -171,7 +171,7 @@ namespace OBeautifulCode.Serialization.Test
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[]
         {
             typeof(TestingDependentConfigAbstractType).ToTypeToRegisterForBson(),
-            typeof(TestingDependentConfigType).ToTypeToRegisterForBson(MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new TestingDependentSerializer()),
+            typeof(TestingDependentConfigType).ToTypeToRegisterForBson(MemberTypesToInclude.None, RelatedTypesToInclude.None, new BsonSerializerBuilder(() => new TestingDependentSerializer(), BsonSerializerOutputKind.Object)),
         };
     }
 

@@ -140,7 +140,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationBase\RegisteredContractResolver.cs" />
     <Compile Include="SerializationConfiguration\TypeToRegister\JsonConverterBuilder.cs" />
-    <Compile Include="SerializationConfiguration\JsonConverterOutputKind.cs" />
+    <Compile Include="Enums\JsonConverterOutputKind.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationType.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationExtensions.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationType{T}.cs" />

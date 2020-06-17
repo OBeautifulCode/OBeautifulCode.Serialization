@@ -17,7 +17,7 @@ namespace OBeautifulCode.Serialization.Bson
         /// <inheritdoc />
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new[]
         {
-            typeof(Color).ToTypeToRegisterForBson(MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new ObcBsonColorSerializer()),
+            typeof(Color).ToTypeToRegisterForBson(MemberTypesToInclude.None, RelatedTypesToInclude.None, new BsonSerializerBuilder(() => new ObcBsonColorSerializer(), BsonSerializerOutputKind.String)),
         };
 
         /// <inheritdoc />

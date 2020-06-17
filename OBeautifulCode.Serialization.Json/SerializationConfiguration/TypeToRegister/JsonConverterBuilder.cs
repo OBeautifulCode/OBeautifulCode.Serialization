@@ -59,8 +59,13 @@ namespace OBeautifulCode.Serialization.Json
         public Func<JsonConverter> DeserializingConverterBuilderFunc { get; }
 
         /// <summary>
-        /// Gets a value that specifies the kind of the converter.
+        /// Gets the output kind of the converter.
         /// </summary>
+        /// <remarks>
+        /// If a custom converter outputs a string, then Dictionaries that are keyed on the type can be written
+        /// using a standard JSON format for dictionaries.  If, however, the converter does not output a string,
+        /// then any dictionaries keyed on the type must be written as a list of key/value pairs.
+        /// </remarks>
         public JsonConverterOutputKind OutputKind { get; }
 
         /// <summary>

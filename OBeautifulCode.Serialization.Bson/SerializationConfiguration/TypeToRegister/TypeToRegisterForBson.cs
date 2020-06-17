@@ -26,15 +26,15 @@ namespace OBeautifulCode.Serialization.Bson
         /// <param name="type">The type to register.</param>
         /// <param name="memberTypesToInclude">Specifies which member types of <paramref name="type"/> that should also be registered.</param>
         /// <param name="relatedTypesToInclude">Specifies which types related to <paramref name="type"/> that should also be registered.</param>
-        /// <param name="serializerBuilderFunc">A func that builds the <see cref="IBsonSerializer"/>.</param>
+        /// <param name="bsonSerializerBuilder">Builds an<see cref="IBsonSerializer"/>.</param>
         /// <param name="propertyNameWhitelist">The names of the properties to constrain the registration to.</param>
         public TypeToRegisterForBson(
             Type type,
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude,
-            Func<IBsonSerializer> serializerBuilderFunc,
+            BsonSerializerBuilder bsonSerializerBuilder,
             IReadOnlyCollection<string> propertyNameWhitelist)
-            : this(type, type, type, memberTypesToInclude, relatedTypesToInclude, serializerBuilderFunc, propertyNameWhitelist)
+            : this(type, type, type, memberTypesToInclude, relatedTypesToInclude, bsonSerializerBuilder, propertyNameWhitelist)
         {
         }
 
@@ -46,7 +46,7 @@ namespace OBeautifulCode.Serialization.Bson
         /// <param name="directOriginType">The type whose processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> directly resulted in the creation of this <see cref="TypeToRegisterForBson"/>.</param>
         /// <param name="memberTypesToInclude">Specifies which member types of <paramref name="type"/> that should also be registered.</param>
         /// <param name="relatedTypesToInclude">Specifies which types related to <paramref name="type"/> that should also be registered.</param>
-        /// <param name="serializerBuilderFunc">A func that builds the <see cref="IBsonSerializer"/>.</param>
+        /// <param name="bsonSerializerBuilder">Builds an <see cref="IBsonSerializer"/>.</param>
         /// <param name="propertyNameWhitelist">The names of the properties to constrain the registration to.</param>
         public TypeToRegisterForBson(
             Type type,
@@ -54,7 +54,7 @@ namespace OBeautifulCode.Serialization.Bson
             Type directOriginType,
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude,
-            Func<IBsonSerializer> serializerBuilderFunc,
+            BsonSerializerBuilder bsonSerializerBuilder,
             IReadOnlyCollection<string> propertyNameWhitelist)
             : base(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude)
         {
@@ -62,21 +62,21 @@ namespace OBeautifulCode.Serialization.Bson
             new { recursiveOriginType }.AsArg().Must().NotBeNull();
             new { directOriginType }.AsArg().Must().NotBeNull();
 
-            if ((serializerBuilderFunc != null) && (propertyNameWhitelist != null))
+            if ((bsonSerializerBuilder != null) && (propertyNameWhitelist != null))
             {
-                throw new ArgumentException(Invariant($"{nameof(serializerBuilderFunc)} and {nameof(propertyNameWhitelist)} cannot both be specified."));
+                throw new ArgumentException(Invariant($"{nameof(bsonSerializerBuilder)} and {nameof(propertyNameWhitelist)} cannot both be specified."));
             }
 
-            if (serializerBuilderFunc != null)
+            if (bsonSerializerBuilder != null)
             {
                 if (memberTypesToInclude != MemberTypesToInclude.None)
                 {
-                    throw new ArgumentException(Invariant($"{nameof(serializerBuilderFunc)} is specified, but {nameof(Serialization.MemberTypesToInclude)} is not {MemberTypesToInclude.None}."));
+                    throw new ArgumentException(Invariant($"{nameof(bsonSerializerBuilder)} is specified, but {nameof(Serialization.MemberTypesToInclude)} is not {MemberTypesToInclude.None}."));
                 }
 
                 if (type.IsGenericTypeDefinition)
                 {
-                    throw new NotSupportedException(Invariant($"{nameof(serializerBuilderFunc)} is specified, but underlying type to register is an open generic."));
+                    throw new NotSupportedException(Invariant($"{nameof(bsonSerializerBuilder)} is specified, but underlying type to register is an open generic."));
                 }
             }
 
@@ -100,14 +100,14 @@ namespace OBeautifulCode.Serialization.Bson
                 }
             }
 
-            this.SerializerBuilderFunc = serializerBuilderFunc;
+            this.BsonSerializerBuilder = bsonSerializerBuilder;
             this.PropertyNameWhitelist = propertyNameWhitelist;
         }
 
         /// <summary>
-        /// Gets a func that builds the <see cref="IBsonSerializer"/>.
+        /// Gets an object that builds an <see cref="IBsonSerializer"/>.
         /// </summary>
-        public Func<IBsonSerializer> SerializerBuilderFunc { get; }
+        public BsonSerializerBuilder BsonSerializerBuilder { get; }
 
         /// <summary>
         /// Gets the names of the properties to constrain the registration to.
@@ -118,7 +118,7 @@ namespace OBeautifulCode.Serialization.Bson
         public override TypeToRegister CreateSpawnedTypeToRegister(
             Type type)
         {
-            var result = new TypeToRegisterForBson(type, this.RecursiveOriginType, this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.SerializerBuilderFunc, this.PropertyNameWhitelist);
+            var result = new TypeToRegisterForBson(type, this.RecursiveOriginType, this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.BsonSerializerBuilder, this.PropertyNameWhitelist);
 
             return result;
         }

@@ -28,13 +28,13 @@ namespace OBeautifulCode.Serialization.Bson
         {
             var type = typeToRegisterForBson.Type;
 
-            var serializerBuilderFunc = typeToRegisterForBson.SerializerBuilderFunc;
+            var bsonSerializerBuilder = typeToRegisterForBson.BsonSerializerBuilder;
 
             var propertyNameWhitelist = typeToRegisterForBson.PropertyNameWhitelist;
 
             if (registeringSerializationConfigurationType == this.SerializationConfigurationType)
             {
-                if (serializerBuilderFunc == null)
+                if (bsonSerializerBuilder == null)
                 {
                     try
                     {
@@ -56,11 +56,11 @@ namespace OBeautifulCode.Serialization.Bson
                 }
                 else
                 {
-                    BsonSerializer.RegisterSerializer(type, serializerBuilderFunc());
+                    BsonSerializer.RegisterSerializer(type, bsonSerializerBuilder.BsonSerializerBuilderFunc());
                 }
             }
 
-            if (serializerBuilderFunc != null)
+            if (bsonSerializerBuilder != null)
             {
                 this.typesWithCustomSerializerOrPropertyNamesWhitelist.Add(type, null);
             }
