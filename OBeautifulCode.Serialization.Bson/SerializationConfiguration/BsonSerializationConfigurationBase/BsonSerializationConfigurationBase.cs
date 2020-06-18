@@ -22,6 +22,13 @@ namespace OBeautifulCode.Serialization.Bson
     {
         private readonly Dictionary<Type, object> typesWithCustomSerializerOrPropertyNamesWhitelist = new Dictionary<Type, object>();
 
+        private readonly Dictionary<Type, object> typesWithCustomStringSerializers = new Dictionary<Type, object>();
+
+        /// <summary>
+        /// Gets the types that have custom string serializers.
+        /// </summary>
+        public IReadOnlyDictionary<Type, object> TypesWithCustomStringSerializers => this.typesWithCustomStringSerializers;
+
         private void ProcessTypeToRegisterForBson(
             TypeToRegisterForBson typeToRegisterForBson,
             SerializationConfigurationType registeringSerializationConfigurationType)
@@ -63,6 +70,11 @@ namespace OBeautifulCode.Serialization.Bson
             if (bsonSerializerBuilder != null)
             {
                 this.typesWithCustomSerializerOrPropertyNamesWhitelist.Add(type, null);
+
+                if (bsonSerializerBuilder.OutputKind == BsonSerializerOutputKind.String)
+                {
+                    this.typesWithCustomStringSerializers.Add(type, null);
+                }
             }
 
             if (propertyNameWhitelist != null)

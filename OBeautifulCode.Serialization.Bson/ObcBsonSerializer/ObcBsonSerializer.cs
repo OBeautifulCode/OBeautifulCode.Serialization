@@ -7,10 +7,11 @@
 namespace OBeautifulCode.Serialization.Bson
 {
     using System;
-
+    using System.Runtime.Remoting.Messaging;
     using MongoDB.Bson;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
 
     /// <summary>
@@ -32,6 +33,8 @@ namespace OBeautifulCode.Serialization.Bson
         private static SerializationConfigurationBase serializationConfigurationInUseForDeserialization;
         #pragma warning restore SA1401
 
+        private readonly BsonSerializationConfigurationBase bsonSerializationConfiguration;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcBsonSerializer"/> class.
         /// </summary>
@@ -40,6 +43,8 @@ namespace OBeautifulCode.Serialization.Bson
             BsonSerializationConfigurationType bsonSerializationConfigurationType = null)
             : base(bsonSerializationConfigurationType ?? typeof(NullBsonSerializationConfiguration).ToBsonSerializationConfigurationType())
         {
+            this.bsonSerializationConfiguration = (BsonSerializationConfigurationBase)this.SerializationConfiguration;
+
             this.SerializerRepresentation = new SerializerRepresentation(SerializationKind.Bson, bsonSerializationConfigurationType?.ConcreteSerializationConfigurationDerivativeType.ToRepresentation());
         }
 
@@ -66,6 +71,8 @@ namespace OBeautifulCode.Serialization.Bson
         public override byte[] SerializeToBytes(
             object objectToSerialize)
         {
+            objectToSerialize = this.WrapRootObjectThatSerializesToStringIfAppropriate(objectToSerialize);
+
             var objectType = objectToSerialize?.GetType();
 
             this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Serialize, objectToSerialize);
@@ -76,40 +83,11 @@ namespace OBeautifulCode.Serialization.Bson
         }
 
         /// <inheritdoc />
-        public override T Deserialize<T>(
-            byte[] serializedBytes)
-        {
-            var objectType = typeof(T);
-
-            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Deserialize, null);
-
-            var result = serializedBytes == null
-                ? default
-                : this.DeserializeSettingSerializationConfigurationInUse(serializedBytes.Deserialize<T>);
-
-            return result;
-        }
-
-        /// <inheritdoc />
-        public override object Deserialize(
-            byte[] serializedBytes,
-            Type type)
-        {
-            new { type }.AsArg().Must().NotBeNull();
-
-            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
-
-            var result = serializedBytes == null
-                ? null
-                : this.DeserializeSettingSerializationConfigurationInUse(() => serializedBytes.Deserialize(type));
-
-            return result;
-        }
-
-        /// <inheritdoc />
         public override string SerializeToString(
             object objectToSerialize)
         {
+            objectToSerialize = this.WrapRootObjectThatSerializesToStringIfAppropriate(objectToSerialize);
+
             var objectType = objectToSerialize?.GetType();
 
             this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Serialize, objectToSerialize);
@@ -132,24 +110,38 @@ namespace OBeautifulCode.Serialization.Bson
 
         /// <inheritdoc />
         public override T Deserialize<T>(
+            byte[] serializedBytes)
+        {
+            var result = (T)this.Deserialize(serializedBytes, typeof(T));
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override object Deserialize(
+            byte[] serializedBytes,
+            Type type)
+        {
+            new { type }.AsArg().Must().NotBeNull();
+
+            type = this.GetRootObjectThatSerializesToStringWrapperTypeIfAppropriate(type);
+
+            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
+
+            var result = serializedBytes == null
+                ? null
+                : this.DeserializeSettingSerializationConfigurationInUse(() => serializedBytes.Deserialize(type));
+
+            result = UnwrapRootObjectIfAppropriate(result);
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override T Deserialize<T>(
             string serializedString)
         {
-            var objectType = typeof(T);
-
-            this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Deserialize, null);
-
-            T result;
-
-            if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
-            {
-                result = default;
-            }
-            else
-            {
-                var document = serializedString.ToBsonDocument();
-
-                result = this.DeserializeSettingSerializationConfigurationInUse(() => document.DeserializeFromDocument<T>());
-            }
+            var result = (T)this.Deserialize(serializedString, typeof(T));
 
             return result;
         }
@@ -160,6 +152,8 @@ namespace OBeautifulCode.Serialization.Bson
             Type type)
         {
             new { type }.AsArg().Must().NotBeNull();
+
+            type = this.GetRootObjectThatSerializesToStringWrapperTypeIfAppropriate(type);
 
             this.InternalBsonThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
 
@@ -174,6 +168,33 @@ namespace OBeautifulCode.Serialization.Bson
                 var document = serializedString.ToBsonDocument();
 
                 result = this.DeserializeSettingSerializationConfigurationInUse(() => document.DeserializeFromDocument(type));
+
+                result = UnwrapRootObjectIfAppropriate(result);
+            }
+
+            return result;
+        }
+
+        private static Type GetRootObjectThatSerializesToStringWrapperType(
+            Type objectType)
+        {
+            var result = typeof(RootObjectThatSerializesToStringWrapper<>).MakeGenericType(objectType);
+
+            return result;
+        }
+
+        private static object UnwrapRootObjectIfAppropriate(
+            object deserializedObject)
+        {
+            object result;
+
+            if (deserializedObject is IWrapRootObject rootObjectWrapper)
+            {
+                result = rootObjectWrapper.UntypedRootObject;
+            }
+            else
+            {
+                result = deserializedObject;
             }
 
             return result;
@@ -184,11 +205,6 @@ namespace OBeautifulCode.Serialization.Bson
             SerializationDirection serializationDirection,
             object objectToSerialize)
         {
-            if (objectType == typeof(string))
-            {
-                throw new NotSupportedException("String is not supported as a root type by the underlying BSON Serializer.");
-            }
-
             this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(objectType, serializationDirection, objectToSerialize);
         }
 
@@ -207,6 +223,53 @@ namespace OBeautifulCode.Serialization.Bson
             {
                 serializationConfigurationInUseForDeserialization = null;
             }
+        }
+
+        private object WrapRootObjectThatSerializesToStringIfAppropriate(
+            object objectToSerialize)
+        {
+            object result;
+
+            if (objectToSerialize == null)
+            {
+                // ReSharper disable once ExpressionIsAlwaysNull
+                result = objectToSerialize;
+            }
+            else
+            {
+                var objectType = objectToSerialize.GetType();
+
+                if (this.IsTypeThatSerializesToString(objectType))
+                {
+                    var wrapperType = GetRootObjectThatSerializesToStringWrapperType(objectType);
+
+                    result = wrapperType.Construct(objectToSerialize);
+                }
+                else
+                {
+                    result = objectToSerialize;
+                }
+            }
+
+            return result;
+        }
+
+        private Type GetRootObjectThatSerializesToStringWrapperTypeIfAppropriate(
+            Type objectType)
+        {
+            var result = this.IsTypeThatSerializesToString(objectType)
+                ? GetRootObjectThatSerializesToStringWrapperType(objectType)
+                : objectType;
+
+            return result;
+        }
+
+        private bool IsTypeThatSerializesToString(
+            Type objectType)
+        {
+            var result = (objectType == typeof(string)) || this.bsonSerializationConfiguration.TypesWithCustomStringSerializers.ContainsKey(objectType);
+
+            return result;
         }
     }
 }

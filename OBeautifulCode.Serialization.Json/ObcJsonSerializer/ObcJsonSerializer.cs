@@ -27,7 +27,7 @@ namespace OBeautifulCode.Serialization.Json
 
         private readonly JsonSerializerSettings anonymousWriteSerializationSettings;
 
-        private readonly JsonSerializationConfigurationBase jsonConfiguration;
+        private readonly JsonSerializationConfigurationBase jsonSerializationConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcJsonSerializer"/> class.
@@ -37,11 +37,11 @@ namespace OBeautifulCode.Serialization.Json
             JsonSerializationConfigurationType jsonSerializationConfigurationType = null)
             : base(jsonSerializationConfigurationType ?? typeof(NullJsonSerializationConfiguration).ToJsonSerializationConfigurationType())
         {
-            this.jsonConfiguration = (JsonSerializationConfigurationBase)this.SerializationConfiguration;
+            this.jsonSerializationConfiguration = (JsonSerializationConfigurationBase)this.SerializationConfiguration;
 
-            new { this.jsonConfiguration.JsonFormattingKind }.AsArg().Must().NotBeEqualTo(JsonFormattingKind.Invalid);
+            new { this.jsonSerializationConfiguration.JsonFormattingKind }.AsArg().Must().NotBeEqualTo(JsonFormattingKind.Invalid);
 
-            this.anonymousWriteSerializationSettings = this.jsonConfiguration.BuildAnonymousJsonSerializerSettings(SerializationDirection.Serialize, this.jsonConfiguration.JsonFormattingKind);
+            this.anonymousWriteSerializationSettings = this.jsonSerializationConfiguration.BuildAnonymousJsonSerializerSettings(SerializationDirection.Serialize, this.jsonSerializationConfiguration.JsonFormattingKind);
 
             this.SerializerRepresentation = new SerializerRepresentation(SerializationKind.Json, jsonSerializationConfigurationType?.ConcreteSerializationConfigurationDerivativeType.ToRepresentation());
         }
@@ -127,11 +127,11 @@ namespace OBeautifulCode.Serialization.Json
 
             var jsonSerializerSettings = (objectToSerialize != null) && objectType.IsClosedAnonymousType()
                 ? this.anonymousWriteSerializationSettings
-                : this.jsonConfiguration.BuildJsonSerializerSettings(SerializationDirection.Serialize, this.jsonConfiguration);
+                : this.jsonSerializationConfiguration.BuildJsonSerializerSettings(SerializationDirection.Serialize, this.jsonSerializationConfiguration);
 
             var result = JsonConvert.SerializeObject(objectToSerialize, jsonSerializerSettings);
 
-            if (this.jsonConfiguration.JsonFormattingKind == JsonFormattingKind.Compact)
+            if (this.jsonSerializationConfiguration.JsonFormattingKind == JsonFormattingKind.Compact)
             {
                 result = result.Replace(Environment.NewLine, string.Empty);
             }
@@ -147,7 +147,7 @@ namespace OBeautifulCode.Serialization.Json
 
             this.InternalJsonThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Deserialize, null);
 
-            var jsonSerializerSettings = this.jsonConfiguration.BuildJsonSerializerSettings(SerializationDirection.Deserialize, this.jsonConfiguration);
+            var jsonSerializerSettings = this.jsonSerializationConfiguration.BuildJsonSerializerSettings(SerializationDirection.Deserialize, this.jsonSerializationConfiguration);
 
             var result = JsonConvert.DeserializeObject<T>(serializedString, jsonSerializerSettings);
 
@@ -173,7 +173,7 @@ namespace OBeautifulCode.Serialization.Json
             }
             else
             {
-                var jsonSerializerSettings = this.jsonConfiguration.BuildJsonSerializerSettings(SerializationDirection.Deserialize, this.jsonConfiguration);
+                var jsonSerializerSettings = this.jsonSerializationConfiguration.BuildJsonSerializerSettings(SerializationDirection.Deserialize, this.jsonSerializationConfiguration);
 
                 result = JsonConvert.DeserializeObject(serializedString, type, jsonSerializerSettings);
             }

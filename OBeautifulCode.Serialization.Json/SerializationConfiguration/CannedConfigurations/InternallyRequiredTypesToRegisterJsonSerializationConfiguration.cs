@@ -24,6 +24,6 @@ namespace OBeautifulCode.Serialization.Json
         protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => InternallyRequiredTypes.Select(_ => _.ToTypeToRegisterForJson()).ToList();
 
         /// <inheritdoc />
-        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => InternallyRequiredTypes.Select(_ => _.Namespace).Distinct().ToList();
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => this.TypesToRegisterForJson.Select(_ => _.Type.Namespace).Distinct().ToList();
     }
 }

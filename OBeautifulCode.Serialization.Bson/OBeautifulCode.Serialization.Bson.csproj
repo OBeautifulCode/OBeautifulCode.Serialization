@@ -108,6 +108,8 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="Interfaces\IWrapRootObject.cs" />
+    <Compile Include="Models\RootObjectThatSerializesToStringWrapper.cs" />
     <Compile Include="ObcBsonSerializer\ObcBsonSerializer{TBsonSerializationConfiguration}.cs" />
     <Compile Include="SerializationConfiguration\BsonSerializationConfigurationBase\BsonSerializationConfigurationBase.Static.cs" />
     <Compile Include="SerializationConfiguration\BsonSerializationConfigurationBase\BsonSerializationConfigurationBase.Override.cs" />
