@@ -32,7 +32,9 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
                 }
                 else if (format == SerializationFormat.Binary)
                 {
-                    serialized.Should().Be(Convert.ToBase64String(SerializationConfigurationBase.NullSerializedStringValue.ToBytes(Encoding.UTF8)));
+                    var expectedPayload = Convert.ToBase64String(SerializationConfigurationBase.NullSerializedStringValue.ToBytes(Encoding.UTF8));
+
+                    serialized.Should().Be(expectedPayload);
                 }
                 else
                 {

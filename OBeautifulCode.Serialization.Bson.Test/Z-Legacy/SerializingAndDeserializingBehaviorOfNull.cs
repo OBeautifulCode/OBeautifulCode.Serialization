@@ -19,6 +19,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
         [Fact]
         public static void BsonCanSerializeNull()
         {
+            // Arrange
             Serialization.Test.SerializingAndDeserializingBehaviorOfNull.NullableObject expected = null;
 
             void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, Serialization.Test.SerializingAndDeserializingBehaviorOfNull.NullableObject deserialized)
@@ -39,14 +40,14 @@ namespace OBeautifulCode.Serialization.Bson.Test
                 deserialized.Should().BeNull();
             }
 
-            // Act
-            var exception1 = Record.Exception(() => SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaBsonWithCallbackVerification(null, formats: new[] { SerializationFormat.String }));
-            var exception2 = Record.Exception(() => SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaBsonWithCallbackVerification(null, formats: new[] { SerializationFormat.Binary }));
+            void ThrowIfStringsDiffer(string serialized, SerializationFormat format, string deserialized)
+            {
+                deserialized.Should().Be(SerializationConfigurationBase.NullSerializedStringValue);
+            }
 
-            // Assert
+            // Act, Assert
             expected.RoundtripSerializeViaBsonWithCallbackVerification(ThrowIfObjectsDiffer);
-            exception1.Should().BeOfType<NotSupportedException>();
-            exception2.Should().BeOfType<NotSupportedException>();
+            SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaBsonWithCallbackVerification(ThrowIfStringsDiffer);
         }
     }
 }
