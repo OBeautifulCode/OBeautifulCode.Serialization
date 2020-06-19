@@ -239,6 +239,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
         }
 
         [Serializable]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class ModelObjectThatSerializesToString : IEquatable<ModelObjectThatSerializesToString>
         {
             public ModelObjectThatSerializesToString(
@@ -269,9 +270,10 @@ namespace OBeautifulCode.Serialization.Bson.Test
 
             public override bool Equals(object obj) => this == (obj as ModelObjectThatSerializesToString);
 
+            [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = ObcSuppressBecause.CA1065_DoNotRaiseExceptionsInUnexpectedLocations_ThrowNotImplementedExceptionWhenForcedToSpecifyMemberThatWillNeverBeUsedInTesting)]
             public override int GetHashCode()
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
         }
 
