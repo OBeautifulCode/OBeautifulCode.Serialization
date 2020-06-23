@@ -118,6 +118,12 @@ namespace OBeautifulCode.Serialization.Test
                 deserialized.ReadOnlyDictionaryNullableDateTime.Should().Equal(expected.ReadOnlyDictionaryNullableDateTime);
                 deserialized.IReadOnlyDictionaryNullableDateTime.Should().Equal(expected.IReadOnlyDictionaryNullableDateTime);
                 deserialized.ConcurrentDictionaryNullableDateTime.Should().Equal(expected.ConcurrentDictionaryNullableDateTime);
+
+                deserialized.DictionaryDateTimeDateTime.Should().Equal(expected.DictionaryDateTimeDateTime);
+                deserialized.IDictionaryDateTimeDateTime.Should().Equal(expected.IDictionaryDateTimeDateTime);
+                deserialized.ReadOnlyDictionaryDateTimeDateTime.Should().Equal(expected.ReadOnlyDictionaryDateTimeDateTime);
+                deserialized.IReadOnlyDictionaryDateTimeDateTime.Should().Equal(expected.IReadOnlyDictionaryDateTimeDateTime);
+                deserialized.ConcurrentDictionaryDateTimeDateTime.Should().Equal(expected.ConcurrentDictionaryDateTimeDateTime);
             }
 
             // Act & Assert
@@ -274,6 +280,12 @@ namespace OBeautifulCode.Serialization.Test
                 deserialized.ReadOnlyDictionaryNullableDateTime.Should().BeNull();
                 deserialized.IReadOnlyDictionaryNullableDateTime.Should().BeNull();
                 deserialized.ConcurrentDictionaryNullableDateTime.Should().BeNull();
+
+                deserialized.DictionaryDateTimeDateTime.Should().BeNull();
+                deserialized.IDictionaryDateTimeDateTime.Should().BeNull();
+                deserialized.ReadOnlyDictionaryDateTimeDateTime.Should().BeNull();
+                deserialized.IReadOnlyDictionaryDateTimeDateTime.Should().BeNull();
+                deserialized.ConcurrentDictionaryDateTimeDateTime.Should().BeNull();
             }
 
             // Act & Assert
@@ -480,6 +492,25 @@ namespace OBeautifulCode.Serialization.Test
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
         public ConcurrentDictionary<DateTime?, int> ConcurrentDictionaryNullableDateTime { get; set; }
+
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
+        public Dictionary<DateTime, DateTime> DictionaryDateTimeDateTime { get; set; }
+
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
+        public IDictionary<DateTime, DateTime> IDictionaryDateTimeDateTime { get; set; }
+
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
+        public ReadOnlyDictionary<DateTime, DateTime> ReadOnlyDictionaryDateTimeDateTime { get; set; }
+
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
+        public IReadOnlyDictionary<DateTime, DateTime> IReadOnlyDictionaryDateTimeDateTime { get; set; }
+
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Poco", Justification = "Name/spelling is correct.")]
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "Just need a type to test.")]
+        public ConcurrentDictionary<DateTime, DateTime> ConcurrentDictionaryDateTimeDateTime { get; set; }
     }
 
     [Serializable]

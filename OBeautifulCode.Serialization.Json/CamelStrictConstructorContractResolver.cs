@@ -55,7 +55,7 @@ namespace OBeautifulCode.Serialization.Json
         {
             new { getRegisteredTypesFunc }.AsArg().Must().NotBeNull();
 
-            // this will cause dictionary keys to be lowercased if set to true (or you can set to true and set a dictionary key resolver.
+            // this will cause dictionary keys to be lowercased if set to true (or you can set to true and set a dictionary key resolver).
             this.NamingStrategy.ProcessDictionaryKeys = false;
 
             this.getRegisteredTypesFunc = getRegisteredTypesFunc;
@@ -100,49 +100,57 @@ namespace OBeautifulCode.Serialization.Json
             var result = base.CreateObjectContract(objectType);
 
             // only apply the heuristic on registered types
-            if (this.getRegisteredTypesFunc().ContainsKey(objectType))
+            var registeredTypeToRegistrationDetailsMap = this.getRegisteredTypesFunc();
+
+            if (registeredTypeToRegistrationDetailsMap.TryGetValue(objectType, out RegistrationDetails registrationDetails))
             {
-                var createdType = Nullable.GetUnderlyingType(objectType) ?? objectType;
+                // if a converter is registered then we DON'T want to augment the contract
+                var typeToRegisterForJson = (TypeToRegisterForJson)registrationDetails.TypeToRegister;
 
-                var isInstantiable = (!createdType.IsInterface) && (!createdType.IsAbstract);
-
-                // this is somewhat reverse engineered from DefaultContractResolver.CreateObjectContract
-                // the object must be instantiable, and Newtonsoft did not find a constructor attributed with [JsonConstructor] (OverrideConstructor)
-                // nor did it find a single parameterized constructor (ParametrizedConstructor)
-                #pragma warning disable 618
-                if (isInstantiable && (result.OverrideConstructor == null) && (result.ParametrizedConstructor == null))
-                #pragma warning restore 618
+                if (typeToRegisterForJson.JsonConverterBuilder == null)
                 {
-                    var constructors = objectType.GetConstructors(BindingFlags.Instance | BindingFlags.Public).ToList();
+                    var createdType = Nullable.GetUnderlyingType(objectType) ?? objectType;
 
-                    // if constructors.Count == 1 then it must be the default constructor because we ruled-out
-                    // a single parameterized constructor.  we don't think constructors.Count == 0 is possible.
-                    if (constructors.Count > 1)
+                    var isInstantiable = (!createdType.IsInterface) && (!createdType.IsAbstract);
+
+                    // this is somewhat reverse engineered from DefaultContractResolver.CreateObjectContract
+                    // the object must be instantiable, and Newtonsoft did not find a constructor attributed with [JsonConstructor] (OverrideConstructor)
+                    // nor did it find a single parameterized constructor (ParametrizedConstructor)
+                    #pragma warning disable 618
+                    if (isInstantiable && (result.OverrideConstructor == null) && (result.ParametrizedConstructor == null))
+                    #pragma warning restore 618
                     {
-                        var maxParameterCount = constructors.Max(_ => _.GetParameters().Length);
+                        var constructors = objectType.GetConstructors(BindingFlags.Instance | BindingFlags.Public).ToList();
 
-                        var constructorsWithMaxParameterCount = constructors.Where(_ => _.GetParameters().Length == maxParameterCount).ToList();
-
-                        if (constructorsWithMaxParameterCount.Count > 1)
+                        // if constructors.Count == 1 then it must be the default constructor because we ruled-out
+                        // a single parameterized constructor.  we don't think constructors.Count == 0 is possible.
+                        if (constructors.Count > 1)
                         {
-                            throw new JsonSerializationException(Invariant($"Cannot deserialize registered type {objectType.ToStringReadable()} because it has multiple candidate constructors to use.  Looking for a single constructor with the maximum number of parameters, however found {constructorsWithMaxParameterCount.Count} constructors with {maxParameterCount} parameters."));
+                            var maxParameterCount = constructors.Max(_ => _.GetParameters().Length);
+
+                            var constructorsWithMaxParameterCount = constructors.Where(_ => _.GetParameters().Length == maxParameterCount).ToList();
+
+                            if (constructorsWithMaxParameterCount.Count > 1)
+                            {
+                                throw new JsonSerializationException(Invariant($"Cannot deserialize registered type {objectType.ToStringReadable()} because it has multiple candidate constructors to use.  Looking for a single constructor with the maximum number of parameters, however found {constructorsWithMaxParameterCount.Count} constructors with {maxParameterCount} parameters."));
+                            }
+
+                            var parameterizedConstructor = constructorsWithMaxParameterCount.Single();
+
+                            #pragma warning disable 618
+                            result.ParametrizedConstructor = parameterizedConstructor;
+                            #pragma warning restore 618
+
+                            // CreatorParameters is empty regardless of whether one of the constructors is the default constructor
+                            // We do not need to scope the properties down to just the constructor properties because CreateConstructorParameters will handle that.
+                            result.CreatorParameters.Clear();
+                            result.CreatorParameters.AddRange(this.CreateConstructorParameters(parameterizedConstructor, result.Properties));
+
+                            // DefaultCreator is != null when an object has a default constructor,
+                            // but also has one or more parameterized constructors, so we need to clear it out here
+                            // so that it doesn't get used.
+                            result.DefaultCreator = null;
                         }
-
-                        var parameterizedConstructor = constructorsWithMaxParameterCount.Single();
-
-                        #pragma warning disable 618
-                        result.ParametrizedConstructor = parameterizedConstructor;
-                        #pragma warning restore 618
-
-                        // CreatorParameters is empty regardless of whether one of the constructors is the default constructor
-                        // We do not need to scope the properties down to just the constructor properties because CreateConstructorParameters will handle that.
-                        result.CreatorParameters.Clear();
-                        result.CreatorParameters.AddRange(this.CreateConstructorParameters(parameterizedConstructor, result.Properties));
-
-                        // DefaultCreator is != null when an object has a default constructor,
-                        // but also has one or more parameterized constructors, so we need to clear it out here
-                        // so that it doesn't get used.
-                        result.DefaultCreator = null;
                     }
                 }
             }

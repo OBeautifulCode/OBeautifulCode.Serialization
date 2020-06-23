@@ -17,37 +17,29 @@ namespace OBeautifulCode.Serialization.Json
     using OBeautifulCode.Type.Recipes;
 
     /// <summary>
-    /// Custom dictionary converter to do the right thing.
-    /// Supports:
-    /// - <see cref="IDictionary{TKey, TValue}"/>
-    /// - <see cref="Dictionary{TKey, TValue}"/>
-    /// - <see cref="IReadOnlyDictionary{TKey, TValue}" />
-    /// - <see cref="ReadOnlyDictionary{TKey, TValue}" />
-    /// - <see cref="ConcurrentDictionary{TKey, TValue}" />.
+    /// Custom dictionary converter to do the right thing for System Dictionary types.
+    /// See: <see cref="TypeExtensions.IsClosedSystemDictionaryType"/> for supported types.
     /// </summary>
     internal abstract class DictionaryJsonConverterBase : JsonConverter
     {
-#pragma warning disable SA1401 // Fields should be private
-
-        /// <summary>
-        /// Types that are serialized as strings in JSON.
-        /// </summary>
-        protected readonly IReadOnlyCollection<Type> typesThatSerializeToString;
-
-#pragma warning restore SA1401 // Fields should be private
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DictionaryJsonConverterBase"/> class.
         /// </summary>
-        /// <param name="typesThatSerializeToString">Types that convert to a string when serialized.</param>
+        /// <param name="typesThatSerializeToString">The types that are serialized as strings.</param>
         protected DictionaryJsonConverterBase(
             IReadOnlyCollection<Type> typesThatSerializeToString)
         {
-            this.typesThatSerializeToString = typesThatSerializeToString ?? new Type[0];
+            this.TypesThatSerializeToString = typesThatSerializeToString ?? new Type[0];
         }
 
+        /// <summary>
+        /// Gets the types that are serialized as strings.
+        /// </summary>
+        protected IReadOnlyCollection<Type> TypesThatSerializeToString { get; }
+
         /// <inheritdoc />
-        public override bool CanConvert(Type objectType)
+        public override bool CanConvert(
+            Type objectType)
         {
             bool result;
 
@@ -64,7 +56,7 @@ namespace OBeautifulCode.Serialization.Json
                 {
                     var keyType = objectType.GetClosedSystemDictionaryKeyType();
 
-                    result = this.ShouldConsiderKeyType(keyType);
+                    result = this.ShouldHandleKeyType(keyType);
                 }
                 else
                 {
@@ -116,13 +108,13 @@ namespace OBeautifulCode.Serialization.Json
         }
 
         /// <summary>
-        /// Should consider this <see cref="Type"/> of key for this converter.
+        /// Determines if this converter should handle the specified type of dictionary key.
         /// </summary>
-        /// <param name="keyType"><see cref="Type"/> of key.</param>
+        /// <param name="keyType">The type of the dictionary key.</param>
         /// <returns>
-        /// A value indicating whether or not to consider the <see cref="Type"/> of key.
+        /// A value indicating whether or not this converter should handle the specified type of dictionary key.
         /// </returns>
-        protected abstract bool ShouldConsiderKeyType(
+        protected abstract bool ShouldHandleKeyType(
             Type keyType);
     }
 }

@@ -8,9 +8,7 @@ namespace OBeautifulCode.Serialization.Json
 {
     using System;
     using System.Collections;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
 
     using Newtonsoft.Json;
@@ -19,13 +17,8 @@ namespace OBeautifulCode.Serialization.Json
     using OBeautifulCode.Reflection.Recipes;
 
     /// <summary>
-    /// Custom dictionary converter to do the right thing.
-    /// Supports:
-    /// - <see cref="IDictionary{TKey, TValue}"/>
-    /// - <see cref="Dictionary{TKey, TValue}"/>
-    /// - <see cref="IReadOnlyDictionary{TKey, TValue}" />
-    /// - <see cref="ReadOnlyDictionary{TKey, TValue}" />
-    /// - <see cref="ConcurrentDictionary{TKey, TValue}" />.
+    /// Serializes a dictionary to an array of key/value pairs.
+    /// This converter is used when the keys do not serialize as strings.
     /// </summary>
     internal class KeyValueArrayDictionaryJsonConverter : DictionaryJsonConverterBase
     {
@@ -118,6 +111,7 @@ namespace OBeautifulCode.Serialization.Json
                 var key = element.GetPropertyValue<object>(nameof(KeyValuePair<object, object>.Key));
                 var value = element.GetPropertyValue<object>(nameof(KeyValuePair<object, object>.Value));
 
+                // ReSharper disable once PossibleNullReferenceException
                 wrappedDictionaryAddMethod.Invoke(wrappedDictionary, new[] { key, value });
             }
 
@@ -127,15 +121,13 @@ namespace OBeautifulCode.Serialization.Json
         }
 
         /// <inheritdoc />
-        protected override bool ShouldConsiderKeyType(
+        protected override bool ShouldHandleKeyType(
             Type keyType)
         {
-            // see comment in DictionaryJsonConverter about DateTime.
             var result =
-                ((keyType == typeof(DateTime)) || (keyType == typeof(DateTime?))) ||
-                    ((keyType != typeof(string)) &&
-                     (!keyType.IsValueType) &&
-                     (!this.typesThatSerializeToString.Contains(keyType)));
+                (keyType != typeof(string)) &&
+                (!keyType.IsValueType) &&
+                (!this.TypesThatSerializeToString.Contains(keyType));
 
             return result;
         }

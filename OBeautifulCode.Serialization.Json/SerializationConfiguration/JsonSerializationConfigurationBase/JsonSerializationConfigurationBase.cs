@@ -146,20 +146,20 @@ namespace OBeautifulCode.Serialization.Json
             JsonFormattingKind formattingKind)
         {
             // Newtonsoft uses the converters in the order they are specified.
-            // So, it will first try the DateTimeJsonConverter, then the StringEnumConverter, and so on.
-            var result = new JsonConverter[0].Concat(
+            // So, it will first try the StringEnumConverter, then the InheritedTypeWriterJsonConverter, and so on.
+            var result = new JsonConverter[0]
+                .Concat(
                     new JsonConverter[]
                     {
-                        new DateTimeJsonConverter(),
                         new StringEnumConverter { CamelCaseText = true },
-                        new SecureStringJsonConverter(),
-                    }).Concat(formattingKind == JsonFormattingKind.Minimal
+                    })
+                .Concat(formattingKind == JsonFormattingKind.Minimal
                     ? new JsonConverter[0]
                     : new[] { new InheritedTypeWriterJsonConverter(() => this.hierarchyParticipatingTypes) })
                 .Concat(
                     new JsonConverter[]
                     {
-                        // new DictionaryJsonConverter(this.TypesWithStringConverters) - this converter cannot write (CanWrite => false)
+                        new StringKeysAsPropertiesDictionaryJsonConverter(this.typesWithStringConverters),
                         new KeyValueArrayDictionaryJsonConverter(this.typesWithStringConverters),
                     }).ToList();
 
@@ -169,17 +169,17 @@ namespace OBeautifulCode.Serialization.Json
         private IList<JsonConverter> GetDefaultDeserializingConverters()
         {
             // Newtonsoft uses the converters in the order they are specified.
-            // So, it will first try the DateTimeJsonConverter, then the StringEnumConverter, and so on.
-            var result = new JsonConverter[0].Concat(
-                new JsonConverter[]
-                {
-                    new DateTimeJsonConverter(),
-                    new StringEnumConverter { CamelCaseText = true },
-                    new SecureStringJsonConverter(),
-                    new InheritedTypeReaderJsonConverter(() => this.hierarchyParticipatingTypes, this),
-                    new DictionaryJsonConverter(this.typesWithStringConverters),
-                    new KeyValueArrayDictionaryJsonConverter(this.typesWithStringConverters),
-                }).ToList();
+            // So, it will first try the StringEnumConverter, then the InheritedTypeReaderJsonConverter, and so on.
+            var result = new JsonConverter[0]
+                .Concat(
+                    new JsonConverter[]
+                    {
+                        new StringEnumConverter { CamelCaseText = true },
+                        new InheritedTypeReaderJsonConverter(() => this.hierarchyParticipatingTypes, this),
+                        new StringKeysAsPropertiesDictionaryJsonConverter(this.typesWithStringConverters),
+                        new KeyValueArrayDictionaryJsonConverter(this.typesWithStringConverters),
+                    })
+                .ToList();
 
             return result;
         }

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="DictionaryJsonConverter.cs" company="OBeautifulCode">
+// <copyright file="StringKeysAsPropertiesDictionaryJsonConverter.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,39 +7,37 @@
 namespace OBeautifulCode.Serialization.Json
 {
     using System;
-    using System.Collections.Concurrent;
+    using System.Collections;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
+    using System.IO;
     using System.Linq;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
+    using OBeautifulCode.Type.Recipes;
+
+    using static System.FormattableString;
 
     /// <summary>
-    /// Custom dictionary converter to do the right thing.
-    /// Supports:
-    /// - <see cref="IDictionary{TKey, TValue}"/>
-    /// - <see cref="Dictionary{TKey, TValue}"/>
-    /// - <see cref="IReadOnlyDictionary{TKey, TValue}" />
-    /// - <see cref="ReadOnlyDictionary{TKey, TValue}" />
-    /// - <see cref="ConcurrentDictionary{TKey, TValue}" />.
+    /// Serializes a dictionary to an object whose properties are the Key/Value pairs.
+    /// The property names are the Keys serialized as strings.  The property values are
+    /// the serialized Values.
+    /// This converter is used when the keys serialize as strings.
     /// </summary>
-    internal class DictionaryJsonConverter : DictionaryJsonConverterBase
+    internal class StringKeysAsPropertiesDictionaryJsonConverter : DictionaryJsonConverterBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DictionaryJsonConverter"/> class.
+        /// Initializes a new instance of the <see cref="StringKeysAsPropertiesDictionaryJsonConverter"/> class.
         /// </summary>
         /// <param name="typesThatSerializeToString">Types that convert to a string when serialized.</param>
-        public DictionaryJsonConverter(
+        public StringKeysAsPropertiesDictionaryJsonConverter(
             IReadOnlyCollection<Type> typesThatSerializeToString)
             : base(typesThatSerializeToString)
         {
         }
-
-        /// <inheritdoc />
-        public override bool CanWrite => false;
 
         /// <inheritdoc />
         public override void WriteJson(
@@ -47,7 +45,45 @@ namespace OBeautifulCode.Serialization.Json
             object value,
             JsonSerializer serializer)
         {
-            throw new NotSupportedException();
+            var valueAsDictionary = (IDictionary)value;
+
+            var keyType = value.GetType().GetClosedDictionaryKeyType();
+
+            var objectToWrite = new JObject();
+
+            foreach (DictionaryEntry keyValuePair in valueAsDictionary)
+            {
+                string keyProperty;
+
+                using (var keyWriter = new StringWriter())
+                {
+                    var key = keyValuePair.Key;
+
+                    // Send the Key back through the front-door to get picked-up
+                    // by a registered converter or Newtonsoft if there is no registered
+                    // converter for the Key Type.
+                    serializer.Serialize(keyWriter, key, keyType);
+
+                    // The resulting string is in JSON, so it's surrounded by double quotes
+                    // (e.g. ""myKey"").  We deserialize that payload into a string here to
+                    // get the string to use for the Key.
+                    using (var keyReader = new StringReader(keyWriter.ToString()))
+                    {
+                        keyProperty = (string)serializer.Deserialize(keyReader, typeof(string));
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(keyProperty))
+                {
+                    throw new InvalidOperationException(Invariant($"Key in dictionary serializes to a null or white space string.  Key type is {keyType.ToStringReadable()}."));
+                }
+
+                var jsonProperty = new JProperty(keyProperty, keyValuePair.Value == null ? JValue.CreateNull() : JToken.FromObject(keyValuePair.Value, serializer));
+
+                objectToWrite.Add(jsonProperty);
+            }
+
+            objectToWrite.WriteTo(writer);
         }
 
         /// <inheritdoc />
@@ -78,19 +114,7 @@ namespace OBeautifulCode.Serialization.Json
 
             var wrappedDictionaryAddMethod = wrappedDictionaryType.GetMethod(nameof(Dictionary<object, object>.Add));
 
-            if (reader.TokenType == JsonToken.StartArray)
-            {
-                reader.Read();
-                if (reader.TokenType == JsonToken.EndArray)
-                {
-                    return new Dictionary<string, string>();
-                }
-                else
-                {
-                    throw new JsonSerializationException("Non-empty JSON array does not make a valid Dictionary!");
-                }
-            }
-            else if (reader.TokenType == JsonToken.Null)
+            if (reader.TokenType == JsonToken.Null)
             {
                 return null;
             }
@@ -141,6 +165,7 @@ namespace OBeautifulCode.Serialization.Json
 
                     reader.Read();
 
+                    // ReSharper disable once PossibleNullReferenceException
                     wrappedDictionaryAddMethod.Invoke(wrappedDictionary, new[] { key, value });
                 }
             }
@@ -155,21 +180,12 @@ namespace OBeautifulCode.Serialization.Json
         }
 
         /// <inheritdoc />
-        protected override bool ShouldConsiderKeyType(
+        protected override bool ShouldHandleKeyType(
             Type keyType)
         {
-            // We exclude DateTime because if not, then it gets picked-up as a Value type
-            // and activates this converter.  However, this converter doesn't support writing
-            // (see above CanWrite = false), so it falls thru the converter stack and Newtonsoft
-            // picks it up and seeing that the key is DateTime, Newtonsoft handles the serialization
-            // instead of sending the request back to the converter stack (which would then get
-            // picked-up by our own DateTime converter).  This is problematic because this converter
-            // CanWrite, and when it attempts to deserialize a DateTime, our DateTime converter
-            // throws because the format of the serialized string is not recognized.
-            var result = ((keyType != typeof(DateTime)) && (keyType != typeof(DateTime?)))
-                         &&  ((keyType == typeof(string)) ||
-                              keyType.IsValueType ||
-                              this.typesThatSerializeToString.Contains(keyType));
+            var result = (keyType == typeof(string)) ||
+                          keyType.IsValueType ||
+                          this.TypesThatSerializeToString.Contains(keyType);
 
             return result;
         }

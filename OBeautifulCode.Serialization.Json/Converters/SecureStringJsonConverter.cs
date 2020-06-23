@@ -16,7 +16,7 @@ namespace OBeautifulCode.Serialization.Json
     using OBeautifulCode.Serialization.Json.Internal;
 
     /// <summary>
-    /// Class that enables the Json serializer to construct SecureString instances.
+    /// Class that enables the Json serializer to construct <see cref="SecureString"/> instances.
     /// </summary>
     internal class SecureStringJsonConverter : JsonConverter
     {
@@ -30,7 +30,9 @@ namespace OBeautifulCode.Serialization.Json
         public override bool CanConvert(
             Type objectType)
         {
-            return objectType == typeof(SecureString);
+            var result = objectType == typeof(SecureString);
+
+            return result;
         }
 
         /// <summary>
@@ -140,7 +142,10 @@ namespace OBeautifulCode.Serialization.Json
             try
             {
                 unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(source);
-                return Marshal.PtrToStringUni(unmanagedString);
+
+                var result = Marshal.PtrToStringUni(unmanagedString);
+
+                return result;
             }
             finally
             {

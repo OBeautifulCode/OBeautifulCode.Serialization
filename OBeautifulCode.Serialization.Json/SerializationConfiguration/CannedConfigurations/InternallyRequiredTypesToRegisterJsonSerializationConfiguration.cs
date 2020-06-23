@@ -6,8 +6,10 @@
 
 namespace OBeautifulCode.Serialization.Json
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
 
     /// <summary>
     /// A default JSON serialization configuration that adds the internally required types to <see cref="TypesToRegisterForJson"/>, using default behavior for <see cref="MemberTypesToInclude"/> and <see cref="RelatedTypesToInclude"/>.
@@ -21,7 +23,15 @@ namespace OBeautifulCode.Serialization.Json
         protected override IReadOnlyCollection<JsonSerializationConfigurationType> DependentJsonSerializationConfigurationTypes => new JsonSerializationConfigurationType[0];
 
         /// <inheritdoc />
-        protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => InternallyRequiredTypes.Select(_ => _.ToTypeToRegisterForJson()).ToList();
+        protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => InternallyRequiredTypes
+            .Select(_ => _.ToTypeToRegisterForJson())
+            .Concat(new[]
+            {
+                new TypeToRegisterForJson(typeof(SecureString), MemberTypesToInclude.None, RelatedTypesToInclude.None, new JsonConverterBuilder("secure-string-converter", () => new SecureStringJsonConverter(), () => new SecureStringJsonConverter(), JsonConverterOutputKind.String)),
+                new TypeToRegisterForJson(typeof(DateTime), MemberTypesToInclude.None, RelatedTypesToInclude.None, new JsonConverterBuilder("date-time-converter", () => new DateTimeJsonConverter(), () => new DateTimeJsonConverter(), JsonConverterOutputKind.String)),
+                new TypeToRegisterForJson(typeof(DateTime?), MemberTypesToInclude.None, RelatedTypesToInclude.None, new JsonConverterBuilder("date-time-converter", () => new DateTimeJsonConverter(), () => new DateTimeJsonConverter(), JsonConverterOutputKind.String)),
+            })
+            .ToList();
 
         /// <inheritdoc />
         protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => this.TypesToRegisterForJson.Select(_ => _.Type.Namespace).Distinct().ToList();

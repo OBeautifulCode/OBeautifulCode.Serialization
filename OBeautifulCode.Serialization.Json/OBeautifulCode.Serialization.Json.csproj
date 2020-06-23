@@ -120,7 +120,7 @@
     <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\AttemptOnUnregisteredTypeJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\Delegates.cs" />
     <Compile Include="Converters\DateTimeJsonConverter.cs" />
-    <Compile Include="Converters\Dictionary\DictionaryJsonConverter.cs" />
+    <Compile Include="Converters\Dictionary\StringKeysAsPropertiesDictionaryJsonConverter.cs" />
     <Compile Include="Converters\Dictionary\DictionaryJsonConverterBase.cs" />
     <Compile Include="Converters\InheritedTypeJsonConverterBase.cs" />
     <Compile Include="Converters\InheritedTypeReaderJsonConverter.cs" />
