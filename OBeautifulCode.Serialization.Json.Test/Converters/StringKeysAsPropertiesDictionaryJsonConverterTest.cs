@@ -8,6 +8,7 @@ namespace OBeautifulCode.Serialization.Json.Test
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using FakeItEasy;
 
@@ -16,6 +17,7 @@ namespace OBeautifulCode.Serialization.Json.Test
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Serialization.Json;
+    using OBeautifulCode.Serialization.Json.Test.Internal;
     using OBeautifulCode.Serialization.Recipes;
 
     using Xunit;
@@ -178,7 +180,7 @@ namespace OBeautifulCode.Serialization.Json.Test
 
                 if (format == SerializationFormat.String)
                 {
-                    serialized.AsTest().Must().BeEqualTo("{\r\n  \"modelToStringMap\": {\r\n    \"4,-5\": null,\r\n    \"6,3\": \"\",\r\n    \"9,-9\": \"my-string\"\r\n  },\r\n  \"modelToDateTimeMap\": {\r\n    \"8,4\": \"2020-06-23T05:04:06.0000000Z\",\r\n    \"3,1\": \"2020-06-23T05:04:06.0000000\"\r\n  },\r\n  \"modelToModelMap\": {\r\n    \"2,-7\": null,\r\n    \"-8,1\": \"-1,1\"\r\n  },\r\n  \"modelToOtherModelMap\": {\r\n    \"-5,6\": null,\r\n    \"10,2\": {\r\n      \"guid\": \"00000000-0000-0000-0000-100000000000\"\r\n    }\r\n  },\r\n  \"modelToModelToOtherModelMap\": {\r\n    \"1,2\": null,\r\n    \"3,4\": {},\r\n    \"5,6\": {\r\n      \"-3,-2\": null\r\n    },\r\n    \"7,8\": {\r\n      \"-3,-2\": {\r\n        \"guid\": \"00000000-0000-0000-0000-200000000000\"\r\n      }\r\n    }\r\n  }\r\n}");
+                    serialized.AsTest().Must().BeEqualTo("{\r\n  \"modelToStringMap\": {\r\n    \"4,-5\": null,\r\n    \"6,3\": \"\",\r\n    \"9,-9\": \"my-string\"\r\n  },\r\n  \"modelToDateTimeMap\": {\r\n    \"8,4\": \"2020-06-23T05:04:06.0000000Z\",\r\n    \"3,1\": \"2020-06-23T05:04:06.0000000\"\r\n  },\r\n  \"modelToModelMap\": {\r\n    \"2,-7\": null,\r\n    \"-8,1\": \"-1,1\"\r\n  },\r\n  \"modelToOtherModelMap\": {\r\n    \"-5,6\": null,\r\n    \"10,2\": {\r\n      \"id\": \"00000000-0000-0000-0000-100000000000\"\r\n    }\r\n  },\r\n  \"modelToModelToOtherModelMap\": {\r\n    \"1,2\": null,\r\n    \"3,4\": {},\r\n    \"5,6\": {\r\n      \"-3,-2\": null\r\n    },\r\n    \"7,8\": {\r\n      \"-3,-2\": {\r\n        \"id\": \"00000000-0000-0000-0000-200000000000\"\r\n      }\r\n    }\r\n  }\r\n}");
                 }
             }
 
@@ -187,6 +189,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         }
 
         [Serializable]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class ModelWithDictionaryKeysConvertedToString : IEquatable<ModelWithDictionaryKeysConvertedToString>
         {
             public ModelWithDictionaryKeysConvertedToString(
@@ -260,15 +263,16 @@ namespace OBeautifulCode.Serialization.Json.Test
         }
 
         [Serializable]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class ModelThatDoesNotConvertToString : IEquatable<ModelThatDoesNotConvertToString>
         {
             public ModelThatDoesNotConvertToString(
-                Guid guid)
+                Guid id)
             {
-                this.Guid = guid;
+                this.Id = id;
             }
 
-            public Guid Guid { get; private set; }
+            public Guid Id { get; private set; }
 
             public static bool operator ==(ModelThatDoesNotConvertToString left, ModelThatDoesNotConvertToString right)
             {
@@ -301,17 +305,18 @@ namespace OBeautifulCode.Serialization.Json.Test
                     return false;
                 }
 
-                var result = this.Guid == other.Guid;
+                var result = this.Id == other.Id;
 
                 return result;
             }
 
             public override bool Equals(object obj) => this == (obj as ModelThatDoesNotConvertToString);
 
-            public override int GetHashCode() => HashCodeHelper.Initialize().Hash(this.Guid).Value;
+            public override int GetHashCode() => HashCodeHelper.Initialize().Hash(this.Id).Value;
         }
 
         [Serializable]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class ModelThatIsConvertedToString : IEquatable<ModelThatIsConvertedToString>
         {
             public ModelThatIsConvertedToString(

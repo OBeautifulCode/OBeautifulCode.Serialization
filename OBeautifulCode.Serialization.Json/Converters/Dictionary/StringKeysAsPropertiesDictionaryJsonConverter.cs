@@ -9,6 +9,7 @@ namespace OBeautifulCode.Serialization.Json
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
 
@@ -45,6 +46,9 @@ namespace OBeautifulCode.Serialization.Json
             object value,
             JsonSerializer serializer)
         {
+            new { value }.AsArg().Must().NotBeNull();
+            new { serializer }.AsArg().Must().NotBeNull();
+
             var valueAsDictionary = (IDictionary)value;
 
             var keyType = value.GetType().GetClosedDictionaryKeyType();
@@ -55,7 +59,7 @@ namespace OBeautifulCode.Serialization.Json
             {
                 string keyProperty;
 
-                using (var keyWriter = new StringWriter())
+                using (var keyWriter = new StringWriter(CultureInfo.InvariantCulture))
                 {
                     var key = keyValuePair.Key;
 
