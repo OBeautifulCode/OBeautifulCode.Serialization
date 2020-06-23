@@ -148,7 +148,7 @@ namespace OBeautifulCode.Serialization.Json
 
             // has a base class
             var baseType = type.BaseType;
-            if ((baseType != null) && (baseType != typeof(object)))
+            if ((baseType != null) && (baseType != typeof(object)) && (!type.IsValueType))
             {
                 return true;
             }
