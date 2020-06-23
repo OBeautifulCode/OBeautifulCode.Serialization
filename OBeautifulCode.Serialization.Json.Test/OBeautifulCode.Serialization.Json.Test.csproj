@@ -134,6 +134,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="Converters\StringKeysAsPropertiesDictionaryJsonConverterTest.cs" />
     <Compile Include="Z-Legacy\Animal.cs" />
     <Compile Include="Z-Legacy\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />
     <Compile Include="Z-Legacy\DateTimeConverterTest.cs" />
@@ -177,6 +178,7 @@
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
