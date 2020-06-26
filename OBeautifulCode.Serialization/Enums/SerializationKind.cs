@@ -42,5 +42,10 @@ namespace OBeautifulCode.Serialization
         /// Wrapper to honor protocol using provided <see cref="Func{TResult}" />'s.
         /// </summary>
         LambdaBacked,
+
+        /// <summary>
+        /// Wrapper to honor protocol using provided <see cref="IStringSerializeAndDeserialize" />.
+        /// </summary>
+        StringSerializerBacked,
     }
 }
