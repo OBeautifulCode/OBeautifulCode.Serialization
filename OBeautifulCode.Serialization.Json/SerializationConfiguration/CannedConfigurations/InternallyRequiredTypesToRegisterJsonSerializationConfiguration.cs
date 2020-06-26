@@ -19,6 +19,27 @@ namespace OBeautifulCode.Serialization.Json
     /// </remarks>
     public sealed class InternallyRequiredTypesToRegisterJsonSerializationConfiguration : JsonSerializationConfigurationBase, IIgnoreDefaultDependencies
     {
+        private static readonly IStringSerializeAndDeserialize SecureStringStringSerializer = new ObcSecureStringStringSerializer();
+
+        private static readonly IStringSerializeAndDeserialize DateTimeStringSerializer = new ObcDateTimeStringSerializer();
+
+        private static readonly IStringSerializeAndDeserialize NullableDateTimeStringSerializer = new ObcNullableDateTimeStringSerializer();
+
+        private static readonly JsonConverterBuilder SecureStringJsonConverterBuilder = new JsonConverterBuilder(
+            "secure-string-converter",
+            () => new StringSerializerBackedJsonConverter<SecureString>(SecureStringStringSerializer),
+            () => new StringSerializerBackedJsonConverter<SecureString>(SecureStringStringSerializer));
+
+        private static readonly JsonConverterBuilder DateTimeJsonConverterBuilder = new JsonConverterBuilder(
+            "date-time-converter",
+            () => new StringSerializerBackedJsonConverter<DateTime>(DateTimeStringSerializer),
+            () => new StringSerializerBackedJsonConverter<DateTime>(DateTimeStringSerializer));
+
+        private static readonly JsonConverterBuilder NullableDateTimeJsonConverterBuilder = new JsonConverterBuilder(
+            "nullable-date-time-converter",
+            () => new StringSerializerBackedJsonConverter<DateTime?>(NullableDateTimeStringSerializer),
+            () => new StringSerializerBackedJsonConverter<DateTime?>(NullableDateTimeStringSerializer));
+
         /// <inheritdoc />
         protected override IReadOnlyCollection<JsonSerializationConfigurationType> DependentJsonSerializationConfigurationTypes => new JsonSerializationConfigurationType[0];
 
@@ -27,9 +48,9 @@ namespace OBeautifulCode.Serialization.Json
             .Select(_ => _.ToTypeToRegisterForJson())
             .Concat(new[]
             {
-                new TypeToRegisterForJson(typeof(SecureString), MemberTypesToInclude.None, RelatedTypesToInclude.None, new JsonConverterBuilder("secure-string-converter", () => new SecureStringJsonConverter(), () => new SecureStringJsonConverter(), JsonConverterOutputKind.String)),
-                new TypeToRegisterForJson(typeof(DateTime), MemberTypesToInclude.None, RelatedTypesToInclude.None, new JsonConverterBuilder("date-time-converter", () => new DateTimeJsonConverter(), () => new DateTimeJsonConverter(), JsonConverterOutputKind.String)),
-                new TypeToRegisterForJson(typeof(DateTime?), MemberTypesToInclude.None, RelatedTypesToInclude.None, new JsonConverterBuilder("date-time-converter", () => new DateTimeJsonConverter(), () => new DateTimeJsonConverter(), JsonConverterOutputKind.String)),
+                typeof(SecureString).ToTypeToRegisterForJson(MemberTypesToInclude.None, RelatedTypesToInclude.None, SecureStringJsonConverterBuilder, SecureStringStringSerializer),
+                typeof(DateTime).ToTypeToRegisterForJson(MemberTypesToInclude.None, RelatedTypesToInclude.None, DateTimeJsonConverterBuilder, DateTimeStringSerializer),
+                typeof(DateTime?).ToTypeToRegisterForJson(MemberTypesToInclude.None, RelatedTypesToInclude.None, NullableDateTimeJsonConverterBuilder, NullableDateTimeStringSerializer),
             })
             .ToList();
 

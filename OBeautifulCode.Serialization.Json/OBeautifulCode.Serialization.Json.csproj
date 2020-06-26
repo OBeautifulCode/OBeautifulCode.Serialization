@@ -112,6 +112,8 @@
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
     <Compile Include="CamelStrictConstructorContractResolver.cs" />
+    <Compile Include="Enums\CanConvertTypeMatchStrategy.cs" />
+    <Compile Include="Converters\StringSerializerBackedJsonConverter{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\DefaultFormatJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\MinimalFormatJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\CompactFormatJsonSerializationConfiguration{T}.cs" />
@@ -119,14 +121,12 @@
     <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\ThrowOnUnregisteredTypeJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\AttemptOnUnregisteredTypeJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\Delegates.cs" />
-    <Compile Include="Converters\DateTimeJsonConverter.cs" />
     <Compile Include="Converters\Dictionary\StringKeysAsPropertiesDictionaryJsonConverter.cs" />
     <Compile Include="Converters\Dictionary\DictionaryJsonConverterBase.cs" />
     <Compile Include="Converters\InheritedTypeJsonConverterBase.cs" />
     <Compile Include="Converters\InheritedTypeReaderJsonConverter.cs" />
     <Compile Include="Converters\InheritedTypeWriterJsonConverter.cs" />
     <Compile Include="Converters\Dictionary\KeyValueArrayDictionaryJsonConverter.cs" />
-    <Compile Include="Converters\SecureStringJsonConverter.cs" />
     <Compile Include="ObcJsonSerializer\ObcJsonSerializer{TJsonSerializationConfiguration}.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationBase\JsonSerializationConfigurationBase.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationBase\JsonSerializationConfigurationBase.Static.cs" />
@@ -140,7 +140,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationBase\RegisteredContractResolver.cs" />
     <Compile Include="SerializationConfiguration\TypeToRegister\JsonConverterBuilder.cs" />
-    <Compile Include="Enums\JsonConverterOutputKind.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationType.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationExtensions.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationType{T}.cs" />

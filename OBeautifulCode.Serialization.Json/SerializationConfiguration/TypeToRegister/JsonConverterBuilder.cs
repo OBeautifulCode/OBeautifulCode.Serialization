@@ -22,30 +22,31 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonConverterBuilder"/> class.
         /// </summary>
-        /// <param name="id">The unique identifier for the builder.</param>
+        /// <param name="id">The unique identifier for the builder.  This is used to de-dupe builders.  We want to avoid adding the same converters to the converter stack multiple times when multiple <see cref="TypeToRegisterForJson"/> objects have the same builder, because it degrades performance.</param>
         /// <param name="serializingConverterBuilderFunc">A func that builds the serializing <see cref="JsonConverter"/>.</param>
         /// <param name="deserializingConverterBuilderFunc">A func that builds the deserializing <see cref="JsonConverter"/>.</param>
-        /// <param name="outputKind">The output kind of the converter.</param>
         public JsonConverterBuilder(
             string id,
             Func<JsonConverter> serializingConverterBuilderFunc,
-            Func<JsonConverter> deserializingConverterBuilderFunc,
-            JsonConverterOutputKind outputKind)
+            Func<JsonConverter> deserializingConverterBuilderFunc)
         {
             new { id }.AsArg().Must().NotBeNullNorWhiteSpace();
             new { serializingConverterBuilderFunc }.AsArg().Must().NotBeNull();
             new { deserializingConverterBuilderFunc }.AsArg().Must().NotBeNull();
-            new { outputKind }.AsArg().Must().NotBeEqualTo(JsonConverterOutputKind.Unknown);
 
             this.Id = id;
             this.SerializingConverterBuilderFunc = serializingConverterBuilderFunc;
             this.DeserializingConverterBuilderFunc = deserializingConverterBuilderFunc;
-            this.OutputKind = outputKind;
         }
 
         /// <summary>
         /// Gets the unique identifier of the builder.
         /// </summary>
+        /// <remarks>
+        /// This is used to de-dupe builders.
+        /// We want to avoid adding the same converters to the converter stack multiple times when multiple
+        /// <see cref="TypeToRegisterForJson"/> objects have the same builder, because it degrades performance.
+        /// </remarks>
         public string Id { get; }
 
         /// <summary>
@@ -57,16 +58,6 @@ namespace OBeautifulCode.Serialization.Json
         /// Gets a func that builds the deserializing <see cref="JsonConverter"/>.
         /// </summary>
         public Func<JsonConverter> DeserializingConverterBuilderFunc { get; }
-
-        /// <summary>
-        /// Gets the output kind of the converter.
-        /// </summary>
-        /// <remarks>
-        /// If a custom converter outputs a string, then Dictionaries that are keyed on the type can be written
-        /// using a standard JSON format for dictionaries.  If, however, the converter does not output a string,
-        /// then any dictionaries keyed on the type must be written as a list of key/value pairs.
-        /// </remarks>
-        public JsonConverterOutputKind OutputKind { get; }
 
         /// <summary>
         /// Gets the func that builds a <see cref="JsonConverter"/> for the specified <see cref="SerializationDirection"/>.

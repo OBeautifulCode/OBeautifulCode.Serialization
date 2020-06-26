@@ -112,6 +112,8 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="CustomSerializers\DateTime\ObcNullableDateTimeStringSerializer.cs" />
+    <Compile Include="CustomSerializers\ObcSecureStringStringSerializer.cs" />
     <Compile Include="Interfaces\IHaveSerializerRepresentation.cs" />
     <Compile Include="Interfaces\ISerializer.cs" />
     <Compile Include="ObcSerializer\SerializerFactoryBase.cs" />
@@ -167,7 +169,7 @@
     <Compile Include="ObcSerializer\ObcSerializerBase.cs" />
     <Compile Include="CustomSerializers\DateTime\DateTimeParsingSettings.cs" />
     <Compile Include="CustomSerializers\DateTime\SerializedDateTimeKind.cs" />
-    <Compile Include="CustomSerializers\ObcDateTimeStringSerializer.cs" />
+    <Compile Include="CustomSerializers\DateTime\ObcDateTimeStringSerializer.cs" />
     <Compile Include="CustomSerializers\ObcDictionaryStringStringSerializer.cs" />
     <Compile Include="ObcSerializer\ObcLambdaBackedSerializer.cs" />
     <Compile Include="Enums\UnregisteredTypeEncounteredStrategy.cs" />

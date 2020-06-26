@@ -206,7 +206,7 @@ namespace OBeautifulCode.Serialization
         public string SerializeToString(
             object objectToSerialize)
         {
-            new { objectToSerialize }.AsArg().Must().BeOfType<DateTime>();
+            new { objectToSerialize }.AsArg().Must().NotBeNull().And().BeOfType<DateTime>();
 
             var result = SerializeToString((DateTime)objectToSerialize);
 
@@ -217,8 +217,6 @@ namespace OBeautifulCode.Serialization
         public T Deserialize<T>(
             string serializedString)
         {
-            new { serializedString }.AsArg().Must().NotBeNullNorWhiteSpace();
-
             var result = (T)this.Deserialize(serializedString, typeof(T));
 
             return result;

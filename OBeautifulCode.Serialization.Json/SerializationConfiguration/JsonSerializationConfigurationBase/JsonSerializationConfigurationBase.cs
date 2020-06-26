@@ -27,7 +27,7 @@ namespace OBeautifulCode.Serialization.Json
     {
         private readonly Dictionary<Type, object> typesWithConverters = new Dictionary<Type, object>();
 
-        private readonly HashSet<Type> typesWithStringConverters = new HashSet<Type>();
+        private readonly Dictionary<Type, IStringSerializeAndDeserialize> typeToKeyInDictionaryStringSerializerMap = new Dictionary<Type, IStringSerializeAndDeserialize>();
 
         private readonly IList<JsonConverterBuilder> jsonConverterBuilders = new List<JsonConverterBuilder>();
 
@@ -115,15 +115,17 @@ namespace OBeautifulCode.Serialization.Json
             {
                 this.typesWithConverters.Add(type, null);
 
-                if (jsonConverterBuilder.OutputKind == JsonConverterOutputKind.String)
-                {
-                    this.typesWithStringConverters.Add(type);
-                }
-
                 if (this.jsonConverterBuilders.All(_ => _.Id != jsonConverterBuilder.Id))
                 {
                     this.jsonConverterBuilders.Add(jsonConverterBuilder);
                 }
+            }
+
+            var keyInDictionaryStringSerializer = typeToRegisterForJson.KeyInDictionaryStringSerializer;
+
+            if (keyInDictionaryStringSerializer != null)
+            {
+                this.typeToKeyInDictionaryStringSerializerMap.Add(type, keyInDictionaryStringSerializer);
             }
         }
 
@@ -159,8 +161,8 @@ namespace OBeautifulCode.Serialization.Json
                 .Concat(
                     new JsonConverter[]
                     {
-                        new StringKeysAsPropertiesDictionaryJsonConverter(this.typesWithStringConverters),
-                        new KeyValueArrayDictionaryJsonConverter(this.typesWithStringConverters),
+                        new StringKeysAsPropertiesDictionaryJsonConverter(this.typeToKeyInDictionaryStringSerializerMap),
+                        new KeyValueArrayDictionaryJsonConverter(this.typeToKeyInDictionaryStringSerializerMap.Keys.ToList()),
                     }).ToList();
 
             return result;
@@ -176,8 +178,8 @@ namespace OBeautifulCode.Serialization.Json
                     {
                         new StringEnumConverter { CamelCaseText = true },
                         new InheritedTypeReaderJsonConverter(() => this.hierarchyParticipatingTypes, this),
-                        new StringKeysAsPropertiesDictionaryJsonConverter(this.typesWithStringConverters),
-                        new KeyValueArrayDictionaryJsonConverter(this.typesWithStringConverters),
+                        new StringKeysAsPropertiesDictionaryJsonConverter(this.typeToKeyInDictionaryStringSerializerMap),
+                        new KeyValueArrayDictionaryJsonConverter(this.typeToKeyInDictionaryStringSerializerMap.Keys.ToList()),
                     })
                 .ToList();
 

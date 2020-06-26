@@ -9,6 +9,7 @@ namespace OBeautifulCode.Serialization.Json
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -18,6 +19,7 @@ namespace OBeautifulCode.Serialization.Json
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
+    using OBeautifulCode.Serialization.Json.Internal;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -30,17 +32,21 @@ namespace OBeautifulCode.Serialization.Json
     /// </summary>
     internal class StringKeysAsPropertiesDictionaryJsonConverter : DictionaryJsonConverterBase
     {
+        private readonly IReadOnlyDictionary<Type, IStringSerializeAndDeserialize> typeToKeyInDictionaryStringSerializerMap;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StringKeysAsPropertiesDictionaryJsonConverter"/> class.
         /// </summary>
-        /// <param name="typesThatSerializeToString">Types that convert to a string when serialized.</param>
+        /// <param name="typeToKeyInDictionaryStringSerializerMap">A map of type to serializer to use when dictionaries are keyed on that type and should be written-to/read-from a string.</param>
         public StringKeysAsPropertiesDictionaryJsonConverter(
-            IReadOnlyCollection<Type> typesThatSerializeToString)
-            : base(typesThatSerializeToString)
+            IReadOnlyDictionary<Type, IStringSerializeAndDeserialize> typeToKeyInDictionaryStringSerializerMap)
+            : base(typeToKeyInDictionaryStringSerializerMap?.Keys.ToList())
         {
+            this.typeToKeyInDictionaryStringSerializerMap = typeToKeyInDictionaryStringSerializerMap;
         }
 
         /// <inheritdoc />
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = ObcSuppressBecause.CA1506_AvoidExcessiveClassCoupling_DisagreeWithAssessment)]
         public override void WriteJson(
             JsonWriter writer,
             object value,
@@ -63,17 +69,27 @@ namespace OBeautifulCode.Serialization.Json
                 {
                     var key = keyValuePair.Key;
 
-                    // Send the Key back through the front-door to get picked-up
-                    // by a registered converter or Newtonsoft if there is no registered
-                    // converter for the Key Type.
-                    serializer.Serialize(keyWriter, key, keyType);
-
-                    // The resulting string is in JSON, so it's surrounded by double quotes
-                    // (e.g. ""myKey"").  We deserialize that payload into a string here to
-                    // get the string to use for the Key.
-                    using (var keyReader = new StringReader(keyWriter.ToString()))
+                    if (this.typeToKeyInDictionaryStringSerializerMap.ContainsKey(keyType))
                     {
-                        keyProperty = (string)serializer.Deserialize(keyReader, typeof(string));
+                        // this covers types with registered serializers for keys
+                        keyProperty = this.typeToKeyInDictionaryStringSerializerMap[keyType].SerializeToString(key);
+                    }
+                    else
+                    {
+                        // this covers typeof(string) and value types
+
+                        // Send the Key back through the front-door to get picked-up
+                        // by a registered converter or Newtonsoft if there is no registered
+                        // converter for the Key Type.
+                        serializer.Serialize(keyWriter, key, keyType);
+
+                        // The resulting string is in JSON, so it's surrounded by double quotes
+                        // (e.g. ""myKey"").  We deserialize that payload into a string here to
+                        // get the string to use for the Key.
+                        using (var keyReader = new StringReader(keyWriter.ToString()))
+                        {
+                            keyProperty = (string)serializer.Deserialize(keyReader, typeof(string));
+                        }
                     }
                 }
 
@@ -100,19 +116,11 @@ namespace OBeautifulCode.Serialization.Json
             new { reader }.AsArg().Must().NotBeNull();
             new { objectType }.AsArg().Must().NotBeNull();
 
-            const JsonToken propertyNameToken = JsonToken.PropertyName;
+            var keyType = objectType.GetClosedSystemDictionaryKeyType();
 
-            const string jsonReaderUnderlyingTokenFieldName = "_tokenType";
+            var valueType = objectType.GetClosedSystemDictionaryValueType();
 
-            var genericArguments = objectType.GenericTypeArguments;
-
-            new { genericArguments.Length }.AsArg().Must().BeEqualTo(2, "More ore less than 2 generic arguments means this cannot be a dictionary type that should supported.");
-
-            var keyType = genericArguments.First();
-
-            var valueType = genericArguments.Last();
-
-            var wrappedDictionaryType = typeof(Dictionary<,>).MakeGenericType(genericArguments);
+            var wrappedDictionaryType = typeof(Dictionary<,>).MakeGenericType(keyType, valueType);
 
             var wrappedDictionary = wrappedDictionaryType.Construct();
 
@@ -124,48 +132,20 @@ namespace OBeautifulCode.Serialization.Json
             }
             else if (reader.TokenType == JsonToken.StartObject)
             {
-                object WrappedDeserialize(JsonReader localReader, Type targetType)
-                {
-                    if (localReader.TokenType == JsonToken.Null)
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        var undoPropertyNameTokenFieldHack = false;
-
-                        if (localReader.TokenType == propertyNameToken)
-                        {
-                            undoPropertyNameTokenFieldHack = true;
-
-                            localReader.SetFieldValue(jsonReaderUnderlyingTokenFieldName, JsonToken.String);
-                        }
-
-                        var localResult = serializer.Deserialize(localReader, targetType);
-
-                        if (undoPropertyNameTokenFieldHack)
-                        {
-                            localReader.SetFieldValue(jsonReaderUnderlyingTokenFieldName, propertyNameToken);
-                        }
-
-                        return localResult;
-                    }
-                }
-
                 reader.Read();
 
                 while (reader.TokenType != JsonToken.EndObject)
                 {
-                    if (reader.TokenType != propertyNameToken)
+                    if (reader.TokenType != JsonToken.PropertyName)
                     {
                         throw new JsonSerializationException("Unexpected token!");
                     }
 
-                    var key = WrappedDeserialize(reader, keyType);
+                    var key = this.WrappedDeserialize(reader, keyType, serializer, isKey: true);
 
                     reader.Read();
 
-                    var value = WrappedDeserialize(reader, valueType);
+                    var value = this.WrappedDeserialize(reader, valueType, serializer, isKey: false);
 
                     reader.Read();
 
@@ -178,7 +158,7 @@ namespace OBeautifulCode.Serialization.Json
                 throw new JsonSerializationException("Unexpected token!");
             }
 
-            var result = ConvertResultAsNecessary(objectType, wrappedDictionary, genericArguments);
+            var result = ConvertResultAsNecessary(objectType, wrappedDictionary, new[] { keyType, valueType });
 
             return result;
         }
@@ -192,6 +172,49 @@ namespace OBeautifulCode.Serialization.Json
                           this.TypesThatSerializeToString.Contains(keyType);
 
             return result;
+        }
+
+        private object WrappedDeserialize(
+            JsonReader jsonReader,
+            Type objectType,
+            JsonSerializer serializer,
+            bool isKey)
+        {
+            const string jsonReaderUnderlyingTokenFieldName = "_tokenType";
+
+            if (jsonReader.TokenType == JsonToken.Null)
+            {
+                return null;
+            }
+            else
+            {
+                var undoPropertyNameTokenFieldHack = false;
+
+                if (jsonReader.TokenType == JsonToken.PropertyName)
+                {
+                    undoPropertyNameTokenFieldHack = true;
+
+                    jsonReader.SetFieldValue(jsonReaderUnderlyingTokenFieldName, JsonToken.String);
+                }
+
+                object result;
+
+                if (isKey && this.typeToKeyInDictionaryStringSerializerMap.ContainsKey(objectType))
+                {
+                    result = this.typeToKeyInDictionaryStringSerializerMap[objectType].Deserialize(jsonReader.Value?.ToString(), objectType);
+                }
+                else
+                {
+                    result = serializer.Deserialize(jsonReader, objectType);
+                }
+
+                if (undoPropertyNameTokenFieldHack)
+                {
+                    jsonReader.SetFieldValue(jsonReaderUnderlyingTokenFieldName, JsonToken.PropertyName);
+                }
+
+                return result;
+            }
         }
     }
 }

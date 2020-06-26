@@ -26,12 +26,14 @@ namespace OBeautifulCode.Serialization.Json
         /// <param name="memberTypesToInclude">Specifies which member types of <paramref name="type"/> that should also be registered.</param>
         /// <param name="relatedTypesToInclude">Specifies which types related to <paramref name="type"/> that should also be registered.</param>
         /// <param name="jsonConverterBuilder">Builds a serializing and deserializing <see cref="JsonConverter"/>.</param>
+        /// <param name="keyInDictionaryStringSerializer">The serializer to use when dictionaries are keyed on <paramref name="type"/> and the keys should be written-to/read-from a string.</param>
         public TypeToRegisterForJson(
             Type type,
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude,
-            JsonConverterBuilder jsonConverterBuilder)
-            : this(type, type, type, memberTypesToInclude, relatedTypesToInclude, jsonConverterBuilder)
+            JsonConverterBuilder jsonConverterBuilder,
+            IStringSerializeAndDeserialize keyInDictionaryStringSerializer)
+            : this(type, type, type, memberTypesToInclude, relatedTypesToInclude, jsonConverterBuilder, keyInDictionaryStringSerializer)
         {
         }
 
@@ -44,13 +46,15 @@ namespace OBeautifulCode.Serialization.Json
         /// <param name="memberTypesToInclude">Specifies which member types of <paramref name="type"/> that should also be registered.</param>
         /// <param name="relatedTypesToInclude">Specifies which types related to <paramref name="type"/> that should also be registered.</param>
         /// <param name="jsonConverterBuilder">Builds a serializing and deserializing <see cref="JsonConverter"/>.</param>
+        /// <param name="keyInDictionaryStringSerializer">The serializer to use when dictionaries are keyed on <paramref name="type"/> and the keys should be written-to/read-from a string.</param>
         public TypeToRegisterForJson(
             Type type,
             Type recursiveOriginType,
             Type directOriginType,
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude,
-            JsonConverterBuilder jsonConverterBuilder)
+            JsonConverterBuilder jsonConverterBuilder,
+            IStringSerializeAndDeserialize keyInDictionaryStringSerializer)
             : base(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude)
         {
             new { type }.AsArg().Must().NotBeNull();
@@ -70,7 +74,21 @@ namespace OBeautifulCode.Serialization.Json
                 }
             }
 
+            if (keyInDictionaryStringSerializer != null)
+            {
+                if (memberTypesToInclude != MemberTypesToInclude.None)
+                {
+                    throw new ArgumentException(Invariant($"{nameof(keyInDictionaryStringSerializer)} is specified, but {nameof(Serialization.MemberTypesToInclude)} is not {MemberTypesToInclude.None}."));
+                }
+
+                if (type.IsGenericTypeDefinition)
+                {
+                    throw new NotSupportedException(Invariant($"{nameof(keyInDictionaryStringSerializer)} is specified, but underlying type to register is an open generic."));
+                }
+            }
+
             this.JsonConverterBuilder = jsonConverterBuilder;
+            this.KeyInDictionaryStringSerializer = keyInDictionaryStringSerializer;
         }
 
         /// <summary>
@@ -78,11 +96,16 @@ namespace OBeautifulCode.Serialization.Json
         /// </summary>
         public JsonConverterBuilder JsonConverterBuilder { get; }
 
+        /// <summary>
+        /// Gets the serializer to use when dictionaries are keyed on <see cref="Type"/> and the keys should be written-to/read-from a string.
+        /// </summary>
+        public IStringSerializeAndDeserialize KeyInDictionaryStringSerializer { get; }
+
         /// <inheritdoc />
         public override TypeToRegister CreateSpawnedTypeToRegister(
             Type type)
         {
-            var result = new TypeToRegisterForJson(type, this.RecursiveOriginType, this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.JsonConverterBuilder);
+            var result = new TypeToRegisterForJson(type, this.RecursiveOriginType, this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.JsonConverterBuilder, this.KeyInDictionaryStringSerializer);
 
             return result;
         }

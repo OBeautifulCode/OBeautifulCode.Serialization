@@ -111,7 +111,7 @@ namespace OBeautifulCode.Serialization.Test
                 .ToTypeToRegisterForJson(
                     MemberTypesToInclude.None,
                     RelatedTypesToInclude.None,
-                    new JsonConverterBuilder("uniqueId", () => new TestingDependentConverter(), () => new TestingDependentConverter(), A.Dummy<JsonConverterOutputKind>())),
+                    new JsonConverterBuilder("uniqueId", () => new TestingDependentConverter(), () => new TestingDependentConverter())),
         };
     }
 
@@ -126,6 +126,7 @@ namespace OBeautifulCode.Serialization.Test
             var payload = ((TestingDependentConfigType)value).SomeValue;
 
             var payloadObject = new JValue(payload);
+
             payloadObject.WriteTo(writer);
         }
 

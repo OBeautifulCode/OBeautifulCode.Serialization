@@ -134,7 +134,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
-    <Compile Include="Converters\StringKeysAsPropertiesDictionaryJsonConverterTest.cs" />
+    <Compile Include="Converters\DictionaryJsonConverterBaseTest.cs" />
     <Compile Include="Z-Legacy\Animal.cs" />
     <Compile Include="Z-Legacy\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />
     <Compile Include="Z-Legacy\DateTimeConverterTest.cs" />
