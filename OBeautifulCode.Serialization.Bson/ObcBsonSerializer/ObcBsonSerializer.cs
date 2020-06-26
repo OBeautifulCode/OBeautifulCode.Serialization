@@ -7,7 +7,7 @@
 namespace OBeautifulCode.Serialization.Bson
 {
     using System;
-    using System.Runtime.Remoting.Messaging;
+
     using MongoDB.Bson;
 
     using OBeautifulCode.Assertion.Recipes;

@@ -112,6 +112,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
     <Compile Include="CamelStrictConstructorContractResolver.cs" />
+    <Compile Include="Converters\StringSerializerBackedJsonConverter.cs" />
     <Compile Include="Enums\CanConvertTypeMatchStrategy.cs" />
     <Compile Include="Converters\StringSerializerBackedJsonConverter{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\DefaultFormatJsonSerializationConfiguration{T}.cs" />
