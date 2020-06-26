@@ -18,15 +18,15 @@ namespace OBeautifulCode.Serialization.Bson
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeToRegisterForBson{T}"/> class.
         /// </summary>
-        /// <param name="memberTypesToInclude">Optional <see cref="MemberTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultMemberTypesToInclude"/>.</param>
-        /// <param name="relatedTypesToInclude">Optional <see cref="RelatedTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultRelatedTypesToInclude"/>.</param>
-        /// <param name="bsonSerializerBuilder">Optional object that builds an <see cref="IBsonSerializer"/>.  DEFAULT is null (no serializer).</param>
-        /// <param name="propertyNameWhitelist">Optional names of the properties to constrain the registration to.  DEFAULT is null (no whitelist).</param>
+        /// <param name="memberTypesToInclude">Specifies which member types of <typeparamref name="T"/> that should also be registered.</param>
+        /// <param name="relatedTypesToInclude">Specifies which types related to <typeparamref name="T"/> that should also be registered.</param>
+        /// <param name="bsonSerializerBuilder">Builds an<see cref="IBsonSerializer"/>.</param>
+        /// <param name="propertyNameWhitelist">The names of the properties to constrain the registration to.</param>
         public TypeToRegisterForBson(
-            MemberTypesToInclude memberTypesToInclude = TypeToRegisterConstants.DefaultMemberTypesToInclude,
-            RelatedTypesToInclude relatedTypesToInclude = TypeToRegisterConstants.DefaultRelatedTypesToInclude,
-            BsonSerializerBuilder bsonSerializerBuilder = null,
-            IReadOnlyCollection<string> propertyNameWhitelist = null)
+            MemberTypesToInclude memberTypesToInclude,
+            RelatedTypesToInclude relatedTypesToInclude,
+            BsonSerializerBuilder bsonSerializerBuilder,
+            IReadOnlyCollection<string> propertyNameWhitelist)
         : base(typeof(T), memberTypesToInclude, relatedTypesToInclude, bsonSerializerBuilder, propertyNameWhitelist)
         {
         }

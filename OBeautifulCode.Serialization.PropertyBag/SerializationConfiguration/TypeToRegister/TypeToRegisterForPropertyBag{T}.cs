@@ -15,13 +15,13 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeToRegisterForPropertyBag{T}"/> class.
         /// </summary>
-        /// <param name="memberTypesToInclude">Optional <see cref="MemberTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultMemberTypesToInclude"/>.</param>
-        /// <param name="relatedTypesToInclude">Optional <see cref="RelatedTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultRelatedTypesToInclude"/>.</param>
-        /// <param name="stringSerializerBuilderFunc">Optional func that builds the <see cref="IStringSerializeAndDeserialize"/>.  DEFAULT is null (no serializer).</param>
+        /// <param name="memberTypesToInclude">Specifies which member types of <typeparamref name="T"/> that should also be registered.</param>
+        /// <param name="relatedTypesToInclude">Specifies which types related to <typeparamref name="T"/> that should also be registered.</param>
+        /// <param name="stringSerializerBuilderFunc">A func that builds the <see cref="IStringSerializeAndDeserialize"/>.</param>
         public TypeToRegisterForPropertyBag(
-            MemberTypesToInclude memberTypesToInclude = TypeToRegisterConstants.DefaultMemberTypesToInclude,
-            RelatedTypesToInclude relatedTypesToInclude = TypeToRegisterConstants.DefaultRelatedTypesToInclude,
-            Func<IStringSerializeAndDeserialize> stringSerializerBuilderFunc = null)
+            MemberTypesToInclude memberTypesToInclude,
+            RelatedTypesToInclude relatedTypesToInclude,
+            Func<IStringSerializeAndDeserialize> stringSerializerBuilderFunc)
         : base(typeof(T), memberTypesToInclude, relatedTypesToInclude, stringSerializerBuilderFunc)
         {
         }

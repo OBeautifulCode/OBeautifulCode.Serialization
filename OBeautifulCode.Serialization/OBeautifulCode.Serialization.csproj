@@ -116,6 +116,7 @@
     <Compile Include="CustomSerializers\ObcSecureStringStringSerializer.cs" />
     <Compile Include="Interfaces\IHaveSerializerRepresentation.cs" />
     <Compile Include="Interfaces\ISerializer.cs" />
+    <Compile Include="ObcSerializer\ObcStringSerializerBackedSerializer.cs" />
     <Compile Include="ObcSerializer\SerializerFactoryBase.cs" />
     <Compile Include="ObcSerializer\ObcCompressingSerializer.cs" />
     <Compile Include="SerializationConfiguration\IIgnoreDefaultDependencies.cs" />
