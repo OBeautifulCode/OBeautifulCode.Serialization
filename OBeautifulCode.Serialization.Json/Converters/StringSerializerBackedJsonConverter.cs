@@ -103,8 +103,11 @@ namespace OBeautifulCode.Serialization.Json
                 case CanConvertTypeMatchStrategy.TypeToConsiderIsAssignableToRegisteredType:
                     result = this.RegisteredType.IsAssignableFrom(objectType);
                     break;
-                case CanConvertTypeMatchStrategy.RegisteredTypeIsAssignableToTypeToConsider:
+                case CanConvertTypeMatchStrategy.TypeToConsiderIsAssignableFromRegisteredType:
                     result = objectType.IsAssignableFrom(this.RegisteredType);
+                    break;
+                case CanConvertTypeMatchStrategy.TypeToConsiderIsAssignableToOrFromRegisteredType:
+                    result = this.RegisteredType.IsAssignableFrom(objectType) || objectType.IsAssignableFrom(this.RegisteredType);
                     break;
                 default:
                     throw new NotSupportedException(Invariant($"This {nameof(this.CanConvertTypeMatchStrategy)} is not supported: {this.CanConvertTypeMatchStrategy}."));

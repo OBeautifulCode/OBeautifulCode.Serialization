@@ -25,8 +25,13 @@ namespace OBeautifulCode.Serialization.Json
         TypeToConsiderIsAssignableToRegisteredType,
 
         /// <summary>
-        /// The registered type is assignable to the incoming type-to-consider.
+        /// The incoming type-to-consider must be assignable from the registered type.
         /// </summary>
-        RegisteredTypeIsAssignableToTypeToConsider,
+        TypeToConsiderIsAssignableFromRegisteredType,
+
+        /// <summary>
+        /// The incoming type-to-consider must be assignable to OR from the registered type.
+        /// </summary>
+        TypeToConsiderIsAssignableToOrFromRegisteredType,
     }
 }
