@@ -27,7 +27,7 @@ namespace OBeautifulCode.Serialization.Bson
     /// <see cref="BsonSerializer.RegisterSerializer"/>.  Is there an problem if the type being registered doesn't
     /// match the type of the serializer?  This class exists for safety/to avoid any cases where it does matter.
     /// </remarks>
-    internal class RegisteredTypeBsonSerializer<T> : SerializerBase<T>
+    public class RegisteredTypeBsonSerializer<T> : SerializerBase<T>
     {
         private readonly IBsonSerializer backingSerializer;
 
