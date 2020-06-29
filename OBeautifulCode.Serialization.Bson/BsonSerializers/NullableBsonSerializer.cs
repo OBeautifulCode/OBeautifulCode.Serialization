@@ -43,7 +43,9 @@ namespace OBeautifulCode.Serialization.Bson
         }
 
         /// <inheritdoc />
-        public override T? Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
+        public override T? Deserialize(
+            BsonDeserializationContext context,
+            BsonDeserializationArgs args)
         {
             new { context }.AsArg().Must().NotBeNull();
             new { context.Reader }.AsArg().Must().NotBeNull();

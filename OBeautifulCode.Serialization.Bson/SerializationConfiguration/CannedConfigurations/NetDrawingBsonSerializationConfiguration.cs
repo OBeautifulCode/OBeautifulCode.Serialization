@@ -14,10 +14,12 @@ namespace OBeautifulCode.Serialization.Bson
     /// </summary>
     public sealed class NetDrawingBsonSerializationConfiguration : BsonSerializationConfigurationBase, IIgnoreDefaultDependencies
     {
+        private static readonly ColorStringSerializer ColorStringSerializer = new ColorStringSerializer();
+
         /// <inheritdoc />
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new[]
         {
-            new TypeToRegisterForBson(typeof(Color), MemberTypesToInclude.None, RelatedTypesToInclude.None, new BsonSerializerBuilder(() => new ColorBsonSerializer(), BsonSerializerOutputKind.String), null),
+            typeof(Color).ToTypeToRegisterForBsonUsingStringSerializer(ColorStringSerializer),
         };
 
         /// <inheritdoc />
