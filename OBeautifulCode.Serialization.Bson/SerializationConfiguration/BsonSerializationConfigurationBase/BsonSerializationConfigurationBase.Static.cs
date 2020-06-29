@@ -63,6 +63,8 @@ namespace OBeautifulCode.Serialization.Bson
 
                     var serializer = memberType.GetAppropriateSerializer(defaultToObjectSerializer: false);
 
+                    // When null, BSON will just use the class map for the member type, which can be registered anytime after
+                    // the class map being built by this method is registered.
                     if (serializer != null)
                     {
                         memberMap.SetSerializer(serializer);

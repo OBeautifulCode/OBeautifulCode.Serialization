@@ -90,13 +90,13 @@ namespace OBeautifulCode.Serialization.Bson
         /// Gets the serializer to use for a given type.
         /// </summary>
         /// <param name="type">The type to serialize.</param>
-        /// <param name="defaultToObjectSerializer">Optional.  If true (DEFAULT), then returns <see cref="ObjectSerializer"/> when the serializer cannot be determined.  Otherwise, returns null.</param>
+        /// <param name="defaultToObjectSerializer">If true, then returns <see cref="ObjectSerializer"/> when the serializer cannot be determined.  Otherwise, returns null.</param>
         /// <returns>
         /// The serializer to use for the specified type.
         /// </returns>
         public static IBsonSerializer GetAppropriateSerializer(
             this Type type,
-            bool defaultToObjectSerializer = true)
+            bool defaultToObjectSerializer)
         {
             new { type }.AsArg().Must().NotBeNull();
 
@@ -128,9 +128,13 @@ namespace OBeautifulCode.Serialization.Bson
 
                 var valueType = type.GetClosedSystemDictionaryValueType();
 
-                var keySerializer = GetAppropriateSerializer(keyType);
+                // It very much seems like defaultToObjectSerializer should be false, consistent with
+                // what we do for array and collection elements.  However, unit tests fail when we change to false.
+                // We are not sure why and need to dig-in in the future.  We do know that using ObjectSerializer
+                // still allows for dictionary keys and values to use a custom/registered serializer.
+                var keySerializer = GetAppropriateSerializer(keyType, defaultToObjectSerializer: true);
 
-                var valueSerializer = GetAppropriateSerializer(valueType);
+                var valueSerializer = GetAppropriateSerializer(valueType, defaultToObjectSerializer: true);
 
                 result = typeof(DictionaryBsonSerializer<,,>).MakeGenericType(type, keyType, valueType).Construct<IBsonSerializer>(DictionaryRepresentation.ArrayOfDocuments, keySerializer, valueSerializer);
             }
@@ -138,7 +142,8 @@ namespace OBeautifulCode.Serialization.Bson
             {
                 var elementType = type.GetElementType();
 
-                // Don't default to object serializer because if there is no element serializer we want to let the ArraySerializer decide what to do.
+                // Don't default to ObjectSerializer because if there is no element serializer we want BSON to find
+                // an existing registered serializer or fallback to the registered class map for the type.
                 var elementSerializer = GetAppropriateSerializer(elementType, defaultToObjectSerializer: false);
 
                 result = elementSerializer == null
@@ -149,7 +154,8 @@ namespace OBeautifulCode.Serialization.Bson
             {
                 var elementType = type.GetClosedSystemCollectionElementType();
 
-                // Don't default to object serializer because if there is no element serializer we want to let the ObcCollectionSerializer decide what to do.
+                // Don't default to ObjectSerializer because if there is no element serializer we want BSON to find
+                // an existing registered serializer or fallback to the registered class map for the type.
                 var elementSerializer = GetAppropriateSerializer(elementType, defaultToObjectSerializer: false);
 
                 result = typeof(CollectionBsonSerializer<,>).MakeGenericType(type, elementType).Construct<IBsonSerializer>(elementSerializer);

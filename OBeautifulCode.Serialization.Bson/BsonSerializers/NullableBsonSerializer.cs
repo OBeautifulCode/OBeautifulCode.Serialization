@@ -36,7 +36,9 @@ namespace OBeautifulCode.Serialization.Bson
             }
             else
             {
-                var serializer = typeof(T).GetAppropriateSerializer();
+                // ObjectSerializer handles values types (confirmed by browsing BSON source for that type),
+                // so we want to default to that if a serializer is not found
+                var serializer = typeof(T).GetAppropriateSerializer(defaultToObjectSerializer: true);
 
                 serializer.Serialize(context, args, value.Value);
             }
@@ -68,7 +70,9 @@ namespace OBeautifulCode.Serialization.Bson
                 }
                 else
                 {
-                    var serializer = typeof(T).GetAppropriateSerializer();
+                    // ObjectSerializer handles values types (confirmed by browsing BSON source for that type),
+                    // so we want to default to that if a serializer is not found
+                    var serializer = typeof(T).GetAppropriateSerializer(defaultToObjectSerializer: true);
 
                     result = (T?)serializer.Deserialize(context, args);
                 }

@@ -139,8 +139,8 @@
     <Compile Include="SerializationConfiguration\ObcBsonDiscriminatorConventionTest.cs" />
     <Compile Include="Z-Legacy\BsonSerializationConfigurationBaseTest.cs" />
     <Compile Include="Z-Legacy\BsonSerializationConfigurationTestAutoConstrainedType.cs" />
-    <Compile Include="Z-Legacy\CustomSerializers\ObcBsonCollectionSerializerTest.cs" />
-    <Compile Include="Z-Legacy\CustomSerializers\ObcBsonDictionarySerializerTest.cs" />
+    <Compile Include="BsonSerializers\ObcBsonCollectionSerializerTest.cs" />
+    <Compile Include="BsonSerializers\ObcBsonDictionarySerializerTest.cs" />
     <Compile Include="Z-Legacy\ObcConfigurationBaseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -178,6 +178,7 @@
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
