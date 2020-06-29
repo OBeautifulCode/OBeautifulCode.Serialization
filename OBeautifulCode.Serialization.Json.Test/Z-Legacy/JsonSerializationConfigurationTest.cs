@@ -120,7 +120,7 @@ namespace OBeautifulCode.Serialization.Json.Test
                 },
             };
 
-            var result = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<InheritedTypeBase>).ToJsonSerializationConfigurationType()).SerializeToString(value);
+            var result = new ObcJsonSerializer(typeof(InheritedTypeBaseJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).SerializeToString(value);
 
             var serializedValue = Invariant($"[\r\n  {{\r\n    \"child1\": \"Child1\",\r\n    \"base\": \"Base\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+InheritedType1, OBeautifulCode.Serialization.Json.Test\"\r\n  }},\r\n  {{\r\n    \"child2\": \"my child 2\",\r\n    \"base\": \"my base\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+InheritedType2, OBeautifulCode.Serialization.Json.Test\"\r\n  }}\r\n]");
 
@@ -141,7 +141,7 @@ namespace OBeautifulCode.Serialization.Json.Test
                                   "  }" + Environment.NewLine +
                                   "]";
 
-            var result = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<InheritedTypeBase>).ToJsonSerializationConfigurationType()).Deserialize<InheritedTypeBase[]>(serializedValue);
+            var result = new ObcJsonSerializer(typeof(InheritedTypeBaseJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<InheritedTypeBase[]>(serializedValue);
 
             result.Length.Should().Be(2);
             result[0].Base.Should().Be("My base");
@@ -166,7 +166,7 @@ namespace OBeautifulCode.Serialization.Json.Test
                                   "  }" + Environment.NewLine +
                                   "]";
 
-            var result = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<IBaseInterface>).ToJsonSerializationConfigurationType()).Deserialize<IBaseInterface[]>(serializedValue);
+            var result = new ObcJsonSerializer(typeof(BaseInterfaceJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<IBaseInterface[]>(serializedValue);
 
             result.Length.Should().Be(2);
 
@@ -189,7 +189,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             var tigerJson = "{\"tailLength\":2,\"name\":\"Ronny\",\"numberOfTeeth\":50,\"age\":5}";
             var mouseJson = "{\"tailLength\":8,\"name\":\"Missy\",\"furColor\":\"black\",\"age\":7}";
 
-            var jsonSerializer = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType());
+            var jsonSerializer = new ObcJsonSerializer(typeof(AnimalJsonSerializationConfiguration).ToJsonSerializationConfigurationType());
 
             var dog = jsonSerializer.Deserialize<Animal>(dogJson) as Dog;
             var cat = jsonSerializer.Deserialize<Animal>(catJson) as Cat;
@@ -225,7 +225,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var dogJson = "{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}";
 
-            var dog = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType()).Deserialize<Animal>(dogJson) as Dog;
+            var dog = new ObcJsonSerializer(typeof(AnimalJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<Animal>(dogJson) as Dog;
 
             dog.Should().NotBeNull();
             dog.Name.Should().Be("Barney");
@@ -239,7 +239,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var inheritedTypeJson = "{\"base\":\"my base string\"}";
 
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<InheritedTypeBase>).ToJsonSerializationConfigurationType()).Deserialize<InheritedTypeBase>(inheritedTypeJson));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(InheritedTypeBaseJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<InheritedTypeBase>(inheritedTypeJson));
             ex.Message.Should().Contain("InheritedType1");
             ex.Message.Should().Contain("InheritedType2");
         }
@@ -250,7 +250,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             var lightingJson = "{\"watts\":10, \"wattageEquivalent\":60}";
 
             // smart LED has features and it doesn't check for members that are missing in the JSON in FilterCandidateUsingStrictMemberMatching
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Lighting>).ToJsonSerializationConfigurationType()).Deserialize<Lighting>(lightingJson));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(LightingJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<Lighting>(lightingJson));
 
             ex.Message.Should().Contain("CompactFluorescent");
             ex.Message.Should().Contain("Led");
@@ -263,7 +263,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             var noLightingJson = "{}";
             var incandescentJson = "{\"watts\":60}";
 
-            var jsonSerializer = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Lighting>).ToJsonSerializationConfigurationType());
+            var jsonSerializer = new ObcJsonSerializer(typeof(LightingJsonSerializationConfiguration).ToJsonSerializationConfigurationType());
 
             var noLighting = jsonSerializer.Deserialize<Lighting>(noLightingJson) as NoLighting;
             var incandescent = jsonSerializer.Deserialize<Lighting>(incandescentJson) as Incandescent;
@@ -279,7 +279,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var json = "{\"none\":\"none\"}";
 
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType()).Deserialize<Animal>(json));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(AnimalJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<Animal>(json));
 
             ex.Message.Should().StartWith("The json payload could not be deserialized into any of the candidate types.");
         }
@@ -289,7 +289,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var json = "{\"float\":.2,\"int32\":50}";
 
-            var inheritedType3 = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<IBaseInterface>).ToJsonSerializationConfigurationType()).Deserialize<IBaseInterface>(json) as InheritedType3;
+            var inheritedType3 = new ObcJsonSerializer(typeof(BaseInterfaceJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<IBaseInterface>(json) as InheritedType3;
 
             inheritedType3.Should().NotBeNull();
             inheritedType3.Int32.Should().Be(50);
@@ -302,7 +302,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var tigerJson = "{\"tailLength\":2,\"name\":\"Ronny\",\"numberOfTeeth\":50,\"age\":5, \"newProperty\":66}";
 
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType()).Deserialize<Animal>(tigerJson));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(AnimalJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<Animal>(tigerJson));
 
             ex.Message.Should().StartWith("The json payload could not be deserialized into any of the candidate types.");
         }
@@ -313,7 +313,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             // name was changed from string to object
             var tigerJson = "{\"tailLength\":2,\"name\":{ \"first\":\"Ronny\",\"last\":\"Ronnerson\" },\"numberOfTeeth\":50,\"age\":5}";
 
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType()).Deserialize<Animal>(tigerJson));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(AnimalJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<Animal>(tigerJson));
 
             ex.Message.Should().StartWith("The json payload could not be deserialized into any of the candidate types.");
         }
@@ -323,7 +323,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var atkinsJson = "{}";
 
-            var atkins = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Diet>).ToJsonSerializationConfigurationType()).Deserialize<Diet>(atkinsJson) as Atkins;
+            var atkins = new ObcJsonSerializer(typeof(DietJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<Diet>(atkinsJson) as Atkins;
 
             atkins.Should().NotBeNull();
         }
@@ -334,7 +334,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             var catJson1 = "{\"numberOfLives\":9,\"name\":\"Cleo\"}";
             var catJson2 = "{\"numberOfLives\":9,\"age\":3}";
 
-            var jsonSerializer = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Animal>).ToJsonSerializationConfigurationType());
+            var jsonSerializer = new ObcJsonSerializer(typeof(AnimalJsonSerializationConfiguration).ToJsonSerializationConfigurationType());
 
             var ex1 = Assert.Throws<JsonSerializationException>(() => jsonSerializer.Deserialize<Animal>(catJson1));
             var ex2 = Assert.Throws<JsonSerializationException>(() => jsonSerializer.Deserialize<Animal>(catJson2));
@@ -348,7 +348,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var fructoseJson = "{\"minOuncesOfFructose\":5}";
 
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Diet>).ToJsonSerializationConfigurationType()).Deserialize<Diet>(fructoseJson));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(DietJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<Diet>(fructoseJson));
 
             ex.Message.Should().StartWith("The json payload could not be deserialized into any of the candidate types.");
         }
@@ -358,7 +358,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var fructoseJson = "{\"minGramsOfFructose\":5}";
 
-            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Diet>).ToJsonSerializationConfigurationType()).Deserialize<Diet>(fructoseJson));
+            var ex = Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(DietJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<Diet>(fructoseJson));
 
             ex.Message.Should().StartWith("The json payload could not be deserialized into any of the candidate types.");
         }
@@ -368,7 +368,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var dogDietJson = "{\"dog\":{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}, \"diet\":{}}";
 
-            var dogDiet = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Diet, DogDiet>).ToJsonSerializationConfigurationType()).Deserialize<DogDiet>(dogDietJson);
+            var dogDiet = new ObcJsonSerializer(typeof(DogDietJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<DogDiet>(dogDietJson);
 
             dogDiet.Should().NotBeNull();
 
@@ -386,7 +386,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var dogDietJson = "{\"dog\":{\"name\":\"Barney\",\"furColor\":\"brindle\",\"age\":10}, \"diet\":null}";
 
-            var dogDiet = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Diet, DogDiet>).ToJsonSerializationConfigurationType()).Deserialize<DogDiet>(dogDietJson);
+            var dogDiet = new ObcJsonSerializer(typeof(DogDietJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<DogDiet>(dogDietJson);
 
             dogDiet.Should().NotBeNull();
 
@@ -404,7 +404,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var catDietJson = "{\"cat\":{\"numberOfLives\":9,\"name\":\"Cleo\",\"age\":3}, \"diet\":{}}";
 
-            var catDiet = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Diet, CatDiet>).ToJsonSerializationConfigurationType()).Deserialize<CatDiet>(catDietJson);
+            var catDiet = new ObcJsonSerializer(typeof(CatDietJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<CatDiet>(catDietJson);
 
             catDiet.Should().NotBeNull();
             catDiet.Cat.Should().NotBeNull();
@@ -420,7 +420,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var catDietJson = "{\"cat\":{\"numberOfLives\":9,\"name\":\"Cleo\",\"age\":3}, \"diet\":null}";
 
-            var catDiet = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Diet, CatDiet>).ToJsonSerializationConfigurationType()).Deserialize<CatDiet>(catDietJson);
+            var catDiet = new ObcJsonSerializer(typeof(CatDietJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<CatDiet>(catDietJson);
 
             catDiet.Should().NotBeNull();
             catDiet.Cat.Should().NotBeNull();
@@ -498,9 +498,9 @@ namespace OBeautifulCode.Serialization.Json.Test
             var expectedCrabJson = Invariant($"{{\r\n  \"size\": \"large\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+Crab, OBeautifulCode.Serialization.Json.Test\"\r\n}}");
             var expectedSalmonJson = Invariant($"{{\r\n  \"color\": \"brown\",\r\n  \"size\": \"medium\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+Salmon, OBeautifulCode.Serialization.Json.Test\"\r\n}}");
 
-            var actualStarfishJson = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature>).ToJsonSerializationConfigurationType()).SerializeToString(starfish);
-            var actualCrabJson = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature>).ToJsonSerializationConfigurationType()).SerializeToString(crab);
-            var actualSalmonJson = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature>).ToJsonSerializationConfigurationType()).SerializeToString(salmon);
+            var actualStarfishJson = new ObcJsonSerializer(typeof(SeaCreatureJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).SerializeToString(starfish);
+            var actualCrabJson = new ObcJsonSerializer(typeof(SeaCreatureJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).SerializeToString(crab);
+            var actualSalmonJson = new ObcJsonSerializer(typeof(SeaCreatureJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).SerializeToString(salmon);
 
             expectedStarfishJson.Should().Be(actualStarfishJson);
             expectedCrabJson.Should().Be(actualCrabJson);
@@ -512,7 +512,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var salmonJson = "{\r\n  \"color\": \"brown\",\r\n  \"size\": \"medium\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+Salmon, OBeautifulCode.Serialization.Json.Test\"\r\n}";
 
-            var salmon = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature>).ToJsonSerializationConfigurationType()).Deserialize<Salmon>(salmonJson);
+            var salmon = new ObcJsonSerializer(typeof(SeaCreatureJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<Salmon>(salmonJson);
 
             salmon.Should().NotBeNull();
             salmon.Color.Should().Be("brown");
@@ -524,8 +524,8 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var salmonJson = "{\r\n  \"color\": \"brown\",\r\n  \"size\": \"medium\",\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+Salmon, OBeautifulCode.Serialization.Json.Test\"\r\n}";
 
-            var salmon1 = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature>).ToJsonSerializationConfigurationType()).Deserialize<SeaCreature>(salmonJson) as Salmon;
-            var salmon2 = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature>).ToJsonSerializationConfigurationType()).Deserialize<Fish>(salmonJson) as Salmon;
+            var salmon1 = new ObcJsonSerializer(typeof(SeaCreatureJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<SeaCreature>(salmonJson) as Salmon;
+            var salmon2 = new ObcJsonSerializer(typeof(SeaCreatureJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<Fish>(salmonJson) as Salmon;
 
             salmon1.Should().NotBeNull();
             salmon1.Color.Should().Be("brown");
@@ -543,7 +543,7 @@ namespace OBeautifulCode.Serialization.Json.Test
 
             var expectedWhaleJson = Invariant($"{{\r\n  \"name\": \"willy\",\r\n  \"diet\": {{\r\n    \"maxCalories\": 50000,\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+LowCalorie, OBeautifulCode.Serialization.Json.Test\"\r\n  }},\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+Whale, OBeautifulCode.Serialization.Json.Test\"\r\n}}");
 
-            var actualWhaleJson = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature, Diet>).ToJsonSerializationConfigurationType()).SerializeToString(whale);
+            var actualWhaleJson = new ObcJsonSerializer(typeof(SeaCreatureJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).SerializeToString(whale);
 
             actualWhaleJson.Should().Be(expectedWhaleJson);
         }
@@ -553,7 +553,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var whaleJson = "{\r\n  \"name\": \"willy\",\r\n  \"diet\": {\r\n    \"maxCalories\": 50000\r\n  },\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+Whale, OBeautifulCode.Serialization.Json.Test\"\r\n}";
 
-            var whale = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature, Diet>).ToJsonSerializationConfigurationType()).Deserialize<SeaCreature>(whaleJson) as Whale;
+            var whale = new ObcJsonSerializer(typeof(SeaCreatureJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<SeaCreature>(whaleJson) as Whale;
 
             whale.Should().NotBeNull();
             whale.Name.Should().Be("willy");
@@ -570,7 +570,7 @@ namespace OBeautifulCode.Serialization.Json.Test
 
             var expectedSharkJson = Invariant($"{{\r\n  \"name\": \"sammy\",\r\n  \"likesToEat\": {{\r\n    \"color\": \"black\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+Tuna, OBeautifulCode.Serialization.Json.Test\"\r\n  }},\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+Shark, OBeautifulCode.Serialization.Json.Test\"\r\n}}");
 
-            var actualSharkJson = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature>).ToJsonSerializationConfigurationType()).SerializeToString(shark);
+            var actualSharkJson = new ObcJsonSerializer(typeof(SeaCreatureJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).SerializeToString(shark);
 
             actualSharkJson.Should().Be(expectedSharkJson);
         }
@@ -580,7 +580,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var sharkJson = "{\r\n  \"name\": \"sammy\",\r\n  \"likesToEat\": {\r\n    \"color\": \"black\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+Tuna, OBeautifulCode.Serialization.Json.Test\"\r\n  },\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+Shark, OBeautifulCode.Serialization.Json.Test\"\r\n}";
 
-            var shark = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature>).ToJsonSerializationConfigurationType()).Deserialize<SeaCreature>(sharkJson) as Shark;
+            var shark = new ObcJsonSerializer(typeof(SeaCreatureJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<SeaCreature>(sharkJson) as Shark;
 
             shark.Should().NotBeNull();
             shark.Name.Should().Be("sammy");
@@ -597,7 +597,7 @@ namespace OBeautifulCode.Serialization.Json.Test
 
             var expectedSeafoodDietJson = Invariant($"{{\r\n  \"seaCreature\": {{\r\n    \"color\": \"red\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+Salmon, OBeautifulCode.Serialization.Json.Test\"\r\n  }},\r\n  \"amount\": 345,\r\n  \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+SeafoodDiet, OBeautifulCode.Serialization.Json.Test\"\r\n}}");
 
-            var actualSeafoodDietJson = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature>).ToJsonSerializationConfigurationType()).SerializeToString(seafoodDiet);
+            var actualSeafoodDietJson = new ObcJsonSerializer(typeof(SeaCreatureJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).SerializeToString(seafoodDiet);
 
             actualSeafoodDietJson.Should().Be(expectedSeafoodDietJson);
         }
@@ -607,7 +607,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             var seafoodDietJson = "{\r\n  \"seaCreature\": {\r\n    \"color\": \"red\",\r\n    \"size\": \"medium\",\r\n    \"$concreteType\": \"OBeautifulCode.Serialization.Json.Test.JsonSerializationConfigurationTest+Salmon, OBeautifulCode.Serialization.Json.Test\"\r\n  },\r\n  \"amount\": 345\r\n}";
 
-            var seafoodDiet = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<SeaCreature, Diet>).ToJsonSerializationConfigurationType()).Deserialize<Diet>(seafoodDietJson) as SeafoodDiet;
+            var seafoodDiet = new ObcJsonSerializer(typeof(SeaCreatureJsonSerializationConfiguration).ToJsonSerializationConfigurationType()).Deserialize<Diet>(seafoodDietJson) as SeafoodDiet;
 
             seafoodDiet.Should().NotBeNull();
             seafoodDiet.Amount.Should().Be(345);
@@ -990,6 +990,54 @@ namespace OBeautifulCode.Serialization.Json.Test
             public Dictionary<string, Color> ColorsByNames { get; set; }
 
             public Dictionary<Color, string> NamesByColor { get; set; }
+        }
+
+        private class InheritedTypeBaseJsonSerializationConfiguration : JsonSerializationConfigurationBase
+        {
+            protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
+            {
+                new TypeToRegisterForJson(typeof(InheritedTypeBase), MemberTypesToInclude.All, RelatedTypesToInclude.Descendants, null, null),
+            };
+        }
+
+        private class DietJsonSerializationConfiguration : JsonSerializationConfigurationBase
+        {
+            protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
+            {
+                new TypeToRegisterForJson(typeof(Diet), MemberTypesToInclude.All, RelatedTypesToInclude.Descendants, null, null),
+            };
+        }
+
+        private class SeaCreatureJsonSerializationConfiguration : JsonSerializationConfigurationBase
+        {
+            protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
+            {
+                new TypeToRegisterForJson(typeof(SeaCreature), MemberTypesToInclude.All, RelatedTypesToInclude.Descendants, null, null),
+            };
+        }
+
+        private class DogDietJsonSerializationConfiguration : JsonSerializationConfigurationBase
+        {
+            protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
+            {
+                new TypeToRegisterForJson(typeof(DogDiet), MemberTypesToInclude.All, RelatedTypesToInclude.Descendants, null, null),
+            };
+        }
+
+        private class CatDietJsonSerializationConfiguration : JsonSerializationConfigurationBase
+        {
+            protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
+            {
+                new TypeToRegisterForJson(typeof(CatDiet), MemberTypesToInclude.All, RelatedTypesToInclude.Descendants, null, null),
+            };
+        }
+
+        private class BaseInterfaceJsonSerializationConfiguration : JsonSerializationConfigurationBase
+        {
+            protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
+            {
+                new TypeToRegisterForJson(typeof(IBaseInterface), MemberTypesToInclude.All, RelatedTypesToInclude.Descendants, null, null),
+            };
         }
 
 #pragma warning restore SA1305 // Field names should not use Hungarian notation

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ObcBsonColorSerializer.cs" company="OBeautifulCode">
+// <copyright file="ColorBsonSerializer.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ namespace OBeautifulCode.Serialization.Bson
     using static System.FormattableString;
 
     /// <inheritdoc />
-    internal class ObcBsonColorSerializer : SerializerBase<Color>
+    internal class ColorBsonSerializer : SerializerBase<Color>
     {
         /// <inheritdoc />
         public override Color Deserialize(

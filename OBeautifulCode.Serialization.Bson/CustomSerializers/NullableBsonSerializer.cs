@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ObcBsonNullableSerializer.cs" company="OBeautifulCode">
+// <copyright file="NullableBsonSerializer.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ namespace OBeautifulCode.Serialization.Bson
     /// Represents a serializer for <see cref="Nullable{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of the enum.</typeparam>
-    public class ObcBsonNullableSerializer<T> : SerializerBase<T?>
+    public class NullableBsonSerializer<T> : SerializerBase<T?>
         where T : struct
     {
         /// <inheritdoc />

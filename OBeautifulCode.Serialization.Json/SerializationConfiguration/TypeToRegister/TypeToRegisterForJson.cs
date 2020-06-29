@@ -76,11 +76,6 @@ namespace OBeautifulCode.Serialization.Json
 
             if (keyInDictionaryStringSerializer != null)
             {
-                if (memberTypesToInclude != MemberTypesToInclude.None)
-                {
-                    throw new ArgumentException(Invariant($"{nameof(keyInDictionaryStringSerializer)} is specified, but {nameof(Serialization.MemberTypesToInclude)} is not {MemberTypesToInclude.None}."));
-                }
-
                 if (type.IsGenericTypeDefinition)
                 {
                     throw new NotSupportedException(Invariant($"{nameof(keyInDictionaryStringSerializer)} is specified, but underlying type to register is an open generic."));
@@ -103,9 +98,28 @@ namespace OBeautifulCode.Serialization.Json
 
         /// <inheritdoc />
         public override TypeToRegister CreateSpawnedTypeToRegister(
-            Type type)
+            Type type,
+            TypeToIncludeOrigin typeToIncludeOrigin)
         {
-            var result = new TypeToRegisterForJson(type, this.RecursiveOriginType, this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.JsonConverterBuilder, this.KeyInDictionaryStringSerializer);
+            var keyInDictionaryStringSerializer = this.KeyInDictionaryStringSerializer;
+
+            // If a type has an associated KeyInDictionaryStringSerializer and we explore members
+            // (JsonConverterBuilder will be null, otherwise the constructor throws if MemberTypesToInclude != None)
+            // it is very highly unlikely that we want to use that serializer for members that are keys in
+            // dictionaries.  Without the code below which null it out, the config would require two entries for
+            // the same type - one where MemberTypesToInclude is None, specifying the dictionary key serializer
+            // and the other with All.  Further, the one with the serializer would need to be registered first
+            // (the second registration exists solely to explore members since the type itself will get
+            // registered with the first entry).  In the future, we should introduce an enum that describes
+            // how to spawn and just follow those instructions (e.g. something like
+            // CopyKeyInDictionaryStringSerializerWhenTypeToIncludeOriginIsGettingRelatedTypes - which would
+            // only copy the serializer for related types, but not member types).
+            if (typeToIncludeOrigin == TypeToIncludeOrigin.GettingMemberTypes)
+            {
+                keyInDictionaryStringSerializer = null;
+            }
+
+            var result = new TypeToRegisterForJson(type, this.RecursiveOriginType, this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.JsonConverterBuilder, keyInDictionaryStringSerializer);
 
             return result;
         }

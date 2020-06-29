@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ObcBsonEnumStringSerializer.cs" company="OBeautifulCode">
+// <copyright file="EnumStringBsonSerializer.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -17,7 +17,7 @@ namespace OBeautifulCode.Serialization.Bson
     /// Represents a serializer for enums, including support for <see cref="FlagsAttribute"/> ones.
     /// </summary>
     /// <typeparam name="TEnum">The type of the enum.</typeparam>
-    public class ObcBsonEnumStringSerializer<TEnum> : StructSerializerBase<TEnum>
+    public class EnumStringBsonSerializer<TEnum> : StructSerializerBase<TEnum>
         where TEnum : struct
     {
         /// <inheritdoc />

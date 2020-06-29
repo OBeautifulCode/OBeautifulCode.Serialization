@@ -6,6 +6,7 @@
 
 namespace OBeautifulCode.Serialization.Json.Test
 {
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
     internal class Lighting
@@ -55,5 +56,13 @@ namespace OBeautifulCode.Serialization.Json.Test
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Property is used via reflection and code analysis cannot detect that.")]
         public int WattageEquivalent { get; set; }
+    }
+
+    internal class LightingJsonSerializationConfiguration : JsonSerializationConfigurationBase
+    {
+        protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
+        {
+            new TypeToRegisterForJson(typeof(Lighting), MemberTypesToInclude.All, RelatedTypesToInclude.Descendants, null, null),
+        };
     }
 }

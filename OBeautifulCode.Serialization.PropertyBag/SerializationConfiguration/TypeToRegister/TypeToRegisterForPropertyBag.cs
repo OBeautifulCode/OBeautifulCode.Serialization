@@ -78,7 +78,8 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
         /// <inheritdoc />
         public override TypeToRegister CreateSpawnedTypeToRegister(
-            Type type)
+            Type type,
+            TypeToIncludeOrigin typeToIncludeOrigin)
         {
             var result = new TypeToRegisterForPropertyBag(type, this.RecursiveOriginType, this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.StringSerializerBuilderFunc);
 

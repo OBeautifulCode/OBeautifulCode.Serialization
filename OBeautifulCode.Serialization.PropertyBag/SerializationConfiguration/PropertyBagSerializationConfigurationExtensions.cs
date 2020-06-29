@@ -8,6 +8,8 @@ namespace OBeautifulCode.Serialization.PropertyBag
 {
     using System;
 
+    using OBeautifulCode.Assertion.Recipes;
+
     /// <summary>
     /// Extension methods related to property bag serialization configuration.
     /// </summary>
@@ -29,22 +31,39 @@ namespace OBeautifulCode.Serialization.PropertyBag
         }
 
         /// <summary>
-        /// Builds a <see cref="TypeToRegisterForPropertyBag"/> from a type.
+        /// Builds a <see cref="TypeToRegisterForPropertyBag"/> from a type using the most sensible settings.
         /// </summary>
         /// <param name="type">The type to register.</param>
-        /// <param name="memberTypesToInclude">Optional <see cref="MemberTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultMemberTypesToInclude"/>.</param>
-        /// <param name="relatedTypesToInclude">Optional <see cref="RelatedTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultRelatedTypesToInclude"/>.</param>
-        /// <param name="stringSerializerBuilderFunc">Optional func that builds the <see cref="IStringSerializeAndDeserialize"/>.  DEFAULT is null (no serializer).</param>
         /// <returns>
         /// The type to register for property bag serialization.
         /// </returns>
         public static TypeToRegisterForPropertyBag ToTypeToRegisterForPropertyBag(
-            this Type type,
-            MemberTypesToInclude memberTypesToInclude = TypeToRegisterConstants.DefaultMemberTypesToInclude,
-            RelatedTypesToInclude relatedTypesToInclude = TypeToRegisterConstants.DefaultRelatedTypesToInclude,
-            Func<IStringSerializeAndDeserialize> stringSerializerBuilderFunc = null)
+            this Type type)
         {
-            var result = new TypeToRegisterForPropertyBag(type, memberTypesToInclude, relatedTypesToInclude, stringSerializerBuilderFunc);
+            new { type }.AsArg().Must().NotBeNull();
+
+            var result = new TypeToRegisterForPropertyBag(type, MemberTypesToInclude.All, RelatedTypesToInclude.Default, null);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Builds a <see cref="TypeToRegisterForPropertyBag"/> from a type using the most sensible settings,
+        /// with a specified <see cref="IStringSerializeAndDeserialize"/> to use everywhere the type appears.
+        /// </summary>
+        /// <param name="type">The type to register.</param>
+        /// <param name="stringSerializerBuilderFunc">Func that builds the <see cref="IStringSerializeAndDeserialize"/>.  DEFAULT is null (no serializer).</param>
+        /// <returns>
+        /// The type to register for property bag serialization.
+        /// </returns>
+        public static TypeToRegisterForPropertyBag ToTypeToRegisterForPropertyBagUsingStringSerializer(
+            this Type type,
+            Func<IStringSerializeAndDeserialize> stringSerializerBuilderFunc)
+        {
+            new { type }.AsArg().Must().NotBeNull();
+            new { stringSerializerBuilderFunc }.AsArg().Must().NotBeNull();
+
+            var result = new TypeToRegisterForPropertyBag(type, MemberTypesToInclude.None, RelatedTypesToInclude.Default, stringSerializerBuilderFunc);
 
             return result;
         }

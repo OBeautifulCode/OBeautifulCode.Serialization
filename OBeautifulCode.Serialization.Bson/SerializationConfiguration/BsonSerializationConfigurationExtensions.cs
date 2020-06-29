@@ -25,6 +25,8 @@ namespace OBeautifulCode.Serialization.Bson
     /// </summary>
     public static class BsonSerializationConfigurationExtensions
     {
+        private static readonly IStringSerializeAndDeserialize DateTimeStringSerializer = new ObcDateTimeStringSerializer();
+
         /// <summary>
         /// Gets the <see cref="BsonSerializationConfigurationType"/> corresponding to the specified configuration type.
         /// </summary>
@@ -41,24 +43,45 @@ namespace OBeautifulCode.Serialization.Bson
         }
 
         /// <summary>
-        /// Builds a <see cref="TypeToRegisterForBson"/> from a type.
+        /// Builds a <see cref="TypeToRegisterForBson"/> from a type using the most sensible settings.
         /// </summary>
         /// <param name="type">The type to register.</param>
-        /// <param name="memberTypesToInclude">Optional <see cref="MemberTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultMemberTypesToInclude"/>.</param>
-        /// <param name="relatedTypesToInclude">Optional <see cref="RelatedTypesToInclude"/>.  DEFAULT is <see cref="TypeToRegisterConstants.DefaultRelatedTypesToInclude"/>.</param>
-        /// <param name="bsonSerializerBuilder">Optional object that builds an <see cref="IBsonSerializer"/>.  DEFAULT is null (no serializer).</param>
-        /// <param name="propertyNameWhitelist">Optional names of the properties to constrain the registration to.  DEFAULT is null (no whitelist).</param>
         /// <returns>
         /// The type to register for BSON serialization.
         /// </returns>
         public static TypeToRegisterForBson ToTypeToRegisterForBson(
-            this Type type,
-            MemberTypesToInclude memberTypesToInclude = TypeToRegisterConstants.DefaultMemberTypesToInclude,
-            RelatedTypesToInclude relatedTypesToInclude = TypeToRegisterConstants.DefaultRelatedTypesToInclude,
-            BsonSerializerBuilder bsonSerializerBuilder = null,
-            IReadOnlyCollection<string> propertyNameWhitelist = null)
+            this Type type)
         {
-            var result = new TypeToRegisterForBson(type, memberTypesToInclude, relatedTypesToInclude, bsonSerializerBuilder, propertyNameWhitelist);
+            new { type }.AsArg().Must().NotBeNull();
+
+            var result = new TypeToRegisterForBson(type, MemberTypesToInclude.All, RelatedTypesToInclude.Default, null, null);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Builds a <see cref="TypeToRegisterForBson"/> for a type using the most sensible settings,
+        /// with a specified <see cref="IStringSerializeAndDeserialize"/> to use everywhere the type appears.
+        /// </summary>
+        /// <param name="type">The type to register.</param>
+        /// <param name="stringSerializer">The string serializer to use for <paramref name="type"/>.</param>
+        /// <returns>
+        /// The type to register for BSON serialization.
+        /// </returns>
+        public static TypeToRegisterForBson ToTypeToRegisterForBsonUsingStringSerializer(
+            this Type type,
+            IStringSerializeAndDeserialize stringSerializer)
+        {
+            new { type }.AsArg().Must().NotBeNull();
+            new { stringSerializer }.AsArg().Must().NotBeNull();
+
+            var serializer = StringSerializerBackedBsonSerializer.Build(type, stringSerializer);
+
+            IBsonSerializer BsonSerializerBuilderFunc() => serializer;
+
+            var bsonSerializerBuilder = new BsonSerializerBuilder(BsonSerializerBuilderFunc, BsonSerializerOutputKind.String);
+
+            var result = new TypeToRegisterForBson(type, MemberTypesToInclude.None, RelatedTypesToInclude.Default, bsonSerializerBuilder, null);
 
             return result;
         }
@@ -89,15 +112,15 @@ namespace OBeautifulCode.Serialization.Bson
             }
             else if (type.IsEnum)
             {
-                result = typeof(ObcBsonEnumStringSerializer<>).MakeGenericType(type).Construct<IBsonSerializer>();
+                result = typeof(EnumStringBsonSerializer<>).MakeGenericType(type).Construct<IBsonSerializer>();
             }
             else if (type.IsClosedNullableType())
             {
-                result = typeof(ObcBsonNullableSerializer<>).MakeGenericType(Nullable.GetUnderlyingType(type)).Construct<IBsonSerializer>();
+                result = typeof(NullableBsonSerializer<>).MakeGenericType(Nullable.GetUnderlyingType(type)).Construct<IBsonSerializer>();
             }
             else if (type == typeof(DateTime))
             {
-                result = new ObcBsonDateTimeSerializer();
+                result = new StringSerializerBackedBsonSerializer<DateTime>(DateTimeStringSerializer);
             }
             else if (type.IsClosedSystemDictionaryType())
             {
@@ -109,7 +132,7 @@ namespace OBeautifulCode.Serialization.Bson
 
                 var valueSerializer = GetAppropriateSerializer(valueType);
 
-                result = typeof(ObcBsonDictionarySerializer<,,>).MakeGenericType(type, keyType, valueType).Construct<IBsonSerializer>(DictionaryRepresentation.ArrayOfDocuments, keySerializer, valueSerializer);
+                result = typeof(DictionaryBsonSerializer<,,>).MakeGenericType(type, keyType, valueType).Construct<IBsonSerializer>(DictionaryRepresentation.ArrayOfDocuments, keySerializer, valueSerializer);
             }
             else if (type.IsArray)
             {
@@ -129,7 +152,7 @@ namespace OBeautifulCode.Serialization.Bson
                 // Don't default to object serializer because if there is no element serializer we want to let the ObcCollectionSerializer decide what to do.
                 var elementSerializer = GetAppropriateSerializer(elementType, defaultToObjectSerializer: false);
 
-                result = typeof(ObcBsonCollectionSerializer<,>).MakeGenericType(type, elementType).Construct<IBsonSerializer>(elementSerializer);
+                result = typeof(CollectionBsonSerializer<,>).MakeGenericType(type, elementType).Construct<IBsonSerializer>(elementSerializer);
             }
             else
             {

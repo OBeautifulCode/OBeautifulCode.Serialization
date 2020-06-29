@@ -152,6 +152,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="SerializationConfiguration\RegistrationDetails.cs" />
     <Compile Include="SerializationConfiguration\RegistrationTime.cs" />
+    <Compile Include="SerializationConfiguration\TypeToRegister\TypeToIncludeOrigin.cs" />
     <Compile Include="SerializationConfiguration\VersionlessOpenTypeConsolidatingTypeEqualityComparer.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationBase\SerializationConfigurationBase.Static.cs" />
     <Compile Include="SerializationConfiguration\SerializationConfigurationBase\SerializationConfigurationBase.Overridable.cs" />
@@ -164,7 +165,6 @@
     <Compile Include="Enums\SerializationKind.cs" />
     <Compile Include="SerializationConfiguration\TypeToRegister\RelatedTypesToInclude.cs" />
     <Compile Include="SerializationConfiguration\TypeToRegister\MemberTypesToInclude.cs" />
-    <Compile Include="SerializationConfiguration\TypeToRegister\TypeToRegisterConstants.cs" />
     <Compile Include="SerializationConfiguration\TypeToRegister\TypeToRegister{T}.cs" />
     <Compile Include="SerializationConfiguration\TypeToRegister\TypeToRegister.cs" />
     <Compile Include="ObcSerializer\ObcSerializerBase.cs" />

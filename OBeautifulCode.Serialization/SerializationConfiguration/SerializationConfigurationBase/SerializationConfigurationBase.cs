@@ -96,9 +96,9 @@ namespace OBeautifulCode.Serialization
 
                         this.RegisterThisInstanceAsAncestorOfDescendantSerializationConfigurations();
 
-                        var typesToRegister = new Queue<TypeToRegister>(this.TypesToRegister ?? new TypeToRegister[0]);
+                        var typesToRegisterQueue = new Queue<TypeToRegister>(this.TypesToRegister ?? new TypeToRegister[0]);
 
-                        this.ProcessTypesToRegister(typesToRegister);
+                        this.ProcessTypesToRegister(typesToRegisterQueue);
 
                         this.FinalizeInitialization();
 
@@ -239,17 +239,17 @@ namespace OBeautifulCode.Serialization
         }
 
         private void ProcessTypesToRegister(
-            Queue<TypeToRegister> typesToRegister)
+            Queue<TypeToRegister> typesToRegisterQueue)
         {
-            new { typesToRegister }.AsOp().Must().NotContainAnyNullElements();
+            new { typesToRegisterQueue }.AsOp().Must().NotContainAnyNullElements();
 
-            typesToRegister.All(_ => _.IsOriginatingType).AsOp(Invariant($"All {nameof(TypeToRegister)} objects in {nameof(this.TypesToRegister)} are originating {nameof(TypeToRegister)} objects.")).Must().BeTrue();
+            typesToRegisterQueue.All(_ => _.IsOriginatingType).AsOp(Invariant($"All {nameof(TypeToRegister)} objects in {nameof(this.TypesToRegister)} are originating {nameof(TypeToRegister)} objects.")).Must().BeTrue();
 
             new { this.TypeToRegisterNamespacePrefixFilters }.Must().NotBeNull().And().Each().NotBeNullNorWhiteSpace();
 
-            while (typesToRegister.Count > 0)
+            while (typesToRegisterQueue.Count > 0)
             {
-                var typeToRegister = typesToRegister.Dequeue();
+                var typeToRegister = typesToRegisterQueue.Dequeue();
 
                 // This type might be an originating type and already be registered by a dependent config.
                 // This typically occurs when the consumer wants to discover descendants in a new namespace
@@ -296,28 +296,38 @@ namespace OBeautifulCode.Serialization
 
                     var relatedTypes = GetRelatedTypesToInclude(typeToRegister.Type, typeToRegister.RelatedTypesToInclude);
 
+                    this.EnqueueAdditionalTypesToInclude(typeToRegister, relatedTypes, TypeToIncludeOrigin.GettingRelatedTypes, typesToRegisterQueue);
+
                     var memberTypes = GetMemberTypesToInclude(typeToRegister.Type, typeToRegister.MemberTypesToInclude);
 
-                    // This excludes typeToRegister.Type (the dequeued value),
-                    // so it's not possible to create any more originating types.
-                    var additionalTypesToInclude = new Type[0]
-                        .Concat(relatedTypes)
-                        .Concat(memberTypes)
-                        .Distinct()
-                        .Where(_ => !VersionlessOpenTypeConsolidatingTypeEqualityComparer.Instance.Equals(_, typeToRegister.Type))
-                        .ToList();
+                    this.EnqueueAdditionalTypesToInclude(typeToRegister, memberTypes, TypeToIncludeOrigin.GettingMemberTypes, typesToRegisterQueue);
+                }
+            }
+        }
 
-                    foreach (var additionalTypeToInclude in additionalTypesToInclude)
-                    {
-                        var additionalTypeToRegister = typeToRegister.CreateSpawnedTypeToRegister(additionalTypeToInclude);
+        private void EnqueueAdditionalTypesToInclude(
+            TypeToRegister typeToRegister,
+            IReadOnlyCollection<Type> additionalTypesToInclude,
+            TypeToIncludeOrigin typeToIncludeOrigin,
+            Queue<TypeToRegister> typesToRegisterQueue)
+        {
+            // This excludes typeToRegister.Type (the dequeued value),
+            // so it's not possible to create any more originating types.
+            additionalTypesToInclude =
+                additionalTypesToInclude
+                .Distinct()
+                .Where(_ => !VersionlessOpenTypeConsolidatingTypeEqualityComparer.Instance.Equals(_, typeToRegister.Type))
+                .ToList();
 
-                        var additionalTypeToRegisterId = BuildIdIgnoringOrigin(additionalTypeToRegister);
+            foreach (var additionalTypeToInclude in additionalTypesToInclude)
+            {
+                var additionalTypeToRegister = typeToRegister.CreateSpawnedTypeToRegister(additionalTypeToInclude, typeToIncludeOrigin);
 
-                        if (!this.visitedTypesToRegisterIds.Contains(additionalTypeToRegisterId))
-                        {
-                            typesToRegister.Enqueue(additionalTypeToRegister);
-                        }
-                    }
+                var additionalTypeToRegisterId = BuildIdIgnoringOrigin(additionalTypeToRegister);
+
+                if (!this.visitedTypesToRegisterIds.Contains(additionalTypeToRegisterId))
+                {
+                    typesToRegisterQueue.Enqueue(additionalTypeToRegister);
                 }
             }
         }

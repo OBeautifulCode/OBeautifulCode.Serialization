@@ -104,6 +104,10 @@ namespace OBeautifulCode.Serialization
             Type type,
             RelatedTypesToInclude relatedTypesToInclude)
         {
+            relatedTypesToInclude = relatedTypesToInclude == RelatedTypesToInclude.Default
+                ? type.ResolveDefaultIntoActionableRelatedTypesToInclude()
+                : relatedTypesToInclude;
+
             if (relatedTypesToInclude == RelatedTypesToInclude.None)
             {
                 return new Type[0];

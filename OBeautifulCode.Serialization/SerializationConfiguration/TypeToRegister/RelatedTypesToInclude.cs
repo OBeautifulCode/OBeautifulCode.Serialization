@@ -18,6 +18,11 @@ namespace OBeautifulCode.Serialization
         None,
 
         /// <summary>
+        /// For interfaces and abstract classes, include all types that are assignable to the type being registered, otherwise do not include any other types.
+        /// </summary>
+        Default,
+
+        /// <summary>
         /// Include all types that the type being registered is assignable to.
         /// </summary>
         Ancestors,

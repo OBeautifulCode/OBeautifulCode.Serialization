@@ -216,5 +216,37 @@ namespace OBeautifulCode.Serialization
 
             return result;
         }
+
+        /// <summary>
+        /// Resolves <see cref="RelatedTypesToInclude.Default"/> into
+        /// an actionable <see cref="RelatedTypesToInclude"/> for the specified type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>
+        /// An actionable <see cref="RelatedTypesToInclude"/> resolved for the specified type,
+        /// when <see cref="RelatedTypesToInclude.Default"/> is specified.
+        /// </returns>
+        public static RelatedTypesToInclude ResolveDefaultIntoActionableRelatedTypesToInclude(
+            this Type type)
+        {
+            new { type }.AsArg().Must().NotBeNull();
+
+            RelatedTypesToInclude result;
+
+            if (type.IsInterface)
+            {
+                result = RelatedTypesToInclude.Descendants;
+            }
+            else if (type.IsAbstract)
+            {
+                result = RelatedTypesToInclude.Descendants;
+            }
+            else
+            {
+                result = RelatedTypesToInclude.None;
+            }
+
+            return result;
+        }
     }
 }

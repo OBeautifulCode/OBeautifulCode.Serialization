@@ -312,7 +312,7 @@ namespace OBeautifulCode.Serialization.Test
     {
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[]
         {
-            typeof(TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+            new TypeToRegisterForBson(typeof(TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums), MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null),
         };
     }
 

@@ -69,11 +69,11 @@ namespace OBeautifulCode.Serialization.Bson.Test
     {
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[]
         {
-            typeof(TestConfigureActionSingle).ToTypeToRegisterForBson(MemberTypesToInclude.None),
-            typeof(ITestConfigureActionFromAuto).ToTypeToRegisterForBson(MemberTypesToInclude.None),
-            typeof(TestConfigureActionBaseFromSub).ToTypeToRegisterForBson(MemberTypesToInclude.None),
-            typeof(TestConfigureActionBaseFromAuto).ToTypeToRegisterForBson(MemberTypesToInclude.None),
-            typeof(ITestConfigureActionFromInterface).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+            new TypeToRegisterForBson(typeof(TestConfigureActionSingle), MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null),
+            new TypeToRegisterForBson(typeof(ITestConfigureActionFromAuto), MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null),
+            new TypeToRegisterForBson(typeof(TestConfigureActionBaseFromSub), MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null),
+            new TypeToRegisterForBson(typeof(TestConfigureActionBaseFromAuto), MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null),
+            new TypeToRegisterForBson(typeof(ITestConfigureActionFromInterface), MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null),
         };
 
         protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => this.TypesToRegisterForBson.Select(_ => _.Type.Namespace).Distinct().ToList();
@@ -97,10 +97,10 @@ namespace OBeautifulCode.Serialization.Bson.Test
 #pragma warning restore SA1401 // Fields should be private
 
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[0]
-            .Concat(this.SettableClassTypesToRegister.Select(_ => _.ToTypeToRegisterForBson(MemberTypesToInclude.None)))
-            .Concat(this.SettableTypesToAutoRegister.Select(_ => _.ToTypeToRegisterForBson(MemberTypesToInclude.None)))
-            .Concat(this.SettableClassTypesToRegisterAlongWithInheritors.Select(_ => _.ToTypeToRegisterForBson(MemberTypesToInclude.None)))
-            .Concat(this.SettableInterfaceTypesToRegisterImplementationOf.Select(_ => _.ToTypeToRegisterForBson(MemberTypesToInclude.None)))
+            .Concat(this.SettableClassTypesToRegister.Select(_ => new TypeToRegisterForBson(_, MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null)))
+            .Concat(this.SettableTypesToAutoRegister.Select(_ => new TypeToRegisterForBson(_, MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null)))
+            .Concat(this.SettableClassTypesToRegisterAlongWithInheritors.Select(_ => new TypeToRegisterForBson(_, MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null)))
+            .Concat(this.SettableInterfaceTypesToRegisterImplementationOf.Select(_ => new TypeToRegisterForBson(_, MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null)))
             .ToList();
 
         protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => this.TypesToRegisterForBson.Select(_ => _.Type.Namespace).Distinct().ToList();
@@ -110,9 +110,9 @@ namespace OBeautifulCode.Serialization.Bson.Test
     {
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[]
         {
-            typeof(IDeduceWhoLetTheDogsOut).ToTypeToRegisterForBson(MemberTypesToInclude.None),
-            typeof(NamedInvestigator).ToTypeToRegisterForBson(MemberTypesToInclude.None),
-            typeof(AnonymousInvestigator).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+            new TypeToRegisterForBson(typeof(IDeduceWhoLetTheDogsOut), MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null),
+            new TypeToRegisterForBson(typeof(NamedInvestigator), MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null),
+            new TypeToRegisterForBson(typeof(AnonymousInvestigator), MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null),
         };
 
         protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => this.TypesToRegisterForBson.Select(_ => _.Type.Namespace).Distinct().ToList();

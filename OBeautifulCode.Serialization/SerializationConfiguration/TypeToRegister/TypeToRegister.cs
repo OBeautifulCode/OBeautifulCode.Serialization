@@ -92,11 +92,13 @@ namespace OBeautifulCode.Serialization
         /// Creates a <see cref="TypeToRegister"/> that is spawned in processing the <see cref="MemberTypesToInclude"/> and <see cref="RelatedTypesToInclude"/> of this instance.
         /// </summary>
         /// <param name="type">The spawned type.</param>
+        /// <param name="typeToIncludeOrigin">The <see cref="TypeToIncludeOrigin"/>.</param>
         /// <returns>
         /// The spawned <see cref="TypeToRegister"/>.
         /// </returns>
         public abstract TypeToRegister CreateSpawnedTypeToRegister(
-            Type type);
+            Type type,
+            TypeToIncludeOrigin typeToIncludeOrigin);
 
         /// <inheritdoc />
         public override string ToString()

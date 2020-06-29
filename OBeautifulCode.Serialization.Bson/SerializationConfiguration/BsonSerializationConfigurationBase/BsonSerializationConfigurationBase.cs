@@ -10,7 +10,6 @@ namespace OBeautifulCode.Serialization.Bson
     using System.Collections.Generic;
 
     using MongoDB.Bson.Serialization;
-
     using OBeautifulCode.Serialization;
 
     using static System.FormattableString;
@@ -63,7 +62,9 @@ namespace OBeautifulCode.Serialization.Bson
                 }
                 else
                 {
-                    BsonSerializer.RegisterSerializer(type, bsonSerializerBuilder.BsonSerializerBuilderFunc());
+                    // see comments in RegisteredTypeBsonSerializer<T> for why we are wrapping the serializer
+                    var registeredTypeBsonSerializer = RegisteredTypeBsonSerializer.Build(type, bsonSerializerBuilder.BsonSerializerBuilderFunc());
+                    BsonSerializer.RegisterSerializer(type, registeredTypeBsonSerializer);
                 }
             }
 

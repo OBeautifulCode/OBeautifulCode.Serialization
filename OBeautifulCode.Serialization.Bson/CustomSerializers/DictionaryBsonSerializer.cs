@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ObcBsonDictionarySerializer.cs" company="OBeautifulCode">
+// <copyright file="DictionaryBsonSerializer.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -30,18 +30,18 @@ namespace OBeautifulCode.Serialization.Bson
     /// <typeparam name="TKey">The type of the key of the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of the value of the dictionary.</typeparam>
     [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = ObcSuppressBecause.CA1005_AvoidExcessiveParametersOnGenericTypes_SpecifiedParametersRequiredForNeededFunctionality)]
-    public class ObcBsonDictionarySerializer<TDictionary, TKey, TValue> : SerializerBase<TDictionary>
+    public class DictionaryBsonSerializer<TDictionary, TKey, TValue> : SerializerBase<TDictionary>
         where TDictionary : class, IEnumerable<KeyValuePair<TKey, TValue>>
     {
         private readonly DictionaryInterfaceImplementerSerializer<Dictionary<TKey, TValue>> underlyingSerializer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObcBsonDictionarySerializer{TDictionary,TKey,TValue}"/> class.
+        /// Initializes a new instance of the <see cref="DictionaryBsonSerializer{TDictionary,TKey,TValue}"/> class.
         /// </summary>
         /// <param name="dictionaryRepresentation">The dictionary representation.</param>
         /// <param name="keySerializer">The key serializer.</param>
         /// <param name="valueSerializer">The value serializer.</param>
-        public ObcBsonDictionarySerializer(
+        public DictionaryBsonSerializer(
             DictionaryRepresentation dictionaryRepresentation,
             IBsonSerializer keySerializer,
             IBsonSerializer valueSerializer)

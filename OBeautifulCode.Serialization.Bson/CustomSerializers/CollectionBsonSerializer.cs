@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ObcBsonCollectionSerializer.cs" company="OBeautifulCode">
+// <copyright file="CollectionBsonSerializer.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -24,16 +24,16 @@ namespace OBeautifulCode.Serialization.Bson
     /// </summary>
     /// <typeparam name="TCollection">The type of the collection.</typeparam>
     /// <typeparam name="TElement">The type of the elements in the collection.</typeparam>
-    public class ObcBsonCollectionSerializer<TCollection, TElement> : SerializerBase<TCollection>
+    public class CollectionBsonSerializer<TCollection, TElement> : SerializerBase<TCollection>
         where TCollection : class, IEnumerable<TElement>
     {
         private readonly ReadOnlyCollectionSerializer<TElement> underlyingSerializer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObcBsonCollectionSerializer{TCollection,TElement}"/> class.
+        /// Initializes a new instance of the <see cref="CollectionBsonSerializer{TCollection,TElement}"/> class.
         /// </summary>
         /// <param name="elementSerializer">The element serializer.</param>
-        public ObcBsonCollectionSerializer(
+        public CollectionBsonSerializer(
             IBsonSerializer<TElement> elementSerializer)
         {
             typeof(TCollection).IsClosedSystemCollectionType().AsArg("typeof(TCollection).IsSystemCollectionType()").Must().BeTrue();

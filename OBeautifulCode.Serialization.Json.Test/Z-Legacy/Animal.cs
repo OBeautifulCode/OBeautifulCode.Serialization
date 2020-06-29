@@ -6,7 +6,10 @@
 
 namespace OBeautifulCode.Serialization.Json.Test
 {
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+
+    using OBeautifulCode.Serialization.Json;
 
 #pragma warning disable SA1201 // Elements should appear in the correct order
 #pragma warning disable SA1401 // Fields should be private
@@ -104,6 +107,14 @@ namespace OBeautifulCode.Serialization.Json.Test
         public int NumberOfTeeth { get; }
 
         public int TailLength;
+    }
+
+    internal class AnimalJsonSerializationConfiguration : JsonSerializationConfigurationBase
+    {
+        protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
+        {
+            new TypeToRegisterForJson(typeof(Animal), MemberTypesToInclude.All, RelatedTypesToInclude.Descendants, null, null),
+        };
     }
 
 #pragma warning restore SA1401 // Fields should be private

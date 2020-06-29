@@ -901,8 +901,8 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
             {
-                typeof(ModelThatCanBeConvertedToString).ToTypeToRegisterForJson(),
                 typeof(TestModel).ToTypeToRegisterForJson(),
+                typeof(ModelThatCanBeConvertedToString).ToTypeToRegisterForJson(),
             };
         }
 
@@ -911,14 +911,14 @@ namespace OBeautifulCode.Serialization.Json.Test
             private static readonly ModelThatCanBeConvertedToStringSerializer ModelThatCanBeConvertedToStringSerializer = new ModelThatCanBeConvertedToStringSerializer();
 
             private static readonly JsonConverterBuilder ModelThatIsConvertedToStringJsonConverterBuilder = new JsonConverterBuilder(
-                "custom-converter",
+                Guid.NewGuid().ToString(),
                 () => new StringSerializerBackedJsonConverter<ModelThatCanBeConvertedToString>(ModelThatCanBeConvertedToStringSerializer),
                 () => new StringSerializerBackedJsonConverter<ModelThatCanBeConvertedToString>(ModelThatCanBeConvertedToStringSerializer));
 
             protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
             {
-                typeof(ModelThatCanBeConvertedToString).ToTypeToRegisterForJson(MemberTypesToInclude.None, RelatedTypesToInclude.None, ModelThatIsConvertedToStringJsonConverterBuilder),
                 typeof(TestModel).ToTypeToRegisterForJson(),
+                new TypeToRegisterForJson(typeof(ModelThatCanBeConvertedToString), MemberTypesToInclude.None, RelatedTypesToInclude.None, ModelThatIsConvertedToStringJsonConverterBuilder, null),
             };
         }
 
@@ -928,8 +928,8 @@ namespace OBeautifulCode.Serialization.Json.Test
 
             protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
             {
-                typeof(ModelThatCanBeConvertedToString).ToTypeToRegisterForJson(MemberTypesToInclude.None, RelatedTypesToInclude.None, null, ModelThatCanBeConvertedToStringSerializer),
                 typeof(TestModel).ToTypeToRegisterForJson(),
+                typeof(ModelThatCanBeConvertedToString).ToTypeToRegisterForJsonUsingKeyInDictionaryStringSerializer(ModelThatCanBeConvertedToStringSerializer),
             };
         }
 
@@ -937,15 +937,10 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             private static readonly ModelThatCanBeConvertedToStringSerializer ModelThatCanBeConvertedToStringSerializer = new ModelThatCanBeConvertedToStringSerializer();
 
-            private static readonly JsonConverterBuilder ModelThatIsConvertedToStringJsonConverterBuilder = new JsonConverterBuilder(
-                "custom-converter",
-                () => new StringSerializerBackedJsonConverter<ModelThatCanBeConvertedToString>(ModelThatCanBeConvertedToStringSerializer),
-                () => new StringSerializerBackedJsonConverter<ModelThatCanBeConvertedToString>(ModelThatCanBeConvertedToStringSerializer));
-
             protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
             {
-                typeof(ModelThatCanBeConvertedToString).ToTypeToRegisterForJson(MemberTypesToInclude.None, RelatedTypesToInclude.None, ModelThatIsConvertedToStringJsonConverterBuilder, ModelThatCanBeConvertedToStringSerializer),
                 typeof(TestModel).ToTypeToRegisterForJson(),
+                typeof(ModelThatCanBeConvertedToString).ToTypeToRegisterForJsonUsingStringSerializer(ModelThatCanBeConvertedToStringSerializer),
             };
         }
 
@@ -955,8 +950,8 @@ namespace OBeautifulCode.Serialization.Json.Test
 
             protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
             {
-                typeof(ModelThatCanBeConvertedToString).ToTypeToRegisterForJson(MemberTypesToInclude.None, RelatedTypesToInclude.None, null, ModelThatCanBeConvertedToStringSerializer),
                 typeof(TestModel).ToTypeToRegisterForJson(),
+                typeof(ModelThatCanBeConvertedToString).ToTypeToRegisterForJsonUsingKeyInDictionaryStringSerializer(ModelThatCanBeConvertedToStringSerializer),
             };
         }
 
@@ -964,15 +959,10 @@ namespace OBeautifulCode.Serialization.Json.Test
         {
             private static readonly ModelThatCanBeConvertedToStringSerializer ModelThatCanBeConvertedToStringSerializer = new ModelThatCanBeConvertedToStringSerializer(outputNullOrEmpty: true);
 
-            private static readonly JsonConverterBuilder ModelThatIsConvertedToStringJsonConverterBuilder = new JsonConverterBuilder(
-                "custom-converter",
-                () => new StringSerializerBackedJsonConverter<ModelThatCanBeConvertedToString>(ModelThatCanBeConvertedToStringSerializer),
-                () => new StringSerializerBackedJsonConverter<ModelThatCanBeConvertedToString>(ModelThatCanBeConvertedToStringSerializer));
-
             protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
             {
-                typeof(ModelThatCanBeConvertedToString).ToTypeToRegisterForJson(MemberTypesToInclude.None, RelatedTypesToInclude.None, ModelThatIsConvertedToStringJsonConverterBuilder, ModelThatCanBeConvertedToStringSerializer),
                 typeof(TestModel).ToTypeToRegisterForJson(),
+                typeof(ModelThatCanBeConvertedToString).ToTypeToRegisterForJsonUsingStringSerializer(ModelThatCanBeConvertedToStringSerializer),
             };
         }
     }

@@ -18,14 +18,14 @@ namespace OBeautifulCode.Serialization
     /// <remarks>
     /// Binary serialization will be the UTF-8 byte representation of the resulting string of the backing serializer.
     /// </remarks>
-    public class OBcStringSerializerBackedSerializer : ISerializer
+    public class ObcStringSerializerBackedSerializer : ISerializer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OBcStringSerializerBackedSerializer"/> class.
+        /// Initializes a new instance of the <see cref="ObcStringSerializerBackedSerializer"/> class.
         /// </summary>
         /// <param name="backingStringSerializer">Backing string serializer.</param>
         /// <param name="id">Optional identifier to be stored in metadata of <see cref="SerializerRepresentation"/>.  DEFAULT is null.</param>
-        public OBcStringSerializerBackedSerializer(
+        public ObcStringSerializerBackedSerializer(
             IStringSerializeAndDeserialize backingStringSerializer,
             string id = null)
         {
@@ -35,6 +35,11 @@ namespace OBeautifulCode.Serialization
 
             this.SerializerRepresentation = new SerializerRepresentation(SerializationKind.StringSerializerBacked, metadata: new Dictionary<string, string> { { nameof(id), id } });
         }
+
+        /// <summary>
+        /// Gets the encoding for binary serialization.
+        /// </summary>
+        public static Encoding Encoding => Encoding.UTF8;
 
         /// <summary>
         /// Gets the backing string serializer.
@@ -50,18 +55,13 @@ namespace OBeautifulCode.Serialization
         /// <inheritdoc />
         public SerializerRepresentation SerializerRepresentation { get; }
 
-        /// <summary>
-        /// Gets the encoding for binary serialization.
-        /// </summary>
-        public Encoding Encoding => Encoding.UTF8;
-
         /// <inheritdoc />
         public byte[] SerializeToBytes(
             object objectToSerialize)
         {
             var serializedString = this.BackingStringSerializer.SerializeToString(objectToSerialize);
 
-            var result = this.Encoding.GetBytes(serializedString);
+            var result = Encoding.GetBytes(serializedString);
 
             return result;
         }
@@ -100,7 +100,7 @@ namespace OBeautifulCode.Serialization
         public T Deserialize<T>(
             byte[] serializedBytes)
         {
-            var serializedString = this.Encoding.GetString(serializedBytes);
+            var serializedString = Encoding.GetString(serializedBytes);
 
             var result = this.BackingStringSerializer.Deserialize<T>(serializedString);
 
@@ -114,7 +114,7 @@ namespace OBeautifulCode.Serialization
         {
             new { type }.AsArg().Must().NotBeNull();
 
-            var serializedString = this.Encoding.GetString(serializedBytes);
+            var serializedString = Encoding.GetString(serializedBytes);
 
             var result = this.BackingStringSerializer.Deserialize(serializedString, type);
 

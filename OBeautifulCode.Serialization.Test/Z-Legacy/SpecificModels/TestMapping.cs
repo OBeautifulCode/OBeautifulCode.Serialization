@@ -179,8 +179,8 @@ namespace OBeautifulCode.Serialization.Test
     {
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[]
         {
-            typeof(TestBase).ToTypeToRegisterForBson(MemberTypesToInclude.None),
-            typeof(TestWithReadOnlyCollectionOfBaseClass).ToTypeToRegisterForBson(MemberTypesToInclude.None),
+            new TypeToRegisterForBson(typeof(TestBase), MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null),
+            new TypeToRegisterForBson(typeof(TestWithReadOnlyCollectionOfBaseClass), MemberTypesToInclude.None, RelatedTypesToInclude.AncestorsAndDescendants, null, null),
         };
     }
 

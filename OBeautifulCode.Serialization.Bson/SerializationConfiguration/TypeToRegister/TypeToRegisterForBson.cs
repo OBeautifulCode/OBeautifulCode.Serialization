@@ -116,7 +116,8 @@ namespace OBeautifulCode.Serialization.Bson
 
         /// <inheritdoc />
         public override TypeToRegister CreateSpawnedTypeToRegister(
-            Type type)
+            Type type,
+            TypeToIncludeOrigin typeToIncludeOrigin)
         {
             var result = new TypeToRegisterForBson(type, this.RecursiveOriginType, this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.BsonSerializerBuilder, this.PropertyNameWhitelist);
 

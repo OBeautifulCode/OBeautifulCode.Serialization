@@ -231,7 +231,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
         {
             protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => new TypeToRegisterForPropertyBag[]
             {
-                typeof(TypeWithCustomPropertyBagSerializer).ToTypeToRegisterForPropertyBag(MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new TypeWithCustomPropertyBagSerializerSerializer()),
+                new TypeToRegisterForPropertyBag(typeof(TypeWithCustomPropertyBagSerializer), MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new TypeWithCustomPropertyBagSerializerSerializer()),
             };
         }
 
@@ -242,8 +242,8 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => new TypeToRegisterForPropertyBag[]
             {
                 typeof(ComplicatedObject).ToTypeToRegisterForPropertyBag(),
-                typeof(InheritTypeBase).ToTypeToRegisterForPropertyBag(MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new InheritTestSerializer()),
-                typeof(InheritTypeDerive).ToTypeToRegisterForPropertyBag(MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new InheritTestSerializer()),
+                new TypeToRegisterForPropertyBag(typeof(InheritTypeBase), MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new InheritTestSerializer()),
+                new TypeToRegisterForPropertyBag(typeof(InheritTypeDerive), MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new InheritTestSerializer()),
             };
         }
 

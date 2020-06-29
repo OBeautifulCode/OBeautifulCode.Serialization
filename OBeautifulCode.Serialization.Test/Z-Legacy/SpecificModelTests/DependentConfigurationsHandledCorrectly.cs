@@ -107,11 +107,7 @@ namespace OBeautifulCode.Serialization.Test
         protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new TypeToRegisterForJson[]
         {
             typeof(TestingDependentConfigAbstractType).ToTypeToRegisterForJson(),
-            typeof(TestingDependentConfigType)
-                .ToTypeToRegisterForJson(
-                    MemberTypesToInclude.None,
-                    RelatedTypesToInclude.None,
-                    new JsonConverterBuilder("uniqueId", () => new TestingDependentConverter(), () => new TestingDependentConverter())),
+            new TypeToRegisterForJson(typeof(TestingDependentConfigType), MemberTypesToInclude.None, RelatedTypesToInclude.None, new JsonConverterBuilder("uniqueId", () => new TestingDependentConverter(), () => new TestingDependentConverter()), null),
         };
     }
 
@@ -172,7 +168,7 @@ namespace OBeautifulCode.Serialization.Test
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new TypeToRegisterForBson[]
         {
             typeof(TestingDependentConfigAbstractType).ToTypeToRegisterForBson(),
-            typeof(TestingDependentConfigType).ToTypeToRegisterForBson(MemberTypesToInclude.None, RelatedTypesToInclude.None, new BsonSerializerBuilder(() => new TestingDependentSerializer(), BsonSerializerOutputKind.Object)),
+            new TypeToRegisterForBson(typeof(TestingDependentConfigType), MemberTypesToInclude.None, RelatedTypesToInclude.None, new BsonSerializerBuilder(() => new TestingDependentSerializer(), BsonSerializerOutputKind.Object), null),
         };
     }
 
@@ -220,7 +216,7 @@ namespace OBeautifulCode.Serialization.Test
         protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => new TypeToRegisterForPropertyBag[]
         {
             typeof(TestingDependentConfigAbstractType).ToTypeToRegisterForPropertyBag(),
-            typeof(TestingDependentConfigType).ToTypeToRegisterForPropertyBag(MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new TestingDependentPropBagSerializer()),
+            new TypeToRegisterForPropertyBag(typeof(TestingDependentConfigType), MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new TestingDependentPropBagSerializer()),
         };
     }
 

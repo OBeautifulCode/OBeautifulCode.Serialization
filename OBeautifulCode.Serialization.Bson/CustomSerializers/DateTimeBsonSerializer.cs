@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ObcBsonDateTimeSerializer.cs" company="OBeautifulCode">
+// <copyright file="DateTimeBsonSerializer.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ namespace OBeautifulCode.Serialization.Bson
     /// <summary>
     /// Custom <see cref="DateTime"/> serializer to do the right thing.
     /// </summary>
-    public class ObcBsonDateTimeSerializer : SerializerBase<DateTime>
+    public class DateTimeBsonSerializer : SerializerBase<DateTime>
     {
         private static readonly IStringSerializeAndDeserialize StringSerializer = new ObcDateTimeStringSerializer();
 
