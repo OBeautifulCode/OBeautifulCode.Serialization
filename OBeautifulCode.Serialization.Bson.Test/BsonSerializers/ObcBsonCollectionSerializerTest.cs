@@ -10,7 +10,9 @@ namespace OBeautifulCode.Serialization.Bson.Test
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
+
     using FakeItEasy;
+
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Serialization.Bson.Test.Internal;

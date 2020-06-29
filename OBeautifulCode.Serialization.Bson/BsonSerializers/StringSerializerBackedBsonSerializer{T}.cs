@@ -48,6 +48,8 @@ namespace OBeautifulCode.Serialization.Bson
 
             if (bsonType == BsonType.Null)
             {
+                context.Reader.ReadNull();
+
                 serializedPayload = null;
             }
             else if (bsonType == BsonType.String)

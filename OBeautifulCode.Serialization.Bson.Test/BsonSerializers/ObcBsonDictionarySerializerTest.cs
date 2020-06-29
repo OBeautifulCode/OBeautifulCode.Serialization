@@ -12,8 +12,9 @@ namespace OBeautifulCode.Serialization.Bson.Test
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Security.Cryptography;
+
     using FakeItEasy;
+
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Serialization.Bson;
