@@ -52,18 +52,18 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// with a specified <see cref="IStringSerializeAndDeserialize"/> to use everywhere the type appears.
         /// </summary>
         /// <param name="type">The type to register.</param>
-        /// <param name="stringSerializerBuilderFunc">Func that builds the <see cref="IStringSerializeAndDeserialize"/>.  DEFAULT is null (no serializer).</param>
+        /// <param name="stringSerializer">The string serializer to use for <paramref name="type"/>.</param>
         /// <returns>
         /// The type to register for property bag serialization.
         /// </returns>
         public static TypeToRegisterForPropertyBag ToTypeToRegisterForPropertyBagUsingStringSerializer(
             this Type type,
-            Func<IStringSerializeAndDeserialize> stringSerializerBuilderFunc)
+            IStringSerializeAndDeserialize stringSerializer)
         {
             new { type }.AsArg().Must().NotBeNull();
-            new { stringSerializerBuilderFunc }.AsArg().Must().NotBeNull();
+            new { stringSerializer }.AsArg().Must().NotBeNull();
 
-            var result = new TypeToRegisterForPropertyBag(type, MemberTypesToInclude.None, RelatedTypesToInclude.Default, stringSerializerBuilderFunc);
+            var result = new TypeToRegisterForPropertyBag(type, MemberTypesToInclude.None, RelatedTypesToInclude.Default, () => stringSerializer);
 
             return result;
         }
