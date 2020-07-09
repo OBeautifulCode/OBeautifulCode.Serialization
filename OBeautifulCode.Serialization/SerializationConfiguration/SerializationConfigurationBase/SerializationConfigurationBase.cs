@@ -226,7 +226,14 @@ namespace OBeautifulCode.Serialization
                     this.RegisterType(registrationDetails, RegistrationTime.Initialization);
                 }
 
-                this.visitedTypesToRegisterIds.AddRange(descendantSerializationConfiguration.visitedTypesToRegisterIds);
+                // Previously, we were copying the visitedTypesToRegisterIds from the descendant configs into this config.
+                // However, consider the case where a descendant config visits a type, but does not register the type
+                // because of the TypeToRegisterNamespacePrefixFilters.  When this config comes along and sees the type,
+                // it cannot be registered because the code passes over the type because it finds it in visitedTypesToRegisterIds.
+                // Unfortunately, we have to trade-off performance here (exploring lots of the sames types that have already been
+                // explored by descendants).  We could not find a heuristic or optimization that allowed us to keep some
+                // of the visited types and discard the potentially problematic.
+                // this.visitedTypesToRegisterIds.AddRange(descendantSerializationConfiguration.visitedTypesToRegisterIds);
             }
         }
 
