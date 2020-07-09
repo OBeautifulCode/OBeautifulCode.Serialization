@@ -40,7 +40,7 @@ namespace OBeautifulCode.Serialization
         private readonly HashSet<string> visitedTypesToRegisterIds = new HashSet<string>();
 
         // ReSharper disable once CollectionNeverQueried.Local
-        private readonly Dictionary<Type, TypeToRegister> typeToFilteredOutTypeToRegisterMap = new Dictionary<Type, TypeToRegister>();
+        private readonly Dictionary<Type, TypeToRegister> filteredOutTypeToTypeToRegisterMap = new Dictionary<Type, TypeToRegister>();
 
         private bool initialized;
 
@@ -258,7 +258,7 @@ namespace OBeautifulCode.Serialization
                 // The type was introduced by GetRelatedTypesToInclude() or GetMemberTypesToInclude().
                 // Recursive calls to those methods could result in traversing the same type multiple times.
                 // In both cases, just skip it.
-                if ((!this.registeredTypeToRegistrationDetailsMap.ContainsKey(typeToRegister.Type)) && (!this.typeToFilteredOutTypeToRegisterMap.ContainsKey(typeToRegister.Type)))
+                if ((!this.registeredTypeToRegistrationDetailsMap.ContainsKey(typeToRegister.Type)) && (!this.filteredOutTypeToTypeToRegisterMap.ContainsKey(typeToRegister.Type)))
                 {
                     // these types need to be considered for spawning additional types to include
                     // and thus need to be processed in the queue, but they themselves cannot be registered.
@@ -276,7 +276,7 @@ namespace OBeautifulCode.Serialization
                         }
                         else
                         {
-                            this.typeToFilteredOutTypeToRegisterMap.Add(typeToRegister.Type, typeToRegister);
+                            this.filteredOutTypeToTypeToRegisterMap.Add(typeToRegister.Type, typeToRegister);
                         }
                     }
                     else
