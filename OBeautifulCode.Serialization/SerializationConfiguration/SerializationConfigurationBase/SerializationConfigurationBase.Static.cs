@@ -437,15 +437,13 @@ namespace OBeautifulCode.Serialization
                 return false;
             }
 
-            // needed to register serializer for System.Drawing.Color and others
-            if (type.IsSystemType() && (!typeToRegister.IsOriginatingType))
+            if (type.IsSystemType())
             {
-                return false;
-            }
-
-            if (type.IsArray || type.IsClosedSystemDictionaryType() || type.IsClosedSystemCollectionType() || type.IsClosedSystemEnumerableType())
-            {
-                return false;
+                // needed to register serializer for System.Drawing.Color and others
+                if (!typeToRegister.IsOriginatingType)
+                {
+                    return false;
+                }
             }
 
             return true;
