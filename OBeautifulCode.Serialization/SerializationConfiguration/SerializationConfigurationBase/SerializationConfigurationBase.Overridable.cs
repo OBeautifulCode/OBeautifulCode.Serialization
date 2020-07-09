@@ -9,6 +9,7 @@ namespace OBeautifulCode.Serialization
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     using OBeautifulCode.Serialization.Internal;
 
@@ -44,7 +45,8 @@ namespace OBeautifulCode.Serialization
         /// If a type's namespace starts with any of the specified filters, then the type is registered.
         /// An empty set means that no filtering occurs; all types specified or discovered are registered.
         /// </summary>
-        protected virtual IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => new[] { this.GetType().Namespace };
+        protected virtual IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters =>
+            this.TypesToRegister.Select(_ => _.Type.Namespace).Distinct().ToList();
 
         /// <summary>
         /// Gets the types that are permitted to have unregistered members.
