@@ -96,7 +96,12 @@ namespace OBeautifulCode.Serialization.Bson
             // we have to use ObcBsonSerializer.SerializationConfigurationInUseForDeserialization, which
             // tracks the thread being used for the deserialize operation and associates the serialization
             // configuration in-use with the thread.
-            ObcBsonSerializer.GetSerializationConfigurationInUseForDeserialization().ThrowOnUnregisteredTypeIfAppropriate(result, SerializationDirection.Deserialize, null);
+            var serializationConfiguration = ObcBsonSerializer.GetSerializationConfigurationInUseForDeserialization();
+
+            // serializationConfiguration is only ever null if the consumer is NOT using the front-door for serialization
+            // (i.e. a serializer), but using the Mongo driver directly to deserialize.  In that case, we do not know
+            // which serialization configuration is "in use".
+            serializationConfiguration?.ThrowOnUnregisteredTypeIfAppropriate(result, SerializationDirection.Deserialize, null);
 
             return result;
         }
