@@ -135,6 +135,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
     <Compile Include="Converters\DictionaryJsonConverterBaseTest.cs" />
+    <Compile Include="Converters\SystemCollectionTest.cs" />
     <Compile Include="Converters\TypeToRegisterForJsonTest.cs" />
     <Compile Include="Z-Legacy\Animal.cs" />
     <Compile Include="Z-Legacy\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />

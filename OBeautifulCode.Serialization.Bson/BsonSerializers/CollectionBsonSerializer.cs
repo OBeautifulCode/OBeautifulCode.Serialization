@@ -109,16 +109,21 @@ namespace OBeautifulCode.Serialization.Bson
 
                 var deserializedType = typeof(TCollection);
 
-                if (deserializedType == typeof(List<TElement>))
+                if ((deserializedType == typeof(List<TElement>)) ||
+                    (deserializedType == typeof(IList<TElement>)) ||
+                    (deserializedType == typeof(ICollection<TElement>)))
                 {
                     result = readOnlyCollection.ToList() as TCollection;
                 }
                 else if (deserializedType == typeof(Collection<TElement>))
                 {
-                    result = new Collection<TElement>(readOnlyCollection) as TCollection;
+                    result = new Collection<TElement>(readOnlyCollection.ToList()) as TCollection;
                 }
                 else
                 {
+                    ////typeof(ReadOnlyCollection<>),
+                    ////typeof(IReadOnlyCollection<>),
+                    ////typeof(IReadOnlyList<>),
                     result = readOnlyCollection as TCollection;
                 }
             }

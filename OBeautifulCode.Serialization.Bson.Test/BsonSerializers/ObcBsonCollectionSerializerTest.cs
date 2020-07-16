@@ -83,6 +83,36 @@ namespace OBeautifulCode.Serialization.Bson.Test
             expected2.RoundtripSerializeViaBsonWithBeEqualToAssertion(typeof(CollectionsOfModelThatSerializesToStringBsonSerializationConfiguration));
         }
 
+        [Fact]
+        public static void RoundtripSerialize___Should_return_types_that_honor_mutability_contracts___When_deserializing_various_system_collection_types()
+        {
+            // Arrange
+            var modelThatSerializesToString = A.Dummy<ModelThatSerializesToString>();
+
+            var expected = new CollectionsOfModelThatSerializesToStringModel
+            {
+                CollectionInterface = new List<ModelThatSerializesToString> { modelThatSerializesToString },
+                ReadOnlyCollectionInterface = new HashSet<ModelThatSerializesToString> { modelThatSerializesToString },
+                ListInterface = new List<ModelThatSerializesToString> { modelThatSerializesToString },
+                ReadOnlyListInterface = new[] { modelThatSerializesToString },
+                List = new List<ModelThatSerializesToString> { modelThatSerializesToString },
+                Collection = new Collection<ModelThatSerializesToString> { modelThatSerializesToString },
+                ReadOnlyCollection = new ReadOnlyCollection<ModelThatSerializesToString>(new List<ModelThatSerializesToString> { modelThatSerializesToString }),
+            };
+
+            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, CollectionsOfModelThatSerializesToStringModel deserialized)
+            {
+                // these types are mutable; we should be able to add to them
+                deserialized.Collection.Add(null);
+                deserialized.CollectionInterface.Add(null);
+                deserialized.List.Add(null);
+                deserialized.ListInterface.Add(null);
+            }
+
+            // Act, Assert
+            expected.RoundtripSerializeViaBsonWithCallbackVerification(ThrowIfObjectsDiffer, typeof(CollectionsOfModelThatSerializesToStringBsonSerializationConfiguration));
+        }
+
         [Serializable]
         [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class CollectionsOfDateTimeModel : IEquatable<CollectionsOfDateTimeModel>
