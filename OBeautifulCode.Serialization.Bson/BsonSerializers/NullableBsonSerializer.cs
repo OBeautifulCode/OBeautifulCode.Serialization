@@ -7,6 +7,7 @@
 namespace OBeautifulCode.Serialization.Bson
 {
     using System;
+    using System.Globalization;
 
     using MongoDB.Bson;
     using MongoDB.Bson.IO;
@@ -14,6 +15,9 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization.Serializers;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Type.Recipes;
+
+    using static System.FormattableString;
 
     /// <summary>
     /// Represents a serializer for <see cref="Nullable{T}"/>.
@@ -74,7 +78,33 @@ namespace OBeautifulCode.Serialization.Bson
                     // so we want to default to that if a serializer is not found
                     var serializer = typeof(T).GetAppropriateSerializer(defaultToObjectSerializer: true);
 
-                    result = (T?)serializer.Deserialize(context, args);
+                    var deserialized = serializer.Deserialize(context, args);
+
+                    var expectedType = typeof(T);
+
+                    if (deserialized == null)
+                    {
+                        throw new InvalidOperationException(Invariant($"When deserializing BSON Type '{bsonType}' into '{expectedType.ToStringReadable()}', got null which was unexpected."));
+                    }
+
+                    var deserializedType = deserialized.GetType();
+
+                    if (deserializedType == expectedType)
+                    {
+                        result = (T?)deserialized;
+                    }
+                    else if (deserializedType == typeof(string))
+                    {
+                        // We have observed that 'decimal?' and 'int?' are stored as a string when a document is persisted
+                        // to MongoDB, despite it being a 'decimal?' in the BSON format.  This code is thus
+                        // needed to convert the string to the expected type.
+                        // We have observed that 'bool?' is stored as a boolean.
+                        result = (T?)Convert.ChangeType(deserialized, expectedType, CultureInfo.InvariantCulture);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(Invariant($"When deserializing BSON Type '{bsonType}' into '{expectedType.ToStringReadable()}', BSON returned the following unexpected type: '{deserializedType.ToStringReadable()}'."));
+                    }
                 }
             }
 
