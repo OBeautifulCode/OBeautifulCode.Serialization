@@ -220,7 +220,9 @@ namespace OBeautifulCode.Serialization.Json
 
                 jsonObject.Remove(ConcreteTypeTokenName);
 
-                result = concreteType.ToTypeRepresentationFromAssemblyQualifiedName().ResolveFromLoadedTypes();
+                result = concreteType.ResolveFromLoadedTypes();
+
+                new { result }.AsOp().Must().NotBeNull();
             }
             else
             {

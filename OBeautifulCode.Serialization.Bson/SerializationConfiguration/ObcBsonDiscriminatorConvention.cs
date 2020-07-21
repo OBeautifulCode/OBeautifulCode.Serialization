@@ -62,9 +62,9 @@ namespace OBeautifulCode.Serialization.Bson
 
                 try
                 {
-                    var assemblyQualifiedName = value.ToTypeRepresentationFromAssemblyQualifiedName();
+                    result = value.ResolveFromLoadedTypes();
 
-                    result = assemblyQualifiedName.ResolveFromLoadedTypes();
+                    new { result }.AsOp().Must().NotBeNull();
                 }
                 catch (ArgumentException)
                 {
