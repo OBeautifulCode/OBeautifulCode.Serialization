@@ -8,8 +8,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
 {
     using System;
 
-    using OBeautifulCode.Assertion.Recipes;
-
     /// <summary>
     /// Extension methods related to property bag serialization configuration.
     /// </summary>
@@ -40,7 +38,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
         public static TypeToRegisterForPropertyBag ToTypeToRegisterForPropertyBag(
             this Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var result = new TypeToRegisterForPropertyBag(type, MemberTypesToInclude.All, RelatedTypesToInclude.Default, null);
 
@@ -60,8 +61,15 @@ namespace OBeautifulCode.Serialization.PropertyBag
             this Type type,
             IStringSerializeAndDeserialize stringSerializer)
         {
-            new { type }.AsArg().Must().NotBeNull();
-            new { stringSerializer }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (stringSerializer == null)
+            {
+                throw new ArgumentNullException(nameof(stringSerializer));
+            }
 
             var result = new TypeToRegisterForPropertyBag(type, MemberTypesToInclude.None, RelatedTypesToInclude.Default, () => stringSerializer);
 

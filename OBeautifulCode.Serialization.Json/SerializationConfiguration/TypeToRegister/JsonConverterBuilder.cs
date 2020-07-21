@@ -10,8 +10,6 @@ namespace OBeautifulCode.Serialization.Json
 
     using Newtonsoft.Json;
 
-    using OBeautifulCode.Assertion.Recipes;
-
     using static System.FormattableString;
 
     /// <summary>
@@ -30,9 +28,25 @@ namespace OBeautifulCode.Serialization.Json
             Func<JsonConverter> serializingConverterBuilderFunc,
             Func<JsonConverter> deserializingConverterBuilderFunc)
         {
-            new { id }.AsArg().Must().NotBeNullNorWhiteSpace();
-            new { serializingConverterBuilderFunc }.AsArg().Must().NotBeNull();
-            new { deserializingConverterBuilderFunc }.AsArg().Must().NotBeNull();
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentException(Invariant($"'{nameof(id)}' is white space"));
+            }
+
+            if (serializingConverterBuilderFunc == null)
+            {
+                throw new ArgumentNullException(nameof(serializingConverterBuilderFunc));
+            }
+
+            if (deserializingConverterBuilderFunc == null)
+            {
+                throw new ArgumentNullException(nameof(deserializingConverterBuilderFunc));
+            }
 
             this.Id = id;
             this.SerializingConverterBuilderFunc = serializingConverterBuilderFunc;

@@ -15,7 +15,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
     using System.Runtime.Serialization;
     using System.Text;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
@@ -136,7 +135,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
             byte[] serializedBytes,
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var stringRepresentation = ConvertByteArrayToString(serializedBytes);
 
@@ -195,7 +197,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
             string serializedString,
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
 
@@ -231,7 +236,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 v =>
                     {
                         var propertyInfo = specificType.GetProperty(v.Name, bindingFlags);
-                        propertyInfo.AsArg(Invariant($"Could not find {nameof(PropertyInfo)} on type: {specificType} by name: {v.Name}")).Must().NotBeNull();
+                        if (propertyInfo == null)
+                        {
+                            throw new ArgumentNullException(Invariant($"Could not find {nameof(PropertyInfo)} on type: {specificType} by name: {v.Name}"));
+                        }
 
                         var propertyValue = propertyInfo.GetValue(objectToSerialize);
 
@@ -259,7 +267,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
             IReadOnlyDictionary<string, string> serializedPropertyBag,
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             if (serializedPropertyBag == null)
             {
@@ -353,7 +364,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
                 var missingPropertyExceptionMessage = Invariant($"Could not find {nameof(PropertyInfo)} on type: {specificType} by name: {property.Key}");
 
-                propertyInfo.AsArg(missingPropertyExceptionMessage).Must().NotBeNull();
+                if (propertyInfo == null)
+                {
+                    throw new ArgumentNullException(missingPropertyExceptionMessage);
+                }
 
                 var propertyType = propertyInfo?.PropertyType ?? throw new ArgumentNullException(missingPropertyExceptionMessage);
 
@@ -400,7 +414,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
             string serializedString,
             Type type)
         {
-            new { serializedString }.AsArg().Must().NotBeNull();
+            if (serializedString == null)
+            {
+                throw new ArgumentNullException(nameof(serializedString));
+            }
 
             if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
             {
@@ -486,7 +503,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
         private string MakeStringFromPropertyValue(
             object propertyValue)
         {
-            new { propertyValue }.AsArg().Must().NotBeNull();
+            if (propertyValue == null)
+            {
+                throw new ArgumentNullException(nameof(propertyValue));
+            }
 
             var propertyType = propertyValue.GetType();
 

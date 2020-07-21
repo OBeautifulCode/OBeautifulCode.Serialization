@@ -10,8 +10,6 @@ namespace OBeautifulCode.Serialization.Json
 
     using Newtonsoft.Json;
 
-    using OBeautifulCode.Assertion.Recipes;
-
     using static System.FormattableString;
 
     /// <summary>
@@ -57,9 +55,20 @@ namespace OBeautifulCode.Serialization.Json
             IStringSerializeAndDeserialize keyInDictionaryStringSerializer)
             : base(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude)
         {
-            new { type }.AsArg().Must().NotBeNull();
-            new { recursiveOriginType }.AsArg().Must().NotBeNull();
-            new { directOriginType }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (recursiveOriginType == null)
+            {
+                throw new ArgumentNullException(nameof(recursiveOriginType));
+            }
+
+            if (directOriginType == null)
+            {
+                throw new ArgumentNullException(nameof(directOriginType));
+            }
 
             if (jsonConverterBuilder != null)
             {

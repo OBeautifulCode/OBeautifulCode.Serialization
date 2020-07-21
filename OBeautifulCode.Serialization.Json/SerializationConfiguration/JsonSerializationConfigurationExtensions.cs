@@ -10,8 +10,6 @@ namespace OBeautifulCode.Serialization.Json
 
     using Newtonsoft.Json;
 
-    using OBeautifulCode.Assertion.Recipes;
-
     using static System.FormattableString;
 
     /// <summary>
@@ -44,7 +42,10 @@ namespace OBeautifulCode.Serialization.Json
         public static TypeToRegisterForJson ToTypeToRegisterForJson(
             this Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var result = new TypeToRegisterForJson(type, MemberTypesToInclude.All, RelatedTypesToInclude.Default, null, null);
 
@@ -64,8 +65,15 @@ namespace OBeautifulCode.Serialization.Json
             this Type type,
             IStringSerializeAndDeserialize stringSerializer)
         {
-            new { type }.AsArg().Must().NotBeNull();
-            new { stringSerializer }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (stringSerializer == null)
+            {
+                throw new ArgumentNullException(nameof(stringSerializer));
+            }
 
             var result = new TypeToRegisterForJson(type, MemberTypesToInclude.All, RelatedTypesToInclude.Default, null, stringSerializer);
 
@@ -85,8 +93,15 @@ namespace OBeautifulCode.Serialization.Json
             this Type type,
             IStringSerializeAndDeserialize stringSerializer)
         {
-            new { type }.AsArg().Must().NotBeNull();
-            new { stringSerializer }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (stringSerializer == null)
+            {
+                throw new ArgumentNullException(nameof(stringSerializer));
+            }
 
             var canConvertTypeMatchStrategy = type.ResolveDefaultIntoActionableRelatedTypesToInclude().ToCanConvertTypeMatchStrategy();
 

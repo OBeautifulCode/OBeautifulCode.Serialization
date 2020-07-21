@@ -176,7 +176,15 @@ namespace OBeautifulCode.Serialization
         public static DateTime DeserializeToDateTime(
             string serializedString)
         {
-            new { serializedString }.AsArg().Must().NotBeNullNorWhiteSpace();
+            if (serializedString == null)
+            {
+                throw new ArgumentNullException(nameof(serializedString));
+            }
+
+            if (string.IsNullOrWhiteSpace(serializedString))
+            {
+                throw new ArgumentException(Invariant($"'{nameof(serializedString)}' is white space"));
+            }
 
             var exceptionMessage = Invariant($"Provided {nameof(serializedString)}: {serializedString} is malformed; it's not in a supported format and cannot be deserialized.");
 
@@ -227,7 +235,16 @@ namespace OBeautifulCode.Serialization
             string serializedString,
             Type type)
         {
-            new { serializedString }.AsArg().Must().NotBeNullNorWhiteSpace();
+            if (serializedString == null)
+            {
+                throw new ArgumentNullException(nameof(serializedString));
+            }
+
+            if (string.IsNullOrWhiteSpace(serializedString))
+            {
+                throw new ArgumentException(Invariant($"'{nameof(serializedString)}' is white space"));
+            }
+
             new { type }.AsArg().Must().NotBeNull().And().BeEqualTo(typeof(DateTime));
 
             var result = DeserializeToDateTime(serializedString);

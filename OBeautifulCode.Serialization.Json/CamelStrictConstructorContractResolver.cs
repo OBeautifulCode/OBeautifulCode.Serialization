@@ -16,7 +16,6 @@ namespace OBeautifulCode.Serialization.Json
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Type.Recipes;
 
@@ -53,7 +52,10 @@ namespace OBeautifulCode.Serialization.Json
         public CamelStrictConstructorContractResolver(
             Func<IReadOnlyDictionary<Type, RegistrationDetails>> getRegisteredTypesFunc)
         {
-            new { getRegisteredTypesFunc }.AsArg().Must().NotBeNull();
+            if (getRegisteredTypesFunc == null)
+            {
+                throw new ArgumentNullException(nameof(getRegisteredTypesFunc));
+            }
 
             // this will cause dictionary keys to be lowercased if set to true (or you can set to true and set a dictionary key resolver).
             this.NamingStrategy.ProcessDictionaryKeys = false;
