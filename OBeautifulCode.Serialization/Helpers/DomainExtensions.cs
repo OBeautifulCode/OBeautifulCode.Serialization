@@ -9,7 +9,6 @@ namespace OBeautifulCode.Serialization
     using System;
     using System.Diagnostics.CodeAnalysis;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.Internal;
     using OBeautifulCode.Type.Recipes;
@@ -31,7 +30,10 @@ namespace OBeautifulCode.Serialization
         public static SerializerRepresentation ToRepresentation(
             this IHaveSerializerRepresentation serializer)
         {
-            new { serializer }.AsArg().Must().NotBeNull();
+            if (serializer == null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
 
             var result = serializer.SerializerRepresentation;
 
@@ -58,9 +60,20 @@ namespace OBeautifulCode.Serialization
             SerializationFormat serializationFormat,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            new { serializerRepresentation }.AsArg().Must().NotBeNull();
-            new { serializerFactory }.AsArg().Must().NotBeNull();
-            new { serializationFormat }.AsArg().Must().NotBeEqualTo(SerializationFormat.Invalid);
+            if (serializerRepresentation == null)
+            {
+                throw new ArgumentNullException(nameof(serializerRepresentation));
+            }
+
+            if (serializerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(serializerFactory));
+            }
+
+            if (serializationFormat == SerializationFormat.Invalid)
+            {
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' is equal to '{SerializationFormat.Invalid}'"), (Exception)null);
+            }
 
             var serializer = serializerFactory.BuildSerializer(serializerRepresentation, assemblyMatchStrategy);
 
@@ -85,8 +98,15 @@ namespace OBeautifulCode.Serialization
             ISerializer serializer,
             SerializationFormat serializationFormat)
         {
-            new { serializer }.AsArg().Must().NotBeNull();
-            new { serializationFormat }.AsArg().Must().NotBeEqualTo(SerializationFormat.Invalid);
+            if (serializer == null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
+            if (serializationFormat == SerializationFormat.Invalid)
+            {
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' is equal to '{SerializationFormat.Invalid}'"), (Exception)null);
+            }
 
             string payload;
 
@@ -148,8 +168,15 @@ namespace OBeautifulCode.Serialization
             ISerializerFactory serializerFactory,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            new { describedSerialization }.AsArg().Must().NotBeNull();
-            new { serializerFactory }.AsArg().Must().NotBeNull();
+            if (describedSerialization == null)
+            {
+                throw new ArgumentNullException(nameof(describedSerialization));
+            }
+
+            if (serializerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(serializerFactory));
+            }
 
             var serializer = serializerFactory.BuildSerializer(describedSerialization.SerializerRepresentation, assemblyMatchStrategy);
 
@@ -194,8 +221,15 @@ namespace OBeautifulCode.Serialization
             IDeserialize deserializer,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            new { describedSerialization }.AsArg().Must().NotBeNull();
-            new { deserializer }.AsArg().Must().NotBeNull();
+            if (describedSerialization == null)
+            {
+                throw new ArgumentNullException(nameof(describedSerialization));
+            }
+
+            if (deserializer == null)
+            {
+                throw new ArgumentNullException(nameof(deserializer));
+            }
 
             var targetType = describedSerialization.PayloadTypeRepresentation.ResolveFromLoadedTypes(assemblyMatchStrategy);
 
@@ -229,7 +263,10 @@ namespace OBeautifulCode.Serialization
         public static RelatedTypesToInclude ResolveDefaultIntoActionableRelatedTypesToInclude(
             this Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             RelatedTypesToInclude result;
 

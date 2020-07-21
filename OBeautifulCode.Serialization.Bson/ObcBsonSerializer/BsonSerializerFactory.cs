@@ -8,7 +8,6 @@ namespace OBeautifulCode.Serialization.Bson
 {
     using System;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Compression;
     using OBeautifulCode.Representation.System;
 
@@ -34,7 +33,10 @@ namespace OBeautifulCode.Serialization.Bson
             SerializerRepresentation serializerRepresentation,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            new { serializerRepresentation }.AsArg().Must().NotBeNull();
+            if (serializerRepresentation == null)
+            {
+                throw new ArgumentNullException(nameof(serializerRepresentation));
+            }
 
             // ReSharper disable once RedundantArgumentDefaultValue
             var configurationType = serializerRepresentation.SerializationConfigType?.ResolveFromLoadedTypes(assemblyMatchStrategy, throwIfCannotResolve: true);

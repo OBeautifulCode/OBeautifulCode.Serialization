@@ -6,10 +6,10 @@
 
 namespace OBeautifulCode.Serialization
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
 
     /// <summary>
@@ -33,7 +33,10 @@ namespace OBeautifulCode.Serialization
         public static SerializationConfigurationBase GetOrAddSerializationConfiguration(
             SerializationConfigurationType serializationConfigurationType)
         {
-            new { serializationConfigurationType }.AsArg().Must().NotBeNull();
+            if (serializationConfigurationType == null)
+            {
+                throw new ArgumentNullException(nameof(serializationConfigurationType));
+            }
 
             var result = GetOrAddInstance(serializationConfigurationType);
 

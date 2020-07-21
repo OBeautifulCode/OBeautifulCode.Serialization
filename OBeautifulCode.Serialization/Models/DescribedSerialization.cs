@@ -8,9 +8,10 @@ namespace OBeautifulCode.Serialization
 {
     using System;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Type;
+
+    using static System.FormattableString;
 
     /// <summary>
     /// Represents a serialized object along with a description of the type of the object.
@@ -35,9 +36,20 @@ namespace OBeautifulCode.Serialization
             SerializerRepresentation serializerRepresentation,
             SerializationFormat serializationFormat)
         {
-            new { payloadTypeRepresentation }.AsArg().Must().NotBeNull();
-            new { serializerRepresentation }.AsArg().Must().NotBeNull();
-            new { serializationFormat }.AsArg().Must().NotBeEqualTo(SerializationFormat.Invalid);
+            if (payloadTypeRepresentation == null)
+            {
+                throw new ArgumentNullException(nameof(payloadTypeRepresentation));
+            }
+
+            if (serializerRepresentation == null)
+            {
+                throw new ArgumentNullException(nameof(serializerRepresentation));
+            }
+
+            if (serializationFormat == SerializationFormat.Invalid)
+            {
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' is equal to '{SerializationFormat.Invalid}'"), (Exception)null);
+            }
 
             this.PayloadTypeRepresentation = payloadTypeRepresentation;
             this.SerializedPayload = serializedPayload;

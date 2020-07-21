@@ -13,10 +13,11 @@ namespace OBeautifulCode.Serialization.Json
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.Json.Internal;
     using OBeautifulCode.Type.Recipes;
+
+    using static System.FormattableString;
 
     /// <summary>
     /// JSON serializer.
@@ -39,7 +40,10 @@ namespace OBeautifulCode.Serialization.Json
         {
             this.jsonSerializationConfiguration = (JsonSerializationConfigurationBase)this.SerializationConfiguration;
 
-            new { this.jsonSerializationConfiguration.JsonFormattingKind }.AsArg().Must().NotBeEqualTo(JsonFormattingKind.Invalid);
+            if (this.jsonSerializationConfiguration.JsonFormattingKind == JsonFormattingKind.Invalid)
+            {
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(this.jsonSerializationConfiguration.JsonFormattingKind)}' is equal to '{JsonFormattingKind.Invalid}'"), (Exception)null);
+            }
 
             this.anonymousWriteSerializationSettings = this.jsonSerializationConfiguration.BuildAnonymousJsonSerializerSettings(SerializationDirection.Serialize, this.jsonSerializationConfiguration.JsonFormattingKind);
 
@@ -108,7 +112,10 @@ namespace OBeautifulCode.Serialization.Json
             byte[] serializedBytes,
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var jsonString = ConvertByteArrayToJson(serializedBytes);
 
@@ -159,7 +166,10 @@ namespace OBeautifulCode.Serialization.Json
             string serializedString,
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             this.InternalJsonThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
 

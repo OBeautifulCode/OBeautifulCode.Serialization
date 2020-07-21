@@ -6,7 +6,7 @@
 
 namespace OBeautifulCode.Serialization.Json
 {
-    using OBeautifulCode.Assertion.Recipes;
+    using System;
 
     /// <summary>
     /// Json converter to use.
@@ -20,7 +20,10 @@ namespace OBeautifulCode.Serialization.Json
         public RegisteredContractResolver(
             ContractResolverBuilder contractResolverBuilder)
         {
-            new { contractResolverBuilder }.AsArg().Must().NotBeNull();
+            if (contractResolverBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(contractResolverBuilder));
+            }
 
             this.ContractResolverBuilder = contractResolverBuilder;
         }

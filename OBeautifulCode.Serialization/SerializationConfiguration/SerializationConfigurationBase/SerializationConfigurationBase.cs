@@ -118,7 +118,10 @@ namespace OBeautifulCode.Serialization
         public bool IsRegisteredType(
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var result = this.registeredTypeToRegistrationDetailsMap.ContainsKey(type);
 
@@ -343,7 +346,10 @@ namespace OBeautifulCode.Serialization
             TypeToRegister typeToRegister,
             RegistrationTime registrationTime)
         {
-            new { typeToRegister }.AsArg().Must().NotBeNull();
+            if (typeToRegister == null)
+            {
+                throw new ArgumentNullException(nameof(typeToRegister));
+            }
 
             var result = new RegistrationDetails(typeToRegister, this.SerializationConfigurationType);
 

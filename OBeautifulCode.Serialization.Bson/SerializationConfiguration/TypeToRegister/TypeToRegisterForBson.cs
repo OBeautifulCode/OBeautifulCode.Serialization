@@ -58,9 +58,20 @@ namespace OBeautifulCode.Serialization.Bson
             IReadOnlyCollection<string> propertyNameWhitelist)
             : base(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude)
         {
-            new { type }.AsArg().Must().NotBeNull();
-            new { recursiveOriginType }.AsArg().Must().NotBeNull();
-            new { directOriginType }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (recursiveOriginType == null)
+            {
+                throw new ArgumentNullException(nameof(recursiveOriginType));
+            }
+
+            if (directOriginType == null)
+            {
+                throw new ArgumentNullException(nameof(directOriginType));
+            }
 
             if ((bsonSerializerBuilder != null) && (propertyNameWhitelist != null))
             {

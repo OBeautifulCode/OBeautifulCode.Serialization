@@ -9,8 +9,6 @@ namespace OBeautifulCode.Serialization
     using System;
     using System.Collections.Generic;
 
-    using OBeautifulCode.Assertion.Recipes;
-
     /// <summary>
     /// Serializer that is backed by <see cref="Func{T1,TResult}" />.
     /// </summary>
@@ -36,10 +34,25 @@ namespace OBeautifulCode.Serialization
             Func<byte[], Type, object> deserializeBytes,
             string id = null)
         {
-            new { serializeString }.AsArg().Must().NotBeNull();
-            new { deserializeString }.AsArg().Must().NotBeNull();
-            new { serializeBytes }.AsArg().Must().NotBeNull();
-            new { deserializeBytes }.AsArg().Must().NotBeNull();
+            if (serializeString == null)
+            {
+                throw new ArgumentNullException(nameof(serializeString));
+            }
+
+            if (deserializeString == null)
+            {
+                throw new ArgumentNullException(nameof(deserializeString));
+            }
+
+            if (serializeBytes == null)
+            {
+                throw new ArgumentNullException(nameof(serializeBytes));
+            }
+
+            if (deserializeBytes == null)
+            {
+                throw new ArgumentNullException(nameof(deserializeBytes));
+            }
 
             this.serializeString = serializeString;
             this.deserializeString = deserializeString;
@@ -90,7 +103,10 @@ namespace OBeautifulCode.Serialization
             string serializedString,
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var result = this.deserializeString(serializedString, type);
 
@@ -111,7 +127,10 @@ namespace OBeautifulCode.Serialization
             byte[] serializedBytes,
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var result = this.deserializeBytes(serializedBytes, type);
 

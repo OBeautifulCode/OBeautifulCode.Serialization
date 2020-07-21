@@ -6,12 +6,14 @@
 
 namespace OBeautifulCode.Serialization
 {
+    using System;
     using System.Collections.Generic;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Compression;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Type;
+
+    using static System.FormattableString;
 
     /// <summary>
     /// Model object that represents a serializer so you can persist and share the definition and rehydrate the serializer later.
@@ -31,8 +33,15 @@ namespace OBeautifulCode.Serialization
             CompressionKind compressionKind = CompressionKind.None,
             IReadOnlyDictionary<string, string> metadata = null)
         {
-            new { serializationKind }.AsArg().Must().NotBeEqualTo(SerializationKind.Invalid);
-            new { compressionKind }.AsArg().Must().NotBeEqualTo(CompressionKind.Invalid);
+            if (serializationKind == SerializationKind.Invalid)
+            {
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationKind)}' is equal to '{SerializationKind.Invalid}'"), (Exception)null);
+            }
+
+            if (compressionKind == CompressionKind.Invalid)
+            {
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(compressionKind)}' is equal to '{CompressionKind.Invalid}'"), (Exception)null);
+            }
 
             this.SerializationKind = serializationKind;
             this.SerializationConfigType = serializationConfigType;

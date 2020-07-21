@@ -47,8 +47,15 @@ namespace OBeautifulCode.Serialization.Bson
             IBsonReader bsonReader,
             Type nominalType)
         {
-            new { bsonReader }.AsArg().Must().NotBeNull();
-            new { nominalType }.AsArg().Must().NotBeNull();
+            if (bsonReader == null)
+            {
+                throw new ArgumentNullException(nameof(bsonReader));
+            }
+
+            if (nominalType == null)
+            {
+                throw new ArgumentNullException(nameof(nominalType));
+            }
 
             var bookmark = bsonReader.GetBookmark();
 

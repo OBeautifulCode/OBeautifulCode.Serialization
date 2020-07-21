@@ -17,7 +17,6 @@ namespace OBeautifulCode.Serialization.Json
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Serialization.Json.Internal;
     using OBeautifulCode.Type.Recipes;
@@ -52,8 +51,15 @@ namespace OBeautifulCode.Serialization.Json
             object value,
             JsonSerializer serializer)
         {
-            new { value }.AsArg().Must().NotBeNull();
-            new { serializer }.AsArg().Must().NotBeNull();
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (serializer == null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
 
             var valueAsDictionary = (IDictionary)value;
 
@@ -113,8 +119,15 @@ namespace OBeautifulCode.Serialization.Json
             object existingValue,
             JsonSerializer serializer)
         {
-            new { reader }.AsArg().Must().NotBeNull();
-            new { objectType }.AsArg().Must().NotBeNull();
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            if (objectType == null)
+            {
+                throw new ArgumentNullException(nameof(objectType));
+            }
 
             var keyType = objectType.GetClosedSystemDictionaryKeyType();
 

@@ -11,8 +11,6 @@ namespace OBeautifulCode.Serialization.Json
 
     using Newtonsoft.Json;
 
-    using OBeautifulCode.Assertion.Recipes;
-
     /// <summary>
     /// A converter that handles inherited types.
     /// </summary>
@@ -36,7 +34,10 @@ namespace OBeautifulCode.Serialization.Json
         protected InheritedTypeJsonConverterBase(
             Func<ConcurrentDictionary<Type, object>> getTypesToHandleFunc)
         {
-            new { getTypesToHandleFunc }.AsArg().Must().NotBeNull();
+            if (getTypesToHandleFunc == null)
+            {
+                throw new ArgumentNullException(nameof(getTypesToHandleFunc));
+            }
 
             this.getTypesToHandleFunc = getTypesToHandleFunc;
         }

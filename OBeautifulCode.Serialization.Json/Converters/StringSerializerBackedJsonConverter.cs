@@ -10,8 +10,6 @@ namespace OBeautifulCode.Serialization.Json
 
     using Newtonsoft.Json;
 
-    using OBeautifulCode.Assertion.Recipes;
-
     using static System.FormattableString;
 
     /// <summary>
@@ -30,8 +28,15 @@ namespace OBeautifulCode.Serialization.Json
             IStringSerializeAndDeserialize backingSerializer,
             CanConvertTypeMatchStrategy canConvertTypeMatchStrategy = CanConvertTypeMatchStrategy.TypeToConsiderEqualsRegisteredType)
         {
-            new { registeredType }.AsArg().Must().NotBeNull();
-            new { backingSerializer }.AsArg().Must().NotBeNull();
+            if (registeredType == null)
+            {
+                throw new ArgumentNullException(nameof(registeredType));
+            }
+
+            if (backingSerializer == null)
+            {
+                throw new ArgumentNullException(nameof(backingSerializer));
+            }
 
             this.RegisteredType = registeredType;
             this.BackingSerializer = backingSerializer;
@@ -59,7 +64,10 @@ namespace OBeautifulCode.Serialization.Json
             object value,
             JsonSerializer serializer)
         {
-            new { writer }.AsArg().Must().NotBeNull();
+            if (writer == null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
 
             var stringToWrite = this.BackingSerializer.SerializeToString(value);
 
@@ -80,7 +88,10 @@ namespace OBeautifulCode.Serialization.Json
             object existingValue,
             JsonSerializer serializer)
         {
-            new { reader }.AsArg().Must().NotBeNull();
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
 
             var result = this.BackingSerializer.Deserialize(reader.Value?.ToString(), objectType);
 
@@ -91,7 +102,10 @@ namespace OBeautifulCode.Serialization.Json
         public override bool CanConvert(
             Type objectType)
         {
-            new { objectType }.Must().NotBeNull();
+            if (objectType == null)
+            {
+                throw new ArgumentNullException(nameof(objectType));
+            }
 
             bool result;
 

@@ -6,10 +6,10 @@
 
 namespace OBeautifulCode.Serialization.Bson
 {
+    using System;
+
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Serializers;
-
-    using OBeautifulCode.Assertion.Recipes;
 
     /// <summary>
     /// The serializer that is used when <see cref="TypeToRegisterForBson"/> specifies a <see cref="BsonSerializerBuilder"/>.
@@ -38,7 +38,10 @@ namespace OBeautifulCode.Serialization.Bson
         public RegisteredTypeBsonSerializer(
             IBsonSerializer backingSerializer)
         {
-            new { backingSerializer }.AsArg().Must().NotBeNull();
+            if (backingSerializer == null)
+            {
+                throw new ArgumentNullException(nameof(backingSerializer));
+            }
 
             this.backingSerializer = backingSerializer;
         }

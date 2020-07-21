@@ -6,6 +6,7 @@
 
 namespace OBeautifulCode.Serialization.Bson
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
@@ -49,7 +50,10 @@ namespace OBeautifulCode.Serialization.Bson
             BsonSerializationArgs args,
             TCollection value)
         {
-            new { context }.AsArg().Must().NotBeNull();
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
 
             if (value == null)
             {
@@ -86,7 +90,10 @@ namespace OBeautifulCode.Serialization.Bson
             BsonDeserializationContext context,
             BsonDeserializationArgs args)
         {
-            new { context }.AsArg().Must().NotBeNull();
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
 
             TCollection result;
 

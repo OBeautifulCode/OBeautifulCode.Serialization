@@ -26,7 +26,11 @@ namespace OBeautifulCode.Serialization
         protected SerializationConfigurationType(
             Type concreteSerializationConfigurationDerivativeType)
         {
-            new { concreteSerializationConfigurationDerivativeType }.AsArg().Must().NotBeNull();
+            if (concreteSerializationConfigurationDerivativeType == null)
+            {
+                throw new ArgumentNullException(nameof(concreteSerializationConfigurationDerivativeType));
+            }
+
             new { concreteSerializationConfigurationDerivativeType.IsAbstract }.AsArg().Must().BeFalse();
             concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(SerializationConfigurationBase)).AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(SerializationConfigurationBase)}")).Must().BeTrue();
             concreteSerializationConfigurationDerivativeType.HasDefaultConstructor().AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)}.{nameof(TypeExtensions.HasDefaultConstructor)}()")).Must().BeTrue();

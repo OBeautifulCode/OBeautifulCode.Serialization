@@ -12,7 +12,6 @@ namespace OBeautifulCode.Serialization
     using System.Linq;
     using System.Text;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Serialization.Internal;
 
@@ -49,8 +48,15 @@ namespace OBeautifulCode.Serialization
             string lineDelimiter = DefaultLineDelimiter,
             string nullValueEncoding = DefaultNullValueEncoding)
         {
-            new { keyValueDelimiter }.AsArg().Must().NotBeNull();
-            new { lineDelimiter }.AsArg().Must().NotBeNull();
+            if (keyValueDelimiter == null)
+            {
+                throw new ArgumentNullException(nameof(keyValueDelimiter));
+            }
+
+            if (lineDelimiter == null)
+            {
+                throw new ArgumentNullException(nameof(lineDelimiter));
+            }
 
             this.KeyValueDelimiter = keyValueDelimiter;
             this.LineDelimiter = lineDelimiter;
@@ -86,7 +92,10 @@ namespace OBeautifulCode.Serialization
             {
                 var dictionary = objectToSerialize as IReadOnlyDictionary<string, string>;
 
-                dictionary.AsArg(Invariant($"typeMustBeConvertibleTo-{nameof(IReadOnlyDictionary<string, string>)}-found-{objectToSerialize.GetType()}")).Must().NotBeNull();
+                if (dictionary == null)
+                {
+                    throw new ArgumentNullException(Invariant($"typeMustBeConvertibleTo-{nameof(IReadOnlyDictionary<string, string>)}-found-{objectToSerialize.GetType()}"));
+                }
 
                 result = this.SerializeDictionaryToString(dictionary);
             }
@@ -124,13 +133,25 @@ namespace OBeautifulCode.Serialization
 
                     var value = keyValuePair.Value ?? this.NullValueEncoding;
 
-                    key.Contains(this.KeyValueDelimiter).AsArg(Invariant($"Key-cannot-contain-{nameof(this.KeyValueDelimiter)}--{this.KeyValueDelimiter}--found-on-key--{key}")).Must().BeFalse();
+                    if (key.Contains(this.KeyValueDelimiter))
+                    {
+                        throw new ArgumentException(Invariant($"Key-cannot-contain-{nameof(this.KeyValueDelimiter)}--{this.KeyValueDelimiter}--found-on-key--{key}"));
+                    }
 
-                    (value ?? string.Empty).Contains(this.KeyValueDelimiter).AsArg(Invariant($"Key-cannot-contain-{nameof(this.KeyValueDelimiter)}--{this.KeyValueDelimiter}--found-on-value--{value}")).Must().BeFalse();
+                    if ((value ?? string.Empty).Contains(this.KeyValueDelimiter))
+                    {
+                        throw new ArgumentException(Invariant($"Key-cannot-contain-{nameof(this.KeyValueDelimiter)}--{this.KeyValueDelimiter}--found-on-value--{value}"));
+                    }
 
-                    key.Contains(this.LineDelimiter).AsArg(Invariant($"Key-cannot-contain-{nameof(this.LineDelimiter)}--{(Environment.NewLine == this.LineDelimiter ? "NEWLINE" : this.LineDelimiter)}--found-on-key--{key}")).Must().BeFalse();
+                    if (key.Contains(this.LineDelimiter))
+                    {
+                        throw new ArgumentException(Invariant($"Key-cannot-contain-{nameof(this.LineDelimiter)}--{(Environment.NewLine == this.LineDelimiter ? "NEWLINE" : this.LineDelimiter)}--found-on-key--{key}"));
+                    }
 
-                    (value ?? string.Empty).Contains(this.LineDelimiter).AsArg(Invariant($"Key-cannot-contain-{nameof(this.LineDelimiter)}--{(Environment.NewLine == this.LineDelimiter ? "NEWLINE" : this.LineDelimiter)}--found-on-value--{value}")).Must().BeFalse();
+                    if ((value ?? string.Empty).Contains(this.LineDelimiter))
+                    {
+                        throw new ArgumentException(Invariant($"Key-cannot-contain-{nameof(this.LineDelimiter)}--{(Environment.NewLine == this.LineDelimiter ? "NEWLINE" : this.LineDelimiter)}--found-on-value--{value}"));
+                    }
 
                     stringBuilder.Append(Invariant($"{key}{this.KeyValueDelimiter}{value ?? string.Empty}"));
 
@@ -174,11 +195,17 @@ namespace OBeautifulCode.Serialization
             }
             else
             {
-                new { type }.AsArg().Must().NotBeNull();
+                if (type == null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
 
                 var dictionary = type.Construct() as IReadOnlyDictionary<string, string>;
 
-                dictionary.AsArg(Invariant($"typeMustBeConvertibleTo-{nameof(IReadOnlyDictionary<string, string>)}-found-{type}")).Must().NotBeNull();
+                if (dictionary == null)
+                {
+                    throw new ArgumentNullException(Invariant($"typeMustBeConvertibleTo-{nameof(IReadOnlyDictionary<string, string>)}-found-{type}"));
+                }
 
                 result = this.DeserializeToDictionary(serializedString);
             }
@@ -219,7 +246,10 @@ namespace OBeautifulCode.Serialization
                     {
                         var items = line.Split(new[] { this.KeyValueDelimiter }, StringSplitOptions.RemoveEmptyEntries);
 
-                        items.Length.AsArg(Invariant($"Line-must-split-on-{nameof(this.KeyValueDelimiter)}--{this.KeyValueDelimiter}-to-1-or-2-items-this-did-not--{line}")).Must().BeInRange(1, 2);
+                        if ((items.Length != 1) && (items.Length != 2))
+                        {
+                            throw new ArgumentOutOfRangeException(Invariant($"Line-must-split-on-{nameof(this.KeyValueDelimiter)}--{this.KeyValueDelimiter}-to-1-or-2-items-this-did-not--{line}"), (Exception)null);
+                        }
 
                         var key = items[0];
 

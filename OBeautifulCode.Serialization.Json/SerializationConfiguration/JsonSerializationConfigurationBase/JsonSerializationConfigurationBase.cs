@@ -15,7 +15,6 @@ namespace OBeautifulCode.Serialization.Json
     using Newtonsoft.Json.Converters;
     using Newtonsoft.Json.Serialization;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization;
 
     using static System.FormattableString;
@@ -45,8 +44,15 @@ namespace OBeautifulCode.Serialization.Json
             SerializationDirection serializationDirection,
             JsonSerializationConfigurationBase jsonSerializationConfiguration)
         {
-            new { serializationDirection }.AsArg().Must().NotBeEqualTo(SerializationDirection.Unknown);
-            new { jsonSerializationConfiguration }.AsArg().Must().NotBeNull();
+            if (serializationDirection == SerializationDirection.Unknown)
+            {
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationDirection)}' is equal to '{SerializationDirection.Unknown}'"), (Exception)null);
+            }
+
+            if (jsonSerializationConfiguration == null)
+            {
+                throw new ArgumentNullException(nameof(jsonSerializationConfiguration));
+            }
 
             var jsonFormattingKind = jsonSerializationConfiguration.JsonFormattingKind;
 
@@ -70,7 +76,10 @@ namespace OBeautifulCode.Serialization.Json
             {
                 var overrideResolver = this.OverrideContractResolver[serializationDirection];
 
-                new { overrideResolver }.AsArg().Must().NotBeNull();
+                if (overrideResolver == null)
+                {
+                    throw new ArgumentNullException(nameof(overrideResolver));
+                }
 
                 result.ContractResolver = overrideResolver.ContractResolverBuilder(() => this.RegisteredTypeToRegistrationDetailsMap);
             }

@@ -8,8 +8,6 @@ namespace OBeautifulCode.Serialization.Bson
 {
     using System;
 
-    using OBeautifulCode.Assertion.Recipes;
-
     /// <summary>
     /// Help methods for creating BSON serialization configuration types that set <see cref="BsonSerializationConfigurationBase.TypesToRegisterForBson"/>.
     /// </summary>
@@ -26,7 +24,10 @@ namespace OBeautifulCode.Serialization.Bson
         public static Type GetType(
             Type typeToRegister)
         {
-            new { typeToRegister }.AsArg().Must().NotBeNull();
+            if (typeToRegister == null)
+            {
+                throw new ArgumentNullException(nameof(typeToRegister));
+            }
 
             var result = typeof(TypesToRegisterBsonSerializationConfiguration<>).MakeGenericType(typeToRegister);
 
@@ -46,8 +47,15 @@ namespace OBeautifulCode.Serialization.Bson
             Type typeToRegister1,
             Type typeToRegister2)
         {
-            new { typeToRegister1 }.AsArg().Must().NotBeNull();
-            new { typeToRegister2 }.AsArg().Must().NotBeNull();
+            if (typeToRegister1 == null)
+            {
+                throw new ArgumentNullException(nameof(typeToRegister1));
+            }
+
+            if (typeToRegister2 == null)
+            {
+                throw new ArgumentNullException(nameof(typeToRegister2));
+            }
 
             var result = typeof(TypesToRegisterBsonSerializationConfiguration<,>).MakeGenericType(typeToRegister1, typeToRegister2);
 

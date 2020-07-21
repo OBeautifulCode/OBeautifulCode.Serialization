@@ -34,7 +34,10 @@ namespace OBeautifulCode.Serialization.Bson
             Type type,
             IReadOnlyCollection<string> constrainToProperties = null)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var result = new BsonClassMap(type);
 
@@ -55,12 +58,16 @@ namespace OBeautifulCode.Serialization.Bson
             {
                 var memberType = member.GetUnderlyingType();
 
-                memberType.AsArg(Invariant($"{member.Name}-{nameof(MemberInfo.DeclaringType)}")).Must().NotBeNull();
+                if (memberType == null)
+                {
+                    throw new ArgumentNullException(Invariant($"{member.Name}-{nameof(MemberInfo.DeclaringType)}"));
+                }
 
                 try
                 {
                     var memberMap = MapMember(result, member);
 
+                    // ReSharper disable once ArgumentsStyleLiteral
                     var serializer = memberType.GetAppropriateSerializer(defaultToObjectSerializer: false);
 
                     // When null, BSON will just use the class map for the member type, which can be registered anytime after

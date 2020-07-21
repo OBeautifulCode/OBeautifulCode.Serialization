@@ -10,7 +10,6 @@ namespace OBeautifulCode.Serialization.Bson
 
     using MongoDB.Bson;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
 
@@ -122,7 +121,10 @@ namespace OBeautifulCode.Serialization.Bson
             byte[] serializedBytes,
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             type = this.GetRootObjectThatSerializesToStringWrapperTypeIfAppropriate(type);
 
@@ -151,7 +153,10 @@ namespace OBeautifulCode.Serialization.Bson
             string serializedString,
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             type = this.GetRootObjectThatSerializesToStringWrapperTypeIfAppropriate(type);
 

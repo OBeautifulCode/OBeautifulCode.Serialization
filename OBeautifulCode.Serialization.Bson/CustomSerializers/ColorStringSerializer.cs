@@ -41,7 +41,10 @@ namespace OBeautifulCode.Serialization.Bson
             string serializedString,
             Type type)
         {
-            new { serializedString }.AsArg().Must().NotBeNull();
+            if (serializedString == null)
+            {
+                throw new ArgumentNullException(nameof(serializedString));
+            }
 
             var result = ColorTranslator.FromHtml(serializedString);
 

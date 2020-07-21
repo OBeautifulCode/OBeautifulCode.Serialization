@@ -6,7 +6,7 @@
 
 namespace OBeautifulCode.Serialization.Bson
 {
-    using OBeautifulCode.Assertion.Recipes;
+    using System;
 
     /// <summary>
     /// Wraps a root-level object that serializes to string.
@@ -21,7 +21,10 @@ namespace OBeautifulCode.Serialization.Bson
         public RootObjectThatSerializesToStringWrapper(
             T rootObject)
         {
-            new { rootObject }.AsArg().Must().NotBeNull();
+            if (rootObject == null)
+            {
+                throw new ArgumentNullException(nameof(rootObject));
+            }
 
             this.RootObject = rootObject;
         }

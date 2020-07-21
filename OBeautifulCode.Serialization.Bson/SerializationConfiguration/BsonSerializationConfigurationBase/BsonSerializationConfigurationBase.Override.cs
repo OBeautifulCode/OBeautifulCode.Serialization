@@ -9,7 +9,6 @@ namespace OBeautifulCode.Serialization.Bson
     using System;
     using System.Collections.Generic;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization;
     using OBeautifulCode.Type.Recipes;
 
@@ -49,9 +48,20 @@ namespace OBeautifulCode.Serialization.Bson
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude)
         {
-            new { type }.AsArg().Must().NotBeNull();
-            new { recursiveOriginType }.AsArg().Must().NotBeNull();
-            new { directOriginType }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (recursiveOriginType == null)
+            {
+                throw new ArgumentNullException(nameof(recursiveOriginType));
+            }
+
+            if (directOriginType == null)
+            {
+                throw new ArgumentNullException(nameof(directOriginType));
+            }
 
             var genericTypeDefinition = type.GetGenericTypeDefinition();
 
@@ -67,8 +77,15 @@ namespace OBeautifulCode.Serialization.Bson
             RegistrationDetails registrationDetails,
             RegistrationTime registrationTime)
         {
-            new { registrationDetails }.AsArg().Must().NotBeNull();
-            new { registrationTime }.AsArg().Must().NotBeEqualTo(RegistrationTime.Unknown);
+            if (registrationDetails == null)
+            {
+                throw new ArgumentNullException(nameof(registrationDetails));
+            }
+
+            if (registrationTime == RegistrationTime.Unknown)
+            {
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(registrationTime)}' is equal to '{RegistrationTime.Unknown}'"), (Exception)null);
+            }
 
             if (registrationDetails.TypeToRegister is TypeToRegisterForBson typeToRegisterForBson)
             {

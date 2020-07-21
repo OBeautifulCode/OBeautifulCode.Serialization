@@ -11,8 +11,6 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Serializers;
 
-    using OBeautifulCode.Assertion.Recipes;
-
     /// <summary>
     /// Represents a serializer for enums, including support for <see cref="FlagsAttribute"/> ones.
     /// </summary>
@@ -25,7 +23,10 @@ namespace OBeautifulCode.Serialization.Bson
             BsonDeserializationContext context,
             BsonDeserializationArgs args)
         {
-            new { context }.AsArg().Must().NotBeNull();
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
 
             var bsonReader = context.Reader;
 
@@ -42,7 +43,10 @@ namespace OBeautifulCode.Serialization.Bson
             BsonSerializationArgs args,
             TEnum value)
         {
-            new { context }.AsArg().Must().NotBeNull();
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
 
             var bsonWriter = context.Writer;
 

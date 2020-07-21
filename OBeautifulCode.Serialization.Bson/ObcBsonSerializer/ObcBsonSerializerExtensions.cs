@@ -14,7 +14,6 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.IO;
     using MongoDB.Bson.Serialization;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization.Bson.Internal;
 
     /// <summary>
@@ -34,7 +33,10 @@ namespace OBeautifulCode.Serialization.Bson
         public static byte[] SerializeToBytes(
             this object objectToSerialize)
         {
-            new { objectToSerialize }.AsArg().Must().NotBeNull();
+            if (objectToSerialize == null)
+            {
+                throw new ArgumentNullException(nameof(objectToSerialize));
+            }
 
             using (var memoryStream = new MemoryStream())
             {
@@ -65,7 +67,10 @@ namespace OBeautifulCode.Serialization.Bson
         public static BsonDocument SerializeToDocument(
             this object objectToSerialize)
         {
-            new { objectToSerialize }.AsArg().Must().NotBeNull();
+            if (objectToSerialize == null)
+            {
+                throw new ArgumentNullException(nameof(objectToSerialize));
+            }
 
             var result = new BsonDocument();
 
@@ -91,7 +96,10 @@ namespace OBeautifulCode.Serialization.Bson
             this BsonDocument bsonDocumentToDeserialize,
             Type type)
         {
-            new { bsonDocumentToDeserialize }.AsArg().Must().NotBeNull();
+            if (bsonDocumentToDeserialize == null)
+            {
+                throw new ArgumentNullException(nameof(bsonDocumentToDeserialize));
+            }
 
             var result = type == typeof(DynamicTypePlaceholder)
                 ? BsonSerializer.Deserialize<dynamic>(bsonDocumentToDeserialize)
@@ -111,7 +119,10 @@ namespace OBeautifulCode.Serialization.Bson
         public static T DeserializeFromDocument<T>(
             this BsonDocument bsonDocumentToDeserialize)
         {
-            new { bsonDocumentToDeserialize }.AsArg().Must().NotBeNull();
+            if (bsonDocumentToDeserialize == null)
+            {
+                throw new ArgumentNullException(nameof(bsonDocumentToDeserialize));
+            }
 
             var result = BsonSerializer.Deserialize<T>(bsonDocumentToDeserialize);
 
@@ -149,7 +160,10 @@ namespace OBeautifulCode.Serialization.Bson
             this byte[] serializedBytes,
             Type type)
         {
-            new { serializedBytes }.AsArg().Must().NotBeNull();
+            if (serializedBytes == null)
+            {
+                throw new ArgumentNullException(nameof(serializedBytes));
+            }
 
             using (var memoryStream = new MemoryStream(serializedBytes))
             {

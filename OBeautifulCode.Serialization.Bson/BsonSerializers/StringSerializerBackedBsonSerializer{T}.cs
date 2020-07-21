@@ -12,7 +12,6 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Serializers;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -40,7 +39,10 @@ namespace OBeautifulCode.Serialization.Bson
             BsonDeserializationContext context,
             BsonDeserializationArgs args)
         {
-            new { context }.AsArg().Must().NotBeNull();
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
 
             string serializedPayload;
 
@@ -72,7 +74,10 @@ namespace OBeautifulCode.Serialization.Bson
             BsonSerializationArgs args,
             T value)
         {
-            new { context }.AsArg().Must().NotBeNull();
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
 
             var serializedString = this.backingSerializer.SerializeToString(value);
 

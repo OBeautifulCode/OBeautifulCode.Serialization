@@ -16,7 +16,6 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization.Options;
     using MongoDB.Bson.Serialization.Serializers;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Type.Recipes;
 
@@ -52,7 +51,10 @@ namespace OBeautifulCode.Serialization.Bson
         public static TypeToRegisterForBson ToTypeToRegisterForBson(
             this Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var result = new TypeToRegisterForBson(type, MemberTypesToInclude.All, RelatedTypesToInclude.Default, null, null);
 
@@ -72,8 +74,15 @@ namespace OBeautifulCode.Serialization.Bson
             this Type type,
             IStringSerializeAndDeserialize stringSerializer)
         {
-            new { type }.AsArg().Must().NotBeNull();
-            new { stringSerializer }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (stringSerializer == null)
+            {
+                throw new ArgumentNullException(nameof(stringSerializer));
+            }
 
             var serializer = StringSerializerBackedBsonSerializer.Build(type, stringSerializer);
 
@@ -98,7 +107,10 @@ namespace OBeautifulCode.Serialization.Bson
             this Type type,
             bool defaultToObjectSerializer)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             IBsonSerializer result;
 
@@ -178,7 +190,10 @@ namespace OBeautifulCode.Serialization.Bson
         public static IReadOnlyCollection<MemberInfo> GetMembersToAutomap(
             this Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             bool FilterCompilerGenerated(MemberInfo memberInfo) => !memberInfo.CustomAttributes.Select(s => s.AttributeType).Contains(typeof(CompilerGeneratedAttribute));
 

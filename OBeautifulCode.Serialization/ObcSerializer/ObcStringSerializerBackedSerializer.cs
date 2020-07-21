@@ -10,8 +10,6 @@ namespace OBeautifulCode.Serialization
     using System.Collections.Generic;
     using System.Text;
 
-    using OBeautifulCode.Assertion.Recipes;
-
     /// <summary>
     /// Serializer that is backed by a <see cref="IStringSerializeAndDeserialize"/>.
     /// </summary>
@@ -29,7 +27,10 @@ namespace OBeautifulCode.Serialization
             IStringSerializeAndDeserialize backingStringSerializer,
             string id = null)
         {
-            new { backingStringSerializer }.AsArg().Must().NotBeNull();
+            if (backingStringSerializer == null)
+            {
+                throw new ArgumentNullException(nameof(backingStringSerializer));
+            }
 
             this.BackingStringSerializer = backingStringSerializer;
 
@@ -89,7 +90,10 @@ namespace OBeautifulCode.Serialization
             string serializedString,
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var result = this.BackingStringSerializer.Deserialize(serializedString, type);
 
@@ -112,7 +116,10 @@ namespace OBeautifulCode.Serialization
             byte[] serializedBytes,
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var serializedString = Encoding.GetString(serializedBytes);
 

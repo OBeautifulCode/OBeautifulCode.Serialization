@@ -10,7 +10,6 @@ namespace OBeautifulCode.Serialization.Bson
 
     using MongoDB.Bson.Serialization;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
 
     /// <summary>
@@ -30,7 +29,10 @@ namespace OBeautifulCode.Serialization.Bson
             Type type,
             IBsonSerializer backingSerializer)
         {
-            new { type }.AsArg().Must().NotBeNull();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
             var result = (IBsonSerializer)typeof(RegisteredTypeBsonSerializer<>).MakeGenericType(type).Construct(backingSerializer);
 

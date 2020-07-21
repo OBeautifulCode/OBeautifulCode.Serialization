@@ -6,7 +6,7 @@
 
 namespace OBeautifulCode.Serialization
 {
-    using OBeautifulCode.Assertion.Recipes;
+    using System;
 
     /// <summary>
     /// Details about the registration of a type.
@@ -22,8 +22,15 @@ namespace OBeautifulCode.Serialization
             TypeToRegister typeToRegister,
             SerializationConfigurationType serializationConfigurationType)
         {
-            new { typeToRegister }.AsArg().Must().NotBeNull();
-            new { serializationConfigurationType }.AsArg().Must().NotBeNull();
+            if (typeToRegister == null)
+            {
+                throw new ArgumentNullException(nameof(typeToRegister));
+            }
+
+            if (serializationConfigurationType == null)
+            {
+                throw new ArgumentNullException(nameof(serializationConfigurationType));
+            }
 
             this.TypeToRegister = typeToRegister;
             this.SerializationConfigurationType = serializationConfigurationType;

@@ -8,12 +8,10 @@ namespace OBeautifulCode.Serialization.Json
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Representation.System;
 
     /// <summary>
@@ -88,7 +86,10 @@ namespace OBeautifulCode.Serialization.Json
             // whether we need to write the concrete type.  It always gets written if the runtime type participates
             // in a hierarchy, even if the declared type IS the runtime type and thus the extra concrete type could
             // be excluded.
-            new { value }.AsArg().Must().NotBeNull();
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
 
             var typeName = value.GetType().ToRepresentation().RemoveAssemblyVersions().BuildAssemblyQualifiedName();
 

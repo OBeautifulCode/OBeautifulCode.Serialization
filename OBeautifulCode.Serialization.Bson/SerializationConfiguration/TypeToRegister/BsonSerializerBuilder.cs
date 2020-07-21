@@ -10,7 +10,7 @@ namespace OBeautifulCode.Serialization.Bson
 
     using MongoDB.Bson.Serialization;
 
-    using OBeautifulCode.Assertion.Recipes;
+    using static System.FormattableString;
 
     /// <summary>
     /// Builds an <see cref="IBsonSerializer"/>.
@@ -26,8 +26,15 @@ namespace OBeautifulCode.Serialization.Bson
             Func<IBsonSerializer> bsonSerializerBuilderFunc,
             BsonSerializerOutputKind outputKind)
         {
-            new { bsonSerializerBuilderFunc }.AsArg().Must().NotBeNull();
-            new { outputKind }.AsArg().Must().NotBeEqualTo(BsonSerializerOutputKind.Unknown);
+            if (bsonSerializerBuilderFunc == null)
+            {
+                throw new ArgumentNullException(nameof(bsonSerializerBuilderFunc));
+            }
+
+            if (outputKind == BsonSerializerOutputKind.Unknown)
+            {
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(outputKind)}' is equal to '{BsonSerializerOutputKind.Unknown}'"), (Exception)null);
+            }
 
             this.BsonSerializerBuilderFunc = bsonSerializerBuilderFunc;
             this.OutputKind = outputKind;

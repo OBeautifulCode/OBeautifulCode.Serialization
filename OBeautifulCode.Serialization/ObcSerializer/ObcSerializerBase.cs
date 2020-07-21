@@ -8,8 +8,6 @@ namespace OBeautifulCode.Serialization
 {
     using System;
 
-    using OBeautifulCode.Assertion.Recipes;
-
     /// <summary>
     /// Serializer that utilizes a fully configured <see cref="SerializationConfigurationBase"/>.
     /// </summary>
@@ -22,7 +20,10 @@ namespace OBeautifulCode.Serialization
         protected ObcSerializerBase(
             SerializationConfigurationType serializationConfigurationType)
         {
-            new { serializationConfigurationType }.AsArg().Must().NotBeNull();
+            if (serializationConfigurationType == null)
+            {
+                throw new ArgumentNullException(nameof(serializationConfigurationType));
+            }
 
             this.SerializationConfigurationType = serializationConfigurationType;
             this.SerializationConfiguration = SerializationConfigurationManager.GetOrAddSerializationConfiguration(serializationConfigurationType);

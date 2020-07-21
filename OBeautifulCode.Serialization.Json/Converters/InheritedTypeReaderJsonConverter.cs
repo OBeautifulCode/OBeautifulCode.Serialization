@@ -117,9 +117,20 @@ namespace OBeautifulCode.Serialization.Json
             object existingValue,
             JsonSerializer serializer)
         {
-            new { reader }.AsArg().Must().NotBeNull();
-            new { objectType }.AsArg().Must().NotBeNull();
-            new { serializer }.AsArg().Must().NotBeNull();
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            if (objectType == null)
+            {
+                throw new ArgumentNullException(nameof(objectType));
+            }
+
+            if (serializer == null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
 
             if (reader.TokenType == JsonToken.Null)
             {

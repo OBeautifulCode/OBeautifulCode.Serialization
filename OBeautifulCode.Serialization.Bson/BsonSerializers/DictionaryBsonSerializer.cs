@@ -57,7 +57,10 @@ namespace OBeautifulCode.Serialization.Bson
             BsonSerializationArgs args,
             TDictionary value)
         {
-            new { context }.AsArg().Must().NotBeNull();
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
 
             if (value == null)
             {
@@ -89,7 +92,10 @@ namespace OBeautifulCode.Serialization.Bson
             BsonDeserializationContext context,
             BsonDeserializationArgs args)
         {
-            new { context }.AsArg().Must().NotBeNull();
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
 
             TDictionary result;
 

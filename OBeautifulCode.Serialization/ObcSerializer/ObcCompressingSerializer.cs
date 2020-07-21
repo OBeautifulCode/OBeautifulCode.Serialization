@@ -8,7 +8,6 @@ namespace OBeautifulCode.Serialization
 {
     using System;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Compression;
     using OBeautifulCode.Representation.System;
 
@@ -26,8 +25,15 @@ namespace OBeautifulCode.Serialization
             ISerializer serializer,
             ICompressor compressor)
         {
-            new { serializer }.AsArg().Must().NotBeNull();
-            new { compressor }.AsArg().Must().NotBeNull();
+            if (serializer == null)
+            {
+                throw new ArgumentNullException(nameof(serializer));
+            }
+
+            if (compressor == null)
+            {
+                throw new ArgumentNullException(nameof(compressor));
+            }
 
             this.Serializer = serializer;
             this.Compressor = compressor;
