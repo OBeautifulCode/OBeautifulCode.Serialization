@@ -153,8 +153,10 @@ namespace OBeautifulCode.Serialization.Json
                 return true;
             }
 
-            // not abstract, but is the base class of some other class
-            if (registeredTypes.Any(registeredType => (type != registeredType) && type.IsAssignableFrom(registeredType)))
+            // not abstract, but:
+            // - is the base class of some other registered class OR
+            // - implements a registered interface
+            if (registeredTypes.Any(registeredType => (type != registeredType) && (type.IsAssignableFrom(registeredType) || registeredType.IsAssignableFrom(type))))
             {
                 return true;
             }
