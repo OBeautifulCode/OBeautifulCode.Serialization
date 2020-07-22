@@ -14,7 +14,6 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Conventions;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.Bson.Internal;
     using OBeautifulCode.Type.Recipes;
@@ -71,7 +70,10 @@ namespace OBeautifulCode.Serialization.Bson
                 {
                     result = value.ResolveFromLoadedTypes();
 
-                    new { result }.AsOp().Must().NotBeNull();
+                    if (result == null)
+                    {
+                        throw new InvalidOperationException(Invariant($"'{nameof(result)}' is null"));
+                    }
                 }
                 catch (ArgumentException)
                 {

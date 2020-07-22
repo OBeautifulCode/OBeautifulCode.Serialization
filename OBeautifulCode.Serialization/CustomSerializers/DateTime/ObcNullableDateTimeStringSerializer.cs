@@ -54,7 +54,15 @@ namespace OBeautifulCode.Serialization
             string serializedString,
             Type type)
         {
-            new { type }.AsArg().Must().NotBeNull().And().BeEqualTo(typeof(DateTime?));
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (type != typeof(DateTime?))
+            {
+                throw new ArgumentException(Invariant($"{nameof(type)} != typeof({nameof(DateTime)}?); '{nameof(type)}' is of type '{type.ToStringReadable()}'"));
+            }
 
             object result;
 

@@ -254,7 +254,7 @@ namespace OBeautifulCode.Serialization
 
             typesToRegisterQueue.All(_ => _.IsOriginatingType).AsOp(Invariant($"All {nameof(TypeToRegister)} objects in {nameof(this.TypesToRegister)} are originating {nameof(TypeToRegister)} objects.")).Must().BeTrue();
 
-            new { this.TypeToRegisterNamespacePrefixFilters }.Must().NotBeNull().And().Each().NotBeNullNorWhiteSpace();
+            new { this.TypeToRegisterNamespacePrefixFilters }.AsOp().Must().NotBeNull().And().Each().NotBeNullNorWhiteSpace();
 
             while (typesToRegisterQueue.Count > 0)
             {

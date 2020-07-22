@@ -49,8 +49,7 @@ namespace OBeautifulCode.Serialization.Test
 
             // Assert
             actual.Must().Each().BeOfType<ArgumentException>();
-            actual.Select(_ => _.Message).Must().Each().ContainString("value");
-            actual.Select(_ => _.Message).Must().Each().ContainString(nameof(DateTime));
+            actual.Select(_ => _.Message).Must().Each().ContainString("objectToSerialize.GetType() != typeof(DateTime);");
         }
 
         [Fact]
@@ -123,13 +122,11 @@ namespace OBeautifulCode.Serialization.Test
             var actual2 = Record.Exception(() => systemUnderTest.Deserialize<DateTime>("2019-01-05T12:14:58.1920000Z"));
 
             // Assert
-            actual1.Must().BeOfType<ArgumentOutOfRangeException>();
-            actual1.Message.Must().ContainString("System.DateTime");
-            actual1.Message.Must().ContainString("name: 'type'");
+            actual1.Must().BeOfType<ArgumentException>();
+            actual1.Message.Must().BeEqualTo("type != typeof(DateTime?); 'type' is of type 'object'");
 
-            actual2.Must().BeOfType<ArgumentOutOfRangeException>();
-            actual2.Message.Must().ContainString("System.DateTime");
-            actual2.Message.Must().ContainString("name: 'type'");
+            actual2.Must().BeOfType<ArgumentException>();
+            actual2.Message.Must().BeEqualTo("type != typeof(DateTime?); 'type' is of type 'DateTime'");
         }
 
         [Fact]
@@ -171,13 +168,11 @@ namespace OBeautifulCode.Serialization.Test
             var actual2 = Record.Exception(() => systemUnderTest.Deserialize("2019-01-05T12:14:58.1920000Z", typeof(DateTime)));
 
             // Assert
-            actual1.Must().BeOfType<ArgumentOutOfRangeException>();
-            actual1.Message.Must().ContainString("System.DateTime");
-            actual1.Message.Must().ContainString("name: 'type'");
+            actual1.Must().BeOfType<ArgumentException>();
+            actual1.Message.Must().BeEqualTo("type != typeof(DateTime?); 'type' is of type 'object'");
 
-            actual2.Must().BeOfType<ArgumentOutOfRangeException>();
-            actual2.Message.Must().ContainString("System.DateTime");
-            actual2.Message.Must().ContainString("name: 'type'");
+            actual2.Must().BeOfType<ArgumentException>();
+            actual2.Message.Must().BeEqualTo("type != typeof(DateTime?); 'type' is of type 'DateTime'");
         }
 
         [Fact]

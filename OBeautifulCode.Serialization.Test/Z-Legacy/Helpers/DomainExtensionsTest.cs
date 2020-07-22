@@ -37,7 +37,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Provided value (name: 'serializerRepresentation') is null.");
+            exception.Message.Should().Contain("serializerRepresentation");
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace OBeautifulCode.Serialization.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Provided value (name: 'serializerFactory') is null.");
+            exception.Message.Should().Contain("serializerFactory");
         }
 
         [Fact]

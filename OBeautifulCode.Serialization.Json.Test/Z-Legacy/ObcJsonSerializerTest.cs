@@ -37,7 +37,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Provided value (name: 'type') is null.");
+            exception.Message.Should().Contain("type");
         }
 
         [Fact]

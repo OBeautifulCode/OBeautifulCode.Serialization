@@ -9,7 +9,9 @@ namespace OBeautifulCode.Serialization.Bson
     using System;
     using System.Drawing;
 
-    using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Type.Recipes;
+
+    using static System.FormattableString;
 
     /// <summary>
     /// String serializer for <see cref="Color"/>.
@@ -20,7 +22,15 @@ namespace OBeautifulCode.Serialization.Bson
         public string SerializeToString(
             object objectToSerialize)
         {
-            new { objectToSerialize }.AsArg().Must().NotBeNull().And().BeOfType<Color>();
+            if (objectToSerialize == null)
+            {
+                throw new ArgumentNullException(nameof(objectToSerialize));
+            }
+
+            if (objectToSerialize.GetType() != typeof(Color))
+            {
+                throw new ArgumentException(Invariant($"{nameof(objectToSerialize)}.GetType() != typeof({nameof(Color)}); '{nameof(objectToSerialize)}' is of type '{objectToSerialize.GetType().ToStringReadable()}'"));
+            }
 
             var result = ColorTranslator.ToHtml((Color)objectToSerialize);
 

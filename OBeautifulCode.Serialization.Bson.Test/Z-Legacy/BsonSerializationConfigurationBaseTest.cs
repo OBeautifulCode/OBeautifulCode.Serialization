@@ -94,7 +94,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentException>();
-            exception.Message.Should().Be("Provided value (name: 'constrainedPropertyDoesNotExistOnType') is not false.  Provided value is 'True'.");
+            exception.Message.Should().Be("'constrainedPropertyDoesNotExistOnType' is true");
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Provided value (name: 'type') is null.");
+            exception.Message.Should().Contain("type");
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
             // Assert
             exception.Should().NotBeNull();
             exception.Should().BeOfType<ArgumentNullException>();
-            exception.Message.Should().Be("Provided value (name: 'type') is null.");
+            exception.Message.Should().Contain("type");
         }
 
         [Fact]

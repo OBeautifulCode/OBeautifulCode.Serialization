@@ -14,7 +14,6 @@ namespace OBeautifulCode.Serialization.Json
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Type.Recipes;
@@ -233,7 +232,10 @@ namespace OBeautifulCode.Serialization.Json
 
                 result = concreteType.ResolveFromLoadedTypes();
 
-                new { result }.AsOp().Must().NotBeNull();
+                if (result == null)
+                {
+                    throw new InvalidOperationException(Invariant($"'{nameof(result)}' is null"));
+                }
             }
             else
             {
