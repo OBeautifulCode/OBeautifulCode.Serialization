@@ -84,7 +84,7 @@ namespace OBeautifulCode.Serialization.Bson
 
             if (registrationTime == RegistrationTime.Unknown)
             {
-                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(registrationTime)}' is equal to '{RegistrationTime.Unknown}'"), (Exception)null);
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(registrationTime)}' == '{RegistrationTime.Unknown}'"), (Exception)null);
             }
 
             if (registrationDetails.TypeToRegister is TypeToRegisterForBson typeToRegisterForBson)

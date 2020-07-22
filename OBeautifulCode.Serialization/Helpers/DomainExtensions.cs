@@ -72,7 +72,7 @@ namespace OBeautifulCode.Serialization
 
             if (serializationFormat == SerializationFormat.Invalid)
             {
-                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' is equal to '{SerializationFormat.Invalid}'"), (Exception)null);
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' == '{SerializationFormat.Invalid}'"), (Exception)null);
             }
 
             var serializer = serializerFactory.BuildSerializer(serializerRepresentation, assemblyMatchStrategy);
@@ -105,7 +105,7 @@ namespace OBeautifulCode.Serialization
 
             if (serializationFormat == SerializationFormat.Invalid)
             {
-                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' is equal to '{SerializationFormat.Invalid}'"), (Exception)null);
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' == '{SerializationFormat.Invalid}'"), (Exception)null);
             }
 
             string payload;

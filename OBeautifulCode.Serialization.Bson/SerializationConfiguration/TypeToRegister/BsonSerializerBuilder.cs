@@ -33,7 +33,7 @@ namespace OBeautifulCode.Serialization.Bson
 
             if (outputKind == BsonSerializerOutputKind.Unknown)
             {
-                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(outputKind)}' is equal to '{BsonSerializerOutputKind.Unknown}'"), (Exception)null);
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(outputKind)}' == '{BsonSerializerOutputKind.Unknown}'"), (Exception)null);
             }
 
             this.BsonSerializerBuilderFunc = bsonSerializerBuilderFunc;

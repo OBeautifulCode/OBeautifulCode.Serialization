@@ -42,7 +42,7 @@ namespace OBeautifulCode.Serialization.Json
 
             if (this.jsonSerializationConfiguration.JsonFormattingKind == JsonFormattingKind.Invalid)
             {
-                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(this.jsonSerializationConfiguration.JsonFormattingKind)}' is equal to '{JsonFormattingKind.Invalid}'"), (Exception)null);
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(this.jsonSerializationConfiguration.JsonFormattingKind)}' == '{JsonFormattingKind.Invalid}'"), (Exception)null);
             }
 
             this.anonymousWriteSerializationSettings = this.jsonSerializationConfiguration.BuildAnonymousJsonSerializerSettings(SerializationDirection.Serialize, this.jsonSerializationConfiguration.JsonFormattingKind);

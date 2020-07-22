@@ -46,7 +46,7 @@ namespace OBeautifulCode.Serialization.Json
         {
             if (serializationDirection == SerializationDirection.Unknown)
             {
-                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationDirection)}' is equal to '{SerializationDirection.Unknown}'"), (Exception)null);
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationDirection)}' == '{SerializationDirection.Unknown}'"), (Exception)null);
             }
 
             if (jsonSerializationConfiguration == null)

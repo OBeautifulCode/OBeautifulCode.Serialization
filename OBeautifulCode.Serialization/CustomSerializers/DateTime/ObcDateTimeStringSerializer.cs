@@ -13,8 +13,8 @@ namespace OBeautifulCode.Serialization
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization.Internal;
+    using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
 
@@ -190,7 +190,10 @@ namespace OBeautifulCode.Serialization
 
             var serializedDateTimeKind = DetermineSerializedDateTimeKind(serializedString);
 
-            serializedDateTimeKind.AsOp().Must().NotBeEqualTo(SerializedDateTimeKind.Unknown, exceptionMessage, ApplyBecause.InLieuOfDefaultMessage);
+            if (serializedDateTimeKind == SerializedDateTimeKind.Unknown)
+            {
+                throw new InvalidOperationException(exceptionMessage);
+            }
 
             var parsingSettings = SerializedDateTimeKindToParsingSettingsMap[serializedDateTimeKind];
 
@@ -205,7 +208,10 @@ namespace OBeautifulCode.Serialization
                 throw new InvalidOperationException(exceptionMessage, ex);
             }
 
-            result.Kind.AsOp().Must().BeEqualTo(parsingSettings.DateTimeKind, Invariant($"Provided {nameof(serializedString)}: {serializedString} deserialized into a {nameof(DateTime)} who's {nameof(DateTimeKind)} is {nameof(DateTimeKind)}.{result.Kind}, however {nameof(DateTimeKind)}.{parsingSettings.DateTimeKind} was expected based on the format of the string."), ApplyBecause.InLieuOfDefaultMessage);
+            if (result.Kind != parsingSettings.DateTimeKind)
+            {
+                throw new InvalidOperationException(Invariant($"Provided {nameof(serializedString)}: {serializedString} deserialized into a {nameof(DateTime)} who's {nameof(DateTimeKind)} is {nameof(DateTimeKind)}.{result.Kind}, however {nameof(DateTimeKind)}.{parsingSettings.DateTimeKind} was expected based on the format of the string."));
+            }
 
             return result;
         }
@@ -214,7 +220,15 @@ namespace OBeautifulCode.Serialization
         public string SerializeToString(
             object objectToSerialize)
         {
-            new { objectToSerialize }.AsArg().Must().NotBeNull().And().BeOfType<DateTime>();
+            if (objectToSerialize == null)
+            {
+                throw new ArgumentNullException(nameof(objectToSerialize));
+            }
+
+            if (objectToSerialize.GetType() != typeof(DateTime))
+            {
+                throw new ArgumentException(Invariant($"{nameof(objectToSerialize)}.GetType() != typeof({nameof(DateTime)}); '{nameof(objectToSerialize)}' is of type {objectToSerialize.GetType().ToStringReadable()}"));
+            }
 
             var result = SerializeToString((DateTime)objectToSerialize);
 
@@ -245,7 +259,15 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentException(Invariant($"'{nameof(serializedString)}' is white space"));
             }
 
-            new { type }.AsArg().Must().NotBeNull().And().BeEqualTo(typeof(DateTime));
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (type != typeof(DateTime))
+            {
+                throw new ArgumentException(Invariant($"{nameof(type)} != typeof({nameof(DateTime)}); '{nameof(type)}' is of type {type.ToStringReadable()}"));
+            }
 
             var result = DeserializeToDateTime(serializedString);
 

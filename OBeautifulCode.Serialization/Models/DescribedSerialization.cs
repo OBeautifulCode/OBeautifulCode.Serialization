@@ -48,7 +48,7 @@ namespace OBeautifulCode.Serialization
 
             if (serializationFormat == SerializationFormat.Invalid)
             {
-                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' is equal to '{SerializationFormat.Invalid}'"), (Exception)null);
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' == '{SerializationFormat.Invalid}'"), (Exception)null);
             }
 
             this.PayloadTypeRepresentation = payloadTypeRepresentation;

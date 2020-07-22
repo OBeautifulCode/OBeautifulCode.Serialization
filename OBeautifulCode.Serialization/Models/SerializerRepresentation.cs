@@ -35,12 +35,12 @@ namespace OBeautifulCode.Serialization
         {
             if (serializationKind == SerializationKind.Invalid)
             {
-                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationKind)}' is equal to '{SerializationKind.Invalid}'"), (Exception)null);
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationKind)}' == '{SerializationKind.Invalid}'"), (Exception)null);
             }
 
             if (compressionKind == CompressionKind.Invalid)
             {
-                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(compressionKind)}' is equal to '{CompressionKind.Invalid}'"), (Exception)null);
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(compressionKind)}' == '{CompressionKind.Invalid}'"), (Exception)null);
             }
 
             this.SerializationKind = serializationKind;
