@@ -227,7 +227,7 @@ namespace OBeautifulCode.Serialization
 
             if (objectToSerialize.GetType() != typeof(DateTime))
             {
-                throw new ArgumentException(Invariant($"{nameof(objectToSerialize)}.GetType() != typeof({nameof(DateTime)}); '{nameof(objectToSerialize)}' is of type {objectToSerialize.GetType().ToStringReadable()}"));
+                throw new ArgumentException(Invariant($"{nameof(objectToSerialize)}.GetType() != typeof({nameof(DateTime)}); '{nameof(objectToSerialize)}' is of type '{objectToSerialize.GetType().ToStringReadable()}'"));
             }
 
             var result = SerializeToString((DateTime)objectToSerialize);
@@ -266,7 +266,7 @@ namespace OBeautifulCode.Serialization
 
             if (type != typeof(DateTime))
             {
-                throw new ArgumentException(Invariant($"{nameof(type)} != typeof({nameof(DateTime)}); '{nameof(type)}' is of type {type.ToStringReadable()}"));
+                throw new ArgumentException(Invariant($"{nameof(type)} != typeof({nameof(DateTime)}); '{nameof(type)}' is of type '{type.ToStringReadable()}'"));
             }
 
             var result = DeserializeToDateTime(serializedString);

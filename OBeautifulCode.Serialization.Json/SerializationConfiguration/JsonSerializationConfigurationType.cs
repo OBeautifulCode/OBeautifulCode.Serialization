@@ -8,7 +8,6 @@ namespace OBeautifulCode.Serialization.Json
 {
     using System;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Type.Recipes;
 
@@ -27,7 +26,10 @@ namespace OBeautifulCode.Serialization.Json
             Type concreteSerializationConfigurationDerivativeType)
             : base(concreteSerializationConfigurationDerivativeType)
         {
-            concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(JsonSerializationConfigurationBase)).AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(JsonSerializationConfigurationBase)}")).Must().BeTrue();
+            if (!concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(JsonSerializationConfigurationBase)))
+            {
+                throw new ArgumentException(Invariant($"'{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(JsonSerializationConfigurationBase)}' is false"));
+            }
         }
 
         /// <summary>

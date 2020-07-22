@@ -16,7 +16,6 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Serializers;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Type.Recipes;
 
     /// <summary>
@@ -37,7 +36,10 @@ namespace OBeautifulCode.Serialization.Bson
         public CollectionBsonSerializer(
             IBsonSerializer<TElement> elementSerializer)
         {
-            typeof(TCollection).IsClosedSystemCollectionType().AsArg("typeof(TCollection).IsSystemCollectionType()").Must().BeTrue();
+            if (!typeof(TCollection).IsClosedSystemCollectionType())
+            {
+                throw new ArgumentException("'typeof(TCollection).IsSystemCollectionType()' is false");
+            }
 
             this.underlyingSerializer = elementSerializer == null
                 ? new ReadOnlyCollectionSerializer<TElement>()

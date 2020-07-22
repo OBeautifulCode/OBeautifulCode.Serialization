@@ -8,7 +8,6 @@ namespace OBeautifulCode.Serialization.Bson
 {
     using System;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Type.Recipes;
 
@@ -27,7 +26,10 @@ namespace OBeautifulCode.Serialization.Bson
             Type concreteSerializationConfigurationDerivativeType)
             : base(concreteSerializationConfigurationDerivativeType)
         {
-            concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(BsonSerializationConfigurationBase)).AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(BsonSerializationConfigurationBase)}")).Must().BeTrue();
+            if (!concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(BsonSerializationConfigurationBase)))
+            {
+                throw new ArgumentException(Invariant($"'{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(BsonSerializationConfigurationBase)}' is false"));
+            }
         }
 
         /// <summary>

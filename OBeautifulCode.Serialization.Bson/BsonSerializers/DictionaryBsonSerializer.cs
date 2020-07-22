@@ -19,7 +19,6 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization.Options;
     using MongoDB.Bson.Serialization.Serializers;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization.Bson.Internal;
     using OBeautifulCode.Type.Recipes;
 
@@ -47,7 +46,10 @@ namespace OBeautifulCode.Serialization.Bson
             IBsonSerializer keySerializer,
             IBsonSerializer valueSerializer)
         {
-            typeof(TDictionary).IsClosedSystemDictionaryType().AsArg("typeof(TDictionary).IsSystemDictionaryType()").Must().BeTrue();
+            if (!typeof(TDictionary).IsClosedSystemDictionaryType())
+            {
+                throw new ArgumentException("'typeof(TDictionary).IsSystemDictionaryType()' is false");
+            }
 
             this.underlyingSerializer = new DictionaryInterfaceImplementerSerializer<Dictionary<TKey, TValue>>(dictionaryRepresentation, keySerializer, valueSerializer);
         }

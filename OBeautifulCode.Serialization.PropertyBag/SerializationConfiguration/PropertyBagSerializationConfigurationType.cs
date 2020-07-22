@@ -8,7 +8,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
 {
     using System;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Type.Recipes;
 
@@ -27,7 +26,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
             Type concreteSerializationConfigurationDerivativeType)
             : base(concreteSerializationConfigurationDerivativeType)
         {
-            concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(PropertyBagSerializationConfigurationBase)).AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(PropertyBagSerializationConfigurationBase)}")).Must().BeTrue();
+            if (!concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(PropertyBagSerializationConfigurationBase)))
+            {
+                throw new ArgumentException(Invariant($"'{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(PropertyBagSerializationConfigurationBase)}' is false"));
+            }
         }
 
         /// <summary>

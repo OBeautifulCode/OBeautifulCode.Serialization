@@ -13,7 +13,6 @@ namespace OBeautifulCode.Serialization.Bson
 
     using MongoDB.Bson.Serialization;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
 
     using static System.FormattableString;
@@ -51,7 +50,10 @@ namespace OBeautifulCode.Serialization.Bson
             {
                 var allMemberNames = allMembers.Select(_ => _.Name).ToList();
 
-                constrainToProperties.Any(_ => !allMemberNames.Contains(_)).AsArg("constrainedPropertyDoesNotExistOnType").Must().BeFalse();
+                if (constrainToProperties.Any(_ => !allMemberNames.Contains(_)))
+                {
+                    throw new ArgumentException("'constrainedPropertyDoesNotExistOnType' is true");
+                }
             }
 
             foreach (var member in members)

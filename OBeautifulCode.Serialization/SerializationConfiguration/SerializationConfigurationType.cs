@@ -8,7 +8,6 @@ namespace OBeautifulCode.Serialization
 {
     using System;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Type.Recipes;
 
@@ -31,9 +30,20 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(concreteSerializationConfigurationDerivativeType));
             }
 
-            new { concreteSerializationConfigurationDerivativeType.IsAbstract }.AsArg().Must().BeFalse();
-            concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(SerializationConfigurationBase)).AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(SerializationConfigurationBase)}")).Must().BeTrue();
-            concreteSerializationConfigurationDerivativeType.HasDefaultConstructor().AsArg(Invariant($"{nameof(concreteSerializationConfigurationDerivativeType)}.{nameof(TypeExtensions.HasDefaultConstructor)}()")).Must().BeTrue();
+            if (concreteSerializationConfigurationDerivativeType.IsAbstract)
+            {
+                throw new ArgumentException(Invariant($"'{nameof(concreteSerializationConfigurationDerivativeType.IsAbstract)}' is true"));
+            }
+
+            if (!concreteSerializationConfigurationDerivativeType.IsAssignableTo(typeof(SerializationConfigurationBase)))
+            {
+                throw new ArgumentException(Invariant($"'{nameof(concreteSerializationConfigurationDerivativeType)} is assignable to {nameof(SerializationConfigurationBase)}' is false"));
+            }
+
+            if (!concreteSerializationConfigurationDerivativeType.HasDefaultConstructor())
+            {
+                throw new ArgumentException(Invariant($"'{nameof(concreteSerializationConfigurationDerivativeType)}.{nameof(TypeExtensions.HasDefaultConstructor)}()' is false"));
+            }
 
             this.ConcreteSerializationConfigurationDerivativeType = concreteSerializationConfigurationDerivativeType;
         }

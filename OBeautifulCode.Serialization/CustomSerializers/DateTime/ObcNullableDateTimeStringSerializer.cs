@@ -8,7 +8,9 @@ namespace OBeautifulCode.Serialization
 {
     using System;
 
-    using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.Type.Recipes;
+
+    using static System.FormattableString;
 
     /// <summary>
     /// String serializer for <see cref="Nullable{DateTime}"/> />.
@@ -27,7 +29,10 @@ namespace OBeautifulCode.Serialization
             }
             else
             {
-                new { objectToSerialize }.AsArg().Must().BeOfType<DateTime>();
+                if (objectToSerialize.GetType() != typeof(DateTime))
+                {
+                    throw new ArgumentException(Invariant($"{nameof(objectToSerialize)}.GetType() != typeof({nameof(DateTime)}); '{nameof(objectToSerialize)}' is of type '{objectToSerialize.GetType().ToStringReadable()}'"));
+                }
 
                 result = ObcDateTimeStringSerializer.SerializeToString((DateTime)objectToSerialize);
             }

@@ -15,7 +15,6 @@ namespace OBeautifulCode.Serialization
     using System.Reflection;
 
     using OBeautifulCode.Assertion.Recipes;
-    using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Serialization.Internal;
     using OBeautifulCode.Type.Recipes;
