@@ -1049,14 +1049,6 @@ namespace OBeautifulCode.Serialization.Json.Test
 
         private class OtherModelThatCanBeConvertedToStringSerializer : IStringSerializeAndDeserialize
         {
-            private bool outputNullOrEmpty;
-
-            public OtherModelThatCanBeConvertedToStringSerializer(
-                bool outputNullOrEmpty = false)
-            {
-                this.outputNullOrEmpty = outputNullOrEmpty;
-            }
-
             public string SerializeToString(object objectToSerialize)
             {
                 if (objectToSerialize == null)

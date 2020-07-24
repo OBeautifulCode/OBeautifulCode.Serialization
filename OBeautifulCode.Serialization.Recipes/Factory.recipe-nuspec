@@ -10,7 +10,7 @@
       <dependency id="OBeautifulCode.Serialization.Bson" version="$version$" />
       <dependency id="OBeautifulCode.Serialization.Json" version="$version$" />
       <dependency id="OBeautifulCode.Serialization.PropertyBag" version="$version$" />
-      <dependency id="OBeautifulCode.Representation.System" version="1.0.51" />
+      <dependency id="OBeautifulCode.Representation.System" version="1.0.52" />
       <dependency id="OBeautifulCode.Compression.Recipes.CompressionHelper" version="1.0.16" />
     </dependencies>
   </metadata>
