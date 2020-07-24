@@ -78,7 +78,7 @@ namespace OBeautifulCode.Serialization.Json
 
                 if (overrideResolver == null)
                 {
-                    throw new ArgumentNullException(nameof(overrideResolver));
+                    throw new ArgumentException(Invariant($"{nameof(overrideResolver)} is null"));
                 }
 
                 result.ContractResolver = overrideResolver.ContractResolverBuilder(() => this.RegisteredTypeToRegistrationDetailsMap);

@@ -62,7 +62,7 @@ namespace OBeautifulCode.Serialization.Bson
 
             if (context.Reader == null)
             {
-                throw new ArgumentNullException(nameof(context.Reader));
+                throw new ArgumentException(Invariant($"{nameof(context)}.{nameof(BsonDeserializationContext.Reader)} is null"));
             }
 
             T? result;

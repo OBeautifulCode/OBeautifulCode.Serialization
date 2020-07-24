@@ -12,7 +12,7 @@
       <dependency id="OBeautifulCode.Serialization.PropertyBag" version="$version$" />
       <dependency id="OBeautifulCode.Serialization.Recipes.Factory" version="$version$" />
       <dependency id="OBeautifulCode.Reflection.Recipes.AppDomainHelper" version="1.0.89" />
-      <dependency id="OBeautifulCode.Representation.System" version="1.0.49" />
+      <dependency id="OBeautifulCode.Representation.System" version="1.0.50" />
       <dependency id="OBeautifulCode.Type.Recipes.TypeExtensions" version="1.0.51" />
     </dependencies>
   </metadata>
