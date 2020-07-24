@@ -8,10 +8,9 @@ namespace OBeautifulCode.Serialization.Bson
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using MongoDB.Bson.Serialization;
-
-    using OBeautifulCode.Assertion.Recipes;
 
     using static System.FormattableString;
 
@@ -93,7 +92,15 @@ namespace OBeautifulCode.Serialization.Bson
 
             if (propertyNameWhitelist != null)
             {
-                new { propertyNameWhitelist }.AsArg().Must().NotBeEmptyEnumerable().And().Each().NotBeNullNorWhiteSpace();
+                if (!propertyNameWhitelist.Any())
+                {
+                    throw new ArgumentException(Invariant($"'{nameof(propertyNameWhitelist)}' is an empty enumerable"));
+                }
+
+                if (!propertyNameWhitelist.Any(string.IsNullOrWhiteSpace))
+                {
+                    throw new ArgumentException(Invariant($"'{nameof(propertyNameWhitelist)}' contains an element that is null or white space"));
+                }
 
                 if (memberTypesToInclude != MemberTypesToInclude.None)
                 {

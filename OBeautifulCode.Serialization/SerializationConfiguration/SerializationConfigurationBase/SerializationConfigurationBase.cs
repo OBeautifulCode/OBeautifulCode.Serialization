@@ -14,7 +14,6 @@ namespace OBeautifulCode.Serialization
     using System.Linq;
     using System.Reflection;
 
-    using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Serialization.Internal;
     using OBeautifulCode.Type.Recipes;
@@ -81,7 +80,15 @@ namespace OBeautifulCode.Serialization
         public void Initialize(
             IReadOnlyDictionary<SerializationConfigurationType, SerializationConfigurationBase> descendantSerializationConfigurationTypeToInstanceMap)
         {
-            new { descendantSerializationConfigurationTypeToInstanceMap }.AsArg().Must().NotBeNull().And().NotContainAnyKeyValuePairsWithNullValue();
+            if (descendantSerializationConfigurationTypeToInstanceMap == null)
+            {
+                throw new ArgumentNullException(nameof(descendantSerializationConfigurationTypeToInstanceMap));
+            }
+
+            if (descendantSerializationConfigurationTypeToInstanceMap.Any(_ => _.Value == null))
+            {
+                throw new ArgumentException(Invariant($"'{nameof(descendantSerializationConfigurationTypeToInstanceMap)}' contains a key/value pair with a null value"));
+            }
 
             if (!this.initialized)
             {
@@ -250,11 +257,25 @@ namespace OBeautifulCode.Serialization
         private void ProcessTypesToRegister(
             Queue<TypeToRegister> typesToRegisterQueue)
         {
-            new { typesToRegisterQueue }.AsOp().Must().NotContainAnyNullElements();
+            if (typesToRegisterQueue.Any(_ => _ == null))
+            {
+                throw new InvalidOperationException(Invariant($"'{nameof(typesToRegisterQueue)}' contains an element that is null"));
+            }
 
-            typesToRegisterQueue.All(_ => _.IsOriginatingType).AsOp(Invariant($"All {nameof(TypeToRegister)} objects in {nameof(this.TypesToRegister)} are originating {nameof(TypeToRegister)} objects.")).Must().BeTrue();
+            if (!typesToRegisterQueue.All(_ => _.IsOriginatingType))
+            {
+                throw new InvalidOperationException(Invariant($"One or more {nameof(TypeToRegister)} objects in {nameof(this.TypesToRegister)} are NOT originating {nameof(TypeToRegister)} objects."));
+            }
 
-            new { this.TypeToRegisterNamespacePrefixFilters }.AsOp().Must().NotBeNull().And().Each().NotBeNullNorWhiteSpace();
+            if (this.TypeToRegisterNamespacePrefixFilters == null)
+            {
+                throw new InvalidOperationException(Invariant($"{nameof(this.TypeToRegisterNamespacePrefixFilters)} is null"));
+            }
+
+            if (this.TypeToRegisterNamespacePrefixFilters.Any(string.IsNullOrWhiteSpace))
+            {
+                throw new InvalidOperationException(Invariant($"{nameof(this.TypeToRegisterNamespacePrefixFilters)} contains an element that is null or white space"));
+            }
 
             while (typesToRegisterQueue.Count > 0)
             {
