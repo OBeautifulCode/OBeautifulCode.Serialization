@@ -578,6 +578,38 @@ namespace OBeautifulCode.Serialization.Json.Test
             expected.RoundtripSerializeViaJsonWithCallbackVerification(VerificationCallback4, typeof(ObjectAndDictionaryKeyConvertingSerializationConfiguration));
         }
 
+        [Fact]
+        public static void RoundtripSerialize___Should_roundtrip_TestModelWithMixedCaseKeys_and_serialize_without_changing_case_of_keys___When_model_contains_dictionaries_keyed_on_string_or_convertible_to_string_and_keys_have_mixed_case()
+        {
+            var stringToIntMap = new Dictionary<string, int>
+            {
+                { "abc", 1 },
+                { "Abc", 2 },
+                { "AbC", 3 },
+            };
+
+            var otherModelToIntMap = new Dictionary<OtherModelThatCanBeConvertedToString, int>
+            {
+                { new OtherModelThatCanBeConvertedToString("abc"), 1 },
+                { new OtherModelThatCanBeConvertedToString("Abc"), 2 },
+                { new OtherModelThatCanBeConvertedToString("AbC"), 3 },
+            };
+
+            var expected = new TestModelWithMixedCaseKeys(stringToIntMap, otherModelToIntMap);
+
+            void VerificationCallback(string serialized, SerializationFormat format, TestModelWithMixedCaseKeys deserialized)
+            {
+                deserialized.AsTest().Must().BeEqualTo(expected);
+
+                if (format == SerializationFormat.String)
+                {
+                    serialized.AsTest().Must().BeEqualTo("{\r\n  \"stringToIntMap\": {\r\n    \"abc\": 1,\r\n    \"Abc\": 2,\r\n    \"AbC\": 3\r\n  },\r\n  \"otherModelToIntMap\": {\r\n    \"abc\": 1,\r\n    \"Abc\": 2,\r\n    \"AbC\": 3\r\n  }\r\n}");
+                }
+            }
+
+            expected.RoundtripSerializeViaJsonWithCallbackVerification(VerificationCallback, typeof(MixedCaseKeysSerializationConfiguration));
+        }
+
         [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         #pragma warning disable SA1201 // Elements should appear in the correct order
         public enum Position
@@ -721,6 +753,66 @@ namespace OBeautifulCode.Serialization.Json.Test
 
         [Serializable]
         [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
+        public class TestModelWithMixedCaseKeys : IEquatable<TestModelWithMixedCaseKeys>
+        {
+            public TestModelWithMixedCaseKeys(
+                IReadOnlyDictionary<string, int> stringToIntMap,
+                IReadOnlyDictionary<OtherModelThatCanBeConvertedToString, int> otherModelToIntMap)
+            {
+                this.StringToIntMap = stringToIntMap;
+                this.OtherModelToIntMap = otherModelToIntMap;
+            }
+
+            public IReadOnlyDictionary<string, int> StringToIntMap { get; private set; }
+
+            public IReadOnlyDictionary<OtherModelThatCanBeConvertedToString, int> OtherModelToIntMap { get; private set; }
+
+            public static bool operator ==(TestModelWithMixedCaseKeys left, TestModelWithMixedCaseKeys right)
+            {
+                if (ReferenceEquals(left, right))
+                {
+                    return true;
+                }
+
+                if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+                {
+                    return false;
+                }
+
+                var result = left.Equals(right);
+
+                return result;
+            }
+
+            public static bool operator !=(TestModelWithMixedCaseKeys left, TestModelWithMixedCaseKeys right) => !(left == right);
+
+            public bool Equals(TestModelWithMixedCaseKeys other)
+            {
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                if (ReferenceEquals(other, null))
+                {
+                    return false;
+                }
+
+                var result =
+                    this.StringToIntMap.IsEqualTo(other.StringToIntMap) &&
+                    this.OtherModelToIntMap.IsEqualTo(other.OtherModelToIntMap);
+
+                return result;
+            }
+
+            public override bool Equals(object obj) => this == (obj as TestModelWithMixedCaseKeys);
+
+            [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = ObcSuppressBecause.CA1065_DoNotRaiseExceptionsInUnexpectedLocations_ThrowNotImplementedExceptionWhenForcedToSpecifyMemberThatWillNeverBeUsedInTesting)]
+            public override int GetHashCode() => throw new NotImplementedException("should not get used");
+        }
+
+        [Serializable]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class ModelThatCannotBeConvertToString : IEquatable<ModelThatCannotBeConvertToString>
         {
             public ModelThatCannotBeConvertToString(
@@ -829,6 +921,64 @@ namespace OBeautifulCode.Serialization.Json.Test
             public override int GetHashCode() => HashCodeHelper.Initialize().Hash(this.Value).Hash(this.Value2).Value;
         }
 
+        [Serializable]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
+        public class OtherModelThatCanBeConvertedToString : IEquatable<OtherModelThatCanBeConvertedToString>
+        {
+            public OtherModelThatCanBeConvertedToString(
+                string value)
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
+                this.Value = value;
+            }
+
+            public string Value { get; private set; }
+
+            public static bool operator ==(OtherModelThatCanBeConvertedToString left, OtherModelThatCanBeConvertedToString right)
+            {
+                if (ReferenceEquals(left, right))
+                {
+                    return true;
+                }
+
+                if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+                {
+                    return false;
+                }
+
+                var result = left.Equals(right);
+
+                return result;
+            }
+
+            public static bool operator !=(OtherModelThatCanBeConvertedToString left, OtherModelThatCanBeConvertedToString right) => !(left == right);
+
+            public bool Equals(OtherModelThatCanBeConvertedToString other)
+            {
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                if (ReferenceEquals(other, null))
+                {
+                    return false;
+                }
+
+                var result = this.Value == other.Value;
+
+                return result;
+            }
+
+            public override bool Equals(object obj) => this == (obj as OtherModelThatCanBeConvertedToString);
+
+            public override int GetHashCode() => HashCodeHelper.Initialize().Hash(this.Value).Value;
+        }
+
         private class ModelThatCanBeConvertedToStringSerializer : IStringSerializeAndDeserialize
         {
             private bool outputNullOrEmpty;
@@ -892,6 +1042,57 @@ namespace OBeautifulCode.Serialization.Json.Test
                 var value2 = int.Parse(tokens[1]);
 
                 var result = new ModelThatCanBeConvertedToString(value, value2);
+
+                return result;
+            }
+        }
+
+        private class OtherModelThatCanBeConvertedToStringSerializer : IStringSerializeAndDeserialize
+        {
+            private bool outputNullOrEmpty;
+
+            public OtherModelThatCanBeConvertedToStringSerializer(
+                bool outputNullOrEmpty = false)
+            {
+                this.outputNullOrEmpty = outputNullOrEmpty;
+            }
+
+            public string SerializeToString(object objectToSerialize)
+            {
+                if (objectToSerialize == null)
+                {
+                    return null;
+                }
+
+                string result;
+
+                if (objectToSerialize is OtherModelThatCanBeConvertedToString model)
+                {
+                    result = model.Value;
+                }
+                else
+                {
+                    throw new ArgumentException(Invariant($"{nameof(objectToSerialize)} is not a {nameof(OtherModelThatCanBeConvertedToString)}"));
+                }
+
+                return result;
+            }
+
+            public T Deserialize<T>(string serializedString)
+            {
+                var result = (T)this.Deserialize(serializedString, typeof(T));
+
+                return result;
+            }
+
+            public object Deserialize(string serializedString, Type type)
+            {
+                if (serializedString == null)
+                {
+                    return null;
+                }
+
+                var result = new OtherModelThatCanBeConvertedToString(serializedString);
 
                 return result;
             }
@@ -963,6 +1164,17 @@ namespace OBeautifulCode.Serialization.Json.Test
             {
                 typeof(TestModel).ToTypeToRegisterForJson(),
                 typeof(ModelThatCanBeConvertedToString).ToTypeToRegisterForJsonUsingStringSerializer(ModelThatCanBeConvertedToStringSerializer),
+            };
+        }
+
+        private class MixedCaseKeysSerializationConfiguration : JsonSerializationConfigurationBase
+        {
+            private static readonly OtherModelThatCanBeConvertedToStringSerializer OtherModelThatCanBeConvertedToStringSerializer = new OtherModelThatCanBeConvertedToStringSerializer();
+
+            protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
+            {
+                typeof(TestModelWithMixedCaseKeys).ToTypeToRegisterForJson(),
+                typeof(OtherModelThatCanBeConvertedToString).ToTypeToRegisterForJsonUsingStringSerializer(OtherModelThatCanBeConvertedToStringSerializer),
             };
         }
     }
