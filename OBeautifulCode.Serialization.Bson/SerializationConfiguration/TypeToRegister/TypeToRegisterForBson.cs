@@ -97,7 +97,7 @@ namespace OBeautifulCode.Serialization.Bson
                     throw new ArgumentException(Invariant($"'{nameof(propertyNameWhitelist)}' is an empty enumerable"));
                 }
 
-                if (!propertyNameWhitelist.Any(string.IsNullOrWhiteSpace))
+                if (propertyNameWhitelist.Any(string.IsNullOrWhiteSpace))
                 {
                     throw new ArgumentException(Invariant($"'{nameof(propertyNameWhitelist)}' contains an element that is null or white space"));
                 }
