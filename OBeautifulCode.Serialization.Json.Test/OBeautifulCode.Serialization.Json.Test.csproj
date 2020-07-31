@@ -137,6 +137,7 @@
     <Compile Include="Converters\DictionaryJsonConverterBaseTest.cs" />
     <Compile Include="Converters\SystemCollectionTest.cs" />
     <Compile Include="Converters\TypeToRegisterForJsonTest.cs" />
+    <Compile Include="ObcJsonSerializer\AnonymousObjectsTest.cs" />
     <Compile Include="Z-Legacy\Animal.cs" />
     <Compile Include="Z-Legacy\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />
     <Compile Include="Z-Legacy\DateTimeConverterTest.cs" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

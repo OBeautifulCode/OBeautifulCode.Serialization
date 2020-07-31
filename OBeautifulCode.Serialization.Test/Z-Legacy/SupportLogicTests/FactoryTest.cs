@@ -184,9 +184,9 @@ namespace OBeautifulCode.Serialization.Test
             dynamic deserializedBson = serializedBson.DeserializePayload();
 
             // Assert
-            ((string)deserializedJson.Item).Should().Be(input.Item);
-            ((string)deserializedJson.Items[0]).Should().Be(input.Items[0]);
-            ((string)deserializedJson.Items[1]).Should().Be(input.Items[1]);
+            ((string)deserializedJson.item).Should().Be(input.Item);
+            ((string)deserializedJson.items[0]).Should().Be(input.Items[0]);
+            ((string)deserializedJson.items[1]).Should().Be(input.Items[1]);
 
             ((string)deserializedBson.Item).Should().Be(input.Item);
             ((string)deserializedBson.Items[0]).Should().Be(input.Items[0]);

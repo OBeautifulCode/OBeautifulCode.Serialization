@@ -87,30 +87,6 @@ namespace OBeautifulCode.Serialization.Json
             return result;
         }
 
-        /// <summary>
-        /// Build <see cref="JsonSerializerSettings" /> to use for serialization of anonymous types using Newtonsoft.
-        /// </summary>
-        /// <param name="serializationDirection">Direction of serialization.</param>
-        /// <param name="formattingKind">Kind of formatting to use.</param>
-        /// <returns>
-        /// Prepared settings to use with Newtonsoft.
-        /// </returns>
-        public JsonSerializerSettings BuildAnonymousJsonSerializerSettings(
-            SerializationDirection serializationDirection,
-            JsonFormattingKind formattingKind)
-        {
-            // this is a hack to not mess with casing since the case must match for dynamic deserialization...
-            var jsonSerializerSettingsBuilder = JsonFormattingKindToSettingsSelectorByDirection[formattingKind](serializationDirection);
-
-            var result = jsonSerializerSettingsBuilder(() => this.RegisteredTypeToRegistrationDetailsMap);
-
-            result.ContractResolver = new DefaultContractResolver();
-
-            result.Converters = this.GetDefaultConverters(serializationDirection, formattingKind);
-
-            return result;
-        }
-
         private void ProcessTypeToRegisterForJson(
             TypeToRegisterForJson typeToRegisterForJson)
         {

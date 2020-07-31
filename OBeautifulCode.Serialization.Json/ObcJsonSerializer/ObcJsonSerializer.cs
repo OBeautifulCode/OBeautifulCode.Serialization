@@ -15,7 +15,6 @@ namespace OBeautifulCode.Serialization.Json
 
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.Json.Internal;
-    using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
 
@@ -25,8 +24,6 @@ namespace OBeautifulCode.Serialization.Json
     public class ObcJsonSerializer : ObcSerializerBase
     {
         private static readonly Encoding SerializationEncoding = Encoding.UTF8;
-
-        private readonly JsonSerializerSettings anonymousWriteSerializationSettings;
 
         private readonly JsonSerializationConfigurationBase jsonSerializationConfiguration;
 
@@ -44,8 +41,6 @@ namespace OBeautifulCode.Serialization.Json
             {
                 throw new ArgumentOutOfRangeException(Invariant($"'{nameof(this.jsonSerializationConfiguration.JsonFormattingKind)}' == '{JsonFormattingKind.Invalid}'"), (Exception)null);
             }
-
-            this.anonymousWriteSerializationSettings = this.jsonSerializationConfiguration.BuildAnonymousJsonSerializerSettings(SerializationDirection.Serialize, this.jsonSerializationConfiguration.JsonFormattingKind);
 
             this.SerializerRepresentation = new SerializerRepresentation(SerializationKind.Json, jsonSerializationConfigurationType?.ConcreteSerializationConfigurationDerivativeType.ToRepresentation());
         }
@@ -132,9 +127,7 @@ namespace OBeautifulCode.Serialization.Json
 
             this.InternalJsonThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Serialize, objectToSerialize);
 
-            var jsonSerializerSettings = (objectToSerialize != null) && objectType.IsClosedAnonymousType()
-                ? this.anonymousWriteSerializationSettings
-                : this.jsonSerializationConfiguration.BuildJsonSerializerSettings(SerializationDirection.Serialize, this.jsonSerializationConfiguration);
+            var jsonSerializerSettings = this.jsonSerializationConfiguration.BuildJsonSerializerSettings(SerializationDirection.Serialize, this.jsonSerializationConfiguration);
 
             var result = JsonConvert.SerializeObject(objectToSerialize, jsonSerializerSettings);
 
