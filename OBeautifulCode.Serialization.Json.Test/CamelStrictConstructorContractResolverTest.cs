@@ -175,6 +175,7 @@ namespace OBeautifulCode.Serialization.Json.Test
     [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
     public class TestModelWithOptionalConstructorParameters : IEquatable<TestModelWithOptionalConstructorParameters>
     {
+        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddedToIdentifierForTestsWhereTypeIsPrimaryConcern)]
         public TestModelWithOptionalConstructorParameters(
             string stringValue1,
             string stringValue2 = null,
@@ -213,8 +214,10 @@ namespace OBeautifulCode.Serialization.Json.Test
 
         public string StringValue3 { get; private set; }
 
+        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddedToIdentifierForTestsWhereTypeIsPrimaryConcern)]
         public int IntValue1 { get; private set; }
 
+        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddedToIdentifierForTestsWhereTypeIsPrimaryConcern)]
         public int IntValue2 { get; private set; }
 
         public int? NullableIntValue1 { get; private set; }
@@ -293,6 +296,7 @@ namespace OBeautifulCode.Serialization.Json.Test
 
     [Serializable]
     [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
+    [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix", Justification = ObcSuppressBecause.CA1711_IdentifiersShouldNotHaveIncorrectSuffix_TypeNameAddedAsSuffixForTestsWhereTypeIsPrimaryConcern)]
     #pragma warning disable SA1201 // Elements should appear in the correct order
     public enum TestEnum
     #pragma warning restore SA1201 // Elements should appear in the correct order
