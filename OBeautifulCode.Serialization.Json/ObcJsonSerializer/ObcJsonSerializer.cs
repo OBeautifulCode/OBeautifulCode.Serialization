@@ -21,6 +21,9 @@ namespace OBeautifulCode.Serialization.Json
     /// <summary>
     /// JSON serializer.
     /// </summary>
+    /// <remarks>
+    /// Here is the source of Newtonsoft.Json 9.0.1: <a href="https://github.com/JamesNK/Newtonsoft.Json/tree/e5ac9a8473dfdefb8fe2cddae433a9aaa94a5b37"/>.
+    /// </remarks>
     public class ObcJsonSerializer : ObcSerializerBase
     {
         private static readonly Encoding SerializationEncoding = Encoding.UTF8;

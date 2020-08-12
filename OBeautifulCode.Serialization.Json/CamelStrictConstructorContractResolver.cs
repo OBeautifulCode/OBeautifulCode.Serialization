@@ -258,10 +258,36 @@ namespace OBeautifulCode.Serialization.Json
                 var required = matchingMemberProperty.Required;
                 if (required == Required.Default)
                 {
-                    if (matchingMemberProperty.PropertyType != null &&
-                        matchingMemberProperty.PropertyType.IsValueType &&
-                        Nullable.GetUnderlyingType(matchingMemberProperty.PropertyType) == null)
+                    var parameterTypeAssignableToNull = parameterInfo.ParameterType.IsAssignableToNull();
+
+                    if (parameterInfo.HasDefaultValue && ((!parameterTypeAssignableToNull) || (parameterInfo.DefaultValue == null)))
                     {
+                        // See this for the difference between HasDefaultValue and IsOptional:
+                        // https://stackoverflow.com/questions/16186694/difference-between-parameterinfo-isoptional-and-parameterinfo-hasdefaultvalue
+                        // The constructor parameter is optional, and so it does not need to be defined in JSON.
+                        // This allows us to add properties to models over time.  If a property (and associated constructor parameter)
+                        // is added, then old payloads won't have that property and the model cannot be deserialized unless we
+                        // set Required = Required.Default.  We need to set DefaultValue and DefaultValueHandling, otherwise Newtonsoft uses default(T).
+                        // Additionally, there is a BUG in Newtonsoft.Json 9.0.1 such that this approach only works for types that cannot be assigned
+                        // to null (e.g. intParam = 0) -OR- types that can be assigned to null where the constructor parameter's default value is null
+                        // (e.g. nullableIntParam = null).  If the constructor parameter can be assigned to null but it's default value is not null
+                        // (e.g. nullableIntParam = 10), and the value in the payload is null, Newtonsoft uses the default value instead of the null payload value.
+                        // Note that the only types that are assignable to null but can be defaulted to a non-null value are Nullable types and string;
+                        // all other types that are assignable to null can only be defaulted to null (try it out!  compiler does not allow it).
+                        // The issue is with JsonSerializerInternalReader.CreateObjectUsingCreatorWithParameters line 1959:
+                        // when null is in the payload, context.Presence == PropertyPresence.Null, so we enter the if block and grab the parameter's default value.
+                        result.DefaultValue = parameterInfo.DefaultValue;
+
+                        // note that the Include flag = 0 so really we are just setting Populate here.
+                        // Meaning, by default serialization includes all members;
+                        // to specifically ignore you have to set the Ignore flag which = 1.
+                        result.DefaultValueHandling = DefaultValueHandling.Include | DefaultValueHandling.Populate;
+                    }
+                    else if (matchingMemberProperty.PropertyType != null &&
+                             matchingMemberProperty.PropertyType.IsValueType &&
+                             Nullable.GetUnderlyingType(matchingMemberProperty.PropertyType) == null)
+                    {
+                        // the property must be defined in JSON and cannot be null
                         required = Required.Always;
                     }
                     else

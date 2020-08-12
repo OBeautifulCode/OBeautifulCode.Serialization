@@ -134,6 +134,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\SuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="CamelStrictConstructorContractResolverTest.cs" />
     <Compile Include="Converters\DictionaryJsonConverterBaseTest.cs" />
     <Compile Include="Converters\SystemCollectionTest.cs" />
     <Compile Include="Converters\TypeToRegisterForJsonTest.cs" />
