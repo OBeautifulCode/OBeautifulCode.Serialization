@@ -160,7 +160,7 @@ namespace OBeautifulCode.Serialization
             // (e.g. the generic type definition of IDictionary<string, MyGenericClass<T>> is IDictionary<,>,
             // which misses MyGenericClass<>)
             var genericTypeDefinitions = result
-                .Where(_ => _.ContainsGenericParameters && (!_.IsGenericTypeDefinition))
+                .Where(_ => _.IsGenericType && _.ContainsGenericParameters && (!_.IsGenericTypeDefinition))
                 .Select(_ => _.GetGenericTypeDefinition())
                 .ToList();
 
@@ -265,7 +265,7 @@ namespace OBeautifulCode.Serialization
             // (e.g. the generic type definition of IDictionary<string, MyGenericClass<T>> is IDictionary<,>,
             // which misses MyGenericClass<>)
             var genericTypeDefinitions = result
-                .Where(_ => _.ContainsGenericParameters && (!_.IsGenericParameter))
+                .Where(_ => _.IsGenericType && _.ContainsGenericParameters && (!_.IsGenericTypeDefinition))
                 .Select(_ => _.GetGenericTypeDefinition())
                 .ToList();
 
@@ -312,7 +312,7 @@ namespace OBeautifulCode.Serialization
             // this only happens if the user registered a closed generic type in their serialization configuration
             // or if a member of a type is a closed generic type (pulled-in via GetMemberTypesToInclude())
             // Assemblies do not contain closed generic types.
-            if (type.IsGenericType && (!type.ContainsGenericParameters))
+            if (type.IsClosedGenericType())
             {
                 // the concern here is that DiscoverAncestorsAndDescendants will get all ancestors,
                 // but could miss derivatives.  Consider:
