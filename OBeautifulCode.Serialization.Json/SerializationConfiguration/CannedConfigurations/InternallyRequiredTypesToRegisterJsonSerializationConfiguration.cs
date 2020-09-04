@@ -23,6 +23,8 @@ namespace OBeautifulCode.Serialization.Json
 
         private static readonly IStringSerializeAndDeserialize DateTimeStringSerializer = new ObcDateTimeStringSerializer();
 
+        private static readonly IStringSerializeAndDeserialize VersionStringSerializer = new ObcVersionStringSerializer();
+
         private static readonly IStringSerializeAndDeserialize NullableDateTimeStringSerializer = new ObcNullableDateTimeStringSerializer();
 
         /// <inheritdoc />
@@ -36,6 +38,7 @@ namespace OBeautifulCode.Serialization.Json
                 typeof(SecureString).ToTypeToRegisterForJsonUsingStringSerializer(SecureStringStringSerializer),
                 typeof(DateTime).ToTypeToRegisterForJsonUsingStringSerializer(DateTimeStringSerializer),
                 typeof(DateTime?).ToTypeToRegisterForJsonUsingStringSerializer(NullableDateTimeStringSerializer),
+                typeof(Version).ToTypeToRegisterForJsonUsingStringSerializer(VersionStringSerializer),
             })
             .ToList();
 

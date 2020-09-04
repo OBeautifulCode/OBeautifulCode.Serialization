@@ -178,6 +178,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\TypeDummyFactory.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeDummyFactory.designer.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="CustomSerializers\ObcVersionStringSerializerTest.cs" />
     <Compile Include="CustomSerializers\ObcNullableDateTimeStringSerializerTest.cs" />
     <Compile Include="Z-Legacy\SerializationConfiguration\SerializationConfigurationManagerTest.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.cs" />

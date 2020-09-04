@@ -190,6 +190,20 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
+        public static void Deserialize_serializedString_type___Should_throw_ArgumentNullException___When_parameter_type_is_null()
+        {
+            // Arrange
+            var systemUnderTest = new ObcDateTimeStringSerializer();
+
+            // Act
+            var actual = Record.Exception(() => systemUnderTest.Deserialize("2019-01-05T12:14:58.1920000Z", null));
+
+            // Assert
+            actual.Must().BeOfType<ArgumentNullException>();
+            actual.Message.Must().ContainString("type");
+        }
+
+        [Fact]
         public static void Deserialize_serializedString_type___Should_throw_ArgumentException___When_parameter_type_is_not_DateTime()
         {
             // Arrange

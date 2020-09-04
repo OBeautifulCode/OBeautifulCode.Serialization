@@ -12,6 +12,7 @@ namespace OBeautifulCode.Serialization
     using System.Security;
 
     using OBeautifulCode.Serialization.Internal;
+    using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
 
@@ -37,7 +38,7 @@ namespace OBeautifulCode.Serialization
             }
             else
             {
-                throw new ArgumentException(Invariant($"{objectToSerialize} is not a {nameof(SecureString)}"));
+                throw new ArgumentException(Invariant($"{nameof(objectToSerialize)} is not a {nameof(SecureString)}; it is a {objectToSerialize.GetType().ToStringReadable()}."));
             }
 
             return result;
