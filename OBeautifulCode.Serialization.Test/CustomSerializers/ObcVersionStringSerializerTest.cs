@@ -32,7 +32,7 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
-        public static void SerializeToString___Should_throw_ArgumentException___When_parameter_value_is_not_a_Version()
+        public static void SerializeToString___Should_throw_ArgumentException___When_parameter_value_is_not_Version()
         {
             // Arrange
             var systemUnderTest = new ObcVersionStringSerializer();
@@ -83,7 +83,7 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
-        public static void Deserialize_serializedString_type___Should_throw_ArgumentException___When_parameter_type_is_not_a_Version()
+        public static void Deserialize_serializedString_type___Should_throw_ArgumentException___When_parameter_type_is_not_Version()
         {
             // Arrange
             var systemUnderTest = new ObcVersionStringSerializer();
@@ -156,7 +156,7 @@ namespace OBeautifulCode.Serialization.Test
         }
 
         [Fact]
-        public static void Deserialize_T___Should_throw_ArgumentException___When_type_parameter_is_not_a_Version()
+        public static void Deserialize_T___Should_throw_ArgumentException___When_type_parameter_is_not_Version()
         {
             // Arrange
             var systemUnderTest = new ObcVersionStringSerializer();
