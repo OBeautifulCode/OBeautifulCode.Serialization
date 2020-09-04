@@ -258,7 +258,7 @@ namespace OBeautifulCode.Serialization.Json
                 var required = matchingMemberProperty.Required;
                 if (required == Required.Default)
                 {
-                    var parameterTypeAssignableToNull = parameterInfo.ParameterType.IsAssignableToNull();
+                    var parameterTypeAssignableToNull = parameterInfo.ParameterType.IsClosedTypeAssignableToNull();
 
                     if (parameterInfo.HasDefaultValue && ((!parameterTypeAssignableToNull) || (parameterInfo.DefaultValue == null)))
                     {
