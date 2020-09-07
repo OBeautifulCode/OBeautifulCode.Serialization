@@ -1021,6 +1021,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
             {
                 new TypeToRegisterForJson(typeof(DogDiet), MemberTypesToInclude.All, RelatedTypesToInclude.Descendants, null, null),
+                new TypeToRegisterForJson(typeof(Animal), MemberTypesToInclude.All, RelatedTypesToInclude.None, null, null),
             };
         }
 
@@ -1029,6 +1030,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
             {
                 new TypeToRegisterForJson(typeof(CatDiet), MemberTypesToInclude.All, RelatedTypesToInclude.Descendants, null, null),
+                new TypeToRegisterForJson(typeof(Animal), MemberTypesToInclude.All, RelatedTypesToInclude.None, null, null),
             };
         }
 

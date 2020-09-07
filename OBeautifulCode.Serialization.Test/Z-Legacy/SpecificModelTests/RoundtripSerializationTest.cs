@@ -28,8 +28,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_ClassWithGetterOnlysBase___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ClassWithGetterOnlys>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ClassWithGetterOnlys>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ClassWithGetterOnlys, ClassWithGetterOnlysBase>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ClassWithGetterOnlys, ClassWithGetterOnlysBase>);
 
             var expected = new ClassWithGetterOnlys();
 
@@ -101,8 +101,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void RoundtripSerializeDeserialize___Using_TestWithInheritor___Works()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<TestWithInheritorExtraProperty>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<TestWithInheritorExtraProperty>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<TestWithInheritorExtraProperty, TestWithInheritor>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<TestWithInheritorExtraProperty, TestWithInheritor>);
 
             var expected = new TestWithInheritorExtraProperty { Id = Guid.NewGuid().ToString(), Name = Guid.NewGuid().ToString(), AnotherName = Guid.NewGuid().ToString(), };
 
