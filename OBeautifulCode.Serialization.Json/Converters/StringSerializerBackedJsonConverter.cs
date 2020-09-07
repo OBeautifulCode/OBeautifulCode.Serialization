@@ -7,6 +7,7 @@
 namespace OBeautifulCode.Serialization.Json
 {
     using System;
+    using System.Collections.Concurrent;
 
     using Newtonsoft.Json;
 
@@ -17,6 +18,8 @@ namespace OBeautifulCode.Serialization.Json
     /// </summary>
     public class StringSerializerBackedJsonConverter : JsonConverter
     {
+        private readonly ConcurrentDictionary<Type, bool> typeToCanCovertMap = new ConcurrentDictionary<Type, bool>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StringSerializerBackedJsonConverter"/> class.
         /// </summary>
@@ -107,7 +110,10 @@ namespace OBeautifulCode.Serialization.Json
                 throw new ArgumentNullException(nameof(objectType));
             }
 
-            bool result;
+            if (this.typeToCanCovertMap.TryGetValue(objectType, out bool result))
+            {
+                return result;
+            }
 
             switch (this.CanConvertTypeMatchStrategy)
             {
@@ -126,6 +132,8 @@ namespace OBeautifulCode.Serialization.Json
                 default:
                     throw new NotSupportedException(Invariant($"This {nameof(this.CanConvertTypeMatchStrategy)} is not supported: {this.CanConvertTypeMatchStrategy}."));
             }
+
+            this.typeToCanCovertMap.TryAdd(objectType, result);
 
             return result;
         }
