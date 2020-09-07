@@ -14,10 +14,11 @@ namespace OBeautifulCode.Serialization
     /// </summary>
     public class ObcLambdaBackedSerializer : ISerializer
     {
-        private readonly Func<object, string> serializeString;
-        private readonly Func<string, Type, object> deserializeString;
         private readonly Func<object, byte[]> serializeBytes;
+
         private readonly Func<byte[], Type, object> deserializeBytes;
+
+        private readonly ObcLambdaBackedStringSerializer stringSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcLambdaBackedSerializer"/> class.
@@ -34,15 +35,7 @@ namespace OBeautifulCode.Serialization
             Func<byte[], Type, object> deserializeBytes,
             string id = null)
         {
-            if (serializeString == null)
-            {
-                throw new ArgumentNullException(nameof(serializeString));
-            }
-
-            if (deserializeString == null)
-            {
-                throw new ArgumentNullException(nameof(deserializeString));
-            }
+            this.stringSerializer = new ObcLambdaBackedStringSerializer(serializeString, deserializeString);
 
             if (serializeBytes == null)
             {
@@ -54,8 +47,6 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(deserializeBytes));
             }
 
-            this.serializeString = serializeString;
-            this.deserializeString = deserializeString;
             this.serializeBytes = serializeBytes;
             this.deserializeBytes = deserializeBytes;
 
@@ -84,7 +75,7 @@ namespace OBeautifulCode.Serialization
         public string SerializeToString(
             object objectToSerialize)
         {
-            var result = this.serializeString(objectToSerialize);
+            var result = this.stringSerializer.SerializeToString(objectToSerialize);
 
             return result;
         }
@@ -93,7 +84,7 @@ namespace OBeautifulCode.Serialization
         public T Deserialize<T>(
             string serializedString)
         {
-            var result = (T)this.Deserialize(serializedString, typeof(T));
+            var result = this.stringSerializer.Deserialize<T>(serializedString);
 
             return result;
         }
@@ -103,12 +94,7 @@ namespace OBeautifulCode.Serialization
             string serializedString,
             Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            var result = this.deserializeString(serializedString, type);
+            var result = this.stringSerializer.Deserialize(serializedString, type);
 
             return result;
         }
