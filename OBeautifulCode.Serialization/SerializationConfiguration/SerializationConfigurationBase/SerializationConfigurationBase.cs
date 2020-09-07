@@ -409,11 +409,28 @@ namespace OBeautifulCode.Serialization
             SerializationDirection serializationDirection,
             object objectToSerialize)
         {
-            if (!this.validatedTypes.ContainsKey(typeToValidate))
-            {
-                this.ValidateTypeIsRegistered(originalType, typeToValidate);
+            // For non-System types we need to validate the type itself as well as all ancestors.
+            // This protects against the scenario where a derived type is registered, but it's
+            // ancestor isn't.  In BSON, for example, the class map only covers the members
+            // declared on the type itself.  So if BSON hasn't "seen" the ancestors, the right class
+            // map will not be created/mapped to those ancestor types.
+            // This approach is also particularly important for post-initialization registrations,
+            // where serializes have no opportunity, during initialization, to "see" the closed generic
+            // ancestors.
+            // Note that ValidateMembersAreRegistered() will look for declared and non-declared members,
+            // which is why we don't need to call ValidateTypeIsRegistered() on the ancestor types.
+            var typeToValidateIncludingAncestors = typeToValidate.IsSystemType()
+                ? new[] { typeToValidate }
+                : new[] { typeToValidate }.Concat(typeToValidate.GetInheritancePath()).Except(new[] { typeof(object) }).ToArray();
 
-                this.validatedTypes.TryAdd(typeToValidate, null);
+            foreach (var localTypeToValidate in typeToValidateIncludingAncestors)
+            {
+                if (!this.validatedTypes.ContainsKey(localTypeToValidate))
+                {
+                    this.ValidateTypeIsRegistered(originalType, localTypeToValidate);
+
+                    this.validatedTypes.TryAdd(localTypeToValidate, null);
+                }
             }
 
             // we don't want to validate the members of System types like bool, List<SomeType>, etc.

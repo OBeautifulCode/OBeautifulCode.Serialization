@@ -180,6 +180,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
     <Compile Include="CustomSerializers\ObcVersionStringSerializerTest.cs" />
     <Compile Include="CustomSerializers\ObcNullableDateTimeStringSerializerTest.cs" />
+    <Compile Include="RoundtripSerialization\PostInitializationRegistrationTest.cs" />
     <Compile Include="Z-Legacy\SerializationConfiguration\SerializationConfigurationManagerTest.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.designer.cs">
