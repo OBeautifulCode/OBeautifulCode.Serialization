@@ -16,8 +16,8 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
     using FluentAssertions;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Serialization.PropertyBag;
-    using OBeautifulCode.Serialization.PropertyBag.Test.Internal;
     using OBeautifulCode.Serialization.Recipes;
 
     using Xunit;

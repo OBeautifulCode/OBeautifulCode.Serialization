@@ -19,7 +19,7 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization.Options;
     using MongoDB.Bson.Serialization.Serializers;
 
-    using OBeautifulCode.Serialization.Bson.Internal;
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Type.Recipes;
 
     /// <summary>

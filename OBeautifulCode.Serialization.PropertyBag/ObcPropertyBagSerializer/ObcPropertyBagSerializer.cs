@@ -15,10 +15,10 @@ namespace OBeautifulCode.Serialization.PropertyBag
     using System.Runtime.Serialization;
     using System.Text;
 
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
-    using OBeautifulCode.Serialization.PropertyBag.Internal;
     using OBeautifulCode.String.Recipes;
     using OBeautifulCode.Type.Recipes;
 

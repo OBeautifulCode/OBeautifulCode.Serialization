@@ -9,20 +9,23 @@
 
 namespace OBeautifulCode.Type.Recipes
 {
-    using System;
-    using System.CodeDom;
-    using System.CodeDom.Compiler;
-    using System.Collections;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.CompilerServices;
-    using System.Text.RegularExpressions;
+    using global::System;
+    using global::System.CodeDom;
+    using global::System.CodeDom.Compiler;
+    using global::System.Collections;
+    using global::System.Collections.Concurrent;
+    using global::System.Collections.Generic;
+    using global::System.Collections.ObjectModel;
+    using global::System.Diagnostics.CodeAnalysis;
+    using global::System.Globalization;
+    using global::System.Linq;
+    using global::System.Reflection;
+    using global::System.Runtime.CompilerServices;
+    using global::System.Text.RegularExpressions;
 
-    using static System.FormattableString;
+    using OBeautifulCode.CodeAnalysis.Recipes;
+
+    using static global::System.FormattableString;
 
     /// <summary>
     /// Extension methods on type <see cref="Type"/>.
@@ -38,7 +41,7 @@ namespace OBeautifulCode.Type.Recipes
     /// <a href="https://stackoverflow.com/questions/59144791/if-type-isgenericparameter-true-will-type-containsgenericparameters-true?noredirect=1#comment104515860_59144791" />.
     /// <a href="https://stackoverflow.com/questions/59141721/why-is-the-basetype-of-a-generic-type-definition-not-itself-a-generic-type-defin?noredirect=1#comment104515814_59141721" />.
     /// </remarks>
-#if !OBeautifulCodeTypeRecipesProject
+#if !OBeautifulCodeTypeSolution
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Type.Recipes", "See package version number")]
     internal
@@ -1092,6 +1095,42 @@ namespace OBeautifulCode.Type.Recipes
         }
 
         /// <summary>
+        /// Substitutes the elements of an array of types for the type parameters of the current
+        /// generic type definition and returns a <see cref="Type"/> object representing the resulting constructed type
+        /// or null if the operation cannot be performed.
+        /// </summary>
+        /// <param name="type">The generic type definition.</param>
+        /// <param name="typeArguments">An array of types to be substituted for the type parameters of <paramref name="type"/>.</param>
+        /// <returns>
+        /// A <see cref="Type"/> representing the constructed type formed by substituting the
+        /// elements of <paramref name="typeArguments"/> for the type parameters of <paramref name="type"/> or null
+        /// if the operation cannot be performed.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is null.</exception>
+        public static Type MakeGenericTypeOrNull(
+            this Type type,
+            params Type[] typeArguments)
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            Type result;
+
+            try
+            {
+                result = type.MakeGenericType(typeArguments);
+            }
+            catch (Exception)
+            {
+                result = null;
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Gets a compilable, readability-optimized string representation of the specified type.
         /// </summary>
         /// <remarks>
@@ -1367,6 +1406,35 @@ namespace OBeautifulCode.Type.Recipes
                     result = result.Replace("<>f__", string.Empty);
                 }
             }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Substitutes the elements of an array of types for the type parameters of the current
+        /// generic type definition and returns a <see cref="Type"/> object representing the resulting constructed type.
+        /// </summary>
+        /// <param name="type">The generic type definition.</param>
+        /// <param name="genericType">A <see cref="Type"/> representing the constructed type formed by substituting the elements of <paramref name="typeArguments"/> for the type parameters of <paramref name="type"/> or null if the operation cannot be performed.</param>
+        /// <param name="typeArguments">An array of types to be substituted for the type parameters of <paramref name="type"/>.</param>
+        /// <returns>
+        /// true if the type was successfully constructed; otherwise, false.
+        /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> is null.</exception>
+        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "1#", Justification = ObcSuppressBecause.CA1021_AvoidOutParameters_OutParameterRequiredForTryMethod)]
+        public static bool TryMakeGenericType(
+            this Type type,
+            out Type genericType,
+            params Type[] typeArguments)
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            genericType = type.MakeGenericTypeOrNull(typeArguments);
+
+            var result = genericType != null;
 
             return result;
         }

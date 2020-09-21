@@ -8,7 +8,7 @@ namespace OBeautifulCode.Serialization.Bson
 {
     using System.Diagnostics.CodeAnalysis;
 
-    using OBeautifulCode.Serialization.Bson.Internal;
+    using OBeautifulCode.CodeAnalysis.Recipes;
 
     /// <summary>
     /// Wraps a root-level object.

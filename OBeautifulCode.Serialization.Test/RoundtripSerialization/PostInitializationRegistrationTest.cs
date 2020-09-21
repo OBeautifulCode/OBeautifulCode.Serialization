@@ -12,11 +12,11 @@ namespace OBeautifulCode.Serialization.Test
 
     using FakeItEasy;
 
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
     using OBeautifulCode.Serialization.Recipes;
-    using OBeautifulCode.Serialization.Test.Internal;
 
     using Xunit;
 

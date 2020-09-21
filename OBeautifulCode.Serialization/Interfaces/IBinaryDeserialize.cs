@@ -9,7 +9,7 @@ namespace OBeautifulCode.Serialization
     using System;
     using System.Diagnostics.CodeAnalysis;
 
-    using OBeautifulCode.Serialization.Internal;
+    using OBeautifulCode.CodeAnalysis.Recipes;
 
     /// <summary>
     /// Interface to deserialize from a byte array.

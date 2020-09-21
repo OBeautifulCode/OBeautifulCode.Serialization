@@ -13,7 +13,7 @@ namespace OBeautifulCode.Serialization
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    using OBeautifulCode.Serialization.Internal;
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;

@@ -7,12 +7,12 @@
     <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.Test/nuget-icon.png</iconUrl>
     <dependencies>
       <dependency id="OBeautifulCode.Serialization" version="$version$" />
-      <dependency id="OBeautifulCode.Compression.Recipes.DummyFactory" version="1.0.16" />
-      <dependency id="OBeautifulCode.Representation.System.Recipes.DummyFactory" version="1.0.52" />
+      <dependency id="OBeautifulCode.Compression.Recipes.DummyFactory" version="1.0.17" />
+      <dependency id="OBeautifulCode.Representation.System.Recipes.DummyFactory" version="1.0.53" />
+      <dependency id="OBeautifulCode.CodeAnalysis.Recipes.SuppressBecause" version="1.0.6" />
     </dependencies>
   </metadata>
   <files>
-    <file src=".analyzers\SuppressBecause.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SuppressBecause.cs" />
     <file src="SerializationDummyFactory.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SerializationDummyFactory.cs" />
     <file src="SerializationDummyFactory.designer.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SerializationDummyFactory.designer.cs" />
   </files>

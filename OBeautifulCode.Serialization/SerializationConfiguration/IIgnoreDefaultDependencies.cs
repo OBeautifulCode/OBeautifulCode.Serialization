@@ -8,7 +8,7 @@ namespace OBeautifulCode.Serialization
 {
     using System.Diagnostics.CodeAnalysis;
 
-    using OBeautifulCode.Serialization.Internal;
+    using OBeautifulCode.CodeAnalysis.Recipes;
 
     /// <summary>
     /// Declares that <see cref="SerializationConfigurationBase.DefaultDependentSerializationConfigurationTypes"/> should be ignored.

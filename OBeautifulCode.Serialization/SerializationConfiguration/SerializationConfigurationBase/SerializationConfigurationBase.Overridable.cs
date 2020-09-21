@@ -11,7 +11,7 @@ namespace OBeautifulCode.Serialization
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    using OBeautifulCode.Serialization.Internal;
+    using OBeautifulCode.CodeAnalysis.Recipes;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = ObcSuppressBecause.CA1502_AvoidExcessiveComplexity_DisagreeWithAssessment)]
     public abstract partial class SerializationConfigurationBase

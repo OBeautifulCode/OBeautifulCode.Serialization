@@ -12,8 +12,8 @@ namespace OBeautifulCode.Serialization
     using System.Linq;
     using System.Text;
 
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Reflection.Recipes;
-    using OBeautifulCode.Serialization.Internal;
 
     using static System.FormattableString;
 

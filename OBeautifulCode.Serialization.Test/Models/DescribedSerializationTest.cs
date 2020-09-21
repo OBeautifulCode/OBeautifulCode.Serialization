@@ -11,8 +11,8 @@ namespace OBeautifulCode.Serialization.Test
 
     using FakeItEasy;
 
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.CodeGen.ModelObject.Recipes;
-    using OBeautifulCode.Serialization.Test.Internal;
 
     public static partial class DescribedSerializationTest
     {

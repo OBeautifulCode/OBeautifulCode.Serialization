@@ -14,8 +14,8 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Conventions;
 
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Representation.System;
-    using OBeautifulCode.Serialization.Bson.Internal;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;

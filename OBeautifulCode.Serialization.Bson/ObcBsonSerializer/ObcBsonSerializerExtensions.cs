@@ -14,7 +14,7 @@ namespace OBeautifulCode.Serialization.Bson
     using MongoDB.Bson.IO;
     using MongoDB.Bson.Serialization;
 
-    using OBeautifulCode.Serialization.Bson.Internal;
+    using OBeautifulCode.CodeAnalysis.Recipes;
 
     /// <summary>
     /// Helper class for using <see cref="BsonSerializer"/>.

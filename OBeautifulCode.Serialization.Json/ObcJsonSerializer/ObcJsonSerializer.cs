@@ -13,8 +13,8 @@ namespace OBeautifulCode.Serialization.Json
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Representation.System;
-    using OBeautifulCode.Serialization.Json.Internal;
 
     using static System.FormattableString;
 

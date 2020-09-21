@@ -12,8 +12,8 @@ namespace OBeautifulCode.Serialization.Bson.Test
     using System.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Serialization.Bson;
-    using OBeautifulCode.Serialization.Bson.Test.Internal;
     using OBeautifulCode.Serialization.Recipes;
 
     using Xunit;

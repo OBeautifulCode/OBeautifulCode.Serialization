@@ -13,8 +13,8 @@ namespace OBeautifulCode.Serialization.Json.Test
 
     using FakeItEasy;
 
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Equality.Recipes;
-    using OBeautifulCode.Serialization.Json.Test.Internal;
     using OBeautifulCode.Serialization.Recipes;
 
     using Xunit;

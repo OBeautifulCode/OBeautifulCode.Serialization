@@ -10,9 +10,9 @@ namespace OBeautifulCode.Serialization
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Representation.System;
-    using OBeautifulCode.Serialization.Internal;
 
     /// <summary>
     /// Compares two objects of type <see cref="Type"/> for equality, ignoring assembly version

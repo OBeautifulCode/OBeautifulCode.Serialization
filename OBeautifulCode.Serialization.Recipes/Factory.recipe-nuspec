@@ -10,12 +10,12 @@
       <dependency id="OBeautifulCode.Serialization.Bson" version="$version$" />
       <dependency id="OBeautifulCode.Serialization.Json" version="$version$" />
       <dependency id="OBeautifulCode.Serialization.PropertyBag" version="$version$" />
-      <dependency id="OBeautifulCode.Representation.System" version="1.0.52" />
-      <dependency id="OBeautifulCode.Compression.Recipes.CompressionHelper" version="1.0.16" />
+      <dependency id="OBeautifulCode.Representation.System" version="1.0.53" />
+      <dependency id="OBeautifulCode.Compression.Recipes.CompressionHelper" version="1.0.17" />
+      <dependency id="OBeautifulCode.CodeAnalysis.Recipes.SuppressBecause" version="1.0.6" />
     </dependencies>
   </metadata>
   <files>
-    <file src=".analyzers\SuppressBecause.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SuppressBecause.cs" />
     <file src="Factory\FactoryExtensions.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\FactoryExtensions.cs" />
     <file src="Factory\SerializerFactory.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SerializerFactory.cs" />
   </files>

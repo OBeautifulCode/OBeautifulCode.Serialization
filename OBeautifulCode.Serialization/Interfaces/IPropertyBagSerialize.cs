@@ -9,7 +9,7 @@ namespace OBeautifulCode.Serialization
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
-    using OBeautifulCode.Serialization.Internal;
+    using OBeautifulCode.CodeAnalysis.Recipes;
 
     /// <summary>
     /// Interface to serialize to a string.

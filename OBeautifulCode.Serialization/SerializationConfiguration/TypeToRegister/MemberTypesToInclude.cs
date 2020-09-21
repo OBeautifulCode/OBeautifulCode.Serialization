@@ -9,7 +9,7 @@ namespace OBeautifulCode.Serialization
     using System;
     using System.Diagnostics.CodeAnalysis;
 
-    using OBeautifulCode.Serialization.Internal;
+    using OBeautifulCode.CodeAnalysis.Recipes;
 
     /// <summary>
     /// Specifies which member types to include when registering a type.

@@ -9,8 +9,8 @@ namespace OBeautifulCode.Serialization
     using System;
     using System.Diagnostics.CodeAnalysis;
 
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Representation.System;
-    using OBeautifulCode.Serialization.Internal;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;

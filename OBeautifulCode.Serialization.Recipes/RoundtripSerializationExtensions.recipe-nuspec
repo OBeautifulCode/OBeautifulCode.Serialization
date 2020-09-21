@@ -6,18 +6,18 @@
     <tags>serialization roundtrip test</tags>
     <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.Recipes/nuget-icon.png</iconUrl>
     <dependencies>
-      <dependency id="OBeautifulCode.Assertion.Recipes.Must" version="1.0.16" />
+      <dependency id="OBeautifulCode.Assertion.Recipes.Must" version="1.0.17" />
       <dependency id="OBeautifulCode.Serialization.Bson" version="$version$" />
       <dependency id="OBeautifulCode.Serialization.Json" version="$version$" />
       <dependency id="OBeautifulCode.Serialization.PropertyBag" version="$version$" />
       <dependency id="OBeautifulCode.Serialization.Recipes.Factory" version="$version$" />
-      <dependency id="OBeautifulCode.Reflection.Recipes.AppDomainHelper" version="1.0.90" />
-      <dependency id="OBeautifulCode.Representation.System" version="1.0.52" />
-      <dependency id="OBeautifulCode.Type.Recipes.TypeExtensions" version="1.0.58" />
+      <dependency id="OBeautifulCode.Reflection.Recipes.AppDomainHelper" version="1.0.91" />
+      <dependency id="OBeautifulCode.Representation.System" version="1.0.53" />
+      <dependency id="OBeautifulCode.Type.Recipes.TypeExtensions" version="1.0.69" />
+      <dependency id="OBeautifulCode.CodeAnalysis.Recipes.SuppressBecause" version="1.0.6" />
     </dependencies>
   </metadata>
   <files>
-    <file src=".analyzers\SuppressBecause.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SuppressBecause.cs" />
     <file src="RoundtripSerialization\AppDomainScenarios.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\AppDomainScenarios.cs" />
     <file src="RoundtripSerialization\RoundtripSerializationExtensions.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\RoundtripSerializationExtensions.cs" />
     <file src="RoundtripSerialization\RoundtripSerializationExtensions.Bson.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\RoundtripSerializationExtensions.Bson.cs" />
