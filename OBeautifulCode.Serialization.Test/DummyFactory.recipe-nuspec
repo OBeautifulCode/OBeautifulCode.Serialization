@@ -9,7 +9,7 @@
       <dependency id="OBeautifulCode.Serialization" version="$version$" />
       <dependency id="OBeautifulCode.Compression.Recipes.DummyFactory" version="1.0.17" />
       <dependency id="OBeautifulCode.Representation.System.Recipes.DummyFactory" version="1.0.53" />
-      <dependency id="OBeautifulCode.CodeAnalysis.Recipes.SuppressBecause" version="1.0.6" />
+      <dependency id="OBeautifulCode.CodeAnalysis.Recipes.SuppressBecause" version="1.0.7" />
     </dependencies>
   </metadata>
   <files>

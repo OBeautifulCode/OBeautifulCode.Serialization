@@ -12,7 +12,7 @@
       <dependency id="OBeautifulCode.Serialization.PropertyBag" version="$version$" />
       <dependency id="OBeautifulCode.Representation.System" version="1.0.53" />
       <dependency id="OBeautifulCode.Compression.Recipes.CompressionHelper" version="1.0.17" />
-      <dependency id="OBeautifulCode.CodeAnalysis.Recipes.SuppressBecause" version="1.0.6" />
+      <dependency id="OBeautifulCode.CodeAnalysis.Recipes.SuppressBecause" version="1.0.7" />
     </dependencies>
   </metadata>
   <files>
