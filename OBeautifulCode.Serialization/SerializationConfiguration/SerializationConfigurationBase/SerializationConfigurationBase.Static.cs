@@ -422,7 +422,10 @@ namespace OBeautifulCode.Serialization
                 // So truly if there are any descendants here (generic or not), then we are out of luck.
                 if (genericTypeDefinitionDescendants.Any())
                 {
-                    throw new NotSupportedException(Invariant($"Cannot determine which types are related to {type.ToStringReadable()} because it is a closed generic type, having a generic type definition with the following known descendants.  It not clear how to use the generic arguments of the closed type along with these descendants of the generic type definition, to construct descendants of the specified closed generic type: {genericTypeDefinitionDescendants.Select(_ => _.ToStringReadable()).ToDelimitedString(" | ")}."));
+                    // Commented out this throw because consumers were hitting it too many times.
+                    // Ultimately if a type is not registered then the serialization front-door will throw so we are protected.
+                    // Also, these derivative types we are punting on constructing are artificial, they don't really exist.
+                    // throw new NotSupportedException(Invariant($"Cannot determine which types are related to {type.ToStringReadable()} because it is a closed generic type, having a generic type definition with the following known descendants.  It not clear how to use the generic arguments of the closed type along with these descendants of the generic type definition, to construct descendants of the specified closed generic type: {genericTypeDefinitionDescendants.Select(_ => _.ToStringReadable()).ToDelimitedString(" | ")}."));
                 }
             }
 
