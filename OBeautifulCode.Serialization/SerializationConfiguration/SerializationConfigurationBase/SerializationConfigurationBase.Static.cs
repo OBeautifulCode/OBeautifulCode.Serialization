@@ -100,6 +100,116 @@ namespace OBeautifulCode.Serialization
             typeof(DynamicTypePlaceholder),
         };
 
+        private static void SeedAncestorsAndDescendants(
+            SerializationConfigurationType serializationConfigurationType)
+        {
+            var assembliesToProcess = new HashSet<Assembly>();
+
+            var serializationConfigurationConcreteType = serializationConfigurationType.ConcreteSerializationConfigurationDerivativeType;
+
+            // The universe of types that we are interested in are scoped to the dependency tree of assemblies of the serialization
+            // configuration type's assembly.  The serialization configuration will depend on other serialization configuration
+            // types and on domain types, which themselves will depend on other serialization configuration and domain types, and so on.
+            GetThisAndRecursivelyReferencedAssemblies(serializationConfigurationConcreteType.Assembly, assembliesToProcess);
+
+            // However, when the serialization configuration type is NOT in-subsystem, then there's the potential to miss some
+            // assemblies.  For example, lets say the consumer uses TypesToRegisterBsonSerializationConfiguration<T> and specifies
+            // a T in their sub-system.  TypesToRegisterBsonSerializationConfiguration<MyType> is in the OBC.Serialization.Bson assembly
+            // and using the heuristic above, we won't traverse T's assembly.  So this code recursively unpacks the generic arguments
+            // (if any) of the serialization configuration type and adds the assemblies of those types to the list of assemblies to process.
+            // One flaw with this approach is that the consumer could have created their own non-generic "wrapper" serialization configuration
+            // in some assembly other than an assembly in the sub-system in question.  For example, they could create a class
+            // MyTypeToRegisterBsonSerializationConfiguration with a constructor that takes parameter of type Type.
+            // So there's certainly an improvement that could be made to the code below that inspects all of the types referenced
+            // by the serialization configuration type and not just the generic parameter types.
+            assembliesToProcess.AddRange(GetRecursiveGenericArgumentAssemblies(serializationConfigurationConcreteType));
+
+            var typesToProcess = new List<Type>();
+
+            foreach (var assemblyToProcess in assembliesToProcess)
+            {
+                // add types in assemblies that we haven't processed yet
+                if (!AssembliesThatHaveBeenProcessedForRelatedTypes.Contains(assemblyToProcess))
+                {
+                    var typesToConsiderForThisAssembly = new[] { assemblyToProcess }
+                        .GetTypesFromAssemblies()
+                        .Where(IsRelatedTypeCandidate)
+                        .ToList();
+
+                    foreach (var typeToConsiderForThisAssembly in typesToConsiderForThisAssembly)
+                    {
+                        typesToProcess.Add(typeToConsiderForThisAssembly);
+                    }
+
+                    AssembliesThatHaveBeenProcessedForRelatedTypes.Add(assemblyToProcess);
+                }
+            }
+
+            DiscoverAncestorsAndDescendants(typesToProcess);
+        }
+
+        private static void GetThisAndRecursivelyReferencedAssemblies(
+            Assembly assembly,
+            HashSet<Assembly> thisAndRecursiveReferencedAssembliesCollector,
+            Dictionary<string, Assembly> loadedAssemblyFullNameToAssemblyMap = null)
+        {
+            if (thisAndRecursiveReferencedAssembliesCollector.Contains(assembly))
+            {
+                return;
+            }
+
+            loadedAssemblyFullNameToAssemblyMap = loadedAssemblyFullNameToAssemblyMap ?? AssemblyLoader.GetLoadedAssemblies().ToDictionary(_ => _.GetName().FullName, _ => _);
+
+            thisAndRecursiveReferencedAssembliesCollector.Add(assembly);
+
+            var referencedAssemblyNames = assembly.GetReferencedAssemblies();
+
+            var notLoadedReferencedAssemblyNames = referencedAssemblyNames.Where(_ => !loadedAssemblyFullNameToAssemblyMap.ContainsKey(_.FullName)).ToList();
+
+            foreach (var notLoadedReferencedAssemblyName in notLoadedReferencedAssemblyNames)
+            {
+                try
+                {
+                    var loadedAssembly = Assembly.Load(notLoadedReferencedAssemblyName);
+
+                    loadedAssemblyFullNameToAssemblyMap.Add(notLoadedReferencedAssemblyName.FullName, loadedAssembly);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            var referencedAssemblies = referencedAssemblyNames
+                .Where(_ => loadedAssemblyFullNameToAssemblyMap.ContainsKey(_.FullName))
+                .Select(_ => loadedAssemblyFullNameToAssemblyMap[_.FullName]).ToList();
+
+            foreach (var referencedAssembly in referencedAssemblies)
+            {
+                GetThisAndRecursivelyReferencedAssemblies(referencedAssembly, thisAndRecursiveReferencedAssembliesCollector, loadedAssemblyFullNameToAssemblyMap);
+            }
+        }
+
+        private static HashSet<Assembly> GetRecursiveGenericArgumentAssemblies(
+            Type type)
+        {
+            var result = new HashSet<Assembly>();
+
+            if (type.IsGenericType)
+            {
+                // type is a serialization configuration type; it's guaranteed to be closed
+                var genericArguments = type.GenericTypeArguments;
+
+                foreach (var genericArgument in genericArguments)
+                {
+                    result.Add(genericArgument.Assembly);
+
+                    result.AddRange(GetRecursiveGenericArgumentAssemblies(genericArgument));
+                }
+            }
+
+            return result;
+        }
+
         private static IReadOnlyCollection<Type> GetRelatedTypesToInclude(
             Type type,
             RelatedTypesToInclude relatedTypesToInclude)
@@ -281,33 +391,6 @@ namespace OBeautifulCode.Serialization
         private static void DiscoverAncestorsAndDescendants(
             Type type)
         {
-            var assemblies = AssemblyLoader.GetLoadedAssemblies();
-
-            var typesQueue = new Queue<Type>();
-
-            // enqueue types in assemblies that we haven't processed yet
-            foreach (var assembly in assemblies)
-            {
-                if (!AssembliesThatHaveBeenProcessedForRelatedTypes.Contains(assembly))
-                {
-                    var typesToConsiderForThisAssembly = new[] { assembly }
-                        .GetTypesFromAssemblies()
-                        .Where(IsRelatedTypeCandidate)
-                        .ToList();
-
-                    foreach (var typeToConsiderForThisAssembly in typesToConsiderForThisAssembly)
-                    {
-                        typesQueue.Enqueue(typeToConsiderForThisAssembly);
-                    }
-
-                    AssembliesThatHaveBeenProcessedForRelatedTypes.Add(assembly);
-                }
-            }
-
-            DiscoverAncestorsAndDescendants(typesQueue);
-
-            typesQueue.Enqueue(type);
-
             // is a closed generic type?
             // this only happens if the user registered a closed generic type in their serialization configuration
             // or if a member of a type is a closed generic type (pulled-in via GetMemberTypesToInclude())
@@ -343,12 +426,14 @@ namespace OBeautifulCode.Serialization
                 }
             }
 
-            DiscoverAncestorsAndDescendants(typesQueue);
+            DiscoverAncestorsAndDescendants(new[] { type });
         }
 
         private static void DiscoverAncestorsAndDescendants(
-            Queue<Type> typesQueue)
+            IReadOnlyCollection<Type> types)
         {
+            var typesQueue = new Queue<Type>(types);
+
             // note: This algorithm does not directly identify types that are related to the specified
             // generic or array types in a co-variant or contra-variant manner.
             // For example, if we are exploring IDoSomething<Animal>, we will NOT identify IDoSomething<Dog>

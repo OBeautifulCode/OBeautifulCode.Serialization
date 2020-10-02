@@ -277,6 +277,8 @@ namespace OBeautifulCode.Serialization
                 throw new InvalidOperationException(Invariant($"{nameof(this.TypeToRegisterNamespacePrefixFilters)} contains an element that is null or white space"));
             }
 
+            SeedAncestorsAndDescendants(this.SerializationConfigurationType);
+
             while (typesToRegisterQueue.Count > 0)
             {
                 var typeToRegister = typesToRegisterQueue.Dequeue();
