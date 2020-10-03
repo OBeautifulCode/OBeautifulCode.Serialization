@@ -69,6 +69,7 @@ namespace OBeautifulCode.Serialization
                 typeof(IEquatableViaCodeGen),
                 typeof(IHashableViaCodeGen),
                 typeof(IModelViaCodeGen),
+                typeof(IForsakeInheritedModelViaCodeGen),
                 typeof(IStringRepresentableViaCodeGen),
             });
 
@@ -79,6 +80,7 @@ namespace OBeautifulCode.Serialization
         {
             // OBC.Type
             typeof(UtcDateTimeRangeInclusive),
+            typeof(RelativeSortOrder),
 
             // OBC.Compression
             typeof(CompressionKind),
