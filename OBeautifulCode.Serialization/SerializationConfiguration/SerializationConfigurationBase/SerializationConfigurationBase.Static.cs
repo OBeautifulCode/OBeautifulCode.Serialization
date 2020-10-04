@@ -13,7 +13,6 @@ namespace OBeautifulCode.Serialization
     using System.Reflection;
 
     using OBeautifulCode.Collection.Recipes;
-    using OBeautifulCode.Compression;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Type;
@@ -43,64 +42,32 @@ namespace OBeautifulCode.Serialization
                 typeof(ValueType),
                 typeof(Enum),
                 typeof(Array),
-
-                // all model types are assignable to these types
-                typeof(IDeclareCompareToForRelativeSortOrderMethod<>),
-                typeof(IDeclareDeepCloneMethod<>),
-                typeof(IDeclareEqualsMethod<>),
-                typeof(IDeclareGetHashCodeMethod),
-                typeof(IDeclareToStringMethod),
-                typeof(IDeepCloneable<>),
-                typeof(IShallowCloneable<>),
-                typeof(IComparableForRelativeSortOrder<>),
-                typeof(IIdentifiable),
-                typeof(IIdentifiableBy<>),
-                typeof(IIdentifiableByGuid),
-                typeof(IIdentifiableByInteger),
-                typeof(IIdentifiableByString),
-                typeof(IHashable),
-                typeof(IHaveTags),
-                typeof(IImplementNullObjectPattern),
-                typeof(IStringRepresentable),
-                typeof(IModel),
-                typeof(IModel<>),
-                typeof(IComparableViaCodeGen),
-                typeof(IDeepCloneableViaCodeGen),
-                typeof(IEquatableViaCodeGen),
-                typeof(IHashableViaCodeGen),
-                typeof(IModelViaCodeGen),
-                typeof(IForsakeInheritedModelViaCodeGen),
-                typeof(IStringRepresentableViaCodeGen),
             });
 
         /// <summary>
         /// Gets the types that need to be registered for any and all serialization.
         /// </summary>
-        public static IReadOnlyCollection<Type> InternallyRequiredTypes => new[]
-        {
-            // OBC.Type
-            typeof(UtcDateTimeRangeInclusive),
-            typeof(RelativeSortOrder),
-
-            // OBC.Compression
-            typeof(CompressionKind),
-
-            // OBC.Representation
-            typeof(AssemblyRepresentation),
-            typeof(ElementInitRepresentation),
-            typeof(MemberBindingRepresentationBase),
-            typeof(ExpressionRepresentationBase),
-            typeof(TypeRepresentation),
-            typeof(ConstructorInfoRepresentation),
-            typeof(MemberInfoRepresentation),
-            typeof(MethodInfoRepresentation),
-            typeof(UnknownTypePlaceholder),
-
-            // OBC.Serialization:
-            typeof(SerializerRepresentation),
-            typeof(DescribedSerialization),
-            typeof(DynamicTypePlaceholder),
-        };
+        /// <remarks>
+        /// All of the model types within these subsystems will be picked-up as
+        /// descendants of <see cref="IModel"/>, which is a public interface type
+        /// in OBC.Type, and thus specified below.
+        /// </remarks>
+        public static IReadOnlyCollection<Type> InternallyRequiredTypes =>
+            new Type[0]
+            .Concat(OBeautifulCode.Type.ProjectInfo.Assembly.GetPublicInterfaceTypes())
+            .Concat(OBeautifulCode.Type.ProjectInfo.Assembly.GetPublicEnumTypes())
+            .Concat(OBeautifulCode.Compression.ProjectInfo.Assembly.GetPublicInterfaceTypes())
+            .Concat(OBeautifulCode.Compression.ProjectInfo.Assembly.GetPublicEnumTypes())
+            .Concat(OBeautifulCode.Representation.System.ProjectInfo.Assembly.GetPublicInterfaceTypes())
+            .Concat(OBeautifulCode.Representation.System.ProjectInfo.Assembly.GetPublicEnumTypes())
+            .Concat(
+                new[]
+                {
+                    typeof(SerializerRepresentation),
+                    typeof(DescribedSerialization),
+                    typeof(DynamicTypePlaceholder),
+                })
+            .ToList();
 
         private static void SeedAncestorsAndDescendants(
             SerializationConfigurationType serializationConfigurationType)

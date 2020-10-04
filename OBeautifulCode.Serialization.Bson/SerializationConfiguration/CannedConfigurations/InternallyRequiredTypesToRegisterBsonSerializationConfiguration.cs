@@ -26,8 +26,5 @@ namespace OBeautifulCode.Serialization.Bson
                 .Select(_ => _.ToTypeToRegisterForBson())
                 .Concat(new[] { typeof(RootObjectThatSerializesToStringWrapper<>).ToTypeToRegisterForBson() })
                 .ToList();
-
-        /// <inheritdoc />
-        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => this.TypesToRegisterForBson.Select(_ => _.Type.Namespace).Distinct().ToList();
     }
 }

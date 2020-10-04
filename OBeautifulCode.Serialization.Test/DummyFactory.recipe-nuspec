@@ -7,8 +7,8 @@
     <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.Test/nuget-icon.png</iconUrl>
     <dependencies>
       <dependency id="OBeautifulCode.Serialization" version="$version$" />
-      <dependency id="OBeautifulCode.Compression.Recipes.DummyFactory" version="1.0.17" />
-      <dependency id="OBeautifulCode.Representation.System.Recipes.DummyFactory" version="1.0.53" />
+      <dependency id="OBeautifulCode.Compression.Recipes.DummyFactory" version="1.0.19" />
+      <dependency id="OBeautifulCode.Representation.System.Recipes.DummyFactory" version="1.0.55" />
       <dependency id="OBeautifulCode.CodeAnalysis.Recipes.SuppressBecause" version="1.0.7" />
     </dependencies>
   </metadata>

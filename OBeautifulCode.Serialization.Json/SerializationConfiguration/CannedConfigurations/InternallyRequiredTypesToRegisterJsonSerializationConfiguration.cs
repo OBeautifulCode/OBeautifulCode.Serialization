@@ -41,8 +41,5 @@ namespace OBeautifulCode.Serialization.Json
                 typeof(Version).ToTypeToRegisterForJsonUsingStringSerializer(VersionStringSerializer),
             })
             .ToList();
-
-        /// <inheritdoc />
-        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => this.TypesToRegisterForJson.Select(_ => _.Type.Namespace).Distinct().ToList();
     }
 }
