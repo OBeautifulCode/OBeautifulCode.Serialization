@@ -27,22 +27,27 @@ namespace OBeautifulCode.Serialization.Json
 
         private static readonly IStringSerializeAndDeserialize NullableDateTimeStringSerializer = new ObcNullableDateTimeStringSerializer();
 
-        /// <inheritdoc />
-        protected override IReadOnlyCollection<JsonSerializationConfigurationType> DependentJsonSerializationConfigurationTypes => new JsonSerializationConfigurationType[0];
-
-        /// <inheritdoc />
-        protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => InternallyRequiredTypes
-            .Select(_ => _.ToTypeToRegisterForJson())
-            .Concat(new[]
+        private static readonly IReadOnlyCollection<TypeToRegisterForJson> AdditionalTypesToRegister =
+            new[]
             {
                 typeof(SecureString).ToTypeToRegisterForJsonUsingStringSerializer(SecureStringStringSerializer),
                 typeof(DateTime).ToTypeToRegisterForJsonUsingStringSerializer(DateTimeStringSerializer),
                 typeof(DateTime?).ToTypeToRegisterForJsonUsingStringSerializer(NullableDateTimeStringSerializer),
                 typeof(Version).ToTypeToRegisterForJsonUsingStringSerializer(VersionStringSerializer),
-            })
+            };
+
+        /// <inheritdoc />
+        protected override IReadOnlyCollection<JsonSerializationConfigurationType> DependentJsonSerializationConfigurationTypes => new JsonSerializationConfigurationType[0];
+
+        /// <inheritdoc />
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => InternallyRequiredNamespacePrefixFilters
+            .Concat(AdditionalTypesToRegister.Select(_ => _.Type.Namespace).Distinct())
             .ToList();
 
         /// <inheritdoc />
-        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => this.TypesToRegisterForJson.Select(_ => _.Type.Namespace).Distinct().ToList();
+        protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => InternallyRequiredTypes
+            .Select(_ => _.ToTypeToRegisterForJson())
+            .Concat(AdditionalTypesToRegister)
+            .ToList();
     }
 }
