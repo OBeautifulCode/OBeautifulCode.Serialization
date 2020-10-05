@@ -145,7 +145,7 @@ namespace OBeautifulCode.Serialization
             // System has circular dependencies so for any assembly that comes into this method
             // we are going to disregard it's referenced System assemblies.
             // Anyways, these types shouldn't be explored for ancestors or descendants.
-            var referencedAssemblyNames = assembly.GetReferencedAssemblies().Where(_ => (!_.FullName.StartsWith("System")) && (!_.FullName.StartsWith("mscorlib"))).ToList();
+            var referencedAssemblyNames = assembly.GetReferencedAssemblies().Where(_ => (!_.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase)) && (!_.FullName.StartsWith("mscorlib", StringComparison.OrdinalIgnoreCase))).ToList();
 
             var notLoadedReferencedAssemblyNames = referencedAssemblyNames.Where(_ => !loadedAssemblyFullNameToAssembliesMap.ContainsKey(_.FullName)).ToList();
 
