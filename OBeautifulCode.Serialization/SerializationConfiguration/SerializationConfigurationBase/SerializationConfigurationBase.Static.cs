@@ -60,14 +60,19 @@ namespace OBeautifulCode.Serialization
             .Concat(OBeautifulCode.Compression.ProjectInfo.Assembly.GetPublicEnumTypes())
             .Concat(OBeautifulCode.Representation.System.ProjectInfo.Assembly.GetPublicInterfaceTypes())
             .Concat(OBeautifulCode.Representation.System.ProjectInfo.Assembly.GetPublicEnumTypes())
-            .Concat(
-                new[]
-                {
-                    typeof(SerializerRepresentation),
-                    typeof(DescribedSerialization),
-                    typeof(DynamicTypePlaceholder),
-                })
             .ToList();
+
+        /// <summary>
+        /// Gets the namespace prefix filters to use for the <see cref="InternallyRequiredTypes"/>.
+        /// </summary>
+        public static IReadOnlyCollection<string> InternallyRequiredNamespacePrefixFilters =>
+            new[]
+            {
+                OBeautifulCode.Type.ProjectInfo.Namespace,
+                OBeautifulCode.Compression.ProjectInfo.Namespace,
+                OBeautifulCode.Representation.System.ProjectInfo.Namespace,
+                OBeautifulCode.Serialization.ProjectInfo.Namespace,
+            };
 
         private static void SeedAncestorsAndDescendants(
             SerializationConfigurationType serializationConfigurationType)

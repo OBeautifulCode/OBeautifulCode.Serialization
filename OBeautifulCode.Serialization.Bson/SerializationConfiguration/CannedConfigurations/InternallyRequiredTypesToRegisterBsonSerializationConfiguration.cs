@@ -21,6 +21,9 @@ namespace OBeautifulCode.Serialization.Bson
         protected override IReadOnlyCollection<BsonSerializationConfigurationType> DependentBsonSerializationConfigurationTypes => new BsonSerializationConfigurationType[0];
 
         /// <inheritdoc />
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => InternallyRequiredNamespacePrefixFilters;
+
+        /// <inheritdoc />
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson =>
             InternallyRequiredTypes
                 .Select(_ => _.ToTypeToRegisterForBson())

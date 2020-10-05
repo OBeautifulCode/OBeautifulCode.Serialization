@@ -31,6 +31,9 @@ namespace OBeautifulCode.Serialization.Json
         protected override IReadOnlyCollection<JsonSerializationConfigurationType> DependentJsonSerializationConfigurationTypes => new JsonSerializationConfigurationType[0];
 
         /// <inheritdoc />
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => InternallyRequiredNamespacePrefixFilters;
+
+        /// <inheritdoc />
         protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => InternallyRequiredTypes
             .Select(_ => _.ToTypeToRegisterForJson())
             .Concat(new[]
