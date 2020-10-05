@@ -7,6 +7,7 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -27,6 +28,8 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         public const string NullSerializedStringValue = "null";
 
+        private static readonly Dictionary<Assembly, HashSet<Assembly>> AssemblyToRecursivelyReferencedAssemblyMap = new Dictionary<Assembly, HashSet<Assembly>>();
+
         private static readonly HashSet<Assembly> AssembliesThatHaveBeenProcessedForRelatedTypes = new HashSet<Assembly>();
 
         private static readonly Dictionary<Type, HashSet<Type>> TypeToAncestorTypesMap = new Dictionary<Type, HashSet<Type>>(VersionlessOpenTypeConsolidatingTypeEqualityComparer.Instance);
@@ -43,6 +46,8 @@ namespace OBeautifulCode.Serialization
                 typeof(Enum),
                 typeof(Array),
             });
+
+        private static Dictionary<string, Assembly[]> loadedAssemblyFullNameToAssembliesMap = null;
 
         /// <summary>
         /// Gets the types that need to be registered for any and all serialization.
@@ -75,14 +80,14 @@ namespace OBeautifulCode.Serialization
         private static void SeedAncestorsAndDescendants(
             SerializationConfigurationType serializationConfigurationType)
         {
-            var assembliesToProcess = new HashSet<Assembly>();
-
             var serializationConfigurationConcreteType = serializationConfigurationType.ConcreteSerializationConfigurationDerivativeType;
+
+            var assembliesToProcess = new HashSet<Assembly> { serializationConfigurationConcreteType.Assembly };
 
             // The universe of types that we are interested in are scoped to the dependency tree of assemblies of the serialization
             // configuration type's assembly.  The serialization configuration will depend on other serialization configuration
             // types and on domain types, which themselves will depend on other serialization configuration and domain types, and so on.
-            GetThisAndRecursivelyReferencedAssemblies(serializationConfigurationConcreteType.Assembly, assembliesToProcess);
+            assembliesToProcess.AddRange(GetRecursivelyReferencedAssemblies(serializationConfigurationConcreteType.Assembly));
 
             // However, when the serialization configuration type is NOT in-subsystem, then there's the potential to miss some
             // assemblies.  For example, lets say the consumer uses TypesToRegisterBsonSerializationConfiguration<T> and specifies
@@ -120,26 +125,27 @@ namespace OBeautifulCode.Serialization
             DiscoverAncestorsAndDescendants(typesToProcess);
         }
 
-        private static void GetThisAndRecursivelyReferencedAssemblies(
-            Assembly assembly,
-            HashSet<Assembly> thisAndRecursiveReferencedAssembliesCollector,
-            Dictionary<string, Assembly[]> loadedAssemblyFullNameToAssembliesMap = null)
+        private static IReadOnlyCollection<Assembly> GetRecursivelyReferencedAssemblies(
+            Assembly assembly)
         {
-            if (thisAndRecursiveReferencedAssembliesCollector.Contains(assembly))
+            if (AssemblyToRecursivelyReferencedAssemblyMap.ContainsKey(assembly))
             {
-                return;
+                return AssemblyToRecursivelyReferencedAssemblyMap[assembly];
             }
 
-            loadedAssemblyFullNameToAssembliesMap =
-                loadedAssemblyFullNameToAssembliesMap ??
-                AssemblyLoader
-                    .GetLoadedAssemblies()
-                    .GroupBy(_ => _.GetName().FullName)
-                    .ToDictionary(_ => _.Key, _ => _.ToArray());
+            if (loadedAssemblyFullNameToAssembliesMap == null)
+            {
+                loadedAssemblyFullNameToAssembliesMap =
+                    AssemblyLoader
+                        .GetLoadedAssemblies()
+                        .GroupBy(_ => _.GetName().FullName)
+                        .ToDictionary(_ => _.Key, _ => _.ToArray());
+            }
 
-            thisAndRecursiveReferencedAssembliesCollector.Add(assembly);
-
-            var referencedAssemblyNames = assembly.GetReferencedAssemblies();
+            // System has circular dependencies so for any assembly that comes into this method
+            // we are going to disregard it's referenced System assemblies.
+            // Anyways, these types shouldn't be explored for ancestors or descendants.
+            var referencedAssemblyNames = assembly.GetReferencedAssemblies().Where(_ => (!_.FullName.StartsWith("System")) && (!_.FullName.StartsWith("mscorlib"))).ToList();
 
             var notLoadedReferencedAssemblyNames = referencedAssemblyNames.Where(_ => !loadedAssemblyFullNameToAssembliesMap.ContainsKey(_.FullName)).ToList();
 
@@ -161,10 +167,18 @@ namespace OBeautifulCode.Serialization
                 .SelectMany(_ => loadedAssemblyFullNameToAssembliesMap[_.FullName])
                 .ToList();
 
+            var result = new HashSet<Assembly>();
+
             foreach (var referencedAssembly in referencedAssemblies)
             {
-                GetThisAndRecursivelyReferencedAssemblies(referencedAssembly, thisAndRecursiveReferencedAssembliesCollector, loadedAssemblyFullNameToAssembliesMap);
+                result.Add(referencedAssembly);
+
+                result.AddRange(GetRecursivelyReferencedAssemblies(referencedAssembly));
             }
+
+            AssemblyToRecursivelyReferencedAssemblyMap.Add(assembly, result);
+
+            return result;
         }
 
         private static HashSet<Assembly> GetRecursiveGenericArgumentAssemblies(
