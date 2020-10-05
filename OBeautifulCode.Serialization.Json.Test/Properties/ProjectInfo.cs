@@ -9,7 +9,7 @@
 
 namespace OBeautifulCode.Serialization.Json.Test
 {
-    using System.Reflection;
+    using global::System.Reflection;
 
     /// <summary>
     /// Project-related information.
