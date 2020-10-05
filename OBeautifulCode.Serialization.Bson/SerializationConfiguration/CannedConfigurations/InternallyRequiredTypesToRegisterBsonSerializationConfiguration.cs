@@ -17,17 +17,25 @@ namespace OBeautifulCode.Serialization.Bson
     /// </remarks>
     public sealed class InternallyRequiredTypesToRegisterBsonSerializationConfiguration : BsonSerializationConfigurationBase, IIgnoreDefaultDependencies
     {
+        private static readonly IReadOnlyCollection<TypeToRegisterForBson> AdditionalTypesToRegister =
+            new[]
+            {
+                typeof(RootObjectThatSerializesToStringWrapper<>).ToTypeToRegisterForBson(),
+            };
+
         /// <inheritdoc />
         protected override IReadOnlyCollection<BsonSerializationConfigurationType> DependentBsonSerializationConfigurationTypes => new BsonSerializationConfigurationType[0];
 
         /// <inheritdoc />
-        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => InternallyRequiredNamespacePrefixFilters;
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => InternallyRequiredNamespacePrefixFilters
+            .Concat(AdditionalTypesToRegister.Select(_ => _.Type.Namespace).Distinct())
+            .ToList();
 
         /// <inheritdoc />
         protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson =>
             InternallyRequiredTypes
                 .Select(_ => _.ToTypeToRegisterForBson())
-                .Concat(new[] { typeof(RootObjectThatSerializesToStringWrapper<>).ToTypeToRegisterForBson() })
+                .Concat(AdditionalTypesToRegister)
                 .ToList();
     }
 }
