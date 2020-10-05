@@ -120,20 +120,25 @@ namespace OBeautifulCode.Serialization
         private static void GetThisAndRecursivelyReferencedAssemblies(
             Assembly assembly,
             HashSet<Assembly> thisAndRecursiveReferencedAssembliesCollector,
-            Dictionary<string, Assembly> loadedAssemblyFullNameToAssemblyMap = null)
+            Dictionary<string, Assembly[]> loadedAssemblyFullNameToAssembliesMap = null)
         {
             if (thisAndRecursiveReferencedAssembliesCollector.Contains(assembly))
             {
                 return;
             }
 
-            loadedAssemblyFullNameToAssemblyMap = loadedAssemblyFullNameToAssemblyMap ?? AssemblyLoader.GetLoadedAssemblies().ToDictionary(_ => _.GetName().FullName, _ => _);
+            loadedAssemblyFullNameToAssembliesMap =
+                loadedAssemblyFullNameToAssembliesMap ??
+                AssemblyLoader
+                    .GetLoadedAssemblies()
+                    .GroupBy(_ => _.GetName().FullName)
+                    .ToDictionary(_ => _.Key, _ => _.ToArray());
 
             thisAndRecursiveReferencedAssembliesCollector.Add(assembly);
 
             var referencedAssemblyNames = assembly.GetReferencedAssemblies();
 
-            var notLoadedReferencedAssemblyNames = referencedAssemblyNames.Where(_ => !loadedAssemblyFullNameToAssemblyMap.ContainsKey(_.FullName)).ToList();
+            var notLoadedReferencedAssemblyNames = referencedAssemblyNames.Where(_ => !loadedAssemblyFullNameToAssembliesMap.ContainsKey(_.FullName)).ToList();
 
             foreach (var notLoadedReferencedAssemblyName in notLoadedReferencedAssemblyNames)
             {
@@ -141,7 +146,7 @@ namespace OBeautifulCode.Serialization
                 {
                     var loadedAssembly = Assembly.Load(notLoadedReferencedAssemblyName);
 
-                    loadedAssemblyFullNameToAssemblyMap.Add(notLoadedReferencedAssemblyName.FullName, loadedAssembly);
+                    loadedAssemblyFullNameToAssembliesMap.Add(notLoadedReferencedAssemblyName.FullName, new[] { loadedAssembly });
                 }
                 catch (Exception)
                 {
@@ -149,12 +154,13 @@ namespace OBeautifulCode.Serialization
             }
 
             var referencedAssemblies = referencedAssemblyNames
-                .Where(_ => loadedAssemblyFullNameToAssemblyMap.ContainsKey(_.FullName))
-                .Select(_ => loadedAssemblyFullNameToAssemblyMap[_.FullName]).ToList();
+                .Where(_ => loadedAssemblyFullNameToAssembliesMap.ContainsKey(_.FullName))
+                .SelectMany(_ => loadedAssemblyFullNameToAssembliesMap[_.FullName])
+                .ToList();
 
             foreach (var referencedAssembly in referencedAssemblies)
             {
-                GetThisAndRecursivelyReferencedAssemblies(referencedAssembly, thisAndRecursiveReferencedAssembliesCollector, loadedAssemblyFullNameToAssemblyMap);
+                GetThisAndRecursivelyReferencedAssemblies(referencedAssembly, thisAndRecursiveReferencedAssembliesCollector, loadedAssemblyFullNameToAssembliesMap);
             }
         }
 
