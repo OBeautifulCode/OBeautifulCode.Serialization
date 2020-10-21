@@ -28,7 +28,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
     /// Serializer for moving in and out of a <see cref="Dictionary{TKey,TValue} "/> for string, string.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = ObcSuppressBecause.CA1502_AvoidExcessiveComplexity_DisagreeWithAssessment)]
-    public class ObcPropertyBagSerializer : ObcSerializerBase, IPropertyBagSerializeAndDeserialize
+    public class ObcPropertyBagSerializer : ObcSerializerBase, INamedPropertyBagStringValuesSerializeAndDeserialize
     {
         /// <summary>
         /// Reserved key for storing <see cref="Type.FullName" />.
@@ -378,9 +378,13 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
             var propertyNamesUpper = propertyNameToObjectMap.Keys.Select(_ => _.ToUpperInvariant()).ToList();
 
-            var discoveredConstructorToUse = specificType.GetConstructors().Select(c => new { Parameters = c.GetParameters(), Constructor = c })
+            var discoveredConstructorToUse = specificType
+                .GetConstructors()
+                .Select(c => new { Parameters = c.GetParameters(), Constructor = c })
                 .Where(t => t.Parameters.Select(p => p.Name.ToUpperInvariant()).Intersect(propertyNamesUpper).Count() == t.Parameters.Length)
-                .OrderByDescending(t => t.Parameters.Length).FirstOrDefault()?.Constructor;
+                .OrderByDescending(t => t.Parameters.Length)
+                .FirstOrDefault()?
+                .Constructor;
 
             if (discoveredConstructorToUse == null)
             {

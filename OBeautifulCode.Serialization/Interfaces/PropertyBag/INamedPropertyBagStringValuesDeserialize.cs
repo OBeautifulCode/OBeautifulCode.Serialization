@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IPropertyBagDeserialize.cs" company="OBeautifulCode">
+// <copyright file="INamedPropertyBagStringValuesDeserialize.cs" company="OBeautifulCode">
 //   Copyright (c) OBeautifulCode 2018. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -10,17 +10,18 @@ namespace OBeautifulCode.Serialization
     using System.Collections.Generic;
 
     /// <summary>
-    /// Interface to deserialize from a string.
+    /// Interface to deserialize an object from a property bag,
+    /// keyed on property name with the property values represented in strings.
     /// </summary>
-    public interface IPropertyBagDeserialize
+    public interface INamedPropertyBagStringValuesDeserialize
     {
         /// <summary>
-        /// Deserializes the property bag into an object.
+        /// Deserializes the property bag into the specified <typeparamref name="T"/>.
         /// </summary>
-        /// <param name="serializedPropertyBag">property bag to deserialize.</param>
-        /// <typeparam name="T">Type of object to deserialize.</typeparam>
+        /// <param name="serializedPropertyBag">The property bag to deserialize.</param>
+        /// <typeparam name="T">Type to deserialize into.</typeparam>
         /// <returns>
-        /// Deserialized property bag into object of specified type.
+        /// The deserialized object.
         /// </returns>
         T Deserialize<T>(
             IReadOnlyDictionary<string, string> serializedPropertyBag);
@@ -28,12 +29,13 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Deserializes the property bag into an object.
         /// </summary>
-        /// <param name="serializedPropertyBag">property bag to deserialize.</param>
+        /// <param name="serializedPropertyBag">The property bag to deserialize.</param>
         /// <param name="type">Type to deserialize into.</param>
         /// <returns>
-        /// Deserialized property bag into object of specified type.
+        /// The deserialized object.
         /// </returns>
         object Deserialize(
-            IReadOnlyDictionary<string, string> serializedPropertyBag, Type type);
+            IReadOnlyDictionary<string, string> serializedPropertyBag,
+            Type type);
     }
 }
