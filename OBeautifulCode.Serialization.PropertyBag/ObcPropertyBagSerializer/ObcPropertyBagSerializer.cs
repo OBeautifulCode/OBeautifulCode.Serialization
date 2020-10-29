@@ -20,31 +20,32 @@ namespace OBeautifulCode.Serialization.PropertyBag
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.String.Recipes;
-    using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
 
     /// <summary>
-    /// Serializer for moving in and out of a <see cref="Dictionary{TKey,TValue} "/> for string, string.
+    /// Serializer for writing-to and reading-from a property bag.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = ObcSuppressBecause.CA1502_AvoidExcessiveComplexity_DisagreeWithAssessment)]
-    public class ObcPropertyBagSerializer : ObcSerializerBase, INamedPropertyBagStringValuesSerializeAndDeserialize
+    public partial class ObcPropertyBagSerializer : ObcSerializerBase
     {
         /// <summary>
-        /// Reserved key for storing <see cref="Type.FullName" />.
+        /// Reserved key for storing the type's versionless assembly qualified name.
         /// </summary>
-        public const string ReservedKeyTypeFullName = nameof(object.GetType);
+        public const string ReservedKeyForTypeVersionlessAssemblyQualifiedName = "_Type";
 
         /// <summary>
         /// Reserved key for storing <see cref="object.ToString" />.
         /// </summary>
-        public const string ReservedKeyToString = nameof(object.ToString);
+        public const string ReservedKeyForToString = "_" + nameof(object.ToString);
 
         /// <summary>
         /// Encoding to use for conversion in and out of bytes.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = ObcSuppressBecause.CA2104_DoNotDeclareReadOnlyMutableReferenceTypes_TypeIsImmutable)]
         public static readonly Encoding SerializationEncoding = Encoding.UTF8;
+
+        private static readonly BindingFlags GetPropertiesOfConcernBindingFlags = BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public;
 
         private readonly ObcDictionaryStringStringSerializer dictionaryStringSerializer;
 
@@ -78,75 +79,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <inheritdoc />
         public override SerializerRepresentation SerializerRepresentation { get; }
 
-        /// <summary>
-        /// Converts string into a byte array.
-        /// </summary>
-        /// <param name="stringRepresentation">String representation.</param>
-        /// <returns>
-        /// Byte array.
-        /// </returns>
-        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
-        public static byte[] ConvertStringToByteArray(
-            string stringRepresentation)
-        {
-            var result = SerializationEncoding.GetBytes(stringRepresentation);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Converts string representation byte array into a string.
-        /// </summary>
-        /// <param name="stringRepresentationAsBytes">String representation as bytes.</param>
-        /// <returns>
-        /// JSON string.
-        /// </returns>
-        [SuppressMessage("Microsoft.Naming", "CA1720:Identifiers should not contain type names", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
-        public static string ConvertByteArrayToString(
-            byte[] stringRepresentationAsBytes)
-        {
-            var result = SerializationEncoding.GetString(stringRepresentationAsBytes);
-
-            return result;
-        }
-
-        /// <inheritdoc />
-        public override byte[] SerializeToBytes(
-            object objectToSerialize)
-        {
-            var stringRepresentation = this.SerializeToString(objectToSerialize);
-
-            var result = ConvertStringToByteArray(stringRepresentation);
-
-            return result;
-        }
-
-        /// <inheritdoc />
-        public override T Deserialize<T>(
-            byte[] serializedBytes)
-        {
-            var result = (T)this.Deserialize(serializedBytes, typeof(T));
-
-            return result;
-        }
-
-        /// <inheritdoc />
-        public override object Deserialize(
-            byte[] serializedBytes,
-            Type type)
-        {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            var stringRepresentation = ConvertByteArrayToString(serializedBytes);
-
-            var result = this.Deserialize(stringRepresentation, type);
-
-            return result;
-        }
-
         /// <inheritdoc />
         public override string SerializeToString(
             object objectToSerialize)
@@ -165,9 +97,20 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 return SerializationConfigurationBase.NullSerializedStringValue;
             }
 
-            var serializedObject = this.SerializeToPropertyBag(objectToSerialize);
+            var serializedObject =  this.SerializeToNamedPropertyBagWithStringValues(objectToSerialize);
 
             var result = this.dictionaryStringSerializer.SerializeDictionaryToString(serializedObject);
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public override byte[] SerializeToBytes(
+            object objectToSerialize)
+        {
+            var stringRepresentation = this.SerializeToString(objectToSerialize);
+
+            var result = ConvertStringToByteArray(stringRepresentation);
 
             return result;
         }
@@ -217,54 +160,17 @@ namespace OBeautifulCode.Serialization.PropertyBag
         }
 
         /// <inheritdoc />
-        public IReadOnlyDictionary<string, string> SerializeToPropertyBag(
-            object objectToSerialize)
+        public override T Deserialize<T>(
+            byte[] serializedBytes)
         {
-            if (objectToSerialize == null)
-            {
-                return null;
-            }
-
-            var specificType = objectToSerialize.GetType();
-
-            var bindingFlags = BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public;
-
-            var propertyNames = specificType.GetProperties(bindingFlags);
-
-            var result = propertyNames.ToDictionary(
-                k => k.Name,
-                v =>
-                    {
-                        var propertyInfo = specificType.GetProperty(v.Name, bindingFlags);
-                        if (propertyInfo == null)
-                        {
-                            throw new ArgumentNullException(Invariant($"Could not find {nameof(PropertyInfo)} on type: {specificType} by name: {v.Name}"));
-                        }
-
-                        var propertyValue = propertyInfo.GetValue(objectToSerialize);
-
-                        return propertyValue == null ? null : this.MakeStringFromPropertyValue(propertyValue);
-                    });
-
-            result.Add(ReservedKeyToString, objectToSerialize.ToString());
-
-            result.Add(ReservedKeyTypeFullName, specificType.FullName);
+            var result = (T)this.Deserialize(serializedBytes, typeof(T));
 
             return result;
         }
 
         /// <inheritdoc />
-        public T Deserialize<T>(
-            IReadOnlyDictionary<string, string> serializedPropertyBag)
-        {
-            var result = (T)this.Deserialize(serializedPropertyBag, typeof(T));
-
-            return result;
-        }
-
-        /// <inheritdoc />
-        public object Deserialize(
-            IReadOnlyDictionary<string, string> serializedPropertyBag,
+        public override object Deserialize(
+            byte[] serializedBytes,
             Type type)
         {
             if (type == null)
@@ -272,51 +178,25 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (serializedPropertyBag == null)
-            {
-                return SerializationConfigurationBase.NullSerializedStringValue;
-            }
+            var stringRepresentation = ConvertByteArrayToString(serializedBytes);
 
-            if (!serializedPropertyBag.Any())
-            {
-                if (type.HasDefaultConstructor())
-                {
-                    return type.Construct();
-                }
-                else
-                {
-                    throw new SerializationException(Invariant($"Found no properties for type {type} and it also does not have a parameterless constructor."));
-                }
-            }
-
-            var result = this.ConstructAndFillProperties(type, serializedPropertyBag);
+            var result = this.Deserialize(stringRepresentation, type);
 
             return result;
         }
 
-        private static IReadOnlyCollection<Type> GetAllLoadedTypes()
+        private static byte[] ConvertStringToByteArray(
+            string stringRepresentation)
         {
-            var loadedAssemblies = AssemblyLoader.GetLoadedAssemblies().Distinct().ToList();
+            var result = SerializationEncoding.GetBytes(stringRepresentation);
 
-            var result = new List<Type>();
+            return result;
+        }
 
-            var reflectionTypeLoadExceptions = new List<ReflectionTypeLoadException>(); // suppress for now, maybe throw later
-
-            foreach (var assembly in loadedAssemblies)
-            {
-                try
-                {
-                    result.AddRange(new[] { assembly }.GetTypesFromAssemblies());
-                }
-                catch (TypeLoadException ex) when (ex.InnerException?.GetType() == typeof(ReflectionTypeLoadException))
-                {
-                    var reflectionTypeLoadException = (ReflectionTypeLoadException)ex.InnerException;
-
-                    result.AddRange(reflectionTypeLoadException.Types);
-
-                    reflectionTypeLoadExceptions.Add(reflectionTypeLoadException);
-                }
-            }
+        private static string ConvertByteArrayToString(
+            byte[] stringRepresentationAsBytes)
+        {
+            var result = SerializationEncoding.GetString(stringRepresentationAsBytes);
 
             return result;
         }
@@ -329,23 +209,11 @@ namespace OBeautifulCode.Serialization.PropertyBag
         {
             var specificType = objectType;
 
-            if (properties.ContainsKey(ReservedKeyTypeFullName))
+            if (properties.ContainsKey(ReservedKeyForTypeVersionlessAssemblyQualifiedName))
             {
-                var specificTypeFullName = properties[ReservedKeyTypeFullName];
+                var specifiedTypeVersionlessAssemblyQualifiedName = properties[ReservedKeyForTypeVersionlessAssemblyQualifiedName];
 
-                var loadedTypeMatches = GetAllLoadedTypes().Where(_ => _.FullName == specificTypeFullName).ToList();
-
-                if (loadedTypeMatches.Any())
-                {
-                    if (loadedTypeMatches.Count > 1)
-                    {
-                        throw new ArgumentException(Invariant($"Found multiple loaded matches for ({specificTypeFullName}); {string.Join(",", loadedTypeMatches)}"));
-                    }
-                    else
-                    {
-                        specificType = loadedTypeMatches.Single();
-                    }
-                }
+                specificType = specifiedTypeVersionlessAssemblyQualifiedName.ResolveFromLoadedTypes();
             }
 
             var propertyNameToObjectMap = new Dictionary<string, object>();
@@ -354,7 +222,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
             foreach (var property in properties)
             {
-                if (property.Key == ReservedKeyTypeFullName || property.Key == ReservedKeyToString)
+                if (property.Key == ReservedKeyForTypeVersionlessAssemblyQualifiedName || property.Key == ReservedKeyForToString)
                 {
                     // reserved and not assigned to properties
                     continue;
@@ -369,7 +237,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
                     throw new ArgumentNullException(missingPropertyExceptionMessage);
                 }
 
-                var propertyType = propertyInfo?.PropertyType ?? throw new ArgumentNullException(missingPropertyExceptionMessage);
+                var propertyType = propertyInfo.PropertyType ?? throw new ArgumentNullException(missingPropertyExceptionMessage);
 
                 var targetValue = property.Value == null ? null : this.MakeObjectFromString(property.Value, propertyType);
 
@@ -383,8 +251,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 .Select(c => new { Parameters = c.GetParameters(), Constructor = c })
                 .Where(t => t.Parameters.Select(p => p.Name.ToUpperInvariant()).Intersect(propertyNamesUpper).Count() == t.Parameters.Length)
                 .OrderByDescending(t => t.Parameters.Length)
-                .FirstOrDefault()?
-                .Constructor;
+                .FirstOrDefault()?.Constructor;
 
             if (discoveredConstructorToUse == null)
             {

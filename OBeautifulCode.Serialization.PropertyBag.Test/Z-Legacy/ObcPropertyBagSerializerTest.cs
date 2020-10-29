@@ -105,7 +105,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
                 deserialized.StringCollectionWithNulls.Should().Equal(expected.StringCollectionWithNulls);
             }
 
-            var serializedPropertyBag = serializer.SerializeToPropertyBag(expected);
+            var serializedPropertyBag = serializer.SerializeToNamedPropertyBagWithStringValues(expected);
 
             // Act, Assert
             expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(ThrowIfObjectsDiffer, serializationConfigurationType);
@@ -159,8 +159,8 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             var actual2 = Record.Exception(() => expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(null, formats: new[] { SerializationFormat.Binary }));
 
             // Assert
-            actual1.Message.Should().Be("Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: OBeautifulCode.Serialization.PropertyBag.Test.ObcPropertyBagSerializerTest+ConstructorWithoutProperties, properties: Property,ToString,GetType.");
-            actual2.Message.Should().Be("Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: OBeautifulCode.Serialization.PropertyBag.Test.ObcPropertyBagSerializerTest+ConstructorWithoutProperties, properties: Property,ToString,GetType.");
+            actual1.Message.Should().Be("Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: OBeautifulCode.Serialization.PropertyBag.Test.ObcPropertyBagSerializerTest+ConstructorWithoutProperties, properties: Property,_ToString,_Type.");
+            actual2.Message.Should().Be("Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: OBeautifulCode.Serialization.PropertyBag.Test.ObcPropertyBagSerializerTest+ConstructorWithoutProperties, properties: Property,_ToString,_Type.");
         }
 
         [Fact]

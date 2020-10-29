@@ -78,6 +78,10 @@
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringXmlDocOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="ObcPropertyBagSerializer\ObcPropertyBagSerializer.OrdinalString.cs" />
+    <Compile Include="ObcPropertyBagSerializer\ObcPropertyBagSerializer.OrdinalObject.cs" />
+    <Compile Include="ObcPropertyBagSerializer\ObcPropertyBagSerializer.NamedObject.cs" />
+    <Compile Include="ObcPropertyBagSerializer\ObcPropertyBagSerializer.NamedString.cs" />
     <Compile Include="ObcPropertyBagSerializer\ObcPropertyBagSerializer{TPropertyBagSerializationConfiguration}.cs" />
     <Compile Include="ObcPropertyBagSerializer\ObcPropertyBagSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

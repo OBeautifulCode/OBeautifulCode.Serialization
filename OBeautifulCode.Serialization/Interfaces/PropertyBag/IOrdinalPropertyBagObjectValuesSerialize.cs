@@ -25,7 +25,7 @@ namespace OBeautifulCode.Serialization
         /// The property bag.
         /// </returns>
         [SuppressMessage("Microsoft.Naming", "CA1720:Identifiers should not contain type names", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
-        IReadOnlyDictionary<int, object> SerializeToPropertyBag(
+        IReadOnlyDictionary<int, object> SerializeToOrdinalPropertyBagWithObjectValues(
             object objectToSerialize);
     }
 }
