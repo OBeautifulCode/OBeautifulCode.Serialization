@@ -7,7 +7,6 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -341,25 +340,15 @@ namespace OBeautifulCode.Serialization
             // contain a bunch of other System and .NET internal types.
             if (!type.IsSystemType())
             {
-                result.AddRange(
-                    type
-                        .GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                        .Where(_ => !_.IsCompilerGenerated())
-                        .SelectMany(
-                            _ =>
-                            {
-                                if ((_ is PropertyInfo propertyInfo) && memberTypesToInclude.HasFlag(MemberTypesToInclude.DeclaredProperties))
-                                {
-                                    return new[] { propertyInfo.PropertyType };
-                                }
+                var fieldAndPropertyTypes = type
+                    .GetMembersFiltered(MemberRelationships.DeclaredInType, MemberOwners.Instance, MemberAccessModifiers.All, MemberKinds.Field | MemberKinds.Property)
+                    .Where(_ =>
+                        ((_ is PropertyInfo) && memberTypesToInclude.HasFlag(MemberTypesToInclude.DeclaredProperties)) ||
+                        ((_ is FieldInfo) && memberTypesToInclude.HasFlag(MemberTypesToInclude.DeclaredFields)))
+                    .Select(_ => _.GetUnderlyingType())
+                    .ToList();
 
-                                if ((_ is FieldInfo fieldInfo) && memberTypesToInclude.HasFlag(MemberTypesToInclude.DeclaredFields))
-                                {
-                                    return new[] { fieldInfo.FieldType };
-                                }
-
-                                return new Type[0];
-                            }));
+                result.AddRange(fieldAndPropertyTypes);
             }
 
             // there will be open generic types that are not generic type definitions

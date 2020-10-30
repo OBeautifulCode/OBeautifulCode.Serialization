@@ -269,9 +269,15 @@ namespace OBeautifulCode.Serialization.Json
 
             foreach (var assignableType in assignableTypes)
             {
-                var typeProperties = assignableType.GetProperties().Select(t => t.Name).ToList();
+                var typeProperties = assignableType
+                    .GetPropertiesFiltered(MemberRelationships.DeclaredOrInherited, MemberOwners.Instance, MemberAccessModifiers.Public)
+                    .Select(t => t.Name)
+                    .ToList();
 
-                var typeFields = assignableType.GetFields().Select(t => t.Name).ToList();
+                var typeFields = assignableType
+                    .GetFieldsFiltered(MemberRelationships.DeclaredOrInherited, MemberOwners.Instance, MemberAccessModifiers.Public)
+                    .Select(t => t.Name)
+                    .ToList();
 
                 var typeMembers = new HashSet<string>(new string[0].Concat(typeProperties).Concat(typeFields), StringComparer.CurrentCultureIgnoreCase);
 

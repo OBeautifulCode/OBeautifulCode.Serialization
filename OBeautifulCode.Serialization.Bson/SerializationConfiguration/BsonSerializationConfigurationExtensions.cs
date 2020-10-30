@@ -8,9 +8,7 @@ namespace OBeautifulCode.Serialization.Bson
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Options;
@@ -195,28 +193,13 @@ namespace OBeautifulCode.Serialization.Bson
                 throw new ArgumentNullException(nameof(type));
             }
 
-            bool FilterCompilerGenerated(MemberInfo memberInfo) => !memberInfo.CustomAttributes.Select(s => s.AttributeType).Contains(typeof(CompilerGeneratedAttribute));
-
             // We use DeclaredOnly here because BSON uses the class map that was registered for the base class.
-            var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
-
-            var allMembers = type.GetMembers(bindingFlags).Where(FilterCompilerGenerated).ToList();
-
-            var fields = allMembers
-                .Where(_ => _.MemberType == MemberTypes.Field)
-                .Cast<FieldInfo>()
-                .Where(_ => !_.IsInitOnly)
-                .ToList();
-
-            const bool returnIfSetMethodIsNotPublic = true;
-
-            var properties = allMembers
-                .Where(_ => _.MemberType == MemberTypes.Property)
-                .Cast<PropertyInfo>()
-                .Where(_ => _.CanWrite || _.GetSetMethod(returnIfSetMethodIsNotPublic) != null)
-                .ToList();
-
-            var result = new MemberInfo[0].Concat(fields).Concat(properties).ToList();
+            var result = type.GetMembersFiltered(
+                MemberRelationships.DeclaredInType,
+                MemberOwners.Instance,
+                MemberAccessModifiers.All,
+                MemberKinds.Field | MemberKinds.Property,
+                MemberMutability.Writable);
 
             return result;
         }

@@ -17,6 +17,7 @@ namespace OBeautifulCode.Serialization.Json
     using Newtonsoft.Json.Serialization;
 
     using OBeautifulCode.Collection.Recipes;
+    using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -122,7 +123,7 @@ namespace OBeautifulCode.Serialization.Json
                     if (isInstantiable && (result.OverrideConstructor == null) && (result.ParametrizedConstructor == null))
                     #pragma warning restore 618
                     {
-                        var constructors = objectType.GetConstructors(BindingFlags.Instance | BindingFlags.Public).ToList();
+                        var constructors = objectType.GetConstructorsFiltered(MemberRelationships.DeclaredOrInherited, MemberOwners.Instance, MemberAccessModifiers.Public);
 
                         // if constructors.Count == 1 then it must be the default constructor because we ruled-out
                         // a single parameterized constructor.  we don't think constructors.Count == 0 is possible.

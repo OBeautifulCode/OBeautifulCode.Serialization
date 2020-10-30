@@ -10,7 +10,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-
+    using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
 
     using static System.FormattableString;
@@ -28,18 +28,13 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
             var objectType = objectToSerialize.GetType();
 
-            var propertyNames = objectType.GetProperties(GetPropertiesOfConcernBindingFlags);
+            var propertyNames = objectType.GetPropertiesFiltered(MemberRelationships.DeclaredOrInherited, MemberOwners.Instance, MemberAccessModifiers.Public);
 
             var result = propertyNames.ToDictionary(
                 _ => _.Name,
                 _ =>
                 {
-                    var propertyInfo = objectType.GetProperty(_.Name, GetPropertiesOfConcernBindingFlags);
-
-                    if (propertyInfo == null)
-                    {
-                        throw new ArgumentNullException(Invariant($"Could not find {nameof(PropertyInfo)} on type: {objectType} by name: {_.Name}"));
-                    }
+                    var propertyInfo = objectType.GetPropertyFiltered(_.Name, MemberRelationships.DeclaredOrInherited, MemberOwners.Instance, MemberAccessModifiers.Public);
 
                     var propertyValue = propertyInfo.GetValue(objectToSerialize);
 

@@ -45,8 +45,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = ObcSuppressBecause.CA2104_DoNotDeclareReadOnlyMutableReferenceTypes_TypeIsImmutable)]
         public static readonly Encoding SerializationEncoding = Encoding.UTF8;
 
-        private static readonly BindingFlags GetPropertiesOfConcernBindingFlags = BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public;
-
         private readonly ObcDictionaryStringStringSerializer dictionaryStringSerializer;
 
         private readonly IReadOnlyDictionary<Type, IStringSerializeAndDeserialize> configuredTypeToSerializerMap;
@@ -218,8 +216,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
             var propertyNameToObjectMap = new Dictionary<string, object>();
 
-            var bindingFlags = BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public;
-
             foreach (var property in properties)
             {
                 if (property.Key == ReservedKeyForTypeVersionlessAssemblyQualifiedName || property.Key == ReservedKeyForToString)
@@ -228,16 +224,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
                     continue;
                 }
 
-                var propertyInfo = specificType.GetProperty(property.Key, bindingFlags);
+                var propertyInfo = specificType.GetPropertyFiltered(property.Key, MemberRelationships.DeclaredOrInherited, MemberOwners.Instance, MemberAccessModifiers.Public);
 
-                var missingPropertyExceptionMessage = Invariant($"Could not find {nameof(PropertyInfo)} on type: {specificType} by name: {property.Key}");
-
-                if (propertyInfo == null)
-                {
-                    throw new ArgumentNullException(missingPropertyExceptionMessage);
-                }
-
-                var propertyType = propertyInfo.PropertyType ?? throw new ArgumentNullException(missingPropertyExceptionMessage);
+                var propertyType = propertyInfo.PropertyType;
 
                 var targetValue = property.Value == null ? null : this.MakeObjectFromString(property.Value, propertyType);
 
@@ -269,9 +258,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
             foreach (var nameToPropertyInfoAndObject in propertyNameToObjectMap)
             {
-                var propertyInfo = specificType.GetProperty(nameToPropertyInfoAndObject.Key, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.SetProperty);
+                var propertyInfo = specificType.GetPropertyFiltered(nameToPropertyInfoAndObject.Key, MemberRelationships.DeclaredOrInherited, MemberOwners.Instance, MemberAccessModifiers.All, throwIfNotFound: false);
 
-                if (propertyInfo != null && propertyInfo.CanWrite)
+                if ((propertyInfo != null) && propertyInfo.CanWrite)
                 {
                     propertyInfo.SetValue(result, nameToPropertyInfoAndObject.Value);
                 }
@@ -348,8 +337,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
             }
             else
             {
-                var bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance;
-
                 var typeToSearchForParse = type;
 
                 if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -357,11 +344,14 @@ namespace OBeautifulCode.Serialization.PropertyBag
                     typeToSearchForParse = type.GenericTypeArguments.Single();
                 }
 
-                var parseMethod = typeToSearchForParse.GetMethods(bindingFlags).SingleOrDefault(_ =>
-                {
-                    var parameters = _.GetParameters();
-                    return _.Name == "Parse" && parameters.Length == 1 && parameters.Single().ParameterType == typeof(string);
-                });
+                var parseMethod = typeToSearchForParse
+                    .GetMethodsFiltered(MemberRelationships.DeclaredOrInherited, MemberOwners.All, MemberAccessModifiers.Public)
+                    .SingleOrDefault(_ =>
+                    {
+                        var parameters = _.GetParameters();
+
+                        return (_.Name == "Parse") && (parameters.Length == 1) && (parameters.Single().ParameterType == typeof(string));
+                    });
 
                 var result = parseMethod == null
                     ? serializedString

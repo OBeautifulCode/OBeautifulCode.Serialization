@@ -578,9 +578,7 @@ namespace OBeautifulCode.Serialization
                 // might introduce thread contention issues (potential a deadlock?) with syncConfigure.
                 // Not worth the optimization.
                 var memberInfosToAdd = typeToValidate
-                    .GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                    .Where(_ => !_.IsCompilerGenerated())
-                    .Where(_ => (_ is PropertyInfo) || (_ is FieldInfo))
+                    .GetMembersFiltered(MemberRelationships.DeclaredInTypeOrAncestorTypes, MemberOwners.Instance, MemberAccessModifiers.All, MemberKinds.Field | MemberKinds.Property)
                     .ToList();
 
                 TypeToAllFieldsAndPropertiesMemberInfoMap.TryAdd(typeToValidate, memberInfosToAdd);
