@@ -108,8 +108,9 @@ namespace OBeautifulCode.Serialization.Json
             var listOfKeyValuePairsAsEnumerable = (IEnumerable)listOfKeyValuePairs;
             foreach (var element in listOfKeyValuePairsAsEnumerable)
             {
-                var key = element.GetPropertyValue<object>(nameof(KeyValuePair<object, object>.Key));
-                var value = element.GetPropertyValue<object>(nameof(KeyValuePair<object, object>.Value));
+                var key = element.GetPropertyValue(nameof(KeyValuePair<object, object>.Key), MemberRelationships.DeclaredInType, MemberOwners.Instance, MemberAccessModifiers.Public);
+
+                var value = element.GetPropertyValue(nameof(KeyValuePair<object, object>.Value), MemberRelationships.DeclaredInType, MemberOwners.Instance, MemberAccessModifiers.Public);
 
                 // ReSharper disable once PossibleNullReferenceException
                 wrappedDictionaryAddMethod.Invoke(wrappedDictionary, new[] { key, value });

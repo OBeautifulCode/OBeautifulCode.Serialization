@@ -207,7 +207,7 @@ namespace OBeautifulCode.Serialization.Json
                 {
                     undoPropertyNameTokenFieldHack = true;
 
-                    jsonReader.SetFieldValue(jsonReaderUnderlyingTokenFieldName, JsonToken.String);
+                    jsonReader.SetFieldValue(jsonReaderUnderlyingTokenFieldName, JsonToken.String, MemberRelationships.DeclaredInTypeOrAncestorTypes, MemberOwners.Instance);
                 }
 
                 object result;
@@ -223,7 +223,7 @@ namespace OBeautifulCode.Serialization.Json
 
                 if (undoPropertyNameTokenFieldHack)
                 {
-                    jsonReader.SetFieldValue(jsonReaderUnderlyingTokenFieldName, JsonToken.PropertyName);
+                    jsonReader.SetFieldValue(jsonReaderUnderlyingTokenFieldName, JsonToken.PropertyName, MemberRelationships.DeclaredInTypeOrAncestorTypes, MemberOwners.Instance);
                 }
 
                 return result;
