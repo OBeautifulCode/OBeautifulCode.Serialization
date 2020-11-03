@@ -48,11 +48,13 @@ namespace OBeautifulCode.Serialization
             string lineDelimiter = DefaultLineDelimiter,
             string nullValueEncoding = DefaultNullValueEncoding)
         {
+            // ReSharper disable once JoinNullCheckWithUsage
             if (keyValueDelimiter == null)
             {
                 throw new ArgumentNullException(nameof(keyValueDelimiter));
             }
 
+            // ReSharper disable once JoinNullCheckWithUsage
             if (lineDelimiter == null)
             {
                 throw new ArgumentNullException(nameof(lineDelimiter));
@@ -86,7 +88,7 @@ namespace OBeautifulCode.Serialization
 
             if (objectToSerialize == null)
             {
-                result = SerializationConfigurationBase.NullSerializedStringValue;
+                result = null;
             }
             else
             {
@@ -117,7 +119,7 @@ namespace OBeautifulCode.Serialization
 
             if (dictionary == null)
             {
-                 result = SerializationConfigurationBase.NullSerializedStringValue;
+                 result = null;
             }
             else if (!dictionary.Any())
             {
@@ -131,6 +133,10 @@ namespace OBeautifulCode.Serialization
                 {
                     var key = keyValuePair.Key;
 
+                    // When serializing a dictionary (all key/value pairs) to a single string,
+                    // we have the problem of differentiate values that are empty from values that are none
+                    // (e.g. if pipe is a delimiter in "some text||", is the token after "some text" null or empty?)
+                    // The only way to deal with this is to write null as a special value that can be parsed to null.
                     var value = keyValuePair.Value ?? this.NullValueEncoding;
 
                     if (key.Contains(this.KeyValueDelimiter))
@@ -168,16 +174,9 @@ namespace OBeautifulCode.Serialization
         public T Deserialize<T>(
             string serializedString)
         {
-            T result;
+            var type = typeof(T);
 
-            if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
-            {
-                result = default;
-            }
-            else
-            {
-                result = (T)this.Deserialize(serializedString, typeof(T));
-            }
+            var result = (T)this.Deserialize(serializedString, type);
 
             return result;
         }
@@ -187,28 +186,19 @@ namespace OBeautifulCode.Serialization
             string serializedString,
             Type type)
         {
-            object result;
-
-            if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
+            if (type == null)
             {
-                result = null;
+                throw new ArgumentNullException(nameof(type));
             }
-            else
+
+            var dictionary = type.Construct() as IReadOnlyDictionary<string, string>;
+
+            if (dictionary == null)
             {
-                if (type == null)
-                {
-                    throw new ArgumentNullException(nameof(type));
-                }
-
-                var dictionary = type.Construct() as IReadOnlyDictionary<string, string>;
-
-                if (dictionary == null)
-                {
-                    throw new ArgumentNullException(Invariant($"typeMustBeConvertibleTo-{nameof(IReadOnlyDictionary<string, string>)}-found-{type}"));
-                }
-
-                result = this.DeserializeToDictionary(serializedString);
+                throw new ArgumentNullException(Invariant($"typeMustBeConvertibleTo-{nameof(IReadOnlyDictionary<string, string>)}-found-{type}"));
             }
+
+            var result = this.DeserializeToDictionary(serializedString);
 
             return result;
         }
@@ -230,7 +220,7 @@ namespace OBeautifulCode.Serialization
             {
                 result = null;
             }
-            else if (string.IsNullOrEmpty(serializedString))
+            else if (serializedString == string.Empty)
             {
                 result = new Dictionary<string, string>();
             }

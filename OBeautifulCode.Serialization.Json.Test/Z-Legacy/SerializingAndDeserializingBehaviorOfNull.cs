@@ -18,6 +18,8 @@ namespace OBeautifulCode.Serialization.Json.Test
 
     public static class SerializingAndDeserializingBehaviorOfNull
     {
+        private const string NewtonsoftSerializedNullRepresentation = "null";
+
         [Fact]
         public static void JsonCanSerializeNull()
         {
@@ -28,11 +30,11 @@ namespace OBeautifulCode.Serialization.Json.Test
             {
                 if (format == SerializationFormat.String)
                 {
-                    serialized.Should().Be(SerializationConfigurationBase.NullSerializedStringValue);
+                    serialized.Should().Be(NewtonsoftSerializedNullRepresentation);
                 }
                 else if (format == SerializationFormat.Binary)
                 {
-                    var expectedPayload = Convert.ToBase64String(SerializationConfigurationBase.NullSerializedStringValue.ToBytes(Encoding.UTF8));
+                    var expectedPayload = Convert.ToBase64String(NewtonsoftSerializedNullRepresentation.ToBytes(Encoding.UTF8));
 
                     serialized.Should().Be(expectedPayload);
                 }
@@ -46,12 +48,12 @@ namespace OBeautifulCode.Serialization.Json.Test
 
             void ThrowIfStringsDiffer(string serialized, SerializationFormat format, string deserialized)
             {
-                deserialized.Should().Be(SerializationConfigurationBase.NullSerializedStringValue);
+                deserialized.Should().Be(NewtonsoftSerializedNullRepresentation);
             }
 
             // Act, Assert
             expected.RoundtripSerializeViaJsonWithCallbackVerification(ThrowIfObjectsDiffer);
-            SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaJsonWithCallbackVerification(ThrowIfStringsDiffer);
+            NewtonsoftSerializedNullRepresentation.RoundtripSerializeViaJsonWithCallbackVerification(ThrowIfStringsDiffer);
         }
     }
 }

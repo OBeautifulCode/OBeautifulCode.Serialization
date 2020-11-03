@@ -123,9 +123,9 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             // Act
             void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ConstructorWithProperties deserialized)
             {
-                deserialized.PropertyGetOnly.Should().Be(expected.PropertyGetOnly);
-                deserialized.PropertyPrivateSet.Should().Be(expected.PropertyPrivateSet);
-                deserialized.PropertyPublicSet.Should().Be(expected.PropertyPublicSet);
+                deserialized.Property1.Should().Be(expected.Property1);
+                deserialized.Property2.Should().Be(expected.Property2);
+                deserialized.Property3.Should().Be(expected.Property3);
             }
 
             // Act, Assert
@@ -159,8 +159,8 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             var actual2 = Record.Exception(() => expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(null, formats: new[] { SerializationFormat.Binary }));
 
             // Assert
-            actual1.Message.Should().Be("Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: OBeautifulCode.Serialization.PropertyBag.Test.ObcPropertyBagSerializerTest+ConstructorWithoutProperties, properties: Property,_ToString,_Type.");
-            actual2.Message.Should().Be("Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: OBeautifulCode.Serialization.PropertyBag.Test.ObcPropertyBagSerializerTest+ConstructorWithoutProperties, properties: Property,_ToString,_Type.");
+            actual1.Message.Should().Be("Could not deserialize into 'ObcPropertyBagSerializerTest.ConstructorWithoutProperties'; none of its public constructors have parameters where all parameters have a matching property (public, inherited or declared, writable, instance) by name and type.");
+            actual2.Message.Should().Be("Could not deserialize into 'ObcPropertyBagSerializerTest.ConstructorWithoutProperties'; none of its public constructors have parameters where all parameters have a matching property (public, inherited or declared, writable, instance) by name and type.");
         }
 
         [Fact]
@@ -183,18 +183,18 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
         [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class ConstructorWithProperties
         {
-            public ConstructorWithProperties(string propertyGetOnly, string propertyPrivateSet, string propertyPublicSet)
+            public ConstructorWithProperties(string property1, string property2, string property3)
             {
-                this.PropertyGetOnly = propertyGetOnly;
-                this.PropertyPrivateSet = propertyPrivateSet;
-                this.PropertyPublicSet = propertyPublicSet;
+                this.Property1 = property1;
+                this.Property2 = property2;
+                this.Property3 = property3;
             }
 
-            public string PropertyGetOnly { get; }
+            public string Property1 { get; private set; }
 
-            public string PropertyPrivateSet { get; private set; }
+            public string Property2 { get; private set; }
 
-            public string PropertyPublicSet { get; set; }
+            public string Property3 { get; private set; }
         }
 
         [Serializable]

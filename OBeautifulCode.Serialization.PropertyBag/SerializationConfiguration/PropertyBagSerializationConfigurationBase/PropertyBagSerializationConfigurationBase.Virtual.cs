@@ -28,6 +28,13 @@ namespace OBeautifulCode.Serialization.PropertyBag
         public virtual string StringSerializationNullValueEncoding { get; } = ObcDictionaryStringStringSerializer.DefaultNullValueEncoding;
 
         /// <summary>
+        /// Gets a value indicating whether to include the object's versionless assembly qualified name as a property when serializing into a property bag.
+        /// For named serializers, the property is named <see cref="ObcPropertyBagSerializer.ReservedKeyForTypeVersionlessAssemblyQualifiedName"/>.
+        /// For ordinal serializers, the property is placed at index -1.
+        /// </summary>
+        public virtual bool IncludeVersionlessAssemblyQualifiedNameAsProperty => false;
+
+        /// <summary>
         /// Gets the <see cref="PropertyBagSerializationConfigurationBase"/>s that are needed for the current implementation of <see cref="PropertyBagSerializationConfigurationBase"/>.  Optionally overrideable, DEFAULT is empty collection.
         /// </summary>
         protected virtual IReadOnlyCollection<PropertyBagSerializationConfigurationType> DependentPropertyBagSerializationConfigurationTypes => new PropertyBagSerializationConfigurationType[0];

@@ -31,6 +31,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
         public override string StringSerializationNullValueEncoding => ((PropertyBagSerializationConfigurationBase)this.DescendantSerializationConfigurationTypeToInstanceMap[this.DependentPropertyBagSerializationConfigurationTypes.Single()]).StringSerializationNullValueEncoding;
 
         /// <inheritdoc />
+        public override bool IncludeVersionlessAssemblyQualifiedNameAsProperty => ((PropertyBagSerializationConfigurationBase)this.DescendantSerializationConfigurationTypeToInstanceMap[this.DependentPropertyBagSerializationConfigurationTypes.Single()]).IncludeVersionlessAssemblyQualifiedNameAsProperty;
+
+        /// <inheritdoc />
         protected override IReadOnlyCollection<PropertyBagSerializationConfigurationType> DependentPropertyBagSerializationConfigurationTypes => new[] { typeof(T).ToPropertyBagSerializationConfigurationType() };
     }
 }

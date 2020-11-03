@@ -19,6 +19,11 @@ namespace OBeautifulCode.Serialization.Bson
     public class ObcBsonSerializer : ObcSerializerBase
     {
         /// <summary>
+        /// Gets the serialized representation of null (a null object will be serialized to this value).
+        /// </summary>
+        public const string SerializedRepresentationOfNull = "<null>";
+
+        /// <summary>
         /// Gets the serialization configuration of the serializer being used for deserialization on the current thread.
         /// </summary>
         /// <remarks>
@@ -95,7 +100,7 @@ namespace OBeautifulCode.Serialization.Bson
 
             if (objectToSerialize == null)
             {
-                result = SerializationConfigurationBase.NullSerializedStringValue;
+                result = SerializedRepresentationOfNull;
             }
             else
             {
@@ -164,7 +169,7 @@ namespace OBeautifulCode.Serialization.Bson
 
             object result;
 
-            if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
+            if (serializedString == SerializedRepresentationOfNull)
             {
                 result = null;
             }

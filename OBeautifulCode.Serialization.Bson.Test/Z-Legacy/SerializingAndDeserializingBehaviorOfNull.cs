@@ -9,7 +9,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
     using System;
 
     using FluentAssertions;
-
+    using MongoDB.Bson.Serialization;
     using OBeautifulCode.Serialization.Recipes;
 
     using Xunit;
@@ -26,7 +26,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
             {
                 if (format == SerializationFormat.String)
                 {
-                    serialized.Should().Be(SerializationConfigurationBase.NullSerializedStringValue);
+                    serialized.Should().Be(ObcBsonSerializer.SerializedRepresentationOfNull);
                 }
                 else if (format == SerializationFormat.Binary)
                 {
@@ -42,12 +42,12 @@ namespace OBeautifulCode.Serialization.Bson.Test
 
             void ThrowIfStringsDiffer(string serialized, SerializationFormat format, string deserialized)
             {
-                deserialized.Should().Be(SerializationConfigurationBase.NullSerializedStringValue);
+                deserialized.Should().Be(ObcBsonSerializer.SerializedRepresentationOfNull);
             }
 
             // Act, Assert
             expected.RoundtripSerializeViaBsonWithCallbackVerification(ThrowIfObjectsDiffer);
-            SerializationConfigurationBase.NullSerializedStringValue.RoundtripSerializeViaBsonWithCallbackVerification(ThrowIfStringsDiffer);
+            ObcBsonSerializer.SerializedRepresentationOfNull.RoundtripSerializeViaBsonWithCallbackVerification(ThrowIfStringsDiffer);
         }
     }
 }

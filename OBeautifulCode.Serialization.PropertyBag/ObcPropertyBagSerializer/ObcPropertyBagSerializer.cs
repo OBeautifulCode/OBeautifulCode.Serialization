@@ -7,26 +7,19 @@
 namespace OBeautifulCode.Serialization.PropertyBag
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Reflection;
     using System.Runtime.Serialization;
     using System.Text;
 
-    using OBeautifulCode.CodeAnalysis.Recipes;
-    using OBeautifulCode.Collection.Recipes;
-    using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
-    using OBeautifulCode.String.Recipes;
+    using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
 
     /// <summary>
     /// Serializer for writing-to and reading-from a property bag.
     /// </summary>
-    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = ObcSuppressBecause.CA1502_AvoidExcessiveComplexity_DisagreeWithAssessment)]
     public partial class ObcPropertyBagSerializer : ObcSerializerBase
     {
         /// <summary>
@@ -35,14 +28,8 @@ namespace OBeautifulCode.Serialization.PropertyBag
         public const string ReservedKeyForTypeVersionlessAssemblyQualifiedName = "_Type";
 
         /// <summary>
-        /// Reserved key for storing <see cref="object.ToString" />.
-        /// </summary>
-        public const string ReservedKeyForToString = "_" + nameof(object.ToString);
-
-        /// <summary>
         /// Encoding to use for conversion in and out of bytes.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = ObcSuppressBecause.CA2104_DoNotDeclareReadOnlyMutableReferenceTypes_TypeIsImmutable)]
         public static readonly Encoding SerializationEncoding = Encoding.UTF8;
 
         private readonly ObcDictionaryStringStringSerializer dictionaryStringSerializer;
@@ -81,23 +68,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
         public override string SerializeToString(
             object objectToSerialize)
         {
-            var objectType = objectToSerialize?.GetType();
+            var namedPropertyBagWithStringValues =  this.SerializeToNamedPropertyBagWithStringValues(objectToSerialize);
 
-            if (objectType == typeof(string))
-            {
-                throw new NotSupportedException("String is not supported as a type for this serializer.");
-            }
-
-            this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Serialize, objectToSerialize);
-
-            if (objectToSerialize == null)
-            {
-                return SerializationConfigurationBase.NullSerializedStringValue;
-            }
-
-            var serializedObject =  this.SerializeToNamedPropertyBagWithStringValues(objectToSerialize);
-
-            var result = this.dictionaryStringSerializer.SerializeDictionaryToString(serializedObject);
+            var result = this.dictionaryStringSerializer.SerializeDictionaryToString(namedPropertyBagWithStringValues);
 
             return result;
         }
@@ -108,7 +81,9 @@ namespace OBeautifulCode.Serialization.PropertyBag
         {
             var stringRepresentation = this.SerializeToString(objectToSerialize);
 
-            var result = ConvertStringToByteArray(stringRepresentation);
+            var result = stringRepresentation == null
+                ? null
+                : SerializationEncoding.GetBytes(stringRepresentation);
 
             return result;
         }
@@ -119,16 +94,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         {
             var objectType = typeof(T);
 
-            this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(objectType, SerializationDirection.Deserialize, null);
-
-            if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
-            {
-                return default(T);
-            }
-
-            var dictionary = this.dictionaryStringSerializer.DeserializeToDictionary(serializedString);
-
-            var result = this.Deserialize<T>(dictionary);
+            var result = (T)this.Deserialize(serializedString, objectType);
 
             return result;
         }
@@ -138,18 +104,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
             string serializedString,
             Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(type, SerializationDirection.Deserialize, null);
-
-            if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
-            {
-                return null;
-            }
-
             var dictionary = this.dictionaryStringSerializer.DeserializeToDictionary(serializedString);
 
             var result = this.Deserialize(dictionary, type);
@@ -171,250 +125,76 @@ namespace OBeautifulCode.Serialization.PropertyBag
             byte[] serializedBytes,
             Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            var stringRepresentation = ConvertByteArrayToString(serializedBytes);
+            var stringRepresentation = serializedBytes == null
+                ? null
+                : SerializationEncoding.GetString(serializedBytes);
 
             var result = this.Deserialize(stringRepresentation, type);
 
             return result;
         }
 
-        private static byte[] ConvertStringToByteArray(
-            string stringRepresentation)
+        private static IReadOnlyDictionary<string, TValue> GetSerializedPropertyBagToUseOrThrow<TValue>(
+            IReadOnlyDictionary<string, TValue> serializedPropertyBag)
         {
-            var result = SerializationEncoding.GetBytes(stringRepresentation);
+            if (serializedPropertyBag.Count != serializedPropertyBag.Keys.Distinct(StringComparer.OrdinalIgnoreCase).Count())
+            {
+                throw new SerializationException(Invariant($"{nameof(serializedPropertyBag)} contains two or more properties with the same case-insensitive name."));
+            }
+
+            var result = serializedPropertyBag.ToDictionary(_ => _.Key, _ => _.Value, StringComparer.OrdinalIgnoreCase);
 
             return result;
         }
 
-        private static string ConvertByteArrayToString(
-            byte[] stringRepresentationAsBytes)
-        {
-            var result = SerializationEncoding.GetString(stringRepresentationAsBytes);
-
-            return result;
-        }
-
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = ObcSuppressBecause.CA1502_AvoidExcessiveComplexity_DisagreeWithAssessment)]
-        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = ObcSuppressBecause.CA1502_AvoidExcessiveComplexity_DisagreeWithAssessment)]
-        private object ConstructAndFillProperties(
+        private void InternalPropertyBagThrowOnUnregisteredTypeIfAppropriate(
             Type objectType,
-            IReadOnlyDictionary<string, string> properties)
+            SerializationDirection serializationDirection,
+            object objectToSerialize)
         {
-            var specificType = objectType;
+            this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(objectType, serializationDirection, objectToSerialize);
+        }
 
-            if (properties.ContainsKey(ReservedKeyForTypeVersionlessAssemblyQualifiedName))
+        private Type GetTypeToDeserializeIntoOrThrow<TValue>(
+            Type type,
+            IReadOnlyDictionary<string, TValue> serializedPropertyBag)
+        {
+            var result = type;
+
+            // serializePropertyBag will have case-insensitive keys because of ValidateSerializedPropertyBagAndMakeCaseInsensitiveKeys
+            if (serializedPropertyBag.ContainsKey(ReservedKeyForTypeVersionlessAssemblyQualifiedName))
             {
-                var specifiedTypeVersionlessAssemblyQualifiedName = properties[ReservedKeyForTypeVersionlessAssemblyQualifiedName];
+                var assemblyQualifiedNameObject = serializedPropertyBag[ReservedKeyForTypeVersionlessAssemblyQualifiedName];
 
-                specificType = specifiedTypeVersionlessAssemblyQualifiedName.ResolveFromLoadedTypes();
-            }
-
-            var propertyNameToObjectMap = new Dictionary<string, object>();
-
-            foreach (var property in properties)
-            {
-                if (property.Key == ReservedKeyForTypeVersionlessAssemblyQualifiedName || property.Key == ReservedKeyForToString)
+                if (!(assemblyQualifiedNameObject is string assemblyQualifiedName))
                 {
-                    // reserved and not assigned to properties
-                    continue;
+                    throw new SerializationException(Invariant($"The property bag specifies the type to deserialize into via the '{ReservedKeyForTypeVersionlessAssemblyQualifiedName}' property (version-less assembly qualified name), but the value of that property is of type '{assemblyQualifiedNameObject.GetType().ToStringReadable()}' instead of '{typeof(string).ToStringReadable()}'."));
                 }
 
-                var propertyInfo = specificType.GetPropertyFiltered(property.Key, MemberRelationships.DeclaredOrInherited, MemberOwners.Instance, MemberAccessModifiers.Public);
+                result = assemblyQualifiedName.ToTypeRepresentationFromAssemblyQualifiedName().ResolveFromLoadedTypes();
 
-                var propertyType = propertyInfo.PropertyType;
+                this.SerializationConfiguration.ThrowOnUnregisteredTypeIfAppropriate(result, SerializationDirection.Deserialize, null);
 
-                var targetValue = property.Value == null ? null : this.MakeObjectFromString(property.Value, propertyType);
-
-                propertyNameToObjectMap.Add(property.Key, targetValue);
-            }
-
-            var propertyNamesUpper = propertyNameToObjectMap.Keys.Select(_ => _.ToUpperInvariant()).ToList();
-
-            var discoveredConstructorToUse = specificType
-                .GetConstructors()
-                .Select(c => new { Parameters = c.GetParameters(), Constructor = c })
-                .Where(t => t.Parameters.Select(p => p.Name.ToUpperInvariant()).Intersect(propertyNamesUpper).Count() == t.Parameters.Length)
-                .OrderByDescending(t => t.Parameters.Length)
-                .FirstOrDefault()?.Constructor;
-
-            if (discoveredConstructorToUse == null)
-            {
-                throw new SerializationException(Invariant($"Could not find a parameterless constructor or a constructor whose parameter names matched the properties provided; type: {specificType}, properties: {string.Join(",", properties.Keys)}."));
-            }
-
-            var propertyNameUpperToObjectsMap = propertyNameToObjectMap.ToDictionary(k => k.Key.ToUpperInvariant(), v => v.Value);
-
-            var parameterNameUpperAndObjects = discoveredConstructorToUse.GetParameters().Select(
-                _ => new { NameUpper = _.Name.ToUpperInvariant(), Value = propertyNameUpperToObjectsMap[_.Name.ToUpperInvariant()] }).ToList();
-
-            var parameterObjects = parameterNameUpperAndObjects.Select(_ => _.Value).ToArray();
-
-            var result = discoveredConstructorToUse.Invoke(parameterObjects);
-
-            foreach (var nameToPropertyInfoAndObject in propertyNameToObjectMap)
-            {
-                var propertyInfo = specificType.GetPropertyFiltered(nameToPropertyInfoAndObject.Key, MemberRelationships.DeclaredOrInherited, MemberOwners.Instance, MemberAccessModifiers.All, throwIfNotFound: false);
-
-                if ((propertyInfo != null) && propertyInfo.CanWrite)
+                if (!type.IsAssignableFrom(result))
                 {
-                    propertyInfo.SetValue(result, nameToPropertyInfoAndObject.Value);
+                    throw new SerializationException(Invariant($"The property bag specifies the type to deserialize into via the '{ReservedKeyForTypeVersionlessAssemblyQualifiedName}' property (version-less assembly qualified name) as '{result.ToStringReadable()}', but that type is not assignable to '{type.ToStringReadable()}', which is the type specified in the deserialize call."));
                 }
+            }
+
+            // Unlike serialization, where we use the runtime type (object.GetType()), in deserialization we are told
+            // what type to deserialize into and so we have to validate that that's a type we can construct.
+            var isValidType = result.IsClosedNonAnonymousClassType() && (!result.IsAbstract);
+
+            if (!isValidType)
+            {
+                var exceptionMessageSuffix = result == type
+                    ? Invariant($"The type specified in the deserialize call is '{result.ToStringReadable()}', which is not a closed non-anonymous concrete class.")
+                    : Invariant($"The property bag specifies the type to deserialize into via the '{ReservedKeyForTypeVersionlessAssemblyQualifiedName}' property (versionless assembly qualified name) as '{result.ToStringReadable()}', which is not a closed non-anonymous concrete class.");
+
+                throw new SerializationException(Invariant($"Can only deserialize into a closed non-anonymous concrete class.  {exceptionMessageSuffix}"));
             }
 
             return result;
-        }
-
-        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = ObcSuppressBecause.CA1502_AvoidExcessiveComplexity_DisagreeWithAssessment)]
-        private object MakeObjectFromString(
-            string serializedString,
-            Type type)
-        {
-            if (serializedString == null)
-            {
-                throw new ArgumentNullException(nameof(serializedString));
-            }
-
-            if (serializedString == SerializationConfigurationBase.NullSerializedStringValue)
-            {
-                return null;
-            }
-
-            if (this.configuredTypeToSerializerMap.ContainsKey(type))
-            {
-                var serializer = this.configuredTypeToSerializerMap[type];
-
-                var result = serializer.Deserialize(serializedString, type);
-
-                return result;
-            }
-            else if (type.IsEnum)
-            {
-                var result = Enum.Parse(type, serializedString);
-
-                return result;
-            }
-            else if (type.IsArray)
-            {
-                var arrayItemType = type.GetElementType() ?? throw new ArgumentException(Invariant($"Found array type that cannot extract element type: {type}"));
-
-                var asList = (IList)this.MakeObjectFromString(serializedString, typeof(List<>).MakeGenericType(arrayItemType));
-
-                var asArrayList = new ArrayList(asList);
-
-                var result = asArrayList.ToArray(arrayItemType);
-
-                return result;
-            }
-            else if (type == typeof(DateTime) || type == typeof(DateTime?))
-            {
-                var result = ObcDateTimeStringSerializer.DeserializeToDateTime(serializedString);
-
-                return result;
-            }
-            else if (type != typeof(string) && typeof(IEnumerable).IsAssignableFrom(type))
-            {
-                var itemType = type.GenericTypeArguments.SingleOrDefault() ?? throw new ArgumentException(Invariant($"Found {typeof(IEnumerable)} type that cannot extract element type: {type}"));
-
-                var stringValues = serializedString.FromCsv(this.dictionaryStringSerializer.NullValueEncoding);
-
-                var result = (IList)typeof(List<>).MakeGenericType(itemType).Construct();
-
-                foreach (var stringValue in stringValues)
-                {
-                    var itemValue = stringValue == null
-                        ? null
-                        : this.MakeObjectFromString(stringValue, itemType);
-
-                    result.Add(itemValue);
-                }
-
-                return result;
-            }
-            else
-            {
-                var typeToSearchForParse = type;
-
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                {
-                    typeToSearchForParse = type.GenericTypeArguments.Single();
-                }
-
-                var parseMethod = typeToSearchForParse
-                    .GetMethodsFiltered(MemberRelationships.DeclaredOrInherited, MemberOwners.All, MemberAccessModifiers.Public)
-                    .SingleOrDefault(_ =>
-                    {
-                        var parameters = _.GetParameters();
-
-                        return (_.Name == "Parse") && (parameters.Length == 1) && (parameters.Single().ParameterType == typeof(string));
-                    });
-
-                var result = parseMethod == null
-                    ? serializedString
-                    : parseMethod.Invoke(null, new object[] { serializedString });
-
-                return result;
-            }
-        }
-
-        private string MakeStringFromPropertyValue(
-            object propertyValue)
-        {
-            if (propertyValue == null)
-            {
-                throw new ArgumentNullException(nameof(propertyValue));
-            }
-
-            var propertyType = propertyValue.GetType();
-
-            if (this.configuredTypeToSerializerMap.ContainsKey(propertyType))
-            {
-                var serializer = this.configuredTypeToSerializerMap[propertyType];
-
-                var result = serializer.SerializeToString(propertyValue);
-
-                return result;
-            }
-            else if (propertyValue is DateTime propertyValueAsDateTime)
-            {
-                var result = ObcDateTimeStringSerializer.SerializeToString(propertyValueAsDateTime);
-
-                return result;
-            }
-            else
-            {
-                string result;
-
-                if (propertyType != typeof(string) && propertyValue is IEnumerable propertyValueAsEnumerable)
-                {
-                    var values = new List<string>();
-
-                    foreach (var item in propertyValueAsEnumerable)
-                    {
-                        var serializedItem = item == null
-                            ? null
-                            : this.MakeStringFromPropertyValue(item);
-
-                        values.Add(serializedItem);
-                    }
-
-                    result = values.ToCsv(this.dictionaryStringSerializer.NullValueEncoding);
-                }
-                else if (propertyValue is ISerializeToString propertyValueAsSerializeToString)
-                {
-                    result = propertyValueAsSerializeToString.SerializeToString();
-                }
-                else
-                {
-                    result = propertyValue.ToString();
-                }
-
-                return result;
-            }
         }
     }
 }

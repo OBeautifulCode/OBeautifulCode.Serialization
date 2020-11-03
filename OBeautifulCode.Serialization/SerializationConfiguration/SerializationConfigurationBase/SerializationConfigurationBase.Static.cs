@@ -22,11 +22,6 @@ namespace OBeautifulCode.Serialization
 
     public abstract partial class SerializationConfigurationBase
     {
-        /// <summary>
-        /// Gets the string representation of null.
-        /// </summary>
-        public const string NullSerializedStringValue = "null";
-
         private static readonly Dictionary<Assembly, HashSet<Assembly>> AssemblyToRecursivelyReferencedAssemblyMap = new Dictionary<Assembly, HashSet<Assembly>>();
 
         private static readonly HashSet<Assembly> AssembliesThatHaveBeenProcessedForRelatedTypes = new HashSet<Assembly>();
