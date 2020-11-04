@@ -29,8 +29,8 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
         /// <summary>
         /// Gets a value indicating whether to include the object's versionless assembly qualified name as a property when serializing into a property bag.
-        /// For named serializers, the property is named <see cref="ObcPropertyBagSerializer.ReservedKeyForTypeVersionlessAssemblyQualifiedName"/>.
-        /// For ordinal serializers, the property is placed at index -1.
+        /// For named serializers, the property is named <see cref="ObcPropertyBagSerializer.ReservedKeyForTypeVersionlessAssemblyQualifiedNameInNamedPropertyBag"/>.
+        /// For ordinal serializers, the property's index is <see cref="ObcPropertyBagSerializer.ReservedKeyForTypeVersionlessAssemblyQualifiedNameInOrdinalPropertyBag"/>.
         /// </summary>
         public virtual bool IncludeVersionlessAssemblyQualifiedNameAsProperty => false;
 

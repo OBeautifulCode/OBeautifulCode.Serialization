@@ -37,9 +37,11 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
         public static void RoundTrip___Supported_scenarios___Works()
         {
             // Arrange
-            var serializationConfigurationType = typeof(PropertyBagConfigForInheritTypeBase);
+            var serializationConfigurationType1 = typeof(PropertyBagConfigIncludingAssemblyQualifiedNameForInheritTypeBase);
+            var serializationConfigurationType2 = typeof(PropertyBagConfigExcludingAssemblyQualifiedNameForInheritTypeBase);
 
-            var serializer = new ObcPropertyBagSerializer(serializationConfigurationType.ToPropertyBagSerializationConfigurationType());
+            var serializer1 = new ObcPropertyBagSerializer(serializationConfigurationType1.ToPropertyBagSerializationConfigurationType());
+            var serializer2 = new ObcPropertyBagSerializer(serializationConfigurationType2.ToPropertyBagSerializationConfigurationType());
 
             var expected = new ComplicatedObject
             {
@@ -105,31 +107,93 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
                 deserialized.StringCollectionWithNulls.Should().Equal(expected.StringCollectionWithNulls);
             }
 
-            var serializedPropertyBag = serializer.SerializeToNamedPropertyBagWithStringValues(expected);
+            var serializedPropertyBag1a = serializer1.SerializeToNamedPropertyBagWithStringValues(expected);
+            var serializedPropertyBag1b = serializer1.SerializeToNamedPropertyBagWithObjectValues(expected);
+            var serializedPropertyBag1c = serializer1.SerializeToOrdinalPropertyBagWithStringValues(expected);
+            var serializedPropertyBag1d = serializer1.SerializeToOrdinalPropertyBagWithObjectValues(expected);
+
+            var serializedPropertyBag2a = serializer2.SerializeToNamedPropertyBagWithStringValues(expected);
+            var serializedPropertyBag2b = serializer2.SerializeToNamedPropertyBagWithObjectValues(expected);
+            var serializedPropertyBag2c = serializer2.SerializeToOrdinalPropertyBagWithStringValues(expected);
+            var serializedPropertyBag2d = serializer2.SerializeToOrdinalPropertyBagWithObjectValues(expected);
 
             // Act, Assert
-            expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(ThrowIfObjectsDiffer, serializationConfigurationType);
+            expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(ThrowIfObjectsDiffer, serializationConfigurationType1);
+            expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(ThrowIfObjectsDiffer, serializationConfigurationType2);
 
-            var actualPropertyBag = serializer.Deserialize<ComplicatedObject>(serializedPropertyBag);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag);
+            var actualPropertyBag1a = serializer1.Deserialize<ComplicatedObject>(serializedPropertyBag1a);
+            var actualPropertyBag1b = serializer1.Deserialize<ComplicatedObject>(serializedPropertyBag1b);
+            var actualPropertyBag1c = serializer1.Deserialize<ComplicatedObject>(serializedPropertyBag1c);
+            var actualPropertyBag1d = serializer1.Deserialize<ComplicatedObject>(serializedPropertyBag1d);
+
+            var actualPropertyBag2a = serializer1.Deserialize<ComplicatedObject>(serializedPropertyBag2a);
+            var actualPropertyBag2b = serializer1.Deserialize<ComplicatedObject>(serializedPropertyBag2b);
+            var actualPropertyBag2c = serializer1.Deserialize<ComplicatedObject>(serializedPropertyBag2c);
+            var actualPropertyBag2d = serializer1.Deserialize<ComplicatedObject>(serializedPropertyBag2d);
+
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1a);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1b);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1c);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1d);
+
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2a);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2b);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2c);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2d);
         }
 
         [Fact]
         public static void Deserializing_constructors___When_properties_exist___Works()
         {
             // Arrange
-            var expected = new ConstructorWithProperties(A.Dummy<string>(), A.Dummy<string>(), A.Dummy<string>());
+            var serializationConfigurationType1 = typeof(IncludeVersionlessAssemblyQualifiedNamePropertyBagSerializationConfiguration<TypesToRegisterPropertyBagSerializationConfiguration<ConstructorWithProperties>>);
+            var serializationConfigurationType2 = typeof(ExcludeVersionlessAssemblyQualifiedNamePropertyBagSerializationConfiguration<TypesToRegisterPropertyBagSerializationConfiguration<ConstructorWithProperties>>);
+
+            var serializer1 = new ObcPropertyBagSerializer(serializationConfigurationType1.ToPropertyBagSerializationConfigurationType());
+            var serializer2 = new ObcPropertyBagSerializer(serializationConfigurationType2.ToPropertyBagSerializationConfigurationType());
+
+            var expected = new ConstructorWithProperties(A.Dummy<string>(), A.Dummy<int>(), A.Dummy<DateTime>());
+
+            var serializedPropertyBag1a = serializer1.SerializeToNamedPropertyBagWithStringValues(expected);
+            var serializedPropertyBag1b = serializer1.SerializeToNamedPropertyBagWithObjectValues(expected);
+            var serializedPropertyBag1c = serializer1.SerializeToOrdinalPropertyBagWithStringValues(expected);
+            var serializedPropertyBag1d = serializer1.SerializeToOrdinalPropertyBagWithObjectValues(expected);
+
+            var serializedPropertyBag2a = serializer2.SerializeToNamedPropertyBagWithStringValues(expected);
+            var serializedPropertyBag2b = serializer2.SerializeToNamedPropertyBagWithObjectValues(expected);
+            var serializedPropertyBag2c = serializer2.SerializeToOrdinalPropertyBagWithStringValues(expected);
+            var serializedPropertyBag2d = serializer2.SerializeToOrdinalPropertyBagWithObjectValues(expected);
 
             // Act
             void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ConstructorWithProperties deserialized)
             {
-                deserialized.Property1.Should().Be(expected.Property1);
-                deserialized.Property2.Should().Be(expected.Property2);
-                deserialized.Property3.Should().Be(expected.Property3);
+                deserialized.Property1.AsTest().Must().BeEqualTo(expected.Property1);
+                deserialized.Property2.AsTest().Must().BeEqualTo(expected.Property2);
+                deserialized.Property3.AsTest().Must().BeEqualTo(expected.Property3);
             }
 
             // Act, Assert
             expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(ThrowIfObjectsDiffer);
+
+            var actualPropertyBag1a = serializer1.Deserialize<ConstructorWithProperties>(serializedPropertyBag1a);
+            var actualPropertyBag1b = serializer1.Deserialize<ConstructorWithProperties>(serializedPropertyBag1b);
+            var actualPropertyBag1c = serializer1.Deserialize<ConstructorWithProperties>(serializedPropertyBag1c);
+            var actualPropertyBag1d = serializer1.Deserialize<ConstructorWithProperties>(serializedPropertyBag1d);
+
+            var actualPropertyBag2a = serializer1.Deserialize<ConstructorWithProperties>(serializedPropertyBag2a);
+            var actualPropertyBag2b = serializer1.Deserialize<ConstructorWithProperties>(serializedPropertyBag2b);
+            var actualPropertyBag2c = serializer1.Deserialize<ConstructorWithProperties>(serializedPropertyBag2c);
+            var actualPropertyBag2d = serializer1.Deserialize<ConstructorWithProperties>(serializedPropertyBag2d);
+
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1a);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1b);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1c);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1d);
+
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2a);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2b);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2c);
+            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2d);
         }
 
         [Fact]
@@ -159,8 +223,8 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             var actual2 = Record.Exception(() => expected.RoundtripSerializeViaPropertyBagWithCallbackVerification(null, formats: new[] { SerializationFormat.Binary }));
 
             // Assert
-            actual1.Message.Should().Be("Could not deserialize into 'ObcPropertyBagSerializerTest.ConstructorWithoutProperties'; none of its public constructors have parameters where all parameters have a matching property (public, inherited or declared, writable, instance) by name and type.");
-            actual2.Message.Should().Be("Could not deserialize into 'ObcPropertyBagSerializerTest.ConstructorWithoutProperties'; none of its public constructors have parameters where all parameters have a matching property (public, inherited or declared, writable, instance) by name and type.");
+            actual1.Message.Should().Be("Could not serialize/deserialize a 'ObcPropertyBagSerializerTest.ConstructorWithoutProperties'; none of its public constructors have parameters where all parameters have a matching property (public, inherited or declared, writable, instance) by name and type.");
+            actual2.Message.Should().Be("Could not serialize/deserialize a 'ObcPropertyBagSerializerTest.ConstructorWithoutProperties'; none of its public constructors have parameters where all parameters have a matching property (public, inherited or declared, writable, instance) by name and type.");
         }
 
         [Fact]
@@ -183,7 +247,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
         [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class ConstructorWithProperties
         {
-            public ConstructorWithProperties(string property1, string property2, string property3)
+            public ConstructorWithProperties(string property1, int property2, DateTime property3)
             {
                 this.Property1 = property1;
                 this.Property2 = property2;
@@ -192,9 +256,9 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
 
             public string Property1 { get; private set; }
 
-            public string Property2 { get; private set; }
+            public int Property2 { get; private set; }
 
-            public string Property3 { get; private set; }
+            public DateTime Property3 { get; private set; }
         }
 
         [Serializable]
@@ -237,7 +301,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
 
         [Serializable]
         [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
-        public class PropertyBagConfigForInheritTypeBase : PropertyBagSerializationConfigurationBase
+        public class PropertyBagConfigIncludingAssemblyQualifiedNameForInheritTypeBase : PropertyBagSerializationConfigurationBase
         {
             protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => new TypeToRegisterForPropertyBag[]
             {
@@ -245,6 +309,22 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
                 new TypeToRegisterForPropertyBag(typeof(InheritTypeBase), MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new InheritTestSerializer()),
                 new TypeToRegisterForPropertyBag(typeof(InheritTypeDerive), MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new InheritTestSerializer()),
             };
+
+            public override bool IncludeVersionlessAssemblyQualifiedNameAsProperty => true;
+        }
+
+        [Serializable]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
+        public class PropertyBagConfigExcludingAssemblyQualifiedNameForInheritTypeBase : PropertyBagSerializationConfigurationBase
+        {
+            protected override IReadOnlyCollection<TypeToRegisterForPropertyBag> TypesToRegisterForPropertyBag => new TypeToRegisterForPropertyBag[]
+            {
+                typeof(ComplicatedObject).ToTypeToRegisterForPropertyBag(),
+                new TypeToRegisterForPropertyBag(typeof(InheritTypeBase), MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new InheritTestSerializer()),
+                new TypeToRegisterForPropertyBag(typeof(InheritTypeDerive), MemberTypesToInclude.None, RelatedTypesToInclude.None, () => new InheritTestSerializer()),
+            };
+
+            public override bool IncludeVersionlessAssemblyQualifiedNameAsProperty => false;
         }
 
         [Serializable]

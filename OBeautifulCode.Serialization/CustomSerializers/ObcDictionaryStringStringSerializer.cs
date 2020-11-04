@@ -220,7 +220,7 @@ namespace OBeautifulCode.Serialization
             {
                 result = null;
             }
-            else if (serializedString == string.Empty)
+            else if (string.IsNullOrEmpty(serializedString))
             {
                 result = new Dictionary<string, string>();
             }
