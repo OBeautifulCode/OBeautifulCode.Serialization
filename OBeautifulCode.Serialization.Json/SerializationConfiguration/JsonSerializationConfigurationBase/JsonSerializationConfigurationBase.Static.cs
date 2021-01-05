@@ -50,6 +50,21 @@ namespace OBeautifulCode.Serialization.Json
                     }
                 },
                 {
+                    JsonFormattingKind.Concise,
+                    direction =>
+                    {
+                        switch (direction)
+                        {
+                            case SerializationDirection.Serialize:
+                                return ConciseSerializingSettingsBuilder;
+                            case SerializationDirection.Deserialize:
+                                return ConciseDeserializingSettingsBuilder;
+                            default:
+                                throw new NotSupportedException(Invariant($"Value of {nameof(direction)} - {direction} is not currently supported."));
+                        }
+                    }
+                },
+                {
                     JsonFormattingKind.Minimal,
                     direction =>
                     {
@@ -77,16 +92,7 @@ namespace OBeautifulCode.Serialization.Json
                     FloatParseHandling = FloatParseHandling.Decimal,
                 };
 
-        private static readonly JsonSerializerSettingsBuilder DefaultSerializingSettingsBuilder =
-            getRegisteredTypesToRegistrationDetailsMapFunc =>
-                new JsonSerializerSettings
-                {
-                    Formatting = Formatting.Indented,
-                    NullValueHandling = NullValueHandling.Include,
-                    ContractResolver = new CamelStrictConstructorContractResolver(getRegisteredTypesToRegistrationDetailsMapFunc),
-                    DateParseHandling = DateParseHandling.None,
-                    FloatParseHandling = FloatParseHandling.Decimal,
-                };
+        private static readonly JsonSerializerSettingsBuilder DefaultSerializingSettingsBuilder = DefaultDeserializingSettingsBuilder;
 
         private static readonly JsonSerializerSettingsBuilder CompactDeserializingSettingsBuilder =
             getRegisteredTypesToRegistrationDetailsMapFunc =>
@@ -99,16 +105,11 @@ namespace OBeautifulCode.Serialization.Json
                     FloatParseHandling = FloatParseHandling.Decimal,
                 };
 
-        private static readonly JsonSerializerSettingsBuilder CompactSerializingSettingsBuilder =
-            getRegisteredTypesToRegistrationDetailsMapFunc =>
-                new JsonSerializerSettings
-                {
-                    Formatting = Formatting.None,
-                    NullValueHandling = NullValueHandling.Include,
-                    ContractResolver = new CamelStrictConstructorContractResolver(getRegisteredTypesToRegistrationDetailsMapFunc),
-                    DateParseHandling = DateParseHandling.None,
-                    FloatParseHandling = FloatParseHandling.Decimal,
-                };
+        private static readonly JsonSerializerSettingsBuilder CompactSerializingSettingsBuilder = CompactDeserializingSettingsBuilder;
+
+        private static readonly JsonSerializerSettingsBuilder ConciseDeserializingSettingsBuilder = CompactDeserializingSettingsBuilder;
+
+        private static readonly JsonSerializerSettingsBuilder ConciseSerializingSettingsBuilder = CompactDeserializingSettingsBuilder;
 
         private static readonly JsonSerializerSettingsBuilder MinimalDeserializingSettingsBuilder =
             getRegisteredTypesToRegistrationDetailsMapFunc =>
@@ -121,16 +122,7 @@ namespace OBeautifulCode.Serialization.Json
                     FloatParseHandling = FloatParseHandling.Decimal,
                 };
 
-        private static readonly JsonSerializerSettingsBuilder MinimalSerializingSettingsBuilder =
-            getRegisteredTypesToRegistrationDetailsMapFunc =>
-                new JsonSerializerSettings
-                {
-                    Formatting = Formatting.None,
-                    NullValueHandling = NullValueHandling.Ignore,
-                    ContractResolver = new CamelStrictConstructorContractResolver(getRegisteredTypesToRegistrationDetailsMapFunc),
-                    DateParseHandling = DateParseHandling.None,
-                    FloatParseHandling = FloatParseHandling.Decimal,
-                };
+        private static readonly JsonSerializerSettingsBuilder MinimalSerializingSettingsBuilder = MinimalDeserializingSettingsBuilder;
 
         private static bool ParticipatesInHierarchy(
             Type type,

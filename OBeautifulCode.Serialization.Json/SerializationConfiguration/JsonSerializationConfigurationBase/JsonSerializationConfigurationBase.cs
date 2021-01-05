@@ -140,7 +140,7 @@ namespace OBeautifulCode.Serialization.Json
                     {
                         new StringEnumConverter { CamelCaseText = true },
                     })
-                .Concat(formattingKind == JsonFormattingKind.Minimal
+                .Concat(((formattingKind == JsonFormattingKind.Minimal) || (formattingKind == JsonFormattingKind.Concise))
                     ? new JsonConverter[0]
                     : new[] { new InheritedTypeWriterJsonConverter(() => this.hierarchyParticipatingTypes) })
                 .Concat(

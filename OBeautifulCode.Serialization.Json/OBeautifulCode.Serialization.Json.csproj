@@ -98,6 +98,7 @@
     <Compile Include="Enums\CanConvertTypeMatchStrategy.cs" />
     <Compile Include="Converters\StringSerializerBackedJsonConverter{T}.cs" />
     <Compile Include="Properties\ProjectInfo.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\ConciseFormatJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\DefaultFormatJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\MinimalFormatJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\CompactFormatJsonSerializationConfiguration{T}.cs" />

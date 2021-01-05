@@ -134,11 +134,6 @@ namespace OBeautifulCode.Serialization.Json
 
             var result = JsonConvert.SerializeObject(objectToSerialize, jsonSerializerSettings);
 
-            if (this.jsonSerializationConfiguration.JsonFormattingKind == JsonFormattingKind.Compact)
-            {
-                result = result.Replace(Environment.NewLine, string.Empty);
-            }
-
             return result;
         }
 
