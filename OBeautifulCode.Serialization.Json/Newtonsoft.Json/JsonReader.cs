@@ -29,9 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Globalization;
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-using System.Numerics;
-#endif
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json.Utilities;
 #if NET20
@@ -624,17 +621,7 @@ namespace Newtonsoft.Json
                 case JsonToken.Float:
                     if (!(Value is double))
                     {
-                        double d;
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-                        if (Value is BigInteger)
-                        {
-                            d = (double)(BigInteger)Value;
-                        }
-                        else
-#endif
-                        {
-                            d = Convert.ToDouble(Value, CultureInfo.InvariantCulture);
-                        }
+                        double d = Convert.ToDouble(Value, CultureInfo.InvariantCulture);
 
                         SetToken(JsonToken.Float, d, false);
                     }
@@ -684,17 +671,7 @@ namespace Newtonsoft.Json
                     return null;
                 case JsonToken.Integer:
                 case JsonToken.Float:
-                    bool b;
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-                    if (Value is BigInteger)
-                    {
-                        b = (BigInteger)Value != 0;
-                    }
-                    else
-#endif
-                    {
-                        b = Convert.ToBoolean(Value, CultureInfo.InvariantCulture);
-                    }
+                    bool b = Convert.ToBoolean(Value, CultureInfo.InvariantCulture);
 
                     SetToken(JsonToken.Boolean, b, false);
 

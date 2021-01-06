@@ -35,9 +35,6 @@ using System.Dynamic;
 #endif
 using System.Diagnostics;
 using System.Globalization;
-#if !(PORTABLE || PORTABLE40 || NET35 || NET20)
-using System.Numerics;
-#endif
 using System.Reflection;
 using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
@@ -969,13 +966,6 @@ namespace Newtonsoft.Json.Serialization
                                 return Enum.ToObject(contract.NonNullableUnderlyingType, value);
                             }
                         }
-
-#if !(PORTABLE || PORTABLE40 || NET35 || NET20)
-                        if (value is BigInteger)
-                        {
-                            return ConvertUtils.FromBigInteger((BigInteger)value, contract.NonNullableUnderlyingType);
-                        }
-#endif
 
                         // this won't work when converting to a custom IConvertible
                         return Convert.ChangeType(value, contract.NonNullableUnderlyingType, culture);

@@ -29,9 +29,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-using System.Numerics;
-#endif
 using System.Text;
 using Newtonsoft.Json.Utilities;
 using Newtonsoft.Json.Linq;
@@ -234,17 +231,7 @@ namespace Newtonsoft.Json.Bson
         /// <param name="value">The <see cref="Object"/> value to write.</param>
         public override void WriteValue(object value)
         {
-#if !(NET20 || NET35 || PORTABLE || PORTABLE40)
-            if (value is BigInteger)
-            {
-                InternalWriteValue(JsonToken.Integer);
-                AddToken(new BsonBinary(((BigInteger)value).ToByteArray(), BsonBinaryType.Binary));
-            }
-            else
-#endif
-            {
-                base.WriteValue(value);
-            }
+            base.WriteValue(value);
         }
 
         /// <summary>

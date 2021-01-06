@@ -60,23 +60,6 @@ namespace Newtonsoft.Json.Utilities
 #endif
         }
 
-#if !(PORTABLE40 || PORTABLE)
-        public static XmlDateTimeSerializationMode ToSerializationMode(DateTimeKind kind)
-        {
-            switch (kind)
-            {
-                case DateTimeKind.Local:
-                    return XmlDateTimeSerializationMode.Local;
-                case DateTimeKind.Unspecified:
-                    return XmlDateTimeSerializationMode.Unspecified;
-                case DateTimeKind.Utc:
-                    return XmlDateTimeSerializationMode.Utc;
-                default:
-                    throw MiscellaneousUtils.CreateArgumentOutOfRangeException("kind", kind, "Unexpected DateTimeKind value.");
-            }
-        }
-#endif
-
         internal static DateTime EnsureDateTime(DateTime value, DateTimeZoneHandling timeZone)
         {
             switch (timeZone)

@@ -32,9 +32,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.IO;
 using System.Globalization;
-#if !(PORTABLE || PORTABLE40 || NET35 || NET20)
-using System.Numerics;
-#endif
 using Newtonsoft.Json.Utilities;
 
 namespace Newtonsoft.Json
@@ -748,17 +745,7 @@ namespace Newtonsoft.Json
                             case '8':
                             case '9':
                                 ParseNumber(ReadType.Read);
-                                bool b;
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-                                if (Value is BigInteger)
-                                {
-                                    b = (BigInteger)Value != 0;
-                                }
-                                else
-#endif
-                                {
-                                    b = Convert.ToBoolean(Value, CultureInfo.InvariantCulture);
-                                }
+                                bool b = Convert.ToBoolean(Value, CultureInfo.InvariantCulture);
                                 SetToken(JsonToken.Boolean, b, false);
                                 return b;
                             case 't':
@@ -2024,19 +2011,7 @@ namespace Newtonsoft.Json
                     }
                     else if (parseResult == ParseResult.Overflow)
                     {
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-                        string number = _stringReference.ToString();
-
-                        if (number.Length > MaximumJavascriptIntegerCharacterLength)
-                        {
-                            throw JsonReaderException.Create(this, "JSON integer {0} is too large to parse.".FormatWith(CultureInfo.InvariantCulture, _stringReference.ToString()));
-                        }
-
-                        numberValue = BigIntegerParse(number, CultureInfo.InvariantCulture);
-                        numberType = JsonToken.Integer;
-#else
                         throw JsonReaderException.Create(this, "JSON integer {0} is too large or small for an Int64.".FormatWith(CultureInfo.InvariantCulture, _stringReference.ToString()));
-#endif
                     }
                     else
                     {
@@ -2077,18 +2052,6 @@ namespace Newtonsoft.Json
             // index has already been updated
             SetToken(numberType, numberValue, false);
         }
-
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-        // By using the BigInteger type in a separate method,
-        // the runtime can execute the ParseNumber even if 
-        // the System.Numerics.BigInteger.Parse method is
-        // missing, which happens in some versions of Mono
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private static object BigIntegerParse(string number, CultureInfo culture)
-        {
-            return System.Numerics.BigInteger.Parse(number, culture);
-        }
-#endif
 
         private void ParseComment(bool setToken)
         {

@@ -27,9 +27,6 @@
 
 using System;
 using System.Globalization;
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-using System.Numerics;
-#endif
 using Newtonsoft.Json.Utilities;
 
 namespace Newtonsoft.Json.Linq
@@ -223,17 +220,7 @@ namespace Newtonsoft.Json.Linq
         /// <param name="value">The <see cref="Object"/> value to write.</param>
         public override void WriteValue(object value)
         {
-#if !(NET20 || NET35 || PORTABLE || PORTABLE40)
-            if (value is BigInteger)
-            {
-                InternalWriteValue(JsonToken.Integer);
-                AddValue(value, JsonToken.Integer);
-            }
-            else
-#endif
-            {
-                base.WriteValue(value);
-            }
+            base.WriteValue(value);
         }
 
         /// <summary>

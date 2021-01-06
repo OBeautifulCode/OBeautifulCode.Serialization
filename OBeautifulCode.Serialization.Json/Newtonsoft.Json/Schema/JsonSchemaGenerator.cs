@@ -489,9 +489,6 @@ namespace Newtonsoft.Json.Schema
                 case PrimitiveTypeCode.UInt32:
                 case PrimitiveTypeCode.Int64:
                 case PrimitiveTypeCode.UInt64:
-#if !(PORTABLE || NET35 || NET20)
-                case PrimitiveTypeCode.BigInteger:
-#endif
                     return schemaType | JsonSchemaType.Integer;
                 case PrimitiveTypeCode.Single:
                 case PrimitiveTypeCode.Double:

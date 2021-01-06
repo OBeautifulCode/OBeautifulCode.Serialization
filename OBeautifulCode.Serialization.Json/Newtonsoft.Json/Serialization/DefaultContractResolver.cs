@@ -115,13 +115,8 @@ namespace Newtonsoft.Json.Serialization
 #if !(NET35 || NET20 || PORTABLE40)
             new ExpandoObjectConverter(),
 #endif
-#if !(PORTABLE40)
-            new XmlNodeConverter(),
-#endif
 #if !(DOTNET || PORTABLE40 || PORTABLE)
             new BinaryConverter(),
-            new DataSetConverter(),
-            new DataTableConverter(),
 #endif
 #if !(NET35 || NET20)
             new DiscriminatedUnionConverter(),

@@ -29,19 +29,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.ComponentModel;
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-using System.Numerics;
-#endif
 using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Serialization;
 using System.Reflection;
 #if NET20
 using Newtonsoft.Json.Utilities.LinqBridge;
-#endif
-#if !(DOTNET || PORTABLE40 || PORTABLE)
-using System.Data.SqlTypes;
-
 #endif
 
 namespace Newtonsoft.Json.Utilities
@@ -147,10 +140,6 @@ namespace Newtonsoft.Json.Utilities
                 { typeof(Guid?), PrimitiveTypeCode.GuidNullable },
                 { typeof(TimeSpan), PrimitiveTypeCode.TimeSpan },
                 { typeof(TimeSpan?), PrimitiveTypeCode.TimeSpanNullable },
-#if !(PORTABLE || PORTABLE40 || NET35 || NET20)
-                { typeof(BigInteger), PrimitiveTypeCode.BigInteger },
-                { typeof(BigInteger?), PrimitiveTypeCode.BigIntegerNullable },
-#endif
                 { typeof(Uri), PrimitiveTypeCode.Uri },
                 { typeof(string), PrimitiveTypeCode.String },
                 { typeof(byte[]), PrimitiveTypeCode.Bytes },
@@ -313,87 +302,6 @@ namespace Newtonsoft.Json.Utilities
             return o => call(null, o);
         }
 
-#if !(NET20 || NET35 || PORTABLE || PORTABLE40)
-        internal static BigInteger ToBigInteger(object value)
-        {
-            if (value is BigInteger)
-            {
-                return (BigInteger)value;
-            }
-            if (value is string)
-            {
-                return BigInteger.Parse((string)value, CultureInfo.InvariantCulture);
-            }
-            if (value is float)
-            {
-                return new BigInteger((float)value);
-            }
-            if (value is double)
-            {
-                return new BigInteger((double)value);
-            }
-            if (value is decimal)
-            {
-                return new BigInteger((decimal)value);
-            }
-            if (value is int)
-            {
-                return new BigInteger((int)value);
-            }
-            if (value is long)
-            {
-                return new BigInteger((long)value);
-            }
-            if (value is uint)
-            {
-                return new BigInteger((uint)value);
-            }
-            if (value is ulong)
-            {
-                return new BigInteger((ulong)value);
-            }
-            if (value is byte[])
-            {
-                return new BigInteger((byte[])value);
-            }
-
-            throw new InvalidCastException("Cannot convert {0} to BigInteger.".FormatWith(CultureInfo.InvariantCulture, value.GetType()));
-        }
-
-        public static object FromBigInteger(BigInteger i, Type targetType)
-        {
-            if (targetType == typeof(decimal))
-            {
-                return (decimal)i;
-            }
-            if (targetType == typeof(double))
-            {
-                return (double)i;
-            }
-            if (targetType == typeof(float))
-            {
-                return (float)i;
-            }
-            if (targetType == typeof(ulong))
-            {
-                return (ulong)i;
-            }
-            if (targetType == typeof(bool))
-            {
-                return i != 0;
-            }
-
-            try
-            {
-                return System.Convert.ChangeType((long)i, targetType, CultureInfo.InvariantCulture);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("Can not convert from BigInteger to {0}.".FormatWith(CultureInfo.InvariantCulture, targetType), ex);
-            }
-        }
-#endif
-
         #region TryConvert
         internal enum ConvertResult
         {
@@ -542,19 +450,6 @@ namespace Newtonsoft.Json.Utilities
                 }
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (targetType == typeof(BigInteger))
-            {
-                value = ToBigInteger(initialValue);
-                return ConvertResult.Success;
-            }
-            if (initialValue is BigInteger)
-            {
-                value = FromBigInteger((BigInteger)initialValue, targetType);
-                return ConvertResult.Success;
-            }
-#endif
-
 #if !(PORTABLE40 || PORTABLE)
             // see if source or target types have a TypeConverter that converts between the two
             TypeConverter toConverter = GetConverter(initialType);
@@ -588,14 +483,6 @@ namespace Newtonsoft.Json.Utilities
                 return ConvertResult.CannotConvertNull;
             }
 #endif
-#if !(DOTNET || PORTABLE40 || PORTABLE)
-            if (initialValue is INullable)
-            {
-                value = EnsureTypeAssignable(ToValue((INullable)initialValue), initialType, targetType);
-                return ConvertResult.Success;
-            }
-#endif
-
             if (targetType.IsInterface() || targetType.IsGenericTypeDefinition() || targetType.IsAbstract())
             {
                 value = null;
@@ -669,38 +556,6 @@ namespace Newtonsoft.Json.Utilities
 
             throw new ArgumentException("Could not cast or convert from {0} to {1}.".FormatWith(CultureInfo.InvariantCulture, (initialType != null) ? initialType.ToString() : "{null}", targetType));
         }
-
-#if !(DOTNET || PORTABLE40 || PORTABLE)
-        public static object ToValue(INullable nullableValue)
-        {
-            if (nullableValue == null)
-            {
-                return null;
-            }
-            else if (nullableValue is SqlInt32)
-            {
-                return ToValue((SqlInt32)nullableValue);
-            }
-            else if (nullableValue is SqlInt64)
-            {
-                return ToValue((SqlInt64)nullableValue);
-            }
-            else if (nullableValue is SqlBoolean)
-            {
-                return ToValue((SqlBoolean)nullableValue);
-            }
-            else if (nullableValue is SqlString)
-            {
-                return ToValue((SqlString)nullableValue);
-            }
-            else if (nullableValue is SqlDateTime)
-            {
-                return ToValue((SqlDateTime)nullableValue);
-            }
-
-            throw new ArgumentException("Unsupported INullable type: {0}".FormatWith(CultureInfo.InvariantCulture, nullableValue.GetType()));
-        }
-#endif
 
 #if !(PORTABLE40 || PORTABLE)
         internal static TypeConverter GetConverter(Type t)

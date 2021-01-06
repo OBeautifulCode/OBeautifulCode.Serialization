@@ -27,9 +27,6 @@
 
 using System;
 using System.Collections.Generic;
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-using System.Numerics;
-#endif
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json.Utilities;
@@ -841,28 +838,7 @@ namespace Newtonsoft.Json
 
             if (schema.DivisibleBy != null)
             {
-                bool notDivisible;
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-                if (value is BigInteger)
-                {
-                    // not that this will lose any decimal point on DivisibleBy
-                    // so manually raise an error if DivisibleBy is not an integer and value is not zero
-                    BigInteger i = (BigInteger)value;
-                    bool divisibleNonInteger = !Math.Abs(schema.DivisibleBy.Value - Math.Truncate(schema.DivisibleBy.Value)).Equals(0);
-                    if (divisibleNonInteger)
-                    {
-                        notDivisible = i != 0;
-                    }
-                    else
-                    {
-                        notDivisible = i % new BigInteger(schema.DivisibleBy.Value) != 0;
-                    }
-                }
-                else
-#endif
-                {
-                    notDivisible = !IsZero(Convert.ToInt64(value, CultureInfo.InvariantCulture) % schema.DivisibleBy.GetValueOrDefault());
-                }
+                bool notDivisible = !IsZero(Convert.ToInt64(value, CultureInfo.InvariantCulture) % schema.DivisibleBy.GetValueOrDefault());
 
                 if (notDivisible)
                 {

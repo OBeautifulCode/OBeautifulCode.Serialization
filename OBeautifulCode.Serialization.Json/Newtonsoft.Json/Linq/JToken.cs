@@ -33,9 +33,6 @@ using System.Dynamic;
 using System.Linq.Expressions;
 #endif
 using System.IO;
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-using System.Numerics;
-#endif
 using System.Text;
 using Newtonsoft.Json.Utilities;
 using System.Diagnostics;
@@ -70,9 +67,6 @@ namespace Newtonsoft.Json.Linq
 
         private static readonly JTokenType[] BooleanTypes = new[] { JTokenType.Integer, JTokenType.Float, JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.Boolean };
         private static readonly JTokenType[] NumberTypes = new[] { JTokenType.Integer, JTokenType.Float, JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.Boolean };
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-        private static readonly JTokenType[] BigIntegerTypes = new[] { JTokenType.Integer, JTokenType.Float, JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.Boolean, JTokenType.Bytes };
-#endif
         private static readonly JTokenType[] StringTypes = new[] { JTokenType.Date, JTokenType.Integer, JTokenType.Float, JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.Boolean, JTokenType.Bytes, JTokenType.Guid, JTokenType.TimeSpan, JTokenType.Uri };
         private static readonly JTokenType[] GuidTypes = new[] { JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.Guid, JTokenType.Bytes };
         private static readonly JTokenType[] TimeSpanTypes = new[] { JTokenType.String, JTokenType.Comment, JTokenType.Raw, JTokenType.TimeSpan };
@@ -494,13 +488,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to Boolean.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return Convert.ToBoolean((int)(BigInteger)v.Value);
-            }
-#endif
-
             return Convert.ToBoolean(v.Value, CultureInfo.InvariantCulture);
         }
 
@@ -548,13 +535,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to Boolean.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return Convert.ToBoolean((int)(BigInteger)v.Value);
-            }
-#endif
-
             return (v.Value != null) ? (bool?)Convert.ToBoolean(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
@@ -570,13 +550,6 @@ namespace Newtonsoft.Json.Linq
             {
                 throw new ArgumentException("Can not convert {0} to Int64.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
-
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (long)(BigInteger)v.Value;
-            }
-#endif
 
             return Convert.ToInt64(v.Value, CultureInfo.InvariantCulture);
         }
@@ -662,13 +635,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to Decimal.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (decimal?)(BigInteger)v.Value;
-            }
-#endif
-
             return (v.Value != null) ? (decimal?)Convert.ToDecimal(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
@@ -689,13 +655,6 @@ namespace Newtonsoft.Json.Linq
             {
                 throw new ArgumentException("Can not convert {0} to Double.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
-
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (double?)(BigInteger)v.Value;
-            }
-#endif
 
             return (v.Value != null) ? (double?)Convert.ToDouble(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -718,13 +677,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to Char.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (char?)(BigInteger)v.Value;
-            }
-#endif
-
             return (v.Value != null) ? (char?)Convert.ToChar(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
@@ -741,13 +693,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to Int32.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (int)(BigInteger)v.Value;
-            }
-#endif
-
             return Convert.ToInt32(v.Value, CultureInfo.InvariantCulture);
         }
 
@@ -763,13 +708,6 @@ namespace Newtonsoft.Json.Linq
             {
                 throw new ArgumentException("Can not convert {0} to Int16.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
-
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (short)(BigInteger)v.Value;
-            }
-#endif
 
             return Convert.ToInt16(v.Value, CultureInfo.InvariantCulture);
         }
@@ -788,13 +726,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to UInt16.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (ushort)(BigInteger)v.Value;
-            }
-#endif
-
             return Convert.ToUInt16(v.Value, CultureInfo.InvariantCulture);
         }
 
@@ -812,13 +743,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to Char.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (char)(BigInteger)v.Value;
-            }
-#endif
-
             return Convert.ToChar(v.Value, CultureInfo.InvariantCulture);
         }
 
@@ -834,13 +758,6 @@ namespace Newtonsoft.Json.Linq
             {
                 throw new ArgumentException("Can not convert {0} to Byte.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
-
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (byte)(BigInteger)v.Value;
-            }
-#endif
 
             return Convert.ToByte(v.Value, CultureInfo.InvariantCulture);
         }
@@ -858,13 +775,6 @@ namespace Newtonsoft.Json.Linq
             {
                 throw new ArgumentException("Can not convert {0} to SByte.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
-
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (sbyte)(BigInteger)v.Value;
-            }
-#endif
 
             return Convert.ToSByte(v.Value, CultureInfo.InvariantCulture);
         }
@@ -887,13 +797,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to Int32.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (int?)(BigInteger)v.Value;
-            }
-#endif
-
             return (v.Value != null) ? (int?)Convert.ToInt32(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
@@ -914,13 +817,6 @@ namespace Newtonsoft.Json.Linq
             {
                 throw new ArgumentException("Can not convert {0} to Int16.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
-
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (short?)(BigInteger)v.Value;
-            }
-#endif
 
             return (v.Value != null) ? (short?)Convert.ToInt16(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -944,13 +840,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to UInt16.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (ushort?)(BigInteger)v.Value;
-            }
-#endif
-
             return (v.Value != null) ? (ushort?)Convert.ToUInt16(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
@@ -971,13 +860,6 @@ namespace Newtonsoft.Json.Linq
             {
                 throw new ArgumentException("Can not convert {0} to Byte.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
-
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (byte?)(BigInteger)v.Value;
-            }
-#endif
 
             return (v.Value != null) ? (byte?)Convert.ToByte(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -1000,13 +882,6 @@ namespace Newtonsoft.Json.Linq
             {
                 throw new ArgumentException("Can not convert {0} to SByte.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
-
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (sbyte?)(BigInteger)v.Value;
-            }
-#endif
 
             return (v.Value != null) ? (sbyte?)Convert.ToSByte(v.Value, CultureInfo.InvariantCulture) : null;
         }
@@ -1052,13 +927,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to Int64.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (long?)(BigInteger)v.Value;
-            }
-#endif
-
             return (v.Value != null) ? (long?)Convert.ToInt64(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
@@ -1080,13 +948,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to Single.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (float?)(BigInteger)v.Value;
-            }
-#endif
-
             return (v.Value != null) ? (float?)Convert.ToSingle(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
@@ -1102,13 +963,6 @@ namespace Newtonsoft.Json.Linq
             {
                 throw new ArgumentException("Can not convert {0} to Decimal.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
-
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (decimal)(BigInteger)v.Value;
-            }
-#endif
 
             return Convert.ToDecimal(v.Value, CultureInfo.InvariantCulture);
         }
@@ -1132,13 +986,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to UInt32.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (uint?)(BigInteger)v.Value;
-            }
-#endif
-
             return (v.Value != null) ? (uint?)Convert.ToUInt32(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
@@ -1161,13 +1008,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to UInt64.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (ulong?)(BigInteger)v.Value;
-            }
-#endif
-
             return (v.Value != null) ? (ulong?)Convert.ToUInt64(v.Value, CultureInfo.InvariantCulture) : null;
         }
 
@@ -1184,13 +1024,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to Double.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (double)(BigInteger)v.Value;
-            }
-#endif
-
             return Convert.ToDouble(v.Value, CultureInfo.InvariantCulture);
         }
 
@@ -1206,13 +1039,6 @@ namespace Newtonsoft.Json.Linq
             {
                 throw new ArgumentException("Can not convert {0} to Single.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
-
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (float)(BigInteger)v.Value;
-            }
-#endif
 
             return Convert.ToSingle(v.Value, CultureInfo.InvariantCulture);
         }
@@ -1243,12 +1069,6 @@ namespace Newtonsoft.Json.Linq
             {
                 return Convert.ToBase64String((byte[])v.Value);
             }
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return ((BigInteger)v.Value).ToString(CultureInfo.InvariantCulture);
-            }
-#endif
 
             return Convert.ToString(v.Value, CultureInfo.InvariantCulture);
         }
@@ -1267,13 +1087,6 @@ namespace Newtonsoft.Json.Linq
                 throw new ArgumentException("Can not convert {0} to UInt32.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (uint)(BigInteger)v.Value;
-            }
-#endif
-
             return Convert.ToUInt32(v.Value, CultureInfo.InvariantCulture);
         }
 
@@ -1290,13 +1103,6 @@ namespace Newtonsoft.Json.Linq
             {
                 throw new ArgumentException("Can not convert {0} to UInt64.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
             }
-
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return (ulong)(BigInteger)v.Value;
-            }
-#endif
 
             return Convert.ToUInt64(v.Value, CultureInfo.InvariantCulture);
         }
@@ -1323,12 +1129,6 @@ namespace Newtonsoft.Json.Linq
             {
                 return Convert.FromBase64String(Convert.ToString(v.Value, CultureInfo.InvariantCulture));
             }
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (v.Value is BigInteger)
-            {
-                return ((BigInteger)v.Value).ToByteArray();
-            }
-#endif
 
             if (v.Value is byte[])
             {
@@ -1458,34 +1258,6 @@ namespace Newtonsoft.Json.Linq
             return (v.Value is Uri) ? (Uri)v.Value : new Uri(Convert.ToString(v.Value, CultureInfo.InvariantCulture));
         }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-        private static BigInteger ToBigInteger(JToken value)
-        {
-            JValue v = EnsureValue(value);
-            if (v == null || !ValidateToken(v, BigIntegerTypes, false))
-            {
-                throw new ArgumentException("Can not convert {0} to BigInteger.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
-            }
-
-            return ConvertUtils.ToBigInteger(v.Value);
-        }
-
-        private static BigInteger? ToBigIntegerNullable(JToken value)
-        {
-            JValue v = EnsureValue(value);
-            if (v == null || !ValidateToken(v, BigIntegerTypes, true))
-            {
-                throw new ArgumentException("Can not convert {0} to BigInteger.".FormatWith(CultureInfo.InvariantCulture, GetType(value)));
-            }
-
-            if (v.Value == null)
-            {
-                return null;
-            }
-
-            return ConvertUtils.ToBigInteger(v.Value);
-        }
-#endif
         #endregion
 
         #region Cast to operators
@@ -2037,12 +1809,6 @@ namespace Newtonsoft.Json.Linq
                         return (TimeSpan?)this;
                     case PrimitiveTypeCode.TimeSpan:
                         return (TimeSpan)this;
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-                    case PrimitiveTypeCode.BigIntegerNullable:
-                        return ToBigIntegerNullable(this);
-                    case PrimitiveTypeCode.BigInteger:
-                        return ToBigInteger(this);
-#endif
                 }
             }
 

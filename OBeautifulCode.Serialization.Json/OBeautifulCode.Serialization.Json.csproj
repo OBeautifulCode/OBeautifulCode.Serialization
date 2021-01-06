@@ -106,8 +106,6 @@
     <Compile Include="Newtonsoft.Json\Converters\BinaryConverter.cs" />
     <Compile Include="Newtonsoft.Json\Converters\BsonObjectIdConverter.cs" />
     <Compile Include="Newtonsoft.Json\Converters\CustomCreationConverter.cs" />
-    <Compile Include="Newtonsoft.Json\Converters\DataSetConverter.cs" />
-    <Compile Include="Newtonsoft.Json\Converters\DataTableConverter.cs" />
     <Compile Include="Newtonsoft.Json\Converters\DateTimeConverterBase.cs" />
     <Compile Include="Newtonsoft.Json\Converters\DiscriminatedUnionConverter.cs" />
     <Compile Include="Newtonsoft.Json\Converters\EntityKeyMemberConverter.cs" />
@@ -119,7 +117,6 @@
     <Compile Include="Newtonsoft.Json\Converters\RegexConverter.cs" />
     <Compile Include="Newtonsoft.Json\Converters\StringEnumConverter.cs" />
     <Compile Include="Newtonsoft.Json\Converters\VersionConverter.cs" />
-    <Compile Include="Newtonsoft.Json\Converters\XmlNodeConverter.cs" />
     <Compile Include="Newtonsoft.Json\DateFormatHandling.cs" />
     <Compile Include="Newtonsoft.Json\DateParseHandling.cs" />
     <Compile Include="Newtonsoft.Json\DateTimeZoneHandling.cs" />

@@ -33,10 +33,6 @@ using System.Globalization;
 using System.Dynamic;
 using System.Linq.Expressions;
 #endif
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-using System.Numerics;
-
-#endif
 
 namespace Newtonsoft.Json.Linq
 {
@@ -221,33 +217,6 @@ namespace Newtonsoft.Json.Linq
             get { return false; }
         }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-        private static int CompareBigInteger(BigInteger i1, object i2)
-        {
-            int result = i1.CompareTo(ConvertUtils.ToBigInteger(i2));
-
-            if (result != 0)
-            {
-                return result;
-            }
-
-            // converting a fractional number to a BigInteger will lose the fraction
-            // check for fraction if result is two numbers are equal
-            if (i2 is decimal)
-            {
-                decimal d = (decimal)i2;
-                return (0m).CompareTo(Math.Abs(d - Math.Truncate(d)));
-            }
-            else if (i2 is double || i2 is float)
-            {
-                double d = Convert.ToDouble(i2, CultureInfo.InvariantCulture);
-                return (0d).CompareTo(Math.Abs(d - Math.Truncate(d)));
-            }
-
-            return result;
-        }
-#endif
-
         internal static int Compare(JTokenType valueType, object objA, object objB)
         {
             if (objA == null && objB == null)
@@ -266,16 +235,6 @@ namespace Newtonsoft.Json.Linq
             switch (valueType)
             {
                 case JTokenType.Integer:
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-                    if (objA is BigInteger)
-                    {
-                        return CompareBigInteger((BigInteger)objA, objB);
-                    }
-                    if (objB is BigInteger)
-                    {
-                        return -CompareBigInteger((BigInteger)objB, objA);
-                    }
-#endif
                     if (objA is ulong || objB is ulong || objA is decimal || objB is decimal)
                     {
                         return Convert.ToDecimal(objA, CultureInfo.InvariantCulture).CompareTo(Convert.ToDecimal(objB, CultureInfo.InvariantCulture));
@@ -289,16 +248,6 @@ namespace Newtonsoft.Json.Linq
                         return Convert.ToInt64(objA, CultureInfo.InvariantCulture).CompareTo(Convert.ToInt64(objB, CultureInfo.InvariantCulture));
                     }
                 case JTokenType.Float:
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-                    if (objA is BigInteger)
-                    {
-                        return CompareBigInteger((BigInteger)objA, objB);
-                    }
-                    if (objB is BigInteger)
-                    {
-                        return -CompareBigInteger((BigInteger)objB, objA);
-                    }
-#endif
                     return CompareFloat(objA, objB);
                 case JTokenType.Comment:
                 case JTokenType.String:
@@ -430,8 +379,7 @@ namespace Newtonsoft.Json.Linq
                 }
             }
 
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            if (objA is BigInteger || objB is BigInteger)
+            if (objA is ulong || objB is ulong || objA is decimal || objB is decimal)
             {
                 if (objA == null || objB == null)
                 {
@@ -439,127 +387,92 @@ namespace Newtonsoft.Json.Linq
                     return true;
                 }
 
-                // not that this will lose the fraction
-                // BigInteger doesn't have operators with non-integer types
-                BigInteger i1 = ConvertUtils.ToBigInteger(objA);
-                BigInteger i2 = ConvertUtils.ToBigInteger(objB);
+                decimal d1 = Convert.ToDecimal(objA, CultureInfo.InvariantCulture);
+                decimal d2 = Convert.ToDecimal(objB, CultureInfo.InvariantCulture);
 
                 switch (operation)
                 {
                     case ExpressionType.Add:
                     case ExpressionType.AddAssign:
-                        result = i1 + i2;
+                        result = d1 + d2;
                         return true;
                     case ExpressionType.Subtract:
                     case ExpressionType.SubtractAssign:
-                        result = i1 - i2;
+                        result = d1 - d2;
                         return true;
                     case ExpressionType.Multiply:
                     case ExpressionType.MultiplyAssign:
-                        result = i1 * i2;
+                        result = d1 * d2;
                         return true;
                     case ExpressionType.Divide:
                     case ExpressionType.DivideAssign:
-                        result = i1 / i2;
+                        result = d1 / d2;
                         return true;
                 }
             }
-            else
-#endif
-                if (objA is ulong || objB is ulong || objA is decimal || objB is decimal)
+            else if (objA is float || objB is float || objA is double || objB is double)
+            {
+                if (objA == null || objB == null)
                 {
-                    if (objA == null || objB == null)
-                    {
-                        result = null;
-                        return true;
-                    }
-
-                    decimal d1 = Convert.ToDecimal(objA, CultureInfo.InvariantCulture);
-                    decimal d2 = Convert.ToDecimal(objB, CultureInfo.InvariantCulture);
-
-                    switch (operation)
-                    {
-                        case ExpressionType.Add:
-                        case ExpressionType.AddAssign:
-                            result = d1 + d2;
-                            return true;
-                        case ExpressionType.Subtract:
-                        case ExpressionType.SubtractAssign:
-                            result = d1 - d2;
-                            return true;
-                        case ExpressionType.Multiply:
-                        case ExpressionType.MultiplyAssign:
-                            result = d1 * d2;
-                            return true;
-                        case ExpressionType.Divide:
-                        case ExpressionType.DivideAssign:
-                            result = d1 / d2;
-                            return true;
-                    }
+                    result = null;
+                    return true;
                 }
-                else if (objA is float || objB is float || objA is double || objB is double)
+
+                double d1 = Convert.ToDouble(objA, CultureInfo.InvariantCulture);
+                double d2 = Convert.ToDouble(objB, CultureInfo.InvariantCulture);
+
+                switch (operation)
                 {
-                    if (objA == null || objB == null)
-                    {
-                        result = null;
+                    case ExpressionType.Add:
+                    case ExpressionType.AddAssign:
+                        result = d1 + d2;
                         return true;
-                    }
-
-                    double d1 = Convert.ToDouble(objA, CultureInfo.InvariantCulture);
-                    double d2 = Convert.ToDouble(objB, CultureInfo.InvariantCulture);
-
-                    switch (operation)
-                    {
-                        case ExpressionType.Add:
-                        case ExpressionType.AddAssign:
-                            result = d1 + d2;
-                            return true;
-                        case ExpressionType.Subtract:
-                        case ExpressionType.SubtractAssign:
-                            result = d1 - d2;
-                            return true;
-                        case ExpressionType.Multiply:
-                        case ExpressionType.MultiplyAssign:
-                            result = d1 * d2;
-                            return true;
-                        case ExpressionType.Divide:
-                        case ExpressionType.DivideAssign:
-                            result = d1 / d2;
-                            return true;
-                    }
+                    case ExpressionType.Subtract:
+                    case ExpressionType.SubtractAssign:
+                        result = d1 - d2;
+                        return true;
+                    case ExpressionType.Multiply:
+                    case ExpressionType.MultiplyAssign:
+                        result = d1 * d2;
+                        return true;
+                    case ExpressionType.Divide:
+                    case ExpressionType.DivideAssign:
+                        result = d1 / d2;
+                        return true;
                 }
-                else if (objA is int || objA is uint || objA is long || objA is short || objA is ushort || objA is sbyte || objA is byte ||
-                         objB is int || objB is uint || objB is long || objB is short || objB is ushort || objB is sbyte || objB is byte)
+            }
+            else if (objA is int || objA is uint || objA is long || objA is short || objA is ushort || objA is sbyte || objA is byte ||
+                        objB is int || objB is uint || objB is long || objB is short || objB is ushort || objB is sbyte || objB is byte)
+            {
+                if (objA == null || objB == null)
                 {
-                    if (objA == null || objB == null)
-                    {
-                        result = null;
-                        return true;
-                    }
-
-                    long l1 = Convert.ToInt64(objA, CultureInfo.InvariantCulture);
-                    long l2 = Convert.ToInt64(objB, CultureInfo.InvariantCulture);
-
-                    switch (operation)
-                    {
-                        case ExpressionType.Add:
-                        case ExpressionType.AddAssign:
-                            result = l1 + l2;
-                            return true;
-                        case ExpressionType.Subtract:
-                        case ExpressionType.SubtractAssign:
-                            result = l1 - l2;
-                            return true;
-                        case ExpressionType.Multiply:
-                        case ExpressionType.MultiplyAssign:
-                            result = l1 * l2;
-                            return true;
-                        case ExpressionType.Divide:
-                        case ExpressionType.DivideAssign:
-                            result = l1 / l2;
-                            return true;
-                    }
+                    result = null;
+                    return true;
                 }
+
+                long l1 = Convert.ToInt64(objA, CultureInfo.InvariantCulture);
+                long l2 = Convert.ToInt64(objB, CultureInfo.InvariantCulture);
+
+                switch (operation)
+                {
+                    case ExpressionType.Add:
+                    case ExpressionType.AddAssign:
+                        result = l1 + l2;
+                        return true;
+                    case ExpressionType.Subtract:
+                    case ExpressionType.SubtractAssign:
+                        result = l1 - l2;
+                        return true;
+                    case ExpressionType.Multiply:
+                    case ExpressionType.MultiplyAssign:
+                        result = l1 * l2;
+                        return true;
+                    case ExpressionType.Divide:
+                    case ExpressionType.DivideAssign:
+                        result = l1 / l2;
+                        return true;
+                }
+            }
 
             result = null;
             return false;
@@ -634,12 +547,6 @@ namespace Newtonsoft.Json.Linq
             {
                 return JTokenType.Integer;
             }
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-            else if (value is BigInteger)
-            {
-                return JTokenType.Integer;
-            }
-#endif
             else if (value is double || value is float || value is decimal)
             {
                 return JTokenType.Float;
@@ -770,12 +677,6 @@ namespace Newtonsoft.Json.Linq
                     {
                         writer.WriteValue((ulong)_value);
                     }
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-                    else if (_value is BigInteger)
-                    {
-                        writer.WriteValue((BigInteger)_value);
-                    }
-#endif
                     else
                     {
                         writer.WriteValue(Convert.ToInt64(_value, CultureInfo.InvariantCulture));

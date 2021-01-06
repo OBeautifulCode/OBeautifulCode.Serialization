@@ -28,9 +28,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if !(NET20 || NET35 || PORTABLE40 || PORTABLE)
-using System.Numerics;
-#endif
 using Newtonsoft.Json.Utilities;
 using System.Globalization;
 #if NET20
@@ -534,16 +531,7 @@ namespace Newtonsoft.Json
                     break;
                 case JsonToken.Integer:
                     ValidationUtils.ArgumentNotNull(value, nameof(value));
-#if !(NET20 || NET35 || PORTABLE || PORTABLE40)
-                    if (value is BigInteger)
-                    {
-                        WriteValue((BigInteger)value);
-                    }
-                    else
-#endif
-                    {
-                        WriteValue(Convert.ToInt64(value, CultureInfo.InvariantCulture));
-                    }
+                    WriteValue(Convert.ToInt64(value, CultureInfo.InvariantCulture));
                     break;
                 case JsonToken.Float:
                     ValidationUtils.ArgumentNotNull(value, nameof(value));
@@ -1394,15 +1382,6 @@ namespace Newtonsoft.Json
             }
             else
             {
-#if !(NET20 || NET35 || PORTABLE || PORTABLE40)
-                // this is here because adding a WriteValue(BigInteger) to JsonWriter will
-                // mean the user has to add a reference to System.Numerics.dll
-                if (value is BigInteger)
-                {
-                    throw CreateUnsupportedTypeException(this, value);
-                }
-#endif
-
                 WriteValue(this, ConvertUtils.GetTypeCode(value.GetType()), value);
             }
         }
@@ -1552,16 +1531,6 @@ namespace Newtonsoft.Json
                 case PrimitiveTypeCode.TimeSpanNullable:
                     writer.WriteValue((value == null) ? (TimeSpan?)null : (TimeSpan)value);
                     break;
-#if !(PORTABLE || PORTABLE40 || NET35 || NET20)
-                case PrimitiveTypeCode.BigInteger:
-                    // this will call to WriteValue(object)
-                    writer.WriteValue((BigInteger)value);
-                    break;
-                case PrimitiveTypeCode.BigIntegerNullable:
-                    // this will call to WriteValue(object)
-                    writer.WriteValue((value == null) ? (BigInteger?)null : (BigInteger)value);
-                    break;
-#endif
                 case PrimitiveTypeCode.Uri:
                     writer.WriteValue((Uri)value);
                     break;
