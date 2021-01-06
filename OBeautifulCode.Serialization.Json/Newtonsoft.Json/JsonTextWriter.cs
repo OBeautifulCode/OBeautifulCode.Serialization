@@ -30,7 +30,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.IO;
-using System.Xml;
 using Newtonsoft.Json.Utilities;
 
 namespace Newtonsoft.Json
