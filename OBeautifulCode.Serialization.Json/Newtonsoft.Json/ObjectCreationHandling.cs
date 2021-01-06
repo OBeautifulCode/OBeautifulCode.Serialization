@@ -25,7 +25,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// Specifies how object creation is handled by the <see cref="JsonSerializer"/>.

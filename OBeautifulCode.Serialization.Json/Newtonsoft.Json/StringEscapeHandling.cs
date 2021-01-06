@@ -25,7 +25,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// Specifies how strings are escaped when writing JSON text.

@@ -25,7 +25,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace Newtonsoft.Json.Serialization
+namespace NewtonsoftFork.Json.Serialization
 {
     /// <summary>
     /// Represents a method that constructs an object.

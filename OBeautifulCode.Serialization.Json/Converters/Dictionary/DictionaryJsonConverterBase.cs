@@ -11,7 +11,7 @@ namespace OBeautifulCode.Serialization.Json
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
-    using Newtonsoft.Json;
+    using NewtonsoftFork.Json;
 
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Type.Recipes;

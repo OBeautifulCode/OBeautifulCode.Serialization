@@ -28,7 +28,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Newtonsoft.Json.Schema
+namespace NewtonsoftFork.Json.Schema
 {
     /// <summary>
     /// <para>

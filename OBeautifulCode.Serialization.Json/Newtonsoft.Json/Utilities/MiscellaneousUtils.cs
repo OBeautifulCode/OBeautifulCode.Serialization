@@ -33,7 +33,7 @@ using System.Reflection;
 using System.Text;
 using System.Globalization;
 
-namespace Newtonsoft.Json.Utilities
+namespace NewtonsoftFork.Json.Utilities
 {
     internal delegate T Creator<T>();
 

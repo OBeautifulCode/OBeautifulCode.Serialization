@@ -29,9 +29,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Utilities;
 
-namespace Newtonsoft.Json.Serialization
+namespace NewtonsoftFork.Json.Serialization
 {
     internal abstract class JsonSerializerInternalBase
     {

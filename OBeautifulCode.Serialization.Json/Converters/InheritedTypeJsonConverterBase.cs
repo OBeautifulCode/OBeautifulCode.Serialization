@@ -9,7 +9,7 @@ namespace OBeautifulCode.Serialization.Json
     using System;
     using System.Collections.Concurrent;
 
-    using Newtonsoft.Json;
+    using NewtonsoftFork.Json;
 
     /// <summary>
     /// A converter that handles inherited types.

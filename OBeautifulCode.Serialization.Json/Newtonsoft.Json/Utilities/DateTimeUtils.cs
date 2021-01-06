@@ -29,7 +29,7 @@ using System;
 using System.IO;
 using System.Globalization;
 
-namespace Newtonsoft.Json.Utilities
+namespace NewtonsoftFork.Json.Utilities
 {
     internal static class DateTimeUtils
     {

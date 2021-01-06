@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace Newtonsoft.Json.Linq.JsonPath
+namespace NewtonsoftFork.Json.Linq.JsonPath
 {
     internal class ArrayMultipleIndexFilter : PathFilter
     {

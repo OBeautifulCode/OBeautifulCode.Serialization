@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// Instructs the <see cref="JsonSerializer"/> to deserialize properties with no matching class member into the specified collection

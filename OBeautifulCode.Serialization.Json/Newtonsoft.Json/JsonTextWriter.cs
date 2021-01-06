@@ -30,9 +30,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.IO;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Utilities;
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// Represents a writer that provides a fast, non-cached, forward-only way of generating JSON data.

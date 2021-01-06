@@ -31,19 +31,19 @@ using System.Globalization;
 #if !(NET20 || NET35 || PORTABLE40)
 using System.Threading.Tasks;
 #endif
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Utilities;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
+using NewtonsoftFork.Json.Linq;
+using NewtonsoftFork.Json.Utilities;
+using NewtonsoftFork.Json.Converters;
+using NewtonsoftFork.Json.Serialization;
 using System.Text;
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// Provides methods for converting between common language runtime types and JSON types.
     /// </summary>
     /// <example>
-    ///   <code lang="cs" source="..\Src\Newtonsoft.Json.Tests\Documentation\SerializationTests.cs" region="SerializeObject" title="Serializing and Deserializing JSON with JsonConvert" />
+    ///   <code lang="cs" source="..\Src\NewtonsoftFork.Json.Tests\Documentation\SerializationTests.cs" region="SerializeObject" title="Serializing and Deserializing JSON with JsonConvert" />
     /// </example>
     public static class JsonConvert
     {

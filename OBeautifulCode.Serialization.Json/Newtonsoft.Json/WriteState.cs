@@ -27,7 +27,7 @@
 
 using System;
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// Specifies the state of the <see cref="JsonWriter"/>.

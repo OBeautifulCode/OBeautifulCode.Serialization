@@ -30,7 +30,7 @@ using System;
 using System.Reflection.Emit;
 using System.Reflection;
 
-namespace Newtonsoft.Json.Utilities
+namespace NewtonsoftFork.Json.Utilities
 {
     internal static class ILGeneratorExtensions
     {

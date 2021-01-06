@@ -31,16 +31,16 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Utilities;
 using System.Collections;
 #if NET20
-using Newtonsoft.Json.Utilities.LinqBridge;
+using NewtonsoftFork.Json.Utilities.LinqBridge;
 #else
 using System.Linq;
 
 #endif
 
-namespace Newtonsoft.Json.Serialization
+namespace NewtonsoftFork.Json.Serialization
 {
     /// <summary>
     /// Contract details for a <see cref="System.Type"/> used by the <see cref="JsonSerializer"/>.

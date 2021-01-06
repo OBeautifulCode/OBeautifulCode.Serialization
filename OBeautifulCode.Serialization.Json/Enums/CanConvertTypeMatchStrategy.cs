@@ -6,7 +6,7 @@
 
 namespace OBeautifulCode.Serialization.Json
 {
-    using Newtonsoft.Json;
+    using NewtonsoftFork.Json;
 
     /// <summary>
     /// The strategy to use in <see cref="JsonConverter.CanConvert(System.Type)"/> to match

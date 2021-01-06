@@ -28,7 +28,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Newtonsoft.Json.Schema
+namespace NewtonsoftFork.Json.Schema
 {
     [Obsolete("JSON Schema validation has been moved to its own package. See http://www.newtonsoft.com/jsonschema for more details.")]
     internal static class JsonSchemaConstants

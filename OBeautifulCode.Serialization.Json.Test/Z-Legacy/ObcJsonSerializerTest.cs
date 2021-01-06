@@ -14,7 +14,7 @@ namespace OBeautifulCode.Serialization.Json.Test
 
     using FluentAssertions;
 
-    using Newtonsoft.Json.Linq;
+    using NewtonsoftFork.Json.Linq;
 
     using OBeautifulCode.Serialization.Json;
 

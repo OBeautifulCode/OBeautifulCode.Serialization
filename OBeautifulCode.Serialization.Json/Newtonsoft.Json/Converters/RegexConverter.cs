@@ -27,11 +27,11 @@
 
 using System;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json.Bson;
+using NewtonsoftFork.Json.Bson;
 using System.Globalization;
-using Newtonsoft.Json.Serialization;
+using NewtonsoftFork.Json.Serialization;
 
-namespace Newtonsoft.Json.Converters
+namespace NewtonsoftFork.Json.Converters
 {
     /// <summary>
     /// Converts a <see cref="Regex"/> to and from JSON and BSON.

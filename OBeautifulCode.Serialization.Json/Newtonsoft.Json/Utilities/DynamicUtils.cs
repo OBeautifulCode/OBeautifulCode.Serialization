@@ -39,9 +39,9 @@ using Microsoft.CSharp.RuntimeBinder;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Globalization;
-using Newtonsoft.Json.Serialization;
+using NewtonsoftFork.Json.Serialization;
 
-namespace Newtonsoft.Json.Utilities
+namespace NewtonsoftFork.Json.Utilities
 {
     internal static class DynamicUtils
     {

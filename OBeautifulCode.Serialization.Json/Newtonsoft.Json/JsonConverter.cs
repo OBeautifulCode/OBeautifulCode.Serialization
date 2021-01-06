@@ -28,10 +28,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Newtonsoft.Json.Utilities;
-using Newtonsoft.Json.Schema;
+using NewtonsoftFork.Json.Utilities;
+using NewtonsoftFork.Json.Schema;
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// Converts an object to and from JSON.

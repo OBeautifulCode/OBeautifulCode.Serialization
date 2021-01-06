@@ -9,8 +9,8 @@ namespace OBeautifulCode.Serialization.Json
     using System;
     using System.Collections.Generic;
 
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
+    using NewtonsoftFork.Json;
+    using NewtonsoftFork.Json.Serialization;
 
     using Type = System.Type;
 

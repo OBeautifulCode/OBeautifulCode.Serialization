@@ -27,9 +27,9 @@
 
 using System;
 using System.Globalization;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Utilities;
 
-namespace Newtonsoft.Json.Linq
+namespace NewtonsoftFork.Json.Linq
 {
     /// <summary>
     /// Represents a writer that provides a fast, non-cached, forward-only way of generating JSON data.

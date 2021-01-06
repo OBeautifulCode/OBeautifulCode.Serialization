@@ -27,7 +27,7 @@
 
 using System;
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// Instructs the <see cref="JsonSerializer"/> how to serialize the object.

@@ -28,13 +28,13 @@
 using System;
 using System.Collections.Generic;
 #if NET20
-using Newtonsoft.Json.Utilities.LinqBridge;
+using NewtonsoftFork.Json.Utilities.LinqBridge;
 #else
 using System.Linq;
 
 #endif
 
-namespace Newtonsoft.Json.Schema
+namespace NewtonsoftFork.Json.Schema
 {
     /// <summary>
     /// <para>

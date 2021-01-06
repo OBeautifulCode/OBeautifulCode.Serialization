@@ -10,7 +10,7 @@ namespace OBeautifulCode.Serialization.Json
     using System.Collections.Generic;
     using System.Linq;
 
-    using Newtonsoft.Json;
+    using NewtonsoftFork.Json;
 
     using static System.FormattableString;
 

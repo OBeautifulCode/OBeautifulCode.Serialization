@@ -10,7 +10,7 @@ namespace OBeautifulCode.Serialization.Test
 
     using FakeItEasy;
 
-    using Newtonsoft.Json;
+    using NewtonsoftFork.Json;
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Equality.Recipes;

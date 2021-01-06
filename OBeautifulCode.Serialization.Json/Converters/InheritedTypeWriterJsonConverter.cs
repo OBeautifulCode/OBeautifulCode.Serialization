@@ -9,8 +9,8 @@ namespace OBeautifulCode.Serialization.Json
     using System;
     using System.Collections.Concurrent;
 
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+    using NewtonsoftFork.Json;
+    using NewtonsoftFork.Json.Linq;
 
     using OBeautifulCode.Representation.System;
 

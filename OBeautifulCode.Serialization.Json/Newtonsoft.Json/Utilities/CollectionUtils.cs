@@ -32,14 +32,14 @@ using System.Reflection;
 using System.Text;
 using System.Collections;
 #if NET20
-using Newtonsoft.Json.Utilities.LinqBridge;
+using NewtonsoftFork.Json.Utilities.LinqBridge;
 #else
 using System.Linq;
 #endif
 using System.Globalization;
-using Newtonsoft.Json.Serialization;
+using NewtonsoftFork.Json.Serialization;
 
-namespace Newtonsoft.Json.Utilities
+namespace NewtonsoftFork.Json.Utilities
 {
     internal static class CollectionUtils
     {

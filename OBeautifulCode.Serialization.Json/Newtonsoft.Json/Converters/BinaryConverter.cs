@@ -28,10 +28,10 @@
 #if !(DOTNET || PORTABLE40 || PORTABLE)
 using System;
 using System.Globalization;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Utilities;
 using System.Collections.Generic;
 
-namespace Newtonsoft.Json.Converters
+namespace NewtonsoftFork.Json.Converters
 {
     /// <summary>
     /// Converts a binary value to and from a base 64 string value.

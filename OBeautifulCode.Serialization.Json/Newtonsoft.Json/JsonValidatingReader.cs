@@ -27,20 +27,20 @@
 
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Linq;
+using NewtonsoftFork.Json.Schema;
+using NewtonsoftFork.Json.Utilities;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.IO;
 #if NET20
-using Newtonsoft.Json.Utilities.LinqBridge;
+using NewtonsoftFork.Json.Utilities.LinqBridge;
 #else
 using System.Linq;
 
 #endif
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// <para>

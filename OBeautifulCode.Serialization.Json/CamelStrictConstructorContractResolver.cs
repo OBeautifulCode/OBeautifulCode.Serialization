@@ -13,8 +13,8 @@ namespace OBeautifulCode.Serialization.Json
     using System.Linq;
     using System.Reflection;
 
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
+    using NewtonsoftFork.Json;
+    using NewtonsoftFork.Json.Serialization;
 
     using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Reflection.Recipes;
@@ -269,7 +269,7 @@ namespace OBeautifulCode.Serialization.Json
                         // This allows us to add properties to models over time.  If a property (and associated constructor parameter)
                         // is added, then old payloads won't have that property and the model cannot be deserialized unless we
                         // set Required = Required.Default.  We need to set DefaultValue and DefaultValueHandling, otherwise Newtonsoft uses default(T).
-                        // Additionally, there is a BUG in Newtonsoft.Json 9.0.1 such that this approach only works for types that cannot be assigned
+                        // Additionally, there is a BUG in NewtonsoftFork.Json 9.0.1 such that this approach only works for types that cannot be assigned
                         // to null (e.g. intParam = 0) -OR- types that can be assigned to null where the constructor parameter's default value is null
                         // (e.g. nullableIntParam = null).  If the constructor parameter can be assigned to null but it's default value is not null
                         // (e.g. nullableIntParam = 10), and the value in the payload is null, Newtonsoft uses the default value instead of the null payload value.

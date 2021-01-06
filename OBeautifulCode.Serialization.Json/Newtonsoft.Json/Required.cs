@@ -25,7 +25,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// Indicating whether a property is required.

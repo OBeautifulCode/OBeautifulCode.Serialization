@@ -14,8 +14,8 @@ namespace OBeautifulCode.Serialization.Json
     using System.IO;
     using System.Linq;
 
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+    using NewtonsoftFork.Json;
+    using NewtonsoftFork.Json.Linq;
 
     using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Reflection.Recipes;

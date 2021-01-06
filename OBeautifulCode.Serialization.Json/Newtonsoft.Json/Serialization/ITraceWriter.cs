@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Newtonsoft.Json.Serialization
+namespace NewtonsoftFork.Json.Serialization
 {
     /// <summary>
     /// Represents a trace writer.

@@ -27,16 +27,16 @@
 
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Utilities;
 using System.Globalization;
 #if NET20
-using Newtonsoft.Json.Utilities.LinqBridge;
+using NewtonsoftFork.Json.Utilities.LinqBridge;
 #else
 using System.Linq;
 
 #endif
 
-namespace Newtonsoft.Json.Linq
+namespace NewtonsoftFork.Json.Linq
 {
     /// <summary>
     /// Contains the LINQ to JSON extension methods.

@@ -28,9 +28,9 @@
 using System;
 using System.Globalization;
 using System.Runtime.Serialization;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Utilities;
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// The exception thrown when an error occurs while reading JSON text.

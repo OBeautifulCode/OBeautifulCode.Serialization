@@ -25,7 +25,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// Specifies float format handling options when writing special floating point numbers, e.g. <see cref="F:System.Double.NaN"/>,

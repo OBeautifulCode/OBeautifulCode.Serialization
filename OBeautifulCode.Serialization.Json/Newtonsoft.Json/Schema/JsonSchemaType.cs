@@ -27,7 +27,7 @@
 
 using System;
 
-namespace Newtonsoft.Json.Schema
+namespace NewtonsoftFork.Json.Schema
 {
     /// <summary>
     /// <para>

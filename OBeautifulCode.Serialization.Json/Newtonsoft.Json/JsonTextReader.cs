@@ -32,9 +32,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.IO;
 using System.Globalization;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Utilities;
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     internal enum ReadType
     {

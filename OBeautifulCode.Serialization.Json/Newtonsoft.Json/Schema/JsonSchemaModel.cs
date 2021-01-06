@@ -27,10 +27,10 @@
 
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Linq;
+using NewtonsoftFork.Json.Utilities;
 
-namespace Newtonsoft.Json.Schema
+namespace NewtonsoftFork.Json.Schema
 {
     [Obsolete("JSON Schema validation has been moved to its own package. See http://www.newtonsoft.com/jsonschema for more details.")]
     internal class JsonSchemaModel

@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// The exception thrown when an error occurs during JSON serialization or deserialization.

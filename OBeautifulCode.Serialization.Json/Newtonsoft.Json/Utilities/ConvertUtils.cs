@@ -31,13 +31,13 @@ using System.Globalization;
 using System.ComponentModel;
 using System.Text;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json.Serialization;
+using NewtonsoftFork.Json.Serialization;
 using System.Reflection;
 #if NET20
-using Newtonsoft.Json.Utilities.LinqBridge;
+using NewtonsoftFork.Json.Utilities.LinqBridge;
 #endif
 
-namespace Newtonsoft.Json.Utilities
+namespace NewtonsoftFork.Json.Utilities
 {
     internal enum PrimitiveTypeCode
     {

@@ -27,14 +27,14 @@
 
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Utilities;
 using System.Globalization;
 #if !(NET35 || NET20 || PORTABLE40)
 using System.Dynamic;
 using System.Linq.Expressions;
 #endif
 
-namespace Newtonsoft.Json.Linq
+namespace NewtonsoftFork.Json.Linq
 {
     /// <summary>
     /// Represents a value in JSON (string, integer, date, etc).

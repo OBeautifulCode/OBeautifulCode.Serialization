@@ -28,11 +28,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Linq;
+using NewtonsoftFork.Json.Utilities;
 using System.Globalization;
 
-namespace Newtonsoft.Json.Schema
+namespace NewtonsoftFork.Json.Schema
 {
     /// <summary>
     /// <para>

@@ -6,7 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
-namespace Newtonsoft.Json.Serialization
+namespace NewtonsoftFork.Json.Serialization
 {
     internal class TraceJsonReader : JsonReader, IJsonLineInfo
     {

@@ -11,9 +11,9 @@ namespace OBeautifulCode.Serialization.Json
     using System.Collections.Generic;
     using System.Linq;
 
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using Newtonsoft.Json.Serialization;
+    using NewtonsoftFork.Json;
+    using NewtonsoftFork.Json.Converters;
+    using NewtonsoftFork.Json.Serialization;
 
     using OBeautifulCode.Serialization;
 

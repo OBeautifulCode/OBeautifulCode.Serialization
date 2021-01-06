@@ -29,7 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// Instructs the <see cref="JsonSerializer"/> to always serialize the member, and require the member has a value.

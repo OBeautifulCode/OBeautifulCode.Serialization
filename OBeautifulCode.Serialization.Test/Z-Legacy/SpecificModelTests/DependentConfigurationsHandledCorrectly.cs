@@ -19,8 +19,8 @@ namespace OBeautifulCode.Serialization.Test
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Serializers;
 
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+    using NewtonsoftFork.Json;
+    using NewtonsoftFork.Json.Linq;
 
     using OBeautifulCode.Assertion.Recipes;
     using OBeautifulCode.Serialization.Bson;
@@ -32,9 +32,9 @@ namespace OBeautifulCode.Serialization.Test
 
     using static System.FormattableString;
 
-    using JsonReader = Newtonsoft.Json.JsonReader;
-    using JsonToken = Newtonsoft.Json.JsonToken;
-    using JsonWriter = Newtonsoft.Json.JsonWriter;
+    using JsonReader = NewtonsoftFork.Json.JsonReader;
+    using JsonToken = NewtonsoftFork.Json.JsonToken;
+    using JsonWriter = NewtonsoftFork.Json.JsonWriter;
 
     public static class DependentConfigurationsHandledCorrectly
     {

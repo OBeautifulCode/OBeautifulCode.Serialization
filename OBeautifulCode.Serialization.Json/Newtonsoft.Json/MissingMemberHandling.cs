@@ -29,7 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Newtonsoft.Json
+namespace NewtonsoftFork.Json
 {
     /// <summary>
     /// Specifies missing member handling options for the <see cref="JsonSerializer"/>.

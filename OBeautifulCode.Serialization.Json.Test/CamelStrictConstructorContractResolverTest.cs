@@ -128,7 +128,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             expected.RoundtripSerializeViaJsonWithCallbackVerification(VerificationCallback, typeof(TypesToRegisterJsonSerializationConfiguration<TestModelWithOptionalConstructorParameters>));
         }
 
-        [Fact(Skip = "See comment in CreatePropertyFromConstructorParameterWithConstructorInfo about the bug in Newtonsoft.Json")]
+        [Fact(Skip = "See comment in CreatePropertyFromConstructorParameterWithConstructorInfo about the bug in NewtonsoftFork.Json")]
         public static void Deserialize___Should_roundtrip_serialized_TestModelWithOptionalConstructorParameters___When_payload_is_missing_properties_for_constructor_parameters_with_default_values()
         {
             // Arrange

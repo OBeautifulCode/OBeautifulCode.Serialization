@@ -25,7 +25,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace Newtonsoft.Json.Bson
+namespace NewtonsoftFork.Json.Bson
 {
     internal enum BsonType : sbyte
     {

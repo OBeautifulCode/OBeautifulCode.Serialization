@@ -29,17 +29,17 @@ using System;
 using System.Globalization;
 using System.ComponentModel;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Utilities;
-using Newtonsoft.Json.Serialization;
+using NewtonsoftFork.Json.Linq;
+using NewtonsoftFork.Json.Utilities;
+using NewtonsoftFork.Json.Serialization;
 #if NET20
-using Newtonsoft.Json.Utilities.LinqBridge;
+using NewtonsoftFork.Json.Utilities.LinqBridge;
 #else
 using System.Linq;
 
 #endif
 
-namespace Newtonsoft.Json.Schema
+namespace NewtonsoftFork.Json.Schema
 {
     /// <summary>
     /// <para>

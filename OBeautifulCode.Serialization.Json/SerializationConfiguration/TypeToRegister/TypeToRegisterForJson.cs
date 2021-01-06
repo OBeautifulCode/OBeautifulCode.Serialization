@@ -8,7 +8,7 @@ namespace OBeautifulCode.Serialization.Json
 {
     using System;
 
-    using Newtonsoft.Json;
+    using NewtonsoftFork.Json;
 
     using static System.FormattableString;
 

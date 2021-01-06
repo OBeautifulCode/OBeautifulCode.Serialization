@@ -10,8 +10,8 @@ namespace OBeautifulCode.Serialization.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+    using NewtonsoftFork.Json;
+    using NewtonsoftFork.Json.Linq;
 
     using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Representation.System;
@@ -22,7 +22,7 @@ namespace OBeautifulCode.Serialization.Json
     /// JSON serializer.
     /// </summary>
     /// <remarks>
-    /// Here is the source of Newtonsoft.Json 9.0.1: <a href="https://github.com/JamesNK/Newtonsoft.Json/tree/e5ac9a8473dfdefb8fe2cddae433a9aaa94a5b37"/>.
+    /// Here is the source of NewtonsoftFork.Json 9.0.1: <a href="https://github.com/JamesNK/NewtonsoftFork.Json/tree/e5ac9a8473dfdefb8fe2cddae433a9aaa94a5b37"/>.
     /// </remarks>
     public class ObcJsonSerializer : ObcSerializerBase
     {

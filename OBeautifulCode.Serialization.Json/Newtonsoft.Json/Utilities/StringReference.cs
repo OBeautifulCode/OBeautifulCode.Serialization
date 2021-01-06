@@ -27,7 +27,7 @@
 
 using System;
 
-namespace Newtonsoft.Json.Utilities
+namespace NewtonsoftFork.Json.Utilities
 {
     internal struct StringReference
     {

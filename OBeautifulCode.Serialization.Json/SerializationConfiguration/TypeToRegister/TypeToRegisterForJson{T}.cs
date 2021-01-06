@@ -6,7 +6,7 @@
 
 namespace OBeautifulCode.Serialization.Json
 {
-    using Newtonsoft.Json;
+    using NewtonsoftFork.Json;
 
     /// <inheritdoc />
     /// <typeparam name="T">The type to register.</typeparam>

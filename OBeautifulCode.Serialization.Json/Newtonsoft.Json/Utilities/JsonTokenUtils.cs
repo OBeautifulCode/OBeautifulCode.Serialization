@@ -28,7 +28,7 @@
 using System;
 using System.Text;
 
-namespace Newtonsoft.Json.Utilities
+namespace NewtonsoftFork.Json.Utilities
 {
     internal static class JsonTokenUtils
     {

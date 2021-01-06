@@ -29,14 +29,14 @@
 using System;
 using System.Collections.Generic;
 #if NET20
-using Newtonsoft.Json.Utilities.LinqBridge;
+using NewtonsoftFork.Json.Utilities.LinqBridge;
 #endif
 using System.Text;
 using System.Reflection;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Utilities;
 using System.Globalization;
 
-namespace Newtonsoft.Json.Serialization
+namespace NewtonsoftFork.Json.Serialization
 {
     /// <summary>
     /// Get and set values for a <see cref="MemberInfo"/> using dynamic methods.

@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
-namespace Newtonsoft.Json.Serialization
+namespace NewtonsoftFork.Json.Serialization
 {
     /// <summary>
     /// Represents a trace writer that writes to memory. When the trace message limit is

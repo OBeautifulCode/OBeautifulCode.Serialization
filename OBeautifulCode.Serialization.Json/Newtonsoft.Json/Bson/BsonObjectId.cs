@@ -26,9 +26,9 @@
 #endregion
 
 using System;
-using Newtonsoft.Json.Utilities;
+using NewtonsoftFork.Json.Utilities;
 
-namespace Newtonsoft.Json.Bson
+namespace NewtonsoftFork.Json.Bson
 {
     /// <summary>
     /// Represents a BSON Oid (object id).
