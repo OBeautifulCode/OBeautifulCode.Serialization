@@ -36,6 +36,8 @@ namespace NewtonsoftFork.Json.Converters
     /// <summary>
     /// Converts a <see cref="KeyValuePair{TKey,TValue}"/> to and from JSON.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class KeyValuePairConverter : JsonConverter
     {
         private const string KeyName = "Key";

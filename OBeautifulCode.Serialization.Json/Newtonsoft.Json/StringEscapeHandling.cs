@@ -30,6 +30,7 @@ namespace NewtonsoftFork.Json
     /// <summary>
     /// Specifies how strings are escaped when writing JSON text.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum StringEscapeHandling
     {
         /// <summary>

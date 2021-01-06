@@ -31,6 +31,8 @@ using NewtonsoftFork.Json.Utilities;
 
 namespace NewtonsoftFork.Json.Serialization
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal static class CachedAttributeGetter<T> where T : Attribute
     {
         private static readonly ThreadSafeStore<object, T> TypeAttributeCache = new ThreadSafeStore<object, T>(JsonTypeReflector.GetAttribute<T>);

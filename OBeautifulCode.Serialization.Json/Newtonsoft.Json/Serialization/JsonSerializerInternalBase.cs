@@ -33,6 +33,8 @@ using NewtonsoftFork.Json.Utilities;
 
 namespace NewtonsoftFork.Json.Serialization
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal abstract class JsonSerializerInternalBase
     {
         private class ReferenceEqualsEqualityComparer : IEqualityComparer<object>

@@ -30,6 +30,7 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// Provides methods to get and set values.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public interface IValueProvider
     {
         /// <summary>

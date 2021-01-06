@@ -32,13 +32,14 @@ using System.Text;
 using System.IO;
 using NewtonsoftFork.Json.Serialization;
 using NewtonsoftFork.Json.Utilities;
-using NewtonsoftFork.Json.Linq;
 
 namespace NewtonsoftFork.Json.Bson
 {
     /// <summary>
     /// Represents a reader that provides fast, non-cached, forward-only access to serialized JSON data.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class BsonReader : JsonReader
     {
         private const int MaxCharBytesSize = 128;

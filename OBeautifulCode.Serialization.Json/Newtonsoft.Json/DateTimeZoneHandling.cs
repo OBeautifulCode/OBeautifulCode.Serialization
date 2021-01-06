@@ -32,6 +32,7 @@ namespace NewtonsoftFork.Json
     /// <summary>
     /// Specifies how to treat the time value when converting between string and <see cref="DateTime"/>.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum DateTimeZoneHandling
     {
         /// <summary>

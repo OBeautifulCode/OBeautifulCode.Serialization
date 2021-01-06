@@ -30,6 +30,7 @@ namespace NewtonsoftFork.Json
     /// <summary>
     /// Specifies formatting options for the <see cref="JsonTextWriter"/>.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum Formatting
     {
         /// <summary>

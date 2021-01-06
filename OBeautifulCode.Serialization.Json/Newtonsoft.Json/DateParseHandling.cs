@@ -30,6 +30,7 @@ namespace NewtonsoftFork.Json
     /// <summary>
     /// Specifies how date formatted strings, e.g. "\/Date(1198908717056)\/" and "2012-03-21T05:40Z", are parsed when reading JSON text.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum DateParseHandling
     {
         /// <summary>

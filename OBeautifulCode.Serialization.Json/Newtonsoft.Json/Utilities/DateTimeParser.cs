@@ -29,6 +29,7 @@ using System;
 
 namespace NewtonsoftFork.Json.Utilities
 {
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal enum ParserTimeZone
     {
         Unspecified = 0,
@@ -37,6 +38,8 @@ namespace NewtonsoftFork.Json.Utilities
         LocalEastOfUtc = 3
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal struct DateTimeParser
     {
         static DateTimeParser()

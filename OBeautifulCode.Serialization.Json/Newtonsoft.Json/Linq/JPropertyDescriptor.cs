@@ -34,6 +34,8 @@ namespace NewtonsoftFork.Json.Linq
     /// <summary>
     /// Represents a view of a <see cref="JProperty"/>.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class JPropertyDescriptor : PropertyDescriptor
     {
         /// <summary>

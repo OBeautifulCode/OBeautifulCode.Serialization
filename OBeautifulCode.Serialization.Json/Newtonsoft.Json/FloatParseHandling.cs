@@ -30,6 +30,7 @@ namespace NewtonsoftFork.Json
     /// <summary>
     /// Specifies how floating point numbers, e.g. 1.0 and 9.9, are parsed when reading JSON text.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum FloatParseHandling
     {
         /// <summary>

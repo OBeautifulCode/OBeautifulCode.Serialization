@@ -47,6 +47,8 @@ namespace NewtonsoftFork.Json.Linq
     /// <summary>
     /// Represents a token that can contain other tokens.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public abstract class JContainer : JToken, IList<JToken>
 #if !(DOTNET || PORTABLE || PORTABLE40)
         , ITypedList, IBindingList

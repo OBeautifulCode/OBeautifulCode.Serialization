@@ -35,6 +35,8 @@ namespace NewtonsoftFork.Json
     /// <summary>
     /// Represents a collection of <see cref="JsonConverter"/>.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class JsonConverterCollection : Collection<JsonConverter>
     {
     }

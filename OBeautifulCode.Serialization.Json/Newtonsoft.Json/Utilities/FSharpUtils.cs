@@ -36,6 +36,8 @@ using NewtonsoftFork.Json.Serialization;
 
 namespace NewtonsoftFork.Json.Utilities
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class FSharpFunction
     {
         private readonly object _instance;
@@ -55,6 +57,8 @@ namespace NewtonsoftFork.Json.Utilities
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal static class FSharpUtils
     {
         private static readonly object Lock = new object();

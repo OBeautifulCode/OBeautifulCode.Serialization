@@ -38,6 +38,7 @@ namespace NewtonsoftFork.Json
     /// Incoming types should be validated with a custom <see cref="T:System.Runtime.Serialization.SerializationBinder"/>
     /// when deserializing with a value other than <c>TypeNameHandling.None</c>.
     /// </remarks>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     [Flags]
     public enum TypeNameHandling
     {

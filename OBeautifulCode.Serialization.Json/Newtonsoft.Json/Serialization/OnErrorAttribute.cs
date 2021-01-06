@@ -33,6 +33,8 @@ namespace NewtonsoftFork.Json.Serialization
     /// When applied to a method, specifies that the method is called when an error occurs serializing an object.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, Inherited = false)]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public sealed class OnErrorAttribute : Attribute
     {
     }

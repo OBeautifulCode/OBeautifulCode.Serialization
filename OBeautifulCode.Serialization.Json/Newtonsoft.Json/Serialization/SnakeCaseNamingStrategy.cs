@@ -7,6 +7,8 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// A snake case naming strategy.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class SnakeCaseNamingStrategy : NamingStrategy
     {
         /// <summary>

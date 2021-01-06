@@ -113,7 +113,6 @@
     <Compile Include="Newtonsoft.Json\Converters\ExpandoObjectConverter.cs" />
     <Compile Include="Newtonsoft.Json\Converters\IsoDateTimeConverter.cs" />
     <Compile Include="Newtonsoft.Json\Converters\JavaScriptDateTimeConverter.cs" />
-    <Compile Include="Newtonsoft.Json\Converters\JsonValueConverter.cs" />
     <Compile Include="Newtonsoft.Json\Converters\KeyValuePairConverter.cs" />
     <Compile Include="Newtonsoft.Json\Converters\RegexConverter.cs" />
     <Compile Include="Newtonsoft.Json\Converters\StringEnumConverter.cs" />
@@ -151,7 +150,6 @@
     <Compile Include="Newtonsoft.Json\JsonTextReader.cs" />
     <Compile Include="Newtonsoft.Json\JsonTextWriter.cs" />
     <Compile Include="Newtonsoft.Json\JsonToken.cs" />
-    <Compile Include="Newtonsoft.Json\JsonValidatingReader.cs" />
     <Compile Include="Newtonsoft.Json\JsonWriter.cs" />
     <Compile Include="Newtonsoft.Json\JsonWriterException.cs" />
     <Compile Include="Newtonsoft.Json\Linq\CommentHandling.cs" />
@@ -194,22 +192,6 @@
     <Compile Include="Newtonsoft.Json\PreserveReferencesHandling.cs" />
     <Compile Include="Newtonsoft.Json\ReferenceLoopHandling.cs" />
     <Compile Include="Newtonsoft.Json\Required.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\Extensions.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\JsonSchema.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\JsonSchemaBuilder.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\JsonSchemaConstants.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\JsonSchemaException.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\JsonSchemaGenerator.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\JsonSchemaModel.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\JsonSchemaModelBuilder.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\JsonSchemaNode.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\JsonSchemaNodeCollection.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\JsonSchemaResolver.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\JsonSchemaType.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\JsonSchemaWriter.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\UndefinedSchemaIdHandling.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\ValidationEventArgs.cs" />
-    <Compile Include="Newtonsoft.Json\Schema\ValidationEventHandler.cs" />
     <Compile Include="Newtonsoft.Json\SerializationBinder.cs" />
     <Compile Include="Newtonsoft.Json\Serialization\CachedAttributeGetter.cs" />
     <Compile Include="Newtonsoft.Json\Serialization\CamelCaseNamingStrategy.cs" />
@@ -279,7 +261,6 @@
     <Compile Include="Newtonsoft.Json\Utilities\JavaScriptUtils.cs" />
     <Compile Include="Newtonsoft.Json\Utilities\JsonTokenUtils.cs" />
     <Compile Include="Newtonsoft.Json\Utilities\LateBoundReflectionDelegateFactory.cs" />
-    <Compile Include="Newtonsoft.Json\Utilities\LinqBridge.cs" />
     <Compile Include="Newtonsoft.Json\Utilities\MathUtils.cs" />
     <Compile Include="Newtonsoft.Json\Utilities\MethodCall.cs" />
     <Compile Include="Newtonsoft.Json\Utilities\MiscellaneousUtils.cs" />

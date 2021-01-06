@@ -29,6 +29,7 @@ using System;
 
 namespace NewtonsoftFork.Json.Bson
 {
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal enum BsonBinaryType : byte
     {
         Binary = 0x00,

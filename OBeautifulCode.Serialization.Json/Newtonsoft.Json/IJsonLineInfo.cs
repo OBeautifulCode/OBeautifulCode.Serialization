@@ -30,6 +30,7 @@ namespace NewtonsoftFork.Json
     /// <summary>
     /// Provides an interface to enable a class to return line and position information.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public interface IJsonLineInfo
     {
         /// <summary>

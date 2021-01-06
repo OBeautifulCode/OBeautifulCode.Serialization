@@ -29,6 +29,8 @@ using System;
 
 namespace NewtonsoftFork.Json.Utilities
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class PropertyNameTable
     {
         // used to defeat hashtable DoS attack where someone passes in lots of strings that hash to the same hash code

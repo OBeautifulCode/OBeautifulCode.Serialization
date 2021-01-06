@@ -10,6 +10,8 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// Represents a trace writer that writes to the application's <see cref="TraceListener"/> instances.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class DiagnosticsTraceWriter : ITraceWriter
     {
         /// <summary>

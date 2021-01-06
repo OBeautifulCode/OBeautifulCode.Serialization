@@ -5,6 +5,8 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// The default naming strategy. Property names and dictionary keys are unchanged.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class DefaultNamingStrategy : NamingStrategy
     {
         /// <summary>

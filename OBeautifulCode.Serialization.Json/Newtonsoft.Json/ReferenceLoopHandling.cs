@@ -34,6 +34,7 @@ namespace NewtonsoftFork.Json
     /// <summary>
     /// Specifies reference loop handling options for the <see cref="JsonSerializer"/>.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum ReferenceLoopHandling
     {
         /// <summary>

@@ -7,6 +7,8 @@ namespace NewtonsoftFork.Json.Linq
     /// <summary>
     /// Specifies the settings used when loading JSON.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class JsonLoadSettings
     {
         private CommentHandling _commentHandling;

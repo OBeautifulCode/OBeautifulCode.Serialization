@@ -45,6 +45,8 @@ namespace NewtonsoftFork.Json
     /// <example>
     ///   <code lang="cs" source="..\Src\NewtonsoftFork.Json.Tests\Documentation\SerializationTests.cs" region="SerializeObject" title="Serializing and Deserializing JSON with JsonConvert" />
     /// </example>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public static class JsonConvert
     {
         /// <summary>

@@ -38,6 +38,7 @@ namespace NewtonsoftFork.Json
     ///   <code lang="cs" source="..\Src\NewtonsoftFork.Json.Tests\Documentation\SerializationTests.cs" region="ReducingSerializedJsonSizeDefaultValueHandlingExample" title="DefaultValueHandling Ignore Example" />
     /// </example>
     [Flags]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum DefaultValueHandling
     {
         /// <summary>

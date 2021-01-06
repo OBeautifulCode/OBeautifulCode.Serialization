@@ -30,6 +30,8 @@ using System.IO;
 
 namespace NewtonsoftFork.Json.Utilities
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class Base64Encoder
     {
         private const int Base64LineSize = 76;

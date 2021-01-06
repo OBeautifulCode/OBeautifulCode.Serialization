@@ -41,6 +41,8 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// Get and set values for a <see cref="MemberInfo"/> using dynamic methods.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class DynamicValueProvider : IValueProvider
     {
         private readonly MemberInfo _memberInfo;

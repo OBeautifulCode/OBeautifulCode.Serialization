@@ -32,6 +32,8 @@ namespace NewtonsoftFork.Json.Linq
     /// <summary>
     /// Compares tokens to determine whether they are equal.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class JTokenEqualityComparer : IEqualityComparer<JToken>
     {
         /// <summary>

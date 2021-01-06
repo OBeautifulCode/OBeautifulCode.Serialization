@@ -6,6 +6,8 @@ using NewtonsoftFork.Json.Utilities;
 
 namespace NewtonsoftFork.Json.Linq.JsonPath
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal abstract class PathFilter
     {
         public abstract IEnumerable<JToken> ExecuteFilter(IEnumerable<JToken> current, bool errorWhenNoMatch);

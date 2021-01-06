@@ -35,6 +35,8 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// Provides methods to get attributes from a <see cref="System.Type"/>, <see cref="MemberInfo"/>, <see cref="ParameterInfo"/> or <see cref="Assembly"/>.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class ReflectionAttributeProvider : IAttributeProvider
     {
         private readonly object _attributeProvider;

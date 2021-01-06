@@ -33,6 +33,7 @@ using NewtonsoftFork.Json.Utilities;
 
 namespace NewtonsoftFork.Json
 {
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal enum JsonContainerType
     {
         None = 0,
@@ -41,6 +42,8 @@ namespace NewtonsoftFork.Json
         Constructor = 3
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal struct JsonPosition
     {
         private static readonly char[] SpecialCharacters = { '.', ' ', '[', ']', '(', ')' };

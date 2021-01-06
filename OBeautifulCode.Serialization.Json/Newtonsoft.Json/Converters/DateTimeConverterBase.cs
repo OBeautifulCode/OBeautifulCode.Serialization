@@ -32,6 +32,8 @@ namespace NewtonsoftFork.Json.Converters
     /// <summary>
     /// Provides a base class for converting a <see cref="DateTime"/> to and from JSON.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public abstract class DateTimeConverterBase : JsonConverter
     {
         /// <summary>

@@ -30,6 +30,8 @@ using System.Collections.Generic;
 
 namespace NewtonsoftFork.Json.Bson
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal abstract class BsonToken
     {
         public abstract BsonType Type { get; }
@@ -37,6 +39,8 @@ namespace NewtonsoftFork.Json.Bson
         public int CalculatedSize { get; set; }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class BsonObject : BsonToken, IEnumerable<BsonProperty>
     {
         private readonly List<BsonProperty> _children = new List<BsonProperty>();
@@ -63,6 +67,8 @@ namespace NewtonsoftFork.Json.Bson
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class BsonArray : BsonToken, IEnumerable<BsonToken>
     {
         private readonly List<BsonToken> _children = new List<BsonToken>();
@@ -89,6 +95,8 @@ namespace NewtonsoftFork.Json.Bson
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class BsonValue : BsonToken
     {
         private readonly object _value;
@@ -111,6 +119,8 @@ namespace NewtonsoftFork.Json.Bson
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class BsonString : BsonValue
     {
         public int ByteCount { get; set; }
@@ -123,6 +133,8 @@ namespace NewtonsoftFork.Json.Bson
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class BsonBinary : BsonValue
     {
         public BsonBinaryType BinaryType { get; set; }
@@ -134,6 +146,8 @@ namespace NewtonsoftFork.Json.Bson
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class BsonRegex : BsonToken
     {
         public BsonString Pattern { get; set; }
@@ -151,6 +165,8 @@ namespace NewtonsoftFork.Json.Bson
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class BsonProperty
     {
         public BsonString Name { get; set; }

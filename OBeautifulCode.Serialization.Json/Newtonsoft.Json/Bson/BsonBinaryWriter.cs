@@ -33,6 +33,8 @@ using NewtonsoftFork.Json.Utilities;
 
 namespace NewtonsoftFork.Json.Bson
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class BsonBinaryWriter
     {
         private static readonly Encoding Encoding = new UTF8Encoding(false);

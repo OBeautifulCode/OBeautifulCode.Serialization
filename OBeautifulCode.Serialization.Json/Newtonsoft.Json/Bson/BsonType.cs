@@ -27,6 +27,7 @@
 
 namespace NewtonsoftFork.Json.Bson
 {
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal enum BsonType : sbyte
     {
         Number = 1,

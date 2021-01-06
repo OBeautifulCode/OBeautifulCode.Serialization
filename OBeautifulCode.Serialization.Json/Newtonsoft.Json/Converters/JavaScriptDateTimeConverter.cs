@@ -34,6 +34,8 @@ namespace NewtonsoftFork.Json.Converters
     /// <summary>
     /// Converts a <see cref="DateTime"/> to and from a JavaScript date constructor (e.g. new Date(52231943)).
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class JavaScriptDateTimeConverter : DateTimeConverterBase
     {
         /// <summary>

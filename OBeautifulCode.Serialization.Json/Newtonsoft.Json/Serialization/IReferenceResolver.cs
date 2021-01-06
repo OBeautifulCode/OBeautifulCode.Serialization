@@ -30,6 +30,7 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// Used to resolve references when serializing and deserializing JSON by the <see cref="JsonSerializer"/>.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public interface IReferenceResolver
     {
         /// <summary>

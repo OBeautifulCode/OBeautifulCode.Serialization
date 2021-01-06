@@ -32,6 +32,8 @@ using NewtonsoftFork.Json.Utilities;
 
 namespace NewtonsoftFork.Json.Linq
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class JPropertyKeyedCollection : Collection<JToken>
     {
         private static readonly IEqualityComparer<string> Comparer = StringComparer.Ordinal;

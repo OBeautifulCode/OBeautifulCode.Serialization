@@ -38,12 +38,15 @@ using System.Linq;
 
 namespace NewtonsoftFork.Json.Utilities
 {
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal interface IWrappedDictionary
         : IDictionary
     {
         object UnderlyingDictionary { get; }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class DictionaryWrapper<TKey, TValue> : IDictionary<TKey, TValue>, IWrappedDictionary
     {
         private readonly IDictionary _dictionary;

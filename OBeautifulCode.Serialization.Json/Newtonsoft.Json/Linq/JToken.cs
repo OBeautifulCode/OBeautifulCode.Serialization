@@ -50,6 +50,8 @@ namespace NewtonsoftFork.Json.Linq
     /// <summary>
     /// Represents an abstract JSON token.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public abstract class JToken : IJEnumerable<JToken>, IJsonLineInfo
 #if !(DOTNET || PORTABLE40 || PORTABLE)
         , ICloneable

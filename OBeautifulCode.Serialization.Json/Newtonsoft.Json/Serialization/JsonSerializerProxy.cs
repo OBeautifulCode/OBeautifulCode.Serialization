@@ -34,6 +34,8 @@ using System.Runtime.Serialization;
 
 namespace NewtonsoftFork.Json.Serialization
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class JsonSerializerProxy : JsonSerializer
     {
         private readonly JsonSerializerInternalReader _serializerReader;

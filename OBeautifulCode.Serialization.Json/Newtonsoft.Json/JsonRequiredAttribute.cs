@@ -34,6 +34,8 @@ namespace NewtonsoftFork.Json
     /// <summary>
     /// Instructs the <see cref="JsonSerializer"/> to always serialize the member, and require the member has a value.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
     public sealed class JsonRequiredAttribute : Attribute
     {

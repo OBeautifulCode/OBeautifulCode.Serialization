@@ -26,23 +26,16 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection;
-using System.Runtime.Serialization;
 using NewtonsoftFork.Json.Utilities;
-#if NET20
-using NewtonsoftFork.Json.Utilities.LinqBridge;
-#else
-using System.Linq;
-
-#endif
 
 namespace NewtonsoftFork.Json.Converters
 {
     /// <summary>
     /// Converts an <see cref="Enum"/> to and from its name string value.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class StringEnumConverter : JsonConverter
     {
         /// <summary>

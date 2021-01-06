@@ -12,6 +12,8 @@ namespace NewtonsoftFork.Json.Serialization
     /// Represents a trace writer that writes to memory. When the trace message limit is
     /// reached then old trace messages will be removed as new messages are added.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class MemoryTraceWriter : ITraceWriter
     {
         private readonly Queue<string> _traceMessages;

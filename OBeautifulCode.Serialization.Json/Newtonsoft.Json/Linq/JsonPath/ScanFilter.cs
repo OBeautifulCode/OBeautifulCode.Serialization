@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace NewtonsoftFork.Json.Linq.JsonPath
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class ScanFilter : PathFilter
     {
         public string Name { get; set; }

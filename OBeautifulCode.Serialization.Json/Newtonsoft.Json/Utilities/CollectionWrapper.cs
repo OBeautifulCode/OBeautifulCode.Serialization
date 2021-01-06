@@ -39,11 +39,14 @@ using System.Linq;
 
 namespace NewtonsoftFork.Json.Utilities
 {
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal interface IWrappedCollection : IList
     {
         object UnderlyingCollection { get; }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class CollectionWrapper<T> : ICollection<T>, IWrappedCollection
     {
         private readonly IList _list;

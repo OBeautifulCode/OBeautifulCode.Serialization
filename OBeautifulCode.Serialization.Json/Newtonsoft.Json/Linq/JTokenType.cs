@@ -30,6 +30,7 @@ namespace NewtonsoftFork.Json.Linq
     /// <summary>
     /// Specifies the type of token.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum JTokenType
     {
         /// <summary>

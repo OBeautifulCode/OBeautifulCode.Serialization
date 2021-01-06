@@ -13,7 +13,6 @@ namespace OBeautifulCode.Serialization.Json
 
     using NewtonsoftFork.Json;
     using NewtonsoftFork.Json.Converters;
-    using NewtonsoftFork.Json.Serialization;
 
     using OBeautifulCode.Serialization;
 

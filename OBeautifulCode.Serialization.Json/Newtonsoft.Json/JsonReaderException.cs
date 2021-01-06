@@ -35,6 +35,8 @@ namespace NewtonsoftFork.Json
     /// <summary>
     /// The exception thrown when an error occurs while reading JSON text.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
 #if !(DOTNET || PORTABLE || PORTABLE40)
     [Serializable]
 #endif

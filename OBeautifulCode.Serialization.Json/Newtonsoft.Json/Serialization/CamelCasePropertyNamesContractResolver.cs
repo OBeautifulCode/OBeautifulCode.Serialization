@@ -38,6 +38,8 @@ namespace NewtonsoftFork.Json.Serialization
         /// <summary>
         /// Initializes a new instance of the <see cref="CamelCasePropertyNamesContractResolver"/> class.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
         public CamelCasePropertyNamesContractResolver()
 #pragma warning disable 612,618
             : base(true)

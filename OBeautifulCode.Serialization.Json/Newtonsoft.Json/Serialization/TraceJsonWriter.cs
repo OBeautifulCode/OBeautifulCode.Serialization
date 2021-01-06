@@ -8,6 +8,8 @@ using System.Text;
 
 namespace NewtonsoftFork.Json.Serialization
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class TraceJsonWriter : JsonWriter
     {
         private readonly JsonWriter _innerWriter;

@@ -34,6 +34,7 @@ namespace NewtonsoftFork.Json
     ///   <code lang="cs" source="..\Src\NewtonsoftFork.Json.Tests\Documentation\SerializationTests.cs" region="ReducingSerializedJsonSizeNullValueHandlingObject" title="NullValueHandling Class" />
     ///   <code lang="cs" source="..\Src\NewtonsoftFork.Json.Tests\Documentation\SerializationTests.cs" region="ReducingSerializedJsonSizeNullValueHandlingExample" title="NullValueHandling Ignore Example" />
     /// </example>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum NullValueHandling
     {
         /// <summary>

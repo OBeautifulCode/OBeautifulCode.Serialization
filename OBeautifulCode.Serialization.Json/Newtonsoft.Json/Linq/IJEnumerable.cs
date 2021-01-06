@@ -33,6 +33,7 @@ namespace NewtonsoftFork.Json.Linq
     /// Represents a collection of <see cref="JToken"/> objects.
     /// </summary>
     /// <typeparam name="T">The type of token</typeparam>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public interface IJEnumerable<
 #if !(NET20 || NET35)
         out

@@ -40,6 +40,8 @@ using System.Linq;
 
 namespace NewtonsoftFork.Json.Utilities
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class ReflectionMember
     {
         public Type MemberType { get; set; }
@@ -47,6 +49,8 @@ namespace NewtonsoftFork.Json.Utilities
         public Action<object, object> Setter { get; set; }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class ReflectionObject
     {
         public ObjectConstructor<object> Creator { get; private set; }

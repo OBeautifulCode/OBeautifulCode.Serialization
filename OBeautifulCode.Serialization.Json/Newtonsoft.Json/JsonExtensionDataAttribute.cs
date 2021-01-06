@@ -8,6 +8,8 @@ namespace NewtonsoftFork.Json
     /// Instructs the <see cref="JsonSerializer"/> to deserialize properties with no matching class member into the specified collection
     /// and write values during serialization.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
     public class JsonExtensionDataAttribute : Attribute
     {

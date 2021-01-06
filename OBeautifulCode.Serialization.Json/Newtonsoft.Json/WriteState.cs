@@ -32,6 +32,7 @@ namespace NewtonsoftFork.Json
     /// <summary>
     /// Specifies the state of the <see cref="JsonWriter"/>.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum WriteState
     {
         /// <summary>

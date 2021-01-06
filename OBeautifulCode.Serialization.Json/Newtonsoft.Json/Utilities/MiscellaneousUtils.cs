@@ -37,6 +37,8 @@ namespace NewtonsoftFork.Json.Utilities
 {
     internal delegate T Creator<T>();
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal static class MiscellaneousUtils
     {
         public static bool ValueEquals(object objA, object objB)

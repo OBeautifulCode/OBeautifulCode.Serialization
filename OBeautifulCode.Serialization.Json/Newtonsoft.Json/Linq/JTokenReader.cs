@@ -33,6 +33,8 @@ namespace NewtonsoftFork.Json.Linq
     /// <summary>
     /// Represents a reader that provides fast, non-cached, forward-only access to serialized JSON data.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class JTokenReader : JsonReader, IJsonLineInfo
     {
         private readonly JToken _root;

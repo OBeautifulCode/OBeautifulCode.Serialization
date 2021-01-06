@@ -36,6 +36,8 @@ namespace NewtonsoftFork.Json.Linq
     /// <summary>
     /// Represents a JSON constructor.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class JConstructor : JContainer
     {
         private string _name;

@@ -33,6 +33,8 @@ namespace NewtonsoftFork.Json.Bson
     /// <summary>
     /// Represents a BSON Oid (object id).
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class BsonObjectId
     {
         /// <summary>

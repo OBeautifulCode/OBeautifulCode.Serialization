@@ -33,6 +33,8 @@ namespace NewtonsoftFork.Json
     /// <summary>
     /// Instructs the <see cref="JsonSerializer"/> how to serialize the object.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
     public abstract class JsonContainerAttribute : Attribute
     {

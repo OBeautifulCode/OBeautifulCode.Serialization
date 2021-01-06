@@ -8,6 +8,7 @@ namespace NewtonsoftFork.Json.Linq
     /// Specifies how null value properties are merged.
     /// </summary>
     [Flags]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum MergeNullValueHandling
     {
         /// <summary>

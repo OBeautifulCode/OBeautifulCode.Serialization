@@ -39,6 +39,8 @@ namespace NewtonsoftFork.Json.Linq
     /// <summary>
     /// Represents a value in JSON (string, integer, date, etc).
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class JValue : JToken, IEquatable<JValue>, IFormattable, IComparable, IComparable<JValue>
 #if !PORTABLE
         , IConvertible

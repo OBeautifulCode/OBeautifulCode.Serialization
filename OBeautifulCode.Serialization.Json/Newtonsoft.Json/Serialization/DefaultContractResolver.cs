@@ -27,7 +27,6 @@
 
 using System;
 using System.Collections;
-using NewtonsoftFork.Json.Schema;
 #if !(NET35 || NET20 || PORTABLE || PORTABLE40)
 using System.Collections.Concurrent;
 #endif
@@ -55,6 +54,8 @@ using System.Linq;
 
 namespace NewtonsoftFork.Json.Serialization
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal struct ResolverContractKey : IEquatable<ResolverContractKey>
     {
         private readonly Type _resolverType;
@@ -87,6 +88,8 @@ namespace NewtonsoftFork.Json.Serialization
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class DefaultContractResolverState
     {
         public Dictionary<ResolverContractKey, JsonContract> ContractCache;
@@ -96,6 +99,8 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// Used by <see cref="JsonSerializer"/> to resolves a <see cref="JsonContract"/> for a given <see cref="System.Type"/>.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class DefaultContractResolver : IContractResolver
     {
 #pragma warning disable 612,618

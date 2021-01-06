@@ -32,6 +32,8 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// Provides information surrounding an error.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class ErrorContext
     {
         internal ErrorContext(object originalObject, object member, string path, Exception error)

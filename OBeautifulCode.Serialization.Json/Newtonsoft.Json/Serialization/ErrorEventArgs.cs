@@ -32,6 +32,8 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// Provides data for the Error event.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class ErrorEventArgs : EventArgs
     {
         /// <summary>

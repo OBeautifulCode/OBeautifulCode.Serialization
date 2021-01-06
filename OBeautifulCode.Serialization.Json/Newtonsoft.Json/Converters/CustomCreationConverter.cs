@@ -35,6 +35,8 @@ namespace NewtonsoftFork.Json.Converters
     /// Create a custom object
     /// </summary>
     /// <typeparam name="T">The object type to convert.</typeparam>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public abstract class CustomCreationConverter<T> : JsonConverter
     {
         /// <summary>

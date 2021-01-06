@@ -36,6 +36,7 @@ namespace NewtonsoftFork.Json.Serialization
     ///   <code lang="cs" source="..\Src\NewtonsoftFork.Json.Tests\Documentation\SerializationTests.cs" region="ReducingSerializedJsonSizeContractResolverObject" title="IContractResolver Class" />
     ///   <code lang="cs" source="..\Src\NewtonsoftFork.Json.Tests\Documentation\SerializationTests.cs" region="ReducingSerializedJsonSizeContractResolverExample" title="IContractResolver Example" />
     /// </example>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public interface IContractResolver
     {
         /// <summary>

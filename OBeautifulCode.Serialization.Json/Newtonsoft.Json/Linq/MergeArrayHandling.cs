@@ -5,6 +5,7 @@ namespace NewtonsoftFork.Json.Linq
     /// <summary>
     /// Specifies how JSON arrays are merged together.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum MergeArrayHandling
     {
         /// <summary>Concatenate arrays.</summary>

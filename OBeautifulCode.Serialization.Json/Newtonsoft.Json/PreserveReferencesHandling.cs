@@ -38,6 +38,7 @@ namespace NewtonsoftFork.Json
     /// <example>
     ///   <code lang="cs" source="..\Src\NewtonsoftFork.Json.Tests\Documentation\SerializationTests.cs" region="PreservingObjectReferencesOn" title="Preserve Object References" />       
     /// </example>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     [Flags]
     public enum PreserveReferencesHandling
     {

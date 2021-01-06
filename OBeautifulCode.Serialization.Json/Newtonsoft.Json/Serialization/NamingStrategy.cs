@@ -5,6 +5,8 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// A base class for resolving how property names and dictionary keys are serialized.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public abstract class NamingStrategy
     {
         /// <summary>

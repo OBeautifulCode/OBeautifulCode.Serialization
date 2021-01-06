@@ -26,15 +26,14 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
-using NewtonsoftFork.Json.Linq;
 using NewtonsoftFork.Json.Utilities;
 
 namespace NewtonsoftFork.Json.Serialization
 {
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal enum JsonContractType
     {
         None = 0,
@@ -53,6 +52,7 @@ namespace NewtonsoftFork.Json.Serialization
     /// </summary>
     /// <param name="o">The object that raised the callback event.</param>
     /// <param name="context">The streaming context.</param>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public delegate void SerializationCallback(object o, StreamingContext context);
 
     /// <summary>
@@ -61,6 +61,7 @@ namespace NewtonsoftFork.Json.Serialization
     /// <param name="o">The object that raised the callback event.</param>
     /// <param name="context">The streaming context.</param>
     /// <param name="errorContext">The error context.</param>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public delegate void SerializationErrorCallback(object o, StreamingContext context, ErrorContext errorContext);
 
     /// <summary>
@@ -69,17 +70,21 @@ namespace NewtonsoftFork.Json.Serialization
     /// <param name="o">The object to set extension data on.</param>
     /// <param name="key">The extension data key.</param>
     /// <param name="value">The extension data value.</param>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public delegate void ExtensionDataSetter(object o, string key, object value);
 
     /// <summary>
     /// Gets extension data for an object during serialization.
     /// </summary>
     /// <param name="o">The object to set extension data on.</param>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public delegate IEnumerable<KeyValuePair<object, object>> ExtensionDataGetter(object o);
 
     /// <summary>
     /// Contract details for a <see cref="System.Type"/> used by the <see cref="JsonSerializer"/>.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public abstract class JsonContract
     {
         internal bool IsNullable;

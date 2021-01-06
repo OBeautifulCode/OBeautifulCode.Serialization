@@ -40,6 +40,8 @@ namespace NewtonsoftFork.Json.Linq
     /// <example>
     ///   <code lang="cs" source="..\Src\NewtonsoftFork.Json.Tests\Documentation\LinqToJsonTests.cs" region="LinqToJsonCreateParseArray" title="Parsing a JSON Array from Text" />
     /// </example>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class JArray : JContainer, IList<JToken>
     {
         private readonly List<JToken> _values = new List<JToken>();

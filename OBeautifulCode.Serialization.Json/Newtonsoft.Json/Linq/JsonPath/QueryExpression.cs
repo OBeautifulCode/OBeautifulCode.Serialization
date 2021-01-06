@@ -8,6 +8,7 @@ using NewtonsoftFork.Json.Utilities;
 
 namespace NewtonsoftFork.Json.Linq.JsonPath
 {
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal enum QueryOperator
     {
         None = 0,
@@ -22,6 +23,8 @@ namespace NewtonsoftFork.Json.Linq.JsonPath
         Or = 9
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal abstract class QueryExpression
     {
         public QueryOperator Operator { get; set; }
@@ -29,6 +32,8 @@ namespace NewtonsoftFork.Json.Linq.JsonPath
         public abstract bool IsMatch(JToken t);
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class CompositeExpression : QueryExpression
     {
         public List<QueryExpression> Expressions { get; set; }
@@ -66,6 +71,8 @@ namespace NewtonsoftFork.Json.Linq.JsonPath
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class BooleanQueryExpression : QueryExpression
     {
         public List<PathFilter> Path { get; set; }

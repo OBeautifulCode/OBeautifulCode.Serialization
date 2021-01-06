@@ -36,6 +36,8 @@ using NewtonsoftFork.Json.Serialization;
 
 namespace NewtonsoftFork.Json.Utilities
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal static class ImmutableCollectionsUtils
     {
         internal class ImmutableCollectionTypeInfo

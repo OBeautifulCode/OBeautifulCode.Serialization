@@ -35,6 +35,8 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// Get and set values for a <see cref="MemberInfo"/> using reflection.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public class ReflectionValueProvider : IValueProvider
     {
         private readonly MemberInfo _memberInfo;

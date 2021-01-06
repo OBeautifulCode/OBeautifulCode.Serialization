@@ -39,6 +39,7 @@ using NewtonsoftFork.Json.Utilities.LinqBridge;
 
 namespace NewtonsoftFork.Json.Utilities
 {
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal enum PrimitiveTypeCode
     {
         Empty = 0,
@@ -85,12 +86,15 @@ namespace NewtonsoftFork.Json.Utilities
         DBNull = 41
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class TypeInformation
     {
         public Type Type { get; set; }
         public PrimitiveTypeCode TypeCode { get; set; }
     }
 
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal enum ParseResult
     {
         None = 0,
@@ -99,6 +103,8 @@ namespace NewtonsoftFork.Json.Utilities
         Invalid = 3
     }
 
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal static class ConvertUtils
     {
         private static readonly Dictionary<Type, PrimitiveTypeCode> TypeCodeMap =

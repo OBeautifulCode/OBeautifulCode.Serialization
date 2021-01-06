@@ -5,6 +5,7 @@ namespace NewtonsoftFork.Json.Linq
     /// <summary>
     /// Specifies how JSON comments are handled when loading JSON.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum CommentHandling
     {
         /// <summary>
@@ -21,6 +22,7 @@ namespace NewtonsoftFork.Json.Linq
     /// <summary>
     /// Specifies how line information is handled when loading JSON.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public enum LineInfoHandling
     {
         /// <summary>

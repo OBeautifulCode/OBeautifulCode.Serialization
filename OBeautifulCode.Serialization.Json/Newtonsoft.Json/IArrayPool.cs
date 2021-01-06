@@ -6,6 +6,7 @@ namespace NewtonsoftFork.Json
     /// Provides an interface for using pooled arrays.
     /// </summary>
     /// <typeparam name="T">The array type content.</typeparam>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public interface IArrayPool<T>
     {
         /// <summary>

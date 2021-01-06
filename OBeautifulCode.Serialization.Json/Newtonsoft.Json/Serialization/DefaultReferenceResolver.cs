@@ -31,6 +31,8 @@ using System.Globalization;
 
 namespace NewtonsoftFork.Json.Serialization
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     internal class DefaultReferenceResolver : IReferenceResolver
     {
         private int _referenceCount;

@@ -9,6 +9,7 @@ namespace NewtonsoftFork.Json.Serialization
     /// <summary>
     /// Represents a trace writer.
     /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("OBeautifulCode.Serialization.Json", "See package version number")]
     public interface ITraceWriter
     {
         /// <summary>
