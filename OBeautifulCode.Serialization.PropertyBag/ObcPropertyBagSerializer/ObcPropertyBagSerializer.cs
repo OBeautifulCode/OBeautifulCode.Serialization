@@ -202,7 +202,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
             bool ordered)
         {
             var result = type.GetPropertiesFiltered(
-                MemberRelationships.DeclaredOrInherited,
+                MemberRelationships.DeclaredInTypeOrAncestorTypes,
                 MemberOwners.Instance,
                 MemberAccessModifiers.Public,
                 MemberMutability.Writable,
