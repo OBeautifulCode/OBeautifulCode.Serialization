@@ -69,6 +69,8 @@ namespace OBeautifulCode.Assertion.Recipes
 
         public const string DictionaryKeyExampleContextualInfo = "For example, see this key: {0}.";
 
+        public const string DateTimeKindContextualInfo = "Kind is DateTimeKind.{0}.";
+
         public const string DefaultValueContextualInfo = "default(T) is {0}.";
 
         public const string SubjectTypeContextualInfo = "The type of the provided value is '{0}'.";
@@ -206,6 +208,10 @@ namespace OBeautifulCode.Assertion.Recipes
         public const string BeValidEmailAddressExceptionMessageSuffix = "is not a valid email address";
 
         public const string NotBeValidEmailAddressExceptionMessageSuffix = "is a valid email address";
+
+        public const string BeUtcDateTimeExceptionMessageSuffix = "is of a Kind that is not DateTimeKind.Utc";
+
+        public const string BeUtcDateTimeWhenNotNullExceptionMessageSuffix = "is not null and is of a Kind that is not DateTimeKind.Utc";
 
         public static readonly string SubjectAndOperationSequencingErrorMessage = Invariant($"There is an issue with sequencing of the provided value and the supported assertion operators: {nameof(WorkflowExtensions.AsArg)}, {nameof(WorkflowExtensions.AsOp)}, {nameof(WorkflowExtensions.AsTest)}, {nameof(WorkflowExtensions.Must)}, {nameof(WorkflowExtensions.MustForArg)}, {nameof(WorkflowExtensions.MustForOp)}, {nameof(WorkflowExtensions.MustForTest)}, {nameof(WorkflowExtensions.And)}, {nameof(WorkflowExtensions.Each)}.");
 

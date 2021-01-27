@@ -857,7 +857,6 @@ namespace OBeautifulCode.Assertion.Recipes
             ContainOnlyDistinctElementsInternalInternal(assertionTracker, verification, verifiableItem, ContainOnlyDistinctElementsWhenNotNullExceptionMessageSuffix);
         }
 
-
         private static void BeAlphabeticInternal(
             AssertionTracker assertionTracker,
             Verification verification,
@@ -1331,6 +1330,29 @@ namespace OBeautifulCode.Assertion.Recipes
             }
         }
 
+        private static void BeUtcDateTimeInternal(
+            AssertionTracker assertionTracker,
+            Verification verification,
+            VerifiableItem verifiableItem)
+        {
+            NotBeNullInternal(assertionTracker, verification, verifiableItem);
+
+            BeUtcDateTimeInternalInternal(assertionTracker, verification, verifiableItem, BeUtcDateTimeExceptionMessageSuffix);
+        }
+
+        private static void BeUtcDateTimeWhenNotNullInternal(
+            AssertionTracker assertionTracker,
+            Verification verification,
+            VerifiableItem verifiableItem)
+        {
+            if (ReferenceEquals(verifiableItem.ItemValue, null))
+            {
+                return;
+            }
+
+            BeUtcDateTimeInternalInternal(assertionTracker, verification, verifiableItem, BeUtcDateTimeWhenNotNullExceptionMessageSuffix);
+        }
+
         private static void ContainElementInternalInternal(
             AssertionTracker assertionTracker,
             Verification verification,
@@ -1459,6 +1481,26 @@ namespace OBeautifulCode.Assertion.Recipes
                 }
 
                 distinctSet.Add(element);
+            }
+        }
+
+        private static void BeUtcDateTimeInternalInternal(
+            AssertionTracker assertionTracker,
+            Verification verification,
+            VerifiableItem verifiableItem,
+            string exceptionMessageSuffix)
+        {
+            var valueAsDateTime = (DateTime)verifiableItem.ItemValue;
+
+            if (valueAsDateTime.Kind != DateTimeKind.Utc)
+            {
+                var contextualInfo = string.Format(CultureInfo.InvariantCulture, DateTimeKindContextualInfo, valueAsDateTime.Kind);
+
+                var exceptionMessage = BuildVerificationFailedExceptionMessage(assertionTracker, verification, verifiableItem, exceptionMessageSuffix, contextualInfo: contextualInfo);
+
+                var exception = BuildException(assertionTracker, verification, exceptionMessage, ArgumentExceptionKind.ArgumentException);
+
+                throw exception;
             }
         }
     }

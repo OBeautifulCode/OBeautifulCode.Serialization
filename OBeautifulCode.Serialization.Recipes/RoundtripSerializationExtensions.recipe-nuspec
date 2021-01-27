@@ -6,14 +6,14 @@
     <tags>serialization roundtrip test</tags>
     <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.Recipes/nuget-icon.png</iconUrl>
     <dependencies>
-      <dependency id="OBeautifulCode.Assertion.Recipes.Must" version="1.0.24" />
+      <dependency id="OBeautifulCode.Assertion.Recipes.Must" version="1.0.26" />
       <dependency id="OBeautifulCode.Serialization.Bson" version="$version$" />
       <dependency id="OBeautifulCode.Serialization.Json" version="$version$" />
       <dependency id="OBeautifulCode.Serialization.PropertyBag" version="$version$" />
       <dependency id="OBeautifulCode.Serialization.Recipes.Factory" version="$version$" />
-      <dependency id="OBeautifulCode.Reflection.Recipes.AppDomainHelper" version="1.0.107" />
+      <dependency id="OBeautifulCode.Reflection.Recipes.AppDomainHelper" version="1.0.108" />
       <dependency id="OBeautifulCode.Representation.System" version="1.0.55" />
-      <dependency id="OBeautifulCode.Type.Recipes.TypeExtensions" version="1.0.76" />
+      <dependency id="OBeautifulCode.Type.Recipes.TypeExtensions" version="1.0.77" />
       <dependency id="OBeautifulCode.CodeAnalysis.Recipes.SuppressBecause" version="1.0.14" />
     </dependencies>
   </metadata>
