@@ -53,7 +53,7 @@ namespace OBeautifulCode.Serialization
         /// </remarks>
         public static IReadOnlyCollection<Type> InternallyRequiredTypes =>
             new Type[0]
-            .Concat(new[] { typeof(IModel) })
+            .Concat(new[] { typeof(IObject) })
             .Concat(OBeautifulCode.Type.ProjectInfo.Assembly.GetPublicEnumTypes())
             .Concat(OBeautifulCode.Compression.ProjectInfo.Assembly.GetPublicEnumTypes())
             .Concat(OBeautifulCode.Representation.System.ProjectInfo.Assembly.GetPublicEnumTypes())
