@@ -31,41 +31,32 @@ namespace OBeautifulCode.Serialization.Test
 
     using static global::System.FormattableString;
 
-    public static partial class DynamicTypePlaceholderTest
+    public static partial class DescribedSerializationBaseTest
     {
-        private static readonly StringRepresentationTestScenarios<DynamicTypePlaceholder> StringRepresentationTestScenarios = new StringRepresentationTestScenarios<DynamicTypePlaceholder>()
+        private static readonly DescribedSerializationBase ReferenceObjectForEquatableTestScenarios = A.Dummy<DescribedSerializationBase>();
+
+        private static readonly EquatableTestScenarios<DescribedSerializationBase> EquatableTestScenarios = new EquatableTestScenarios<DescribedSerializationBase>()
             .AddScenario(() =>
-                new StringRepresentationTestScenario<DynamicTypePlaceholder>
-                {
-                    Name = "Default Code Generated Scenario",
-                    SystemUnderTestExpectedStringRepresentationFunc = () =>
-                    {
-                        var systemUnderTest = A.Dummy<DynamicTypePlaceholder>();
-
-                        var result = new SystemUnderTestExpectedStringRepresentation<DynamicTypePlaceholder>
-                        {
-                            SystemUnderTest = systemUnderTest,
-                            ExpectedStringRepresentation = Invariant($"OBeautifulCode.Serialization.DynamicTypePlaceholder: <no properties>."),
-                        };
-
-                        return result;
-                    },
-                });
-
-        private static readonly DynamicTypePlaceholder ReferenceObjectForEquatableTestScenarios = A.Dummy<DynamicTypePlaceholder>();
-
-        private static readonly EquatableTestScenarios<DynamicTypePlaceholder> EquatableTestScenarios = new EquatableTestScenarios<DynamicTypePlaceholder>()
-            .AddScenario(() =>
-                new EquatableTestScenario<DynamicTypePlaceholder>
+                new EquatableTestScenario<DescribedSerializationBase>
                 {
                     Name = "Default Code Generated Scenario",
                     ReferenceObject = ReferenceObjectForEquatableTestScenarios,
-                    ObjectsThatAreEqualToButNotTheSameAsReferenceObject = new DynamicTypePlaceholder[]
+                    ObjectsThatAreEqualToButNotTheSameAsReferenceObject = new DescribedSerializationBase[]
                     {
-                        new DynamicTypePlaceholder(),
+                        ReferenceObjectForEquatableTestScenarios.DeepClone(),
                     },
-                    ObjectsThatAreNotEqualToReferenceObject = new DynamicTypePlaceholder[]
+                    ObjectsThatAreNotEqualToReferenceObject = new DescribedSerializationBase[]
                     {
+                        // DeepCloneWith___() methods implemented in concrete derivates throw NotSupportedException
+                        // when the derivative's constructor in-use (by code gen) does not have a parameter that
+                        // corresponds with the property who's value is provided in the DeepCloneWith___() method.
+                        // We do not know in advance if this will happen.  As such, the following objects are commented out.
+                        // ReferenceObjectForEquatableTestScenarios.DeepCloneWithPayloadTypeRepresentation(A.Dummy<DescribedSerializationBase>().Whose(_ => !_.PayloadTypeRepresentation.IsEqualTo(ReferenceObjectForEquatableTestScenarios.PayloadTypeRepresentation)).PayloadTypeRepresentation),
+                        // ReferenceObjectForEquatableTestScenarios.DeepCloneWithSerializerRepresentation(A.Dummy<DescribedSerializationBase>().Whose(_ => !_.SerializerRepresentation.IsEqualTo(ReferenceObjectForEquatableTestScenarios.SerializerRepresentation)).SerializerRepresentation),
+                    },
+                    ObjectsThatDeriveFromScenarioTypeButAreNotOfTheSameTypeAsReferenceObject = new DescribedSerializationBase[]
+                    {
+                        A.Dummy<DescribedSerializationBase>().Whose(_ => _.GetType() != ReferenceObjectForEquatableTestScenarios.GetType()),
                     },
                     ObjectsThatAreNotOfTheSameTypeAsReferenceObject = new object[]
                     {
@@ -95,12 +86,12 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void DynamicTypePlaceholder___Should_implement_IModel_of_DynamicTypePlaceholder___When_reflecting()
+            public static void DescribedSerializationBase___Should_implement_IModel_of_DescribedSerializationBase___When_reflecting()
             {
                 // Arrange
-                var type = typeof(DynamicTypePlaceholder);
+                var type = typeof(DescribedSerializationBase);
 
-                var expectedModelMethods = typeof(IModel<DynamicTypePlaceholder>).GetInterfaceDeclaredAndImplementedMethods();
+                var expectedModelMethods = typeof(IModel<DescribedSerializationBase>).GetInterfaceDeclaredAndImplementedMethods();
 
                 var expectedModelMethodHashes = expectedModelMethods.Select(_ => _.GetSignatureHash());
 
@@ -110,7 +101,7 @@ namespace OBeautifulCode.Serialization.Test
                 var actualModelMethodHashes = actualModelMethods.Select(_ => _.GetSignatureHash());
 
                 // Assert
-                actualInterfaces.AsTest().Must().ContainElement(typeof(IModel<DynamicTypePlaceholder>));
+                actualInterfaces.AsTest().Must().ContainElement(typeof(IModel<DescribedSerializationBase>));
                 expectedModelMethodHashes.Except(actualModelMethodHashes).AsTest().Must().BeEmptyEnumerable();
             }
 
@@ -128,49 +119,16 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void DynamicTypePlaceholder___Should_be_attributed_with_Serializable____When_reflecting()
+            public static void DescribedSerializationBase___Should_be_attributed_with_Serializable____When_reflecting()
             {
                 // Arrange
-                var type = typeof(DynamicTypePlaceholder);
+                var type = typeof(DescribedSerializationBase);
 
                 // Act
                 var actualAttributes = type.GetCustomAttributes(typeof(SerializableAttribute), false);
 
                 // Assert
                 actualAttributes.AsTest().Must().NotBeEmptyEnumerable();
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible")]
-        [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
-        public static class StringRepresentation
-        {
-            [Fact]
-            [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-            [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
-            [SuppressMessage("Microsoft.Naming", "CA1715:IdentifiersShouldHaveCorrectPrefix")]
-            [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords")]
-            [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames")]
-            [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames")]
-            [SuppressMessage("Microsoft.Naming", "CA1722:IdentifiersShouldNotHaveIncorrectPrefix")]
-            [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
-            [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
-            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void ToString___Should_generate_friendly_string_representation_of_object___When_called()
-            {
-                var scenarios = StringRepresentationTestScenarios.ValidateAndPrepareForTesting();
-
-                foreach (var scenario in scenarios)
-                {
-                    // Arrange, Act
-                    var actual = scenario.SystemUnderTest.ToString();
-
-                    // Assert
-                    actual.AsTest().Must().BeEqualTo(scenario.ExpectedStringRepresentation, because: scenario.Id);
-                }
             }
         }
 
@@ -195,10 +153,10 @@ namespace OBeautifulCode.Serialization.Test
             public static void Clone___Should_clone_object___When_called()
             {
                 // Arrange
-                var systemUnderTest = A.Dummy<DynamicTypePlaceholder>();
+                var systemUnderTest = A.Dummy<DescribedSerializationBase>();
 
                 // Act
-                var actual = (DynamicTypePlaceholder)systemUnderTest.Clone();
+                var actual = (DescribedSerializationBase)systemUnderTest.Clone();
 
                 // Assert
                 actual.AsTest().Must().BeEqualTo(systemUnderTest);
@@ -222,7 +180,7 @@ namespace OBeautifulCode.Serialization.Test
             public static void DeepClone___Should_deep_clone_object___When_called()
             {
                 // Arrange
-                var systemUnderTest = A.Dummy<DynamicTypePlaceholder>();
+                var systemUnderTest = A.Dummy<DescribedSerializationBase>();
 
                 // Act
                 var actual = systemUnderTest.DeepClone();
@@ -230,6 +188,24 @@ namespace OBeautifulCode.Serialization.Test
                 // Assert
                 actual.AsTest().Must().BeEqualTo(systemUnderTest);
                 actual.AsTest().Must().NotBeSameReferenceAs(systemUnderTest);
+
+                if (systemUnderTest.PayloadTypeRepresentation == null)
+                {
+                    actual.PayloadTypeRepresentation.AsTest().Must().BeNull();
+                }
+                else
+                {
+                    actual.PayloadTypeRepresentation.AsTest().Must().NotBeSameReferenceAs(systemUnderTest.PayloadTypeRepresentation);
+                }
+
+                if (systemUnderTest.SerializerRepresentation == null)
+                {
+                    actual.SerializerRepresentation.AsTest().Must().BeNull();
+                }
+                else
+                {
+                    actual.SerializerRepresentation.AsTest().Must().NotBeSameReferenceAs(systemUnderTest.SerializerRepresentation);
+                }
             }
         }
 
@@ -254,8 +230,8 @@ namespace OBeautifulCode.Serialization.Test
             public static void EqualsOperator___Should_return_true___When_both_sides_of_operator_are_null()
             {
                 // Arrange
-                DynamicTypePlaceholder systemUnderTest1 = null;
-                DynamicTypePlaceholder systemUnderTest2 = null;
+                DescribedSerializationBase systemUnderTest1 = null;
+                DescribedSerializationBase systemUnderTest2 = null;
 
                 // Act
                 var actual = systemUnderTest1 == systemUnderTest2;
@@ -285,7 +261,7 @@ namespace OBeautifulCode.Serialization.Test
                 foreach (var scenario in scenarios)
                 {
                     // Arrange
-                    DynamicTypePlaceholder systemUnderTest = null;
+                    DescribedSerializationBase systemUnderTest = null;
 
                     // Act
                     var actual1 = systemUnderTest == scenario.ReferenceObject;
@@ -434,8 +410,8 @@ namespace OBeautifulCode.Serialization.Test
             public static void NotEqualsOperator___Should_return_false___When_both_sides_of_operator_are_null()
             {
                 // Arrange
-                DynamicTypePlaceholder systemUnderTest1 = null;
-                DynamicTypePlaceholder systemUnderTest2 = null;
+                DescribedSerializationBase systemUnderTest1 = null;
+                DescribedSerializationBase systemUnderTest2 = null;
 
                 // Act
                 var actual = systemUnderTest1 != systemUnderTest2;
@@ -465,7 +441,7 @@ namespace OBeautifulCode.Serialization.Test
                 foreach (var scenario in scenarios)
                 {
                     // Arrange
-                    DynamicTypePlaceholder systemUnderTest = null;
+                    DescribedSerializationBase systemUnderTest = null;
 
                     // Act
                     var actual1 = systemUnderTest != scenario.ReferenceObject;
@@ -611,14 +587,14 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_DynamicTypePlaceholder___Should_return_false___When_parameter_other_is_null()
+            public static void Equals_with_DescribedSerializationBase___Should_return_false___When_parameter_other_is_null()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 
                 foreach (var scenario in scenarios)
                 {
                     // Arrange
-                    DynamicTypePlaceholder systemUnderTest = null;
+                    DescribedSerializationBase systemUnderTest = null;
 
                     // Act
                     var actual = scenario.ReferenceObject.Equals(systemUnderTest);
@@ -642,7 +618,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_DynamicTypePlaceholder___Should_return_true___When_parameter_other_is_same_object()
+            public static void Equals_with_DescribedSerializationBase___Should_return_true___When_parameter_other_is_same_object()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 
@@ -670,7 +646,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_DynamicTypePlaceholder___Should_return_false___When_parameter_other_is_derived_from_the_same_type_but_is_not_of_the_same_type_as_this_object()
+            public static void Equals_with_DescribedSerializationBase___Should_return_false___When_parameter_other_is_derived_from_the_same_type_but_is_not_of_the_same_type_as_this_object()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 
@@ -698,7 +674,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_DynamicTypePlaceholder___Should_return_false___When_objects_being_compared_have_different_property_values()
+            public static void Equals_with_DescribedSerializationBase___Should_return_false___When_objects_being_compared_have_different_property_values()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 
@@ -726,7 +702,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_DynamicTypePlaceholder___Should_return_true___When_objects_being_compared_have_same_property_values()
+            public static void Equals_with_DescribedSerializationBase___Should_return_true___When_objects_being_compared_have_same_property_values()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 

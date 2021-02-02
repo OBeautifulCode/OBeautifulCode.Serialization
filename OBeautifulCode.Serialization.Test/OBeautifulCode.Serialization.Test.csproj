@@ -186,14 +186,22 @@
     <Compile Include=".recipes\OBeautifulCode.Type\TypeDummyFactory.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeDummyFactory.designer.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="Models\DescribedSerialization\BinaryDescribedSerializationTest.cs" />
+    <Compile Include="Models\DescribedSerialization\BinaryDescribedSerializationTest.designer.cs">
+      <DependentUpon>BinaryDescribedSerializationTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomSerializers\ObcVersionStringSerializerTest.cs" />
     <Compile Include="CustomSerializers\ObcNullableDateTimeStringSerializerTest.cs" />
-    <Compile Include="DescribedSerializationTest.cs" />
-    <Compile Include="DescribedSerializationTest.designer.cs">
-      <DependentUpon>DescribedSerializationTest.cs</DependentUpon>
+    <Compile Include="Models\DescribedSerialization\DescribedSerializationBaseTest.cs" />
+    <Compile Include="Models\DescribedSerialization\DescribedSerializationBaseTest.designer.cs">
+      <DependentUpon>DescribedSerializationBaseTest.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\ProjectInfo.cs" />
     <Compile Include="RoundtripSerialization\PostInitializationRegistrationTest.cs" />
+    <Compile Include="Models\DescribedSerialization\StringDescribedSerializationTest.cs" />
+    <Compile Include="Models\DescribedSerialization\StringDescribedSerializationTest.designer.cs">
+      <DependentUpon>StringDescribedSerializationTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Z-Legacy\SerializationConfiguration\SerializationConfigurationManagerTest.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.designer.cs">
@@ -276,9 +284,7 @@
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\DescribedSerialization\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -98,10 +98,6 @@
     <Compile Include="CustomSerializers\DateTime\ObcNullableDateTimeStringSerializer.cs" />
     <Compile Include="CustomSerializers\ObcVersionStringSerializer.cs" />
     <Compile Include="CustomSerializers\ObcSecureStringStringSerializer.cs" />
-    <Compile Include="DescribedSerialization.cs" />
-    <Compile Include="DescribedSerialization.designer.cs">
-      <DependentUpon>DescribedSerialization.cs</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\IHaveSerializerRepresentation.cs" />
     <Compile Include="Interfaces\PropertyBag\INamedPropertyBagObjectValuesDeserialize.cs" />
     <Compile Include="Interfaces\PropertyBag\IOrdinalPropertyBagStringValuesSerializeAndDeserialize.cs" />
@@ -114,8 +110,17 @@
     <Compile Include="Interfaces\PropertyBag\INamedPropertyBagObjectValuesSerialize.cs" />
     <Compile Include="Interfaces\ISerializer.cs" />
     <Compile Include="Models\DescribedSerialization\BinaryDescribedSerialization.cs" />
+    <Compile Include="Models\DescribedSerialization\BinaryDescribedSerialization.designer.cs">
+      <DependentUpon>BinaryDescribedSerialization.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DescribedSerialization\DescribedSerializationBase.designer.cs">
+      <DependentUpon>DescribedSerializationBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\DescribedSerialization\StringDescribedSerialization.cs" />
     <Compile Include="Models\DescribedSerialization\DescribedSerializationBase.cs" />
+    <Compile Include="Models\DescribedSerialization\StringDescribedSerialization.designer.cs">
+      <DependentUpon>StringDescribedSerialization.cs</DependentUpon>
+    </Compile>
     <Compile Include="ObcSerializer\ObcLambdaBackedStringSerializer.cs" />
     <Compile Include="ObcSerializer\ObcStringSerializerBackedSerializer.cs" />
     <Compile Include="ObcSerializer\SerializerFactoryBase.cs" />

@@ -119,7 +119,7 @@ namespace OBeautifulCode.Serialization.Test
             describedSerialization.Should().NotBeNull();
             describedSerialization.Should().BeOfType<StringDescribedSerialization>();
             describedSerialization.PayloadTypeRepresentation.Should().Be(objectToPackageIntoDescribedSerialization.GetType().ToRepresentation());
-            ((StringDescribedSerialization)describedSerialization).Should().Be("\"" + objectToPackageIntoDescribedSerialization + "\"");
+            ((StringDescribedSerialization)describedSerialization).SerializedPayload.Should().Be("\"" + objectToPackageIntoDescribedSerialization + "\"");
             describedSerialization.SerializerRepresentation.Should().Be(serializerRepresentation);
         }
 
