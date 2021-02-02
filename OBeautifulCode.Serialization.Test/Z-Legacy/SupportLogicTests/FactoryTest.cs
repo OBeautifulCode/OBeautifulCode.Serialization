@@ -121,8 +121,9 @@ namespace OBeautifulCode.Serialization.Test
 
             // Assert
             describedSerialization.Should().NotBeNull();
+            describedSerialization.Should().BeOfType<StringDescribedSerialization>();
             describedSerialization.PayloadTypeRepresentation.Should().Be(objectToPackageIntoDescribedSerialization.GetType().ToRepresentation());
-            describedSerialization.SerializedPayload.Should().Be("\"" + objectToPackageIntoDescribedSerialization + "\"");
+            ((StringDescribedSerialization)describedSerialization).SerializedPayload.Should().Be("\"" + objectToPackageIntoDescribedSerialization + "\"");
             describedSerialization.SerializerRepresentation.Should().Be(serializerRepresentation);
         }
 
@@ -133,11 +134,10 @@ namespace OBeautifulCode.Serialization.Test
             var expected = A.Dummy<string>();
             var serializerRepresentation = new SerializerRepresentation(SerializationKind.Json, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
             var payload = "\"" + expected + "\"";
-            var describedSerialization = new DescribedSerialization(
+            var describedSerialization = new StringDescribedSerialization(
                 expected.GetType().ToRepresentation(),
-                payload,
                 serializerRepresentation,
-                SerializationFormat.String);
+                payload);
 
             // Act
             var actual = describedSerialization.DeserializePayload();
@@ -154,11 +154,10 @@ namespace OBeautifulCode.Serialization.Test
             var expected = A.Dummy<string>();
             var serializerRepresentation = new SerializerRepresentation(SerializationKind.Json, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
             var payload = "\"" + expected + "\"";
-            var describedSerialization = new DescribedSerialization(
+            var describedSerialization = new StringDescribedSerialization(
                 expected.GetType().ToRepresentation(),
-                payload,
                 serializerRepresentation,
-                SerializationFormat.String);
+                payload);
 
             // Act
             var actual = describedSerialization.DeserializePayload<string>();

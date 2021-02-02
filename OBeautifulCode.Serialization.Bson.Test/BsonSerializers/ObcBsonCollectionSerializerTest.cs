@@ -68,13 +68,13 @@ namespace OBeautifulCode.Serialization.Bson.Test
 
             var expected2 = A.Dummy<CollectionsOfModelThatSerializesToStringModel>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, CollectionsOfModelThatSerializesToStringModel deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, CollectionsOfModelThatSerializesToStringModel deserialized)
             {
                 deserialized.AsTest().Must().BeEqualTo(expected1);
 
-                if (format == SerializationFormat.String)
+                if (describedSerialization is StringDescribedSerialization stringDescribedSerialization)
                 {
-                    serialized.AsTest().Must().ContainString("-603,329");
+                    stringDescribedSerialization.SerializedPayload.AsTest().Must().ContainString("-603,329");
                 }
             }
 
@@ -100,7 +100,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
                 ReadOnlyCollection = new ReadOnlyCollection<ModelThatSerializesToString>(new List<ModelThatSerializesToString> { modelThatSerializesToString }),
             };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, CollectionsOfModelThatSerializesToStringModel deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, CollectionsOfModelThatSerializesToStringModel deserialized)
             {
                 // these types are mutable; we should be able to add to them
                 deserialized.Collection.Add(null);

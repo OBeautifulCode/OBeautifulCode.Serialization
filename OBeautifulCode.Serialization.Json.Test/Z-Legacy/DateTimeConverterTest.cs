@@ -23,7 +23,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             // Arrange
             var expected = DateTime.UtcNow;
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, DateTime deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, DateTime deserialized)
             {
                 deserialized.Kind.Should().Be(expected.Kind);
                 deserialized.Should().Be(expected);
@@ -39,7 +39,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             // Arrange
             var expected = DateTime.UtcNow.ToUnspecified();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, DateTime deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, DateTime deserialized)
             {
                 deserialized.Kind.Should().Be(expected.Kind);
                 deserialized.Should().Be(expected);
@@ -55,7 +55,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             // Arrange
             var expected = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time"));
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, DateTime deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, DateTime deserialized)
             {
                 deserialized.Kind.Should().Be(expected.Kind);
                 deserialized.Should().Be(expected);
@@ -71,7 +71,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             // Arrange
             var expected = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("New Zealand Standard Time"));
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, DateTime deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, DateTime deserialized)
             {
                 deserialized.Kind.Should().Be(expected.Kind);
                 deserialized.Should().Be(expected);
@@ -87,7 +87,7 @@ namespace OBeautifulCode.Serialization.Json.Test
             // Arrange
             var expected = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, DateTime deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, DateTime deserialized)
             {
                 deserialized.Kind.Should().Be(expected.Kind);
                 deserialized.Should().Be(expected);

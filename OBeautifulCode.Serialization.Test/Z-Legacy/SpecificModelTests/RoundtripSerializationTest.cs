@@ -33,7 +33,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = new ClassWithGetterOnlys();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ClassWithGetterOnlys deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, ClassWithGetterOnlys deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.GetMyEnumFromBase.Should().Be(expected.GetMyEnumFromBase);
@@ -56,7 +56,7 @@ namespace OBeautifulCode.Serialization.Test
             var privateValue = A.Dummy<string>();
             var expected = new ClassWithPrivateSetter(privateValue);
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ClassWithPrivateSetter deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, ClassWithPrivateSetter deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.PrivateValue.Should().Be(expected.PrivateValue);
@@ -82,7 +82,7 @@ namespace OBeautifulCode.Serialization.Test
                 NullableEnumWithValue = AnotherEnumeration.None,
             };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestWrappedFields deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestWrappedFields deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.NullableDateTimeNull.Should().Be(expected.NullableDateTimeNull);
@@ -106,7 +106,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = new TestWithInheritorExtraProperty { Id = Guid.NewGuid().ToString(), Name = Guid.NewGuid().ToString(), AnotherName = Guid.NewGuid().ToString(), };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestWithInheritorExtraProperty deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestWithInheritorExtraProperty deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.Id.Should().Be(expected.Id);
@@ -127,7 +127,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = new TestWithId { Id = Guid.NewGuid().ToString(), };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestWithId deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestWithId deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.Id.Should().Be(expected.Id);
@@ -146,7 +146,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = new TestMapping();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestMapping deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestMapping deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.StringProperty.Should().BeNull();
@@ -193,7 +193,7 @@ namespace OBeautifulCode.Serialization.Test
                 IntArray = A.Dummy<int[]>(),
             };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestMapping deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestMapping deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.StringProperty.Should().Be(expected.StringProperty);
@@ -227,7 +227,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = new TestCollectionFields();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestCollectionFields deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestCollectionFields deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.ReadOnlyCollectionDateTime.Should().BeNull();
@@ -252,7 +252,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<TestCollectionFields>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestCollectionFields deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestCollectionFields deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.ReadOnlyCollectionDateTime.Should().Equal(expected.ReadOnlyCollectionDateTime);
@@ -283,7 +283,7 @@ namespace OBeautifulCode.Serialization.Test
                 Investigators = new[] { investigator1, investigator2 },
             };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, Investigation deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, Investigation deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.Investigators.Count.Should().Be(2);
@@ -322,7 +322,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = new ClassWithFlagsEnums { Flags = FlagsEnumeration.SecondValue | FlagsEnumeration.ThirdValue };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ClassWithFlagsEnums deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, ClassWithFlagsEnums deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.Flags.Should().Be(expected.Flags);
@@ -341,7 +341,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = new TestWithReadOnlyCollectionOfBaseClass { TestCollection = new List<TestBase>() };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestWithReadOnlyCollectionOfBaseClass deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestWithReadOnlyCollectionOfBaseClass deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.TestCollection.Should().NotBeNull();
@@ -369,7 +369,7 @@ namespace OBeautifulCode.Serialization.Test
                                            },
                                };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestWithReadOnlyCollectionOfBaseClass deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestWithReadOnlyCollectionOfBaseClass deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.TestCollection.Should().NotBeNull();
@@ -392,7 +392,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<BottomClass>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, BottomClass deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, BottomClass deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.Name.Should().Be(expected.Name);
@@ -432,7 +432,7 @@ namespace OBeautifulCode.Serialization.Test
                 NumberOfDecimalPlaces = expectedNumberOfDecimalPlaces2,
             };
 
-            void ThrowIfObjectsDiffer1(string serialized, SerializationFormat format, NumberField deserialized)
+            void ThrowIfObjectsDiffer1(DescribedSerializationBase describedSerialization, NumberField deserialized)
             {
                 (deserialized is YearField).Should().BeFalse();
 
@@ -443,7 +443,7 @@ namespace OBeautifulCode.Serialization.Test
                 deserialized.Title.Should().Be(expectedTitle1);
             }
 
-            void ThrowIfObjectsDiffer2(string serialized, SerializationFormat format, YearField deserialized)
+            void ThrowIfObjectsDiffer2(DescribedSerializationBase describedSerialization, YearField deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.Id.Should().Be(expectedId2);
@@ -468,7 +468,7 @@ namespace OBeautifulCode.Serialization.Test
             {
             };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ModelWithNullableProperties deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, ModelWithNullableProperties deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.NullableDateTime.Should().BeNull();
@@ -494,7 +494,7 @@ namespace OBeautifulCode.Serialization.Test
                 NullableInt = A.Dummy<int>(),
             };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ModelWithNullableProperties deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, ModelWithNullableProperties deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.NullableDateTime.Should().Be(expected.NullableDateTime);

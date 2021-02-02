@@ -44,13 +44,13 @@ namespace OBeautifulCode.Serialization.Json.Test
 
             var expected = new TestModelWithOptionalConstructorParameters(stringValue1, stringValue2, stringValue3, intValue1, intValue2, nullableIntValue1, nullableIntValue2, nullableIntValue3, enumValue1, enumValue2, nullableEnumValue1, nullableEnumValue2, nullableEnumValue3, dictionaryValue);
 
-            void VerificationCallback(string serialized, SerializationFormat format, TestModelWithOptionalConstructorParameters deserialized)
+            void VerificationCallback(DescribedSerializationBase describedSerialization, TestModelWithOptionalConstructorParameters deserialized)
             {
                 deserialized.AsTest().Must().BeEqualTo(expected);
 
-                if (format == SerializationFormat.String)
+                if (describedSerialization is StringDescribedSerialization stringDescribedSerialization)
                 {
-                    serialized.AsTest().Must().BeEqualTo("{\r\n  \"stringValue1\": \"my-string-value-1\",\r\n  \"stringValue2\": \"my-string-value-2\",\r\n  \"stringValue3\": \"my-string-value-3\",\r\n  \"intValue1\": -39,\r\n  \"intValue2\": 4,\r\n  \"nullableIntValue1\": 22,\r\n  \"nullableIntValue2\": 28,\r\n  \"nullableIntValue3\": 32,\r\n  \"enumValue1\": \"second\",\r\n  \"enumValue2\": \"third\",\r\n  \"nullableEnumValue1\": \"second\",\r\n  \"nullableEnumValue2\": \"third\",\r\n  \"nullableEnumValue3\": \"fourth\",\r\n  \"dictionaryValue\": {\r\n    \"abc\": \"def\",\r\n    \"ghi\": \"jkl\"\r\n  }\r\n}");
+                    stringDescribedSerialization.SerializedPayload.AsTest().Must().BeEqualTo("{\r\n  \"stringValue1\": \"my-string-value-1\",\r\n  \"stringValue2\": \"my-string-value-2\",\r\n  \"stringValue3\": \"my-string-value-3\",\r\n  \"intValue1\": -39,\r\n  \"intValue2\": 4,\r\n  \"nullableIntValue1\": 22,\r\n  \"nullableIntValue2\": 28,\r\n  \"nullableIntValue3\": 32,\r\n  \"enumValue1\": \"second\",\r\n  \"enumValue2\": \"third\",\r\n  \"nullableEnumValue1\": \"second\",\r\n  \"nullableEnumValue2\": \"third\",\r\n  \"nullableEnumValue3\": \"fourth\",\r\n  \"dictionaryValue\": {\r\n    \"abc\": \"def\",\r\n    \"ghi\": \"jkl\"\r\n  }\r\n}");
                 }
             }
 
@@ -79,13 +79,13 @@ namespace OBeautifulCode.Serialization.Json.Test
 
             var expected = new TestModelWithOptionalConstructorParameters(stringValue1, stringValue2, stringValue3, intValue1, intValue2, nullableIntValue1, nullableIntValue2, nullableIntValue3, enumValue1, enumValue2, nullableEnumValue1, nullableEnumValue2, nullableEnumValue3, dictionaryValue);
 
-            void VerificationCallback(string serialized, SerializationFormat format, TestModelWithOptionalConstructorParameters deserialized)
+            void VerificationCallback(DescribedSerializationBase describedSerialization, TestModelWithOptionalConstructorParameters deserialized)
             {
                 deserialized.AsTest().Must().BeEqualTo(expected);
 
-                if (format == SerializationFormat.String)
+                if (describedSerialization is StringDescribedSerialization stringDescribedSerialization)
                 {
-                    serialized.AsTest().Must().BeEqualTo("{\r\n  \"stringValue1\": null,\r\n  \"stringValue2\": null,\r\n  \"stringValue3\": null,\r\n  \"intValue1\": 0,\r\n  \"intValue2\": 0,\r\n  \"nullableIntValue1\": null,\r\n  \"nullableIntValue2\": null,\r\n  \"nullableIntValue3\": null,\r\n  \"enumValue1\": \"first\",\r\n  \"enumValue2\": \"first\",\r\n  \"nullableEnumValue1\": null,\r\n  \"nullableEnumValue2\": null,\r\n  \"nullableEnumValue3\": null,\r\n  \"dictionaryValue\": null\r\n}");
+                    stringDescribedSerialization.SerializedPayload.AsTest().Must().BeEqualTo("{\r\n  \"stringValue1\": null,\r\n  \"stringValue2\": null,\r\n  \"stringValue3\": null,\r\n  \"intValue1\": 0,\r\n  \"intValue2\": 0,\r\n  \"nullableIntValue1\": null,\r\n  \"nullableIntValue2\": null,\r\n  \"nullableIntValue3\": null,\r\n  \"enumValue1\": \"first\",\r\n  \"enumValue2\": \"first\",\r\n  \"nullableEnumValue1\": null,\r\n  \"nullableEnumValue2\": null,\r\n  \"nullableEnumValue3\": null,\r\n  \"dictionaryValue\": null\r\n}");
                 }
             }
 
@@ -114,13 +114,13 @@ namespace OBeautifulCode.Serialization.Json.Test
 
             var expected = new TestModelWithOptionalConstructorParameters(stringValue1, stringValue2, stringValue3, intValue1, intValue2, nullableIntValue1, nullableIntValue2, nullableIntValue3, enumValue1, enumValue2, nullableEnumValue1, nullableEnumValue2, nullableEnumValue3, dictionaryValue);
 
-            void VerificationCallback(string serialized, SerializationFormat format, TestModelWithOptionalConstructorParameters deserialized)
+            void VerificationCallback(DescribedSerializationBase describedSerialization, TestModelWithOptionalConstructorParameters deserialized)
             {
                 deserialized.AsTest().Must().BeEqualTo(expected);
 
-                if (format == SerializationFormat.String)
+                if (describedSerialization is StringDescribedSerialization stringDescribedSerialization)
                 {
-                    serialized.AsTest().Must().BeEqualTo("{\r\n  \"stringValue1\": null,\r\n  \"stringValue2\": null,\r\n  \"stringValue3\": null,\r\n  \"intValue1\": 0,\r\n  \"intValue2\": 0,\r\n  \"nullableIntValue1\": 0,\r\n  \"nullableIntValue2\": 0,\r\n  \"nullableIntValue3\": 0,\r\n  \"enumValue1\": \"first\",\r\n  \"enumValue2\": \"first\",\r\n  \"nullableEnumValue1\": \"first\",\r\n  \"nullableEnumValue2\": \"first\",\r\n  \"nullableEnumValue3\": \"first\",\r\n  \"dictionaryValue\": null\r\n}");
+                    stringDescribedSerialization.SerializedPayload.AsTest().Must().BeEqualTo("{\r\n  \"stringValue1\": null,\r\n  \"stringValue2\": null,\r\n  \"stringValue3\": null,\r\n  \"intValue1\": 0,\r\n  \"intValue2\": 0,\r\n  \"nullableIntValue1\": 0,\r\n  \"nullableIntValue2\": 0,\r\n  \"nullableIntValue3\": 0,\r\n  \"enumValue1\": \"first\",\r\n  \"enumValue2\": \"first\",\r\n  \"nullableEnumValue1\": \"first\",\r\n  \"nullableEnumValue2\": \"first\",\r\n  \"nullableEnumValue3\": \"first\",\r\n  \"dictionaryValue\": null\r\n}");
                 }
             }
 

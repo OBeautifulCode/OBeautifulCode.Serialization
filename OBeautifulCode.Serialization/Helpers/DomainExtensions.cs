@@ -44,7 +44,7 @@ namespace OBeautifulCode.Serialization
         /// Converts an object to a self described serialization to persist or share.
         /// </summary>
         /// <typeparam name="T">Type of object to serialize.</typeparam>
-        /// <param name="objectToPackageIntoDescribedSerialization">Object to serialize.</param>
+        /// <param name="objectToPackageIntoDescribedSerializationBase">Object to serialize.</param>
         /// <param name="serializerRepresentation">Representation of the serializer to use.</param>
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
         /// <param name="serializationFormat">The serialization format to use.</param>
@@ -53,8 +53,8 @@ namespace OBeautifulCode.Serialization
         /// Self described serialization.
         /// </returns>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
-        public static DescribedSerialization ToDescribedSerializationUsingSpecificFactory<T>(
-            this T objectToPackageIntoDescribedSerialization,
+        public static DescribedSerializationBase ToDescribedSerializationUsingSpecificFactory<T>(
+            this T objectToPackageIntoDescribedSerializationBase,
             SerializerRepresentation serializerRepresentation,
             ISerializerFactory serializerFactory,
             SerializationFormat serializationFormat,
@@ -77,7 +77,7 @@ namespace OBeautifulCode.Serialization
 
             var serializer = serializerFactory.BuildSerializer(serializerRepresentation, assemblyMatchStrategy);
 
-            var ret = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificSerializer(serializer, serializationFormat);
+            var ret = objectToPackageIntoDescribedSerializationBase.ToDescribedSerializationUsingSpecificSerializer(serializer, serializationFormat);
 
             return ret;
         }
@@ -86,15 +86,15 @@ namespace OBeautifulCode.Serialization
         /// Converts an object to a self described serialization to persist or share.
         /// </summary>
         /// <typeparam name="T">Type of object to serialize.</typeparam>
-        /// <param name="objectToPackageIntoDescribedSerialization">Object to serialize.</param>
+        /// <param name="objectToPackageIntoDescribedSerializationBase">Object to serialize.</param>
         /// <param name="serializer">Serializer to use.</param>
         /// <param name="serializationFormat">The serialization format to use.</param>
         /// <returns>
         /// Self described serialization.
         /// </returns>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddsClarityToIdentifierAndAlternativesDegradeClarity)]
-        public static DescribedSerialization ToDescribedSerializationUsingSpecificSerializer<T>(
-            this T objectToPackageIntoDescribedSerialization,
+        public static DescribedSerializationBase ToDescribedSerializationUsingSpecificSerializer<T>(
+            this T objectToPackageIntoDescribedSerializationBase,
             ISerializer serializer,
             SerializationFormat serializationFormat)
         {
@@ -108,28 +108,25 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' == '{SerializationFormat.Invalid}'"), (Exception)null);
             }
 
-            string payload;
-
-            switch (serializationFormat)
-            {
-                case SerializationFormat.Binary:
-                    var bytes = serializer.SerializeToBytes(objectToPackageIntoDescribedSerialization);
-                    payload = bytes == null ? null : Convert.ToBase64String(bytes);
-                    break;
-                case SerializationFormat.String:
-                    payload = serializer.SerializeToString(objectToPackageIntoDescribedSerialization);
-                    break;
-                default: throw new NotSupportedException(Invariant($"{nameof(SerializationFormat)} - {serializationFormat} is not supported."));
-            }
-
-            var payloadType = objectToPackageIntoDescribedSerialization?.GetType() ?? typeof(T);
-
+            var payloadType = objectToPackageIntoDescribedSerializationBase?.GetType() ?? typeof(T);
             if (payloadType.IsClosedAnonymousType())
             {
                 payloadType = typeof(DynamicTypePlaceholder);
             }
 
-            var result = new DescribedSerialization(payloadType.ToRepresentation(), payload, serializer.SerializerRepresentation, serializationFormat);
+            DescribedSerializationBase result;
+            switch (serializationFormat)
+            {
+                case SerializationFormat.Binary:
+                    var serializedBytes = serializer.SerializeToBytes(objectToPackageIntoDescribedSerializationBase);
+                    result = new BinaryDescribedSerialization(payloadType.ToRepresentation(), serializer.SerializerRepresentation, serializedBytes);
+                    break;
+                case SerializationFormat.String:
+                    var serializedString = serializer.SerializeToString(objectToPackageIntoDescribedSerializationBase);
+                    result = new StringDescribedSerialization(payloadType.ToRepresentation(), serializer.SerializerRepresentation, serializedString);
+                    break;
+                default: throw new NotSupportedException(Invariant($"{nameof(SerializationFormat)} - {serializationFormat} is not supported."));
+            }
 
             return result;
         }
@@ -138,18 +135,18 @@ namespace OBeautifulCode.Serialization
         /// Converts a self described serialization back into it's object.
         /// </summary>
         /// <typeparam name="T">Expected return type.</typeparam>
-        /// <param name="describedSerialization">Self described serialized object.</param>
+        /// <param name="describedSerializationBase">Self described serialized object.</param>
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
         /// Originally serialized object.
         /// </returns>
         public static T DeserializePayloadUsingSpecificFactory<T>(
-            this DescribedSerialization describedSerialization,
+            this DescribedSerializationBase describedSerializationBase,
             ISerializerFactory serializerFactory,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            var result = (T)DeserializePayloadUsingSpecificFactory(describedSerialization, serializerFactory, assemblyMatchStrategy);
+            var result = (T)DeserializePayloadUsingSpecificFactory(describedSerializationBase, serializerFactory, assemblyMatchStrategy);
 
             return result;
         }
@@ -157,20 +154,20 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Converts a self described serialization back into it's object.
         /// </summary>
-        /// <param name="describedSerialization">Self described serialized object.</param>
+        /// <param name="describedSerializationBase">Self described serialized object.</param>
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
         /// Originally serialized object.
         /// </returns>
         public static object DeserializePayloadUsingSpecificFactory(
-            this DescribedSerialization describedSerialization,
+            this DescribedSerializationBase describedSerializationBase,
             ISerializerFactory serializerFactory,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            if (describedSerialization == null)
+            if (describedSerializationBase == null)
             {
-                throw new ArgumentNullException(nameof(describedSerialization));
+                throw new ArgumentNullException(nameof(describedSerializationBase));
             }
 
             if (serializerFactory == null)
@@ -178,9 +175,9 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(serializerFactory));
             }
 
-            var serializer = serializerFactory.BuildSerializer(describedSerialization.SerializerRepresentation, assemblyMatchStrategy);
+            var serializer = serializerFactory.BuildSerializer(describedSerializationBase.SerializerRepresentation, assemblyMatchStrategy);
 
-            var result = describedSerialization.DeserializePayloadUsingSpecificSerializer(serializer, assemblyMatchStrategy);
+            var result = describedSerializationBase.DeserializePayloadUsingSpecificSerializer(serializer, assemblyMatchStrategy);
 
             return result;
         }
@@ -189,7 +186,7 @@ namespace OBeautifulCode.Serialization
         /// Converts a self described serialization back into it's object.
         /// </summary>
         /// <typeparam name="T">Expected return type.</typeparam>
-        /// <param name="describedSerialization">Self described serialized object.</param>
+        /// <param name="describedSerializationBase">Self described serialized object.</param>
         /// <param name="deserializer">Deserializer to use.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
@@ -197,11 +194,11 @@ namespace OBeautifulCode.Serialization
         /// </returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "deserializer", Justification = ObcSuppressBecause.CA1704_IdentifiersShouldBeSpelledCorrectly_SpellingIsCorrectInContextOfTheDomain)]
         public static T DeserializePayloadUsingSpecificSerializer<T>(
-            this DescribedSerialization describedSerialization,
+            this DescribedSerializationBase describedSerializationBase,
             IDeserialize deserializer,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            var result = (T)DeserializePayloadUsingSpecificSerializer(describedSerialization, deserializer, assemblyMatchStrategy);
+            var result = (T)DeserializePayloadUsingSpecificSerializer(describedSerializationBase, deserializer, assemblyMatchStrategy);
 
             return result;
         }
@@ -209,7 +206,7 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Converts a self described serialization back into it's object.
         /// </summary>
-        /// <param name="describedSerialization">Self described serialized object.</param>
+        /// <param name="describedSerializationBase">Self described serialized object.</param>
         /// <param name="deserializer">Deserializer to use.</param>
         /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
@@ -217,13 +214,13 @@ namespace OBeautifulCode.Serialization
         /// </returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "deserializer", Justification = ObcSuppressBecause.CA1704_IdentifiersShouldBeSpelledCorrectly_SpellingIsCorrectInContextOfTheDomain)]
         public static object DeserializePayloadUsingSpecificSerializer(
-            this DescribedSerialization describedSerialization,
+            this DescribedSerializationBase describedSerializationBase,
             IDeserialize deserializer,
             AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
         {
-            if (describedSerialization == null)
+            if (describedSerializationBase == null)
             {
-                throw new ArgumentNullException(nameof(describedSerialization));
+                throw new ArgumentNullException(nameof(describedSerializationBase));
             }
 
             if (deserializer == null)
@@ -231,21 +228,26 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(deserializer));
             }
 
-            var targetType = describedSerialization.PayloadTypeRepresentation.ResolveFromLoadedTypes(assemblyMatchStrategy);
+            var targetType = describedSerializationBase.PayloadTypeRepresentation.ResolveFromLoadedTypes(assemblyMatchStrategy);
 
             object result;
 
-            switch (describedSerialization.SerializationFormat)
+            var serializationFormat = describedSerializationBase.GetSerializationFormat();
+
+            switch (serializationFormat)
             {
                 case SerializationFormat.Binary:
-                    var bytes = describedSerialization.SerializedPayload == null ? null : Convert.FromBase64String(describedSerialization.SerializedPayload);
-                    result = deserializer.Deserialize(bytes, targetType);
+                    var describedSerializationBinary = (BinaryDescribedSerialization)describedSerializationBase;
+                    var serializedBytes = describedSerializationBinary.SerializedPayload;
+                    result = serializedBytes == null ? null : deserializer.Deserialize(serializedBytes, targetType);
                     break;
                 case SerializationFormat.String:
-                    result = deserializer.Deserialize(describedSerialization.SerializedPayload, targetType);
+                    var describedSerializationString = (StringDescribedSerialization)describedSerializationBase;
+                    var serializedString = describedSerializationString.SerializedPayload;
+                    result = serializedString == null ? null : deserializer.Deserialize(serializedString, targetType);
                     break;
                 default:
-                    throw new NotSupportedException(Invariant($"{nameof(SerializationFormat)} - {describedSerialization.SerializationFormat} is not supported."));
+                    throw new NotSupportedException(Invariant($"{nameof(SerializationFormat)} - {serializationFormat} is not supported."));
             }
 
             return result;

@@ -35,12 +35,12 @@ namespace OBeautifulCode.Serialization.Test
             var expectedArray = new[] { expectedValue };
 
             // Act, Assert
-            void ThrowIfListsDiffer(string serialized, SerializationFormat format, List<RegisteredKey> deserialized)
+            void ThrowIfListsDiffer(DescribedSerializationBase describedSerialization, List<RegisteredKey> deserialized)
             {
                 deserialized.Single().Property.Should().Be(expectedList.Single().Property);
             }
 
-            void ThrowIfArraysDiffer(string serialized, SerializationFormat format, RegisteredValue[] deserialized)
+            void ThrowIfArraysDiffer(DescribedSerializationBase describedSerialization, RegisteredValue[] deserialized)
             {
                 deserialized.Single().Property.Should().Be(expectedArray.Single().Property);
             }

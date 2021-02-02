@@ -13,7 +13,7 @@ namespace OBeautifulCode.Serialization.Json.Test
 
     using OBeautifulCode.Serialization.Recipes;
     using OBeautifulCode.String.Recipes;
-
+    using OBeautifulCode.Type.Recipes;
     using Xunit;
 
     public static class SerializingAndDeserializingBehaviorOfNull
@@ -26,27 +26,27 @@ namespace OBeautifulCode.Serialization.Json.Test
             // Arrange
             Serialization.Test.SerializingAndDeserializingBehaviorOfNull.NullableObject expected = null;
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, Serialization.Test.SerializingAndDeserializingBehaviorOfNull.NullableObject deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, Serialization.Test.SerializingAndDeserializingBehaviorOfNull.NullableObject deserialized)
             {
-                if (format == SerializationFormat.String)
+                if (describedSerialization is StringDescribedSerialization stringDescribedSerialization)
                 {
-                    serialized.Should().Be(NewtonsoftSerializedNullRepresentation);
+                    stringDescribedSerialization.SerializedPayload.Should().Be(NewtonsoftSerializedNullRepresentation);
                 }
-                else if (format == SerializationFormat.Binary)
+                else if (describedSerialization is BinaryDescribedSerialization binaryDescribedSerialization)
                 {
-                    var expectedPayload = Convert.ToBase64String(NewtonsoftSerializedNullRepresentation.ToBytes(Encoding.UTF8));
+                    var expectedPayload = NewtonsoftSerializedNullRepresentation.ToBytes(Encoding.UTF8);
 
-                    serialized.Should().Be(expectedPayload);
+                    binaryDescribedSerialization.SerializedPayload.Should().Equal(expectedPayload);
                 }
                 else
                 {
-                    throw new NotSupportedException("This format is not supported: " + format);
+                    throw new NotSupportedException("This type of described serialization is not supported: " + describedSerialization.GetType().ToStringReadable());
                 }
 
                 deserialized.Should().BeNull();
             }
 
-            void ThrowIfStringsDiffer(string serialized, SerializationFormat format, string deserialized)
+            void ThrowIfStringsDiffer(DescribedSerializationBase describedSerialization, string deserialized)
             {
                 deserialized.Should().Be(NewtonsoftSerializedNullRepresentation);
             }

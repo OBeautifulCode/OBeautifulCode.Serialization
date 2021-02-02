@@ -22,7 +22,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Recipes;
-
+    using OBeautifulCode.Type.Recipes;
     using Xunit;
 
     using static System.FormattableString;
@@ -87,21 +87,20 @@ namespace OBeautifulCode.Serialization.Bson.Test
             var expected = A.Dummy<ModelObjectThatSerializesToString>();
 
             void VerificationCallback(
-                string serialized,
-                SerializationFormat format,
+                DescribedSerializationBase describedSerialization,
                 ModelObjectThatSerializesToString deserialized)
             {
-                if (format == SerializationFormat.String)
+                if (describedSerialization is StringDescribedSerialization stringDescribedSerialization)
                 {
-                    serialized.AsTest().Must().ContainString(typeof(RootObjectThatSerializesToStringWrapper<>).Name);
+                    stringDescribedSerialization.SerializedPayload.AsTest().Must().ContainString(typeof(RootObjectThatSerializesToStringWrapper<>).Name);
                 }
-                else if (format == SerializationFormat.Binary)
+                else if (describedSerialization is BinaryDescribedSerialization)
                 {
                     // skip verifying binary
                 }
                 else
                 {
-                    throw new NotSupportedException("This format is not supported: " + format);
+                    throw new NotSupportedException("This type of described serialization is not supported: " + describedSerialization.GetType().ToStringReadable());
                 }
 
                 deserialized.AsTest().Must().BeEqualTo(expected);
@@ -118,21 +117,20 @@ namespace OBeautifulCode.Serialization.Bson.Test
             var expected = A.Dummy<string>();
 
             void VerificationCallback(
-                string serialized,
-                SerializationFormat format,
+                DescribedSerializationBase describedSerialization,
                 string deserialized)
             {
-                if (format == SerializationFormat.String)
+                if (describedSerialization is StringDescribedSerialization stringDescribedSerialization)
                 {
-                    serialized.AsTest().Must().ContainString(typeof(RootObjectThatSerializesToStringWrapper<>).Name);
+                    stringDescribedSerialization.SerializedPayload.AsTest().Must().ContainString(typeof(RootObjectThatSerializesToStringWrapper<>).Name);
                 }
-                else if (format == SerializationFormat.Binary)
+                else if (describedSerialization is BinaryDescribedSerialization)
                 {
                     // skip verifying binary
                 }
                 else
                 {
-                    throw new NotSupportedException("This format is not supported: " + format);
+                    throw new NotSupportedException("This type of described serialization is not supported: " + describedSerialization.GetType().ToStringReadable());
                 }
 
                 deserialized.AsTest().Must().BeEqualTo(expected);

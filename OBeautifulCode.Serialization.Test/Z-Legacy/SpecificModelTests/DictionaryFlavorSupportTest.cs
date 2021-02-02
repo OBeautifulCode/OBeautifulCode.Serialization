@@ -35,7 +35,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<TestDictionaryFields>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestDictionaryFields deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestDictionaryFields deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.DictionaryStringString.Should().Equal(expected.DictionaryStringString);
@@ -61,7 +61,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<TestDictionaryMixedKeyValues>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestDictionaryMixedKeyValues deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestDictionaryMixedKeyValues deserialized)
             {
                 deserialized.Should().NotBeNull();
 
@@ -139,7 +139,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<TestWithDictionaryKeyedOnEnum>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestWithDictionaryKeyedOnEnum deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestWithDictionaryKeyedOnEnum deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.TestDictionary.Should().NotBeNull();
@@ -174,7 +174,7 @@ namespace OBeautifulCode.Serialization.Test
                 },
             };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestWithDictionaryOfEnumToReadOnlyCollectionOfEnums deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.TestDictionary.Should().NotBeNull();
@@ -197,7 +197,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = new TestDictionaryFields();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestDictionaryFields deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestDictionaryFields deserialized)
             {
                 deserialized.Should().NotBeNull();
                 deserialized.DictionaryStringString.Should().BeNull();
@@ -223,7 +223,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = new TestDictionaryMixedKeyValues();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TestDictionaryMixedKeyValues deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TestDictionaryMixedKeyValues deserialized)
             {
                 deserialized.Should().NotBeNull();
 

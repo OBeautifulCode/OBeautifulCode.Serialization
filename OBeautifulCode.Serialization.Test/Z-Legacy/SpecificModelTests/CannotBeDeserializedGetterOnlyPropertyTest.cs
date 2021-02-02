@@ -29,7 +29,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<InitializedNoConstructor>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, InitializedNoConstructor deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, InitializedNoConstructor deserialized)
             {
                 deserialized.AsTest().Must().NotBeNull();
 
@@ -51,7 +51,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<ExpressionBodyNoConstructor>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ExpressionBodyNoConstructor deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, ExpressionBodyNoConstructor deserialized)
             {
                 deserialized.AsTest().Must().NotBeNull();
 
@@ -73,7 +73,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<InitializedSingleParameterizedConstructor>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, InitializedSingleParameterizedConstructor deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, InitializedSingleParameterizedConstructor deserialized)
             {
                 deserialized.AsTest().Must().NotBeNull();
 
@@ -97,7 +97,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<ExpressionBodySingleParameterizedConstructor>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ExpressionBodySingleParameterizedConstructor deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, ExpressionBodySingleParameterizedConstructor deserialized)
             {
                 deserialized.AsTest().Must().NotBeNull();
 
@@ -121,7 +121,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<InitializedMultipleConstructorsWithDefault>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, InitializedMultipleConstructorsWithDefault deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, InitializedMultipleConstructorsWithDefault deserialized)
             {
                 deserialized.AsTest().Must().NotBeNull();
 
@@ -145,7 +145,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<ExpressionBodyMultipleConstructorsWithDefault>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ExpressionBodyMultipleConstructorsWithDefault deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, ExpressionBodyMultipleConstructorsWithDefault deserialized)
             {
                 deserialized.AsTest().Must().NotBeNull();
 
@@ -169,7 +169,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<InitializedMultipleConstructorsWithoutDefault>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, InitializedMultipleConstructorsWithoutDefault deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, InitializedMultipleConstructorsWithoutDefault deserialized)
             {
                 deserialized.AsTest().Must().NotBeNull();
 
@@ -193,7 +193,7 @@ namespace OBeautifulCode.Serialization.Test
 
             var expected = A.Dummy<ExpressionBodyMultipleConstructorsWithoutDefault>();
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ExpressionBodyMultipleConstructorsWithoutDefault deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, ExpressionBodyMultipleConstructorsWithoutDefault deserialized)
             {
                 deserialized.AsTest().Must().NotBeNull();
 

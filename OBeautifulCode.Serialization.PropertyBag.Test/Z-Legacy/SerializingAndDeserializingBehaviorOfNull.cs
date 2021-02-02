@@ -24,9 +24,10 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             // Arrange
             Serialization.Test.SerializingAndDeserializingBehaviorOfNull.NullableObject expected = null;
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, Serialization.Test.SerializingAndDeserializingBehaviorOfNull.NullableObject deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, Serialization.Test.SerializingAndDeserializingBehaviorOfNull.NullableObject deserialized)
             {
-                serialized.Should().BeNull();
+                describedSerialization.GetSerializedPayloadAsEncodedString().Should().BeNull();
+                describedSerialization.GetSerializedPayloadAsEncodedBytes().Should().BeNull();
 
                 deserialized.Should().BeNull();
             }

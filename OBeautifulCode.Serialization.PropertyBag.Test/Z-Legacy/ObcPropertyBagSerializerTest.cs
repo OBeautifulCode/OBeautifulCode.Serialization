@@ -70,7 +70,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
                 StringCollectionWithNulls = new[] { string.Empty, A.Dummy<string>(), null, string.Empty, null, A.Dummy<string>() },
             };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ComplicatedObject deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, ComplicatedObject deserialized)
             {
                 deserialized.NullableDecimal.Should().Be(expected.NullableDecimal);
                 deserialized.NullableDecimalDefault.Should().BeNull();
@@ -131,15 +131,15 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             var actualPropertyBag2c = serializer1.Deserialize<ComplicatedObject>(serializedPropertyBag2c);
             var actualPropertyBag2d = serializer1.Deserialize<ComplicatedObject>(serializedPropertyBag2d);
 
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1a);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1b);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1c);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1d);
+            ThrowIfObjectsDiffer(null, actualPropertyBag1a);
+            ThrowIfObjectsDiffer(null, actualPropertyBag1b);
+            ThrowIfObjectsDiffer(null, actualPropertyBag1c);
+            ThrowIfObjectsDiffer(null, actualPropertyBag1d);
 
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2a);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2b);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2c);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2d);
+            ThrowIfObjectsDiffer(null, actualPropertyBag2a);
+            ThrowIfObjectsDiffer(null, actualPropertyBag2b);
+            ThrowIfObjectsDiffer(null, actualPropertyBag2c);
+            ThrowIfObjectsDiffer(null, actualPropertyBag2d);
         }
 
         [Fact]
@@ -165,7 +165,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             var serializedPropertyBag2d = serializer2.SerializeToOrdinalPropertyBagWithObjectValues(expected);
 
             // Act
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, ConstructorWithProperties deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, ConstructorWithProperties deserialized)
             {
                 deserialized.Property1.AsTest().Must().BeEqualTo(expected.Property1);
                 deserialized.Property2.AsTest().Must().BeEqualTo(expected.Property2);
@@ -185,15 +185,15 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             var actualPropertyBag2c = serializer1.Deserialize<ConstructorWithProperties>(serializedPropertyBag2c);
             var actualPropertyBag2d = serializer1.Deserialize<ConstructorWithProperties>(serializedPropertyBag2d);
 
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1a);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1b);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1c);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag1d);
+            ThrowIfObjectsDiffer(null, actualPropertyBag1a);
+            ThrowIfObjectsDiffer(null, actualPropertyBag1b);
+            ThrowIfObjectsDiffer(null, actualPropertyBag1c);
+            ThrowIfObjectsDiffer(null, actualPropertyBag1d);
 
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2a);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2b);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2c);
-            ThrowIfObjectsDiffer(null, SerializationFormat.Invalid, actualPropertyBag2d);
+            ThrowIfObjectsDiffer(null, actualPropertyBag2a);
+            ThrowIfObjectsDiffer(null, actualPropertyBag2b);
+            ThrowIfObjectsDiffer(null, actualPropertyBag2c);
+            ThrowIfObjectsDiffer(null, actualPropertyBag2d);
         }
 
         [Fact]
@@ -202,7 +202,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
             // Arrange
             var expected = new HasSerializesWithComma { WithCommas = new[] { new SerializesWithComma(), new SerializesWithComma() }.ToList() };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, HasSerializesWithComma deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, HasSerializesWithComma deserialized)
             {
                 deserialized.WithCommas.Count.Should().Be(expected.WithCommas.Count);
                 deserialized.WithCommas.ToList().ForEach(_ => _.Should().NotBeNull());
@@ -235,7 +235,7 @@ namespace OBeautifulCode.Serialization.PropertyBag.Test
 
             var expected = new TypeWithCustomPropertyBagSerializerWrapper { CustomTypeWrapper = new TypeWithCustomPropertyBagSerializer() };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, TypeWithCustomPropertyBagSerializerWrapper deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, TypeWithCustomPropertyBagSerializerWrapper deserialized)
             {
             }
 

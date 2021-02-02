@@ -188,6 +188,10 @@
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
     <Compile Include="CustomSerializers\ObcVersionStringSerializerTest.cs" />
     <Compile Include="CustomSerializers\ObcNullableDateTimeStringSerializerTest.cs" />
+    <Compile Include="DescribedSerializationTest.cs" />
+    <Compile Include="DescribedSerializationTest.designer.cs">
+      <DependentUpon>DescribedSerializationTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\ProjectInfo.cs" />
     <Compile Include="RoundtripSerialization\PostInitializationRegistrationTest.cs" />
     <Compile Include="Z-Legacy\SerializationConfiguration\SerializationConfigurationManagerTest.cs" />
@@ -196,9 +200,6 @@
       <DependentUpon>DynamicTypePlaceholderTest.cs</DependentUpon>
     </Compile>
     <Compile Include="RoundtripSerialization\InternallyRegisteredTypesTest.cs" />
-    <Compile Include="Models\DescribedSerializationTest.designer.cs">
-      <DependentUpon>DescribedSerializationTest.cs</DependentUpon>
-    </Compile>
     <Compile Include="Models\SerializerRepresentationTest.designer.cs">
       <DependentUpon>SerializerRepresentationTest.cs</DependentUpon>
     </Compile>
@@ -231,7 +232,6 @@
     <Compile Include="Z-Legacy\SpecificModelTests\ParamsConstructorCollectionProperty.cs" />
     <Compile Include="Z-Legacy\SpecificModelTests\RoundtripSerializationTest.cs" />
     <Compile Include="Z-Legacy\SpecificModelTests\SerializingAndDeserializingBehaviorOfNull.cs" />
-    <Compile Include="Models\DescribedSerializationTest.cs" />
     <Compile Include="Z-Legacy\Helpers\DomainExtensionsTest.cs" />
     <Compile Include="Z-Legacy\SupportLogicTests\FactoryTest.cs" />
     <Compile Include="Models\SerializerRepresentationTest.cs" />
@@ -275,6 +275,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\DescribedSerialization\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

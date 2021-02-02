@@ -47,7 +47,7 @@ namespace OBeautifulCode.Serialization.Bson.Test
                     new Dictionary<DateTime, DateTime> { { dateTime, dateTime } }),
             };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, DictionariesOfDateTimeModel deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, DictionariesOfDateTimeModel deserialized)
             {
                 // note that in older version of Serialization these assertions would have
                 // passed UNLIKE the associated the test in ObcBsonCollectionSerializerTest
@@ -92,14 +92,14 @@ namespace OBeautifulCode.Serialization.Bson.Test
                     new Dictionary<ModelThatSerializesToString, ModelThatSerializesToString> { { modelThatSerializesToStringForKey, modelThatSerializesToStringForValue } }),
             };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, DictionariesOfModelThatSerializesToStringModel deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, DictionariesOfModelThatSerializesToStringModel deserialized)
             {
                 deserialized.AsTest().Must().BeEqualTo(expected1);
 
-                if (format == SerializationFormat.String)
+                if (describedSerialization is StringDescribedSerialization stringDescribedSerialization)
                 {
-                    serialized.AsTest().Must().ContainString("-892,441");
-                    serialized.AsTest().Must().ContainString("228,-761");
+                    stringDescribedSerialization.SerializedPayload.AsTest().Must().ContainString("-892,441");
+                    stringDescribedSerialization.SerializedPayload.AsTest().Must().ContainString("228,-761");
                 }
             }
 

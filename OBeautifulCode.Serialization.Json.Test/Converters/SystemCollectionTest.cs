@@ -38,7 +38,7 @@ namespace OBeautifulCode.Serialization.Json.Test
                 ReadOnlyCollection = new ReadOnlyCollection<TestModel>(new List<TestModel> { modelThatSerializesToString }),
             };
 
-            void ThrowIfObjectsDiffer(string serialized, SerializationFormat format, CollectionsOfModelThatSerializesToStringModel deserialized)
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, CollectionsOfModelThatSerializesToStringModel deserialized)
             {
                 // these types are mutable; we should be able to add to them
                 deserialized.Collection.Add(null);
