@@ -8,7 +8,10 @@ namespace OBeautifulCode.Serialization
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+
+    using OBeautifulCode.CodeAnalysis.Recipes;
 
     /// <summary>
     /// Where possible, simplifies the serialization process by short-cutting certain trivial types
@@ -24,6 +27,7 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// The types that this serializer will shortcut.
         /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = ObcSuppressBecause.CA2104_DoNotDeclareReadOnlyMutableReferenceTypes_TypeIsImmutable)]
         public static readonly IReadOnlyCollection<Type> StringSimplifiedTypes = new[]
         {
             typeof(string),
