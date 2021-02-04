@@ -196,6 +196,7 @@
     <Compile Include="Models\DescribedSerialization\DescribedSerializationBaseTest.designer.cs">
       <DependentUpon>DescribedSerializationBaseTest.cs</DependentUpon>
     </Compile>
+    <Compile Include="ObcSerializer\ObcSimplifyingSerializerTest.cs" />
     <Compile Include="Properties\ProjectInfo.cs" />
     <Compile Include="RoundtripSerialization\PostInitializationRegistrationTest.cs" />
     <Compile Include="Models\DescribedSerialization\StringDescribedSerializationTest.cs" />

@@ -96,6 +96,8 @@
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringXmlDocOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
     <Compile Include="CustomSerializers\DateTime\ObcNullableDateTimeStringSerializer.cs" />
+    <Compile Include="ObcSerializer\ObcAlwaysThrowingSerializer.cs" />
+    <Compile Include="ObcSerializer\ObcSimplifyingSerializer.cs" />
     <Compile Include="CustomSerializers\ObcVersionStringSerializer.cs" />
     <Compile Include="CustomSerializers\ObcSecureStringStringSerializer.cs" />
     <Compile Include="Interfaces\IHaveSerializerRepresentation.cs" />
@@ -123,7 +125,7 @@
     </Compile>
     <Compile Include="ObcSerializer\ObcLambdaBackedStringSerializer.cs" />
     <Compile Include="ObcSerializer\ObcStringSerializerBackedSerializer.cs" />
-    <Compile Include="ObcSerializer\SerializerFactoryBase.cs" />
+    <Compile Include="SerializerFactory\SerializerFactoryBase.cs" />
     <Compile Include="ObcSerializer\ObcCompressingSerializer.cs" />
     <Compile Include="Properties\ProjectInfo.cs" />
     <Compile Include="SerializationConfiguration\IIgnoreDefaultDependencies.cs" />
