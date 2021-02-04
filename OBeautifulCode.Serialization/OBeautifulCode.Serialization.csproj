@@ -125,6 +125,7 @@
     </Compile>
     <Compile Include="ObcSerializer\ObcLambdaBackedStringSerializer.cs" />
     <Compile Include="ObcSerializer\ObcStringSerializerBackedSerializer.cs" />
+    <Compile Include="SerializerFactory\ObcSimplifyingSerializerFactory.cs" />
     <Compile Include="SerializerFactory\SerializerFactoryBase.cs" />
     <Compile Include="ObcSerializer\ObcCompressingSerializer.cs" />
     <Compile Include="Properties\ProjectInfo.cs" />
