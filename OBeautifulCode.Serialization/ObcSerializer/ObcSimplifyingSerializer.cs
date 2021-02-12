@@ -102,6 +102,7 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <inheritdoc />
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = ObcSuppressBecause.CA1502_AvoidExcessiveComplexity_DisagreeWithAssessment)]
         public object Deserialize(
             string serializedString,
             Type type)
@@ -219,6 +220,7 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <inheritdoc />
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = ObcSuppressBecause.CA1502_AvoidExcessiveComplexity_DisagreeWithAssessment)]
         public string SerializeToString(
             object objectToSerialize)
         {
