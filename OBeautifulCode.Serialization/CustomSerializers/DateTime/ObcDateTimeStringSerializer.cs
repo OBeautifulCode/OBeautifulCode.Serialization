@@ -14,6 +14,7 @@ namespace OBeautifulCode.Serialization
     using System.Text.RegularExpressions;
 
     using OBeautifulCode.CodeAnalysis.Recipes;
+    using OBeautifulCode.String.Recipes;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -26,20 +27,6 @@ namespace OBeautifulCode.Serialization
         private const string LocalDateTimeKindRegexPattern = @"[-+]\d\d:\d\d$";
 
         private static readonly Regex MatchLocalRegex = new Regex(LocalDateTimeKindRegexPattern, RegexOptions.Compiled);
-
-        private static readonly IReadOnlyDictionary<DateTimeKind, string> DateTimeKindToFormatStringMap =
-            new Dictionary<DateTimeKind, string>
-            {
-                // ReSharper disable once StringLiteralTypo
-                { DateTimeKind.Utc, "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffff'Z'" },
-
-                // ReSharper disable once StringLiteralTypo
-                { DateTimeKind.Unspecified, "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffff''" },
-
-                // ReSharper disable once StringLiteralTypo
-                // note that the K here expands to the offset (e.g. "-05:00")
-                { DateTimeKind.Local, "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffffK" },
-            };
 
         private static readonly IReadOnlyDictionary<DateTimeKind, DateTimeStyles> DateTimeKindToStylesMap =
             new Dictionary<DateTimeKind, DateTimeStyles>
@@ -57,7 +44,7 @@ namespace OBeautifulCode.Serialization
                     {
                         DateTimeKind = DateTimeKind.Unspecified,
                         DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Unspecified],
-                        FormatString = DateTimeKindToFormatStringMap[DateTimeKind.Unspecified],
+                        FormatString = StringExtensions.DateTimeKindToPreferredFormatStringMap[DateTimeKind.Unspecified],
                     }
                 },
                 {
@@ -65,7 +52,7 @@ namespace OBeautifulCode.Serialization
                     {
                         DateTimeKind = DateTimeKind.Local,
                         DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Local],
-                        FormatString = DateTimeKindToFormatStringMap[DateTimeKind.Local],
+                        FormatString = StringExtensions.DateTimeKindToPreferredFormatStringMap[DateTimeKind.Local],
                     }
                 },
                 {
@@ -73,7 +60,7 @@ namespace OBeautifulCode.Serialization
                     {
                         DateTimeKind = DateTimeKind.Utc,
                         DateTimeStyles = DateTimeKindToStylesMap[DateTimeKind.Utc],
-                        FormatString = DateTimeKindToFormatStringMap[DateTimeKind.Utc],
+                        FormatString = StringExtensions.DateTimeKindToPreferredFormatStringMap[DateTimeKind.Utc],
                     }
                 },
                 {
@@ -158,7 +145,7 @@ namespace OBeautifulCode.Serialization
         public static string SerializeToString(
             DateTime value)
         {
-            var formatString = DateTimeKindToFormatStringMap[value.Kind];
+            var formatString = StringExtensions.DateTimeKindToPreferredFormatStringMap[value.Kind];
 
             var result = value.ToString(formatString, FormatProvider);
 
