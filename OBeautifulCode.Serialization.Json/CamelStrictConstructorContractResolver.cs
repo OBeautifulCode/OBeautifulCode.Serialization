@@ -193,7 +193,7 @@ namespace OBeautifulCode.Serialization.Json
                     {
                         // NO-OP - this allows for the constructor parameter to be a "params" array while still using a collection property as the source.
                     }
-                    else if (memberType.IsAssignableFrom(parameterInfo.ParameterType))
+                    else if (memberType.IsAssignableTo(parameterInfo.ParameterType))
                     {
                         // NO-OP - vanilla assignable type to constructor check.
                     }
