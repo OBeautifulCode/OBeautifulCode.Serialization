@@ -191,11 +191,28 @@ namespace OBeautifulCode.Serialization.Json
                         && memberGenericArguments.Length == 1
                         && memberType.IsAssignableTo(typeof(IEnumerable<>).MakeGenericType(parameterElementType)))
                     {
-                        // NO-OP - this allows for the constructor parameter to be a "params" array while still using a collection property as the source.
+                        // NO-OP
+                        // this allows for the constructor parameter to be a "params" array while still using a collection property as the source.
                     }
                     else if (memberType.IsAssignableTo(parameterInfo.ParameterType))
                     {
-                        // NO-OP - vanilla assignable type to constructor check.
+                        // NO-OP
+                        // The property type and the constructor parameter type are equal.
+                        // OR
+                        // The property type is assignable to the constructor parameter type.
+                        // In this case, the constructor is taking a less derived type and converting it
+                        // to a more derived type before assigning to the property
+                        // (e.g. constructor takes IEnumerable<string>, but property is an IReadOnlyCollection<string>
+                        //       because the constructor calls .ToList() before assigning to the property).
+                    }
+                    else if (parameterInfo.ParameterType.IsAssignableTo(memberType))
+                    {
+                        // NO-OP
+                        // The constructor parameter type is assignable to the property type.
+                        // In this case, the constructor is taking a more derived type and assigning
+                        // it to the property that is less derived.
+                        // (e.g. constructor takes IReadOnlyCollection<string> and assigns it to a property
+                        //       of type IEnumerable<string>).
                     }
                     else
                     {

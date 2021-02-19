@@ -444,7 +444,7 @@ namespace OBeautifulCode.Serialization.Json.Test
         }
 
         [Fact]
-        public static void Serializer_throws_JsonSerializationException_when_deserializing_type_where_constructor_parameter_is_different_type_than_corresponding_property_and_is_not_assignable_from_that_property_type()
+        public static void Serializer_deserialize_type_where_constructor_parameter_is_different_type_than_corresponding_property_but_is_assignable_to_the_property_type()
         {
             var friendsJson = "{\"firstNames\": [\"betty\",\"bob\",\"bailey\"]}";
 
@@ -452,7 +452,10 @@ namespace OBeautifulCode.Serialization.Json.Test
 
             var serializer = new ObcJsonSerializer(serializationConfigurationType);
 
-            Assert.Throws<JsonSerializationException>(() => serializer.Deserialize<Friends>(friendsJson));
+            var actual = serializer.Deserialize<Friends>(friendsJson);
+
+            actual.Should().NotBeNull();
+            actual.FirstNames.Should().BeEquivalentTo("betty", "bob", "bailey");
         }
 
         [Fact]
@@ -467,11 +470,14 @@ namespace OBeautifulCode.Serialization.Json.Test
         }
 
         [Fact]
-        public static void Serializer_throws_JsonSerializationException_when_serializing_object_where_constructor_parameter_is_different_type_than_corresponding_property_and_is_not_assignable_from_that_property_type()
+        public static void Serializer_serializes_object_where_constructor_parameter_is_different_type_than_corresponding_property_but_is_assignable_to_the_property_type()
         {
             var friends = new Friends(new List<string> { "betty", "bob", "bailey" });
+            var expectedFriendsJson = "{\r\n  \"firstNames\": [\r\n    \"betty\",\r\n    \"bob\",\r\n    \"bailey\"\r\n  ]\r\n}";
 
-            Assert.Throws<JsonSerializationException>(() => new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Friends>).ToJsonSerializationConfigurationType()).SerializeToString(friends));
+            var actualFriendsJson = new ObcJsonSerializer(typeof(TypesToRegisterJsonSerializationConfiguration<Friends>).ToJsonSerializationConfigurationType()).SerializeToString(friends);
+
+            expectedFriendsJson.Should().Be(actualFriendsJson);
         }
 
         [Fact]
