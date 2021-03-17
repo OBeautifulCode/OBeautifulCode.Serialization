@@ -411,7 +411,7 @@ namespace OBeautifulCode.Serialization
             SerializationDirection serializationDirection,
             object objectToSerialize)
         {
-            // For non-System types we need to validate the type itself as well as all ancestors.
+            // For non-restricted types we need to validate the type itself as well as all ancestors.
             // This protects against the scenario where a derived type is registered, but it's
             // ancestor isn't.  In BSON, for example, the class map only covers the members
             // declared on the type itself.  So if BSON hasn't "seen" the ancestors, the right class
@@ -421,7 +421,7 @@ namespace OBeautifulCode.Serialization
             // ancestors.
             // Note that ValidateMembersAreRegistered() will look for declared and non-declared members,
             // which is why we don't need to call ValidateTypeIsRegistered() on the ancestor types.
-            var typeToValidateIncludingAncestors = typeToValidate.IsSystemType()
+            var typeToValidateIncludingAncestors = IsRestrictedType(typeToValidate)
                 ? new[] { typeToValidate }
                 : new[] { typeToValidate }.Concat(typeToValidate.GetInheritancePath()).Except(new[] { typeof(object) }).ToArray();
 
@@ -435,12 +435,12 @@ namespace OBeautifulCode.Serialization
                 }
             }
 
-            // we don't want to validate the members of System types like bool, List<SomeType>, etc.
+            // We don't want to validate the members of restricted types like bool, List<SomeType>, etc.
             // ValidateTypeIsRegistered will pull out the type(s) of the array element, collection elements,
             // dictionary keys/values and validate them.  On serialization, objects having array/collection/dictionary
             // properties will have those enumerables iterated and their runtime types checked in ValidateMembersAreRegistered().
-            // So if we get there with a System type, there's nothing to do.
-            if (!typeToValidate.IsSystemType())
+            // So if we get there with a restricted type, there's nothing to do.
+            if (!IsRestrictedType(typeToValidate))
             {
                 if (!this.TypesPermittedToHaveUnregisteredMembers.ContainsKey(typeToValidate))
                 {
@@ -470,9 +470,9 @@ namespace OBeautifulCode.Serialization
                         this.ValidateTypeIsRegistered(originalType, genericArgumentType);
                     }
 
-                    if (!typeToValidate.IsSystemType())
+                    if (!IsRestrictedType(typeToValidate))
                     {
-                        // For non-System generic types that are not registered, the generic type definition should be registered.
+                        // For non-restricted generic types that are not registered, the generic type definition should be registered.
                         var genericTypeDefinition = typeToValidate.GetGenericTypeDefinition();
 
                         this.ThrowIfTypeIsNotRegistered(originalType, genericTypeDefinition);
@@ -488,9 +488,9 @@ namespace OBeautifulCode.Serialization
                     }
                 }
             }
-            else if (typeToValidate.IsSystemType())
+            else if (IsRestrictedType(typeToValidate))
             {
-                // do nothing for non-generic System types (e.g. bool, int, DateTime, Guid)
+                // do nothing for non-generic restricted types (e.g. bool, int, DateTime, Guid)
             }
             else
             {

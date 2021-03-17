@@ -32,10 +32,10 @@ namespace OBeautifulCode.Serialization
 
         private static readonly Dictionary<Type, HashSet<Type>> TypeToDescendantTypesMap = new Dictionary<Type, HashSet<Type>>(VersionlessOpenTypeConsolidatingTypeEqualityComparer.Instance);
 
-        private static readonly HashSet<Type> TypesToExploreBlacklist = new HashSet<Type>(
+        private static readonly HashSet<Type> CannotBeRegisteredSystemTypes = new HashSet<Type>(
             new[]
             {
-                // all types are assignable to these types, so filter them out.
+                // most types are assignable to these types
                 typeof(string),
                 typeof(object),
                 typeof(ValueType),
@@ -106,7 +106,7 @@ namespace OBeautifulCode.Serialization
                 {
                     var typesToConsiderForThisAssembly = new[] { assemblyToProcess }
                         .GetTypesFromAssemblies()
-                        .Where(IsRelatedTypeCandidate)
+                        .Where(_ => !IsRestrictedType(_))
                         .ToList();
 
                     foreach (var typeToConsiderForThisAssembly in typesToConsiderForThisAssembly)
@@ -216,10 +216,10 @@ namespace OBeautifulCode.Serialization
                 return new Type[0];
             }
 
-            // short-circuit System types.  We will see these types here because we want to explore them in
+            // Short-circuit restricted types.  We will see these types here because we want to explore them in
             // GetMemberTypesToInclude (e.g. List<MyModel>), but we are not interested in their related types
             // (e.g. IEnumerable).
-            if (type.IsSystemType())
+            if (IsRestrictedType(type))
             {
                 return new Type[0];
             }
@@ -324,8 +324,7 @@ namespace OBeautifulCode.Serialization
                 // genericParameterType.IsGenericTypeDefinition == false
                 if (type.IsGenericType)
                 {
-                    // generic parameters will get filtered out below, in ...Where(IsTypeThatCanBeExplored)
-                    result.AddRange(type.GenericTypeArguments);
+                    result.AddRange(type.GenericTypeArguments.Where(_ => !_.IsGenericParameter));
                 }
             }
 
@@ -342,10 +341,10 @@ namespace OBeautifulCode.Serialization
                 }
             }
 
-            // We want to pull generic arguments and array elements from System types (e.g. List<MyModel>)
+            // We want to pull generic arguments and array elements from restricted types (e.g. List<MyModel>)
             // but otherwise we are not interested in the fields and properties of those types, which will
             // contain a bunch of other System and .NET internal types.
-            if (!type.IsSystemType())
+            if (!IsRestrictedType(type))
             {
                 var fieldAndPropertyTypes = type
                     .GetMembersFiltered(MemberRelationships.DeclaredInType, MemberOwners.Instance, MemberAccessModifiers.All, MemberKinds.Field | MemberKinds.Property)
@@ -368,10 +367,6 @@ namespace OBeautifulCode.Serialization
                 .ToList();
 
             result.AddRange(genericTypeDefinitions);
-
-            result = result
-                .Where(IsTypeThatCanBeExplored)
-                .ToList();
 
             return result;
         }
@@ -461,7 +456,7 @@ namespace OBeautifulCode.Serialization
 
                 foreach (var ancestorType in ancestorTypes)
                 {
-                    if (!IsRelatedTypeCandidate(ancestorType))
+                    if (IsRestrictedType(ancestorType))
                     {
                         continue;
                     }
@@ -507,35 +502,49 @@ namespace OBeautifulCode.Serialization
         {
             var type = typeToRegister.Type;
 
-            if (!IsTypeThatCanBeExplored(type))
-            {
-                return false;
-            }
-
             // open type is only allowed if it is a generic type definition
             if (type.ContainsGenericParameters && (!type.IsGenericTypeDefinition))
             {
                 return false;
             }
 
+            if (CannotBeRegisteredSystemTypes.Contains(type))
+            {
+                return false;
+            }
+
+            // System types can be registered directly (e.g. needed to register serializer for System.Drawing.Color)
             if (type.IsSystemType())
             {
-                // needed to register serializer for System.Drawing.Color and others
-                if (!typeToRegister.IsOriginatingType)
+                if (typeToRegister.IsOriginatingType)
+                {
+                    return true;
+                }
+                else
                 {
                     return false;
                 }
             }
 
+            if (IsRestrictedType(type))
+            {
+                return false;
+            }
+
             return true;
         }
 
-        private static bool IsTypeThatCanBeExplored(
+        private static bool IsRestrictedType(
             Type type)
         {
             if (type.IsGenericParameter)
             {
-                return false;
+                return true;
+            }
+
+            if (type.IsSystemType())
+            {
+                return true;
             }
 
             if (type.Namespace == null || // anonymous types
@@ -550,33 +559,10 @@ namespace OBeautifulCode.Serialization
                 type.Namespace.StartsWith("Xunit", StringComparison.Ordinal) ||
                 type.Name.StartsWith("<>c", StringComparison.Ordinal))
             {
-                return false;
+                return true;
             }
 
-            if (TypesToExploreBlacklist.Contains(type))
-            {
-                return false;
-            }
-
-            if (type.IsGenericType)
-            {
-                var genericTypeDefinition = type.GetGenericTypeDefinition();
-
-                if (TypesToExploreBlacklist.Contains(genericTypeDefinition))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private static bool IsRelatedTypeCandidate(
-            Type type)
-        {
-            var result = IsTypeThatCanBeExplored(type) && (!type.IsSystemType());
-
-            return result;
+            return false;
         }
     }
 }
