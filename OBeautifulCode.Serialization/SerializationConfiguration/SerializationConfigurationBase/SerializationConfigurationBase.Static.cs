@@ -8,10 +8,12 @@ namespace OBeautifulCode.Serialization
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
 
+    using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
@@ -196,10 +198,15 @@ namespace OBeautifulCode.Serialization
             return result;
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "typeName", Justification = ObcSuppressBecause.CA1804_RemoveUnusedLocals_UsedAsWorkaroundForConditionalBreakpointThatCannotBeSet)]
         private static IReadOnlyCollection<Type> GetRelatedTypesToInclude(
             Type type,
             RelatedTypesToInclude relatedTypesToInclude)
         {
+            // This is for debugging purposes only.  The debugger doesn't like conditional breakpoints on objects
+            // of type Type, so here we are pulling out the name to enable conditional breakpoint on name.
+            var typeName = type.Name;
+
             relatedTypesToInclude = relatedTypesToInclude == RelatedTypesToInclude.Default
                 ? type.ResolveDefaultIntoActionableRelatedTypesToInclude()
                 : relatedTypesToInclude;
@@ -267,10 +274,15 @@ namespace OBeautifulCode.Serialization
             return result;
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "typeName", Justification = ObcSuppressBecause.CA1804_RemoveUnusedLocals_UsedAsWorkaroundForConditionalBreakpointThatCannotBeSet)]
         private static IReadOnlyCollection<Type> GetMemberTypesToInclude(
             Type type,
             MemberTypesToInclude memberTypesToInclude)
         {
+            // This is for debugging purposes only.  The debugger doesn't like conditional breakpoints on objects
+            // of type Type, so here we are pulling out the name to enable conditional breakpoint on name.
+            var typeName = type.Name;
+
             if (memberTypesToInclude == MemberTypesToInclude.None)
             {
                 return new Type[0];
@@ -408,6 +420,7 @@ namespace OBeautifulCode.Serialization
             DiscoverAncestorsAndDescendants(new[] { type });
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "typeQueueItemName", Justification = ObcSuppressBecause.CA1804_RemoveUnusedLocals_UsedAsWorkaroundForConditionalBreakpointThatCannotBeSet)]
         private static void DiscoverAncestorsAndDescendants(
             IReadOnlyCollection<Type> types)
         {
@@ -422,6 +435,10 @@ namespace OBeautifulCode.Serialization
             while (typesQueue.Any())
             {
                 var typeQueueItem = typesQueue.Dequeue();
+
+                // This is for debugging purposes only.  The debugger doesn't like conditional breakpoints on objects
+                // of type Type, so here we are pulling out the name to enable conditional breakpoint on name.
+                var typeQueueItemName = typeQueueItem.Name;
 
                 if (TypeToAncestorTypesMap.ContainsKey(typeQueueItem))
                 {
