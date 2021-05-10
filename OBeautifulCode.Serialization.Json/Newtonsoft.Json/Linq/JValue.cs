@@ -644,11 +644,19 @@ namespace NewtonsoftFork.Json.Linq
         {
             if (converters != null && converters.Length > 0 && _value != null)
             {
-                JsonConverter matchingConverter = JsonSerializer.GetMatchingConverter(converters, _value.GetType());
+                // OBC: This is an executed code path, but in it's execution we expect there to be no matching converter,
+                // which is why we pass null as the declaredType but then throw below if a converter is matched.
+                // Anyways, the only converter we have that utilizes the declaredType is the InheritedTypeReaderJsonConverter
+                // whose CanConvert() WILL return true for null declaredType, so we know that in the execution of this
+                // code path, we do not hit that converter.
+                JsonConverter matchingConverter = JsonSerializer.GetMatchingConverter(converters, _value.GetType(), null);
+
                 if (matchingConverter != null && matchingConverter.CanWrite)
                 {
-                    matchingConverter.WriteJson(writer, _value, JsonSerializer.CreateDefault());
-                    return;
+                    throw new NotSupportedException("OBC: We don't know what the declared type is here.  This code path is not supported");
+
+                    // matchingConverter.WriteJson(writer, _value, JsonSerializer.CreateDefault(), [declared_type_here]);
+                    // return;
                 }
             }
 

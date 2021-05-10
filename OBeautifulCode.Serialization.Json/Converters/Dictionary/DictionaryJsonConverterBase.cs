@@ -39,7 +39,8 @@ namespace OBeautifulCode.Serialization.Json
 
         /// <inheritdoc />
         public override bool CanConvert(
-            Type objectType)
+            Type objectType,
+            Type declaredType)
         {
             bool result;
 

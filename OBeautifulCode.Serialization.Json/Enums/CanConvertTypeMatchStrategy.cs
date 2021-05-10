@@ -9,7 +9,7 @@ namespace OBeautifulCode.Serialization.Json
     using NewtonsoftFork.Json;
 
     /// <summary>
-    /// The strategy to use in <see cref="JsonConverter.CanConvert(System.Type)"/> to match
+    /// The strategy to use in <see cref="JsonConverter.CanConvert(System.Type, System.Type)"/> to match
     /// an incoming type-to-consider with the type that the <see cref="JsonConverter"/> is registered for.
     /// </summary>
     public enum CanConvertTypeMatchStrategy

@@ -394,7 +394,9 @@ namespace NewtonsoftFork.Json.Serialization
                     // class attribute converter
                     converter = contract.Converter;
                 }
-                else if ((matchingConverter = Serializer.GetMatchingConverter(contract.UnderlyingType)) != null)
+                // OBC: When reading, the declared type is always just the UnderlyingType because all we have in-hand is a type that
+                // we are deserializing into and the payload to use for that.
+                else if ((matchingConverter = Serializer.GetMatchingConverter(contract.UnderlyingType, contract.UnderlyingType)) != null)
                 {
                     // passed in converters
                     converter = matchingConverter;

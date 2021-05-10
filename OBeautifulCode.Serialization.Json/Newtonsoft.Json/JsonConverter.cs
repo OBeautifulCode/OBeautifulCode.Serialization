@@ -42,7 +42,8 @@ namespace NewtonsoftFork.Json
         /// <param name="writer">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public abstract void WriteJson(JsonWriter writer, object value, JsonSerializer serializer);
+        /// <param name="declaredType">The member's declared type.</param>
+        public abstract void WriteJson(JsonWriter writer, object value, JsonSerializer serializer, Type declaredType);
 
         /// <summary>
         /// Reads the JSON representation of the object.
@@ -58,10 +59,11 @@ namespace NewtonsoftFork.Json
         /// Determines whether this instance can convert the specified object type.
         /// </summary>
         /// <param name="objectType">Type of the object.</param>
+        /// <param name="declaredType">The declared type of the object.</param>
         /// <returns>
         /// 	<c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
         /// </returns>
-        public abstract bool CanConvert(Type objectType);
+        public abstract bool CanConvert(Type objectType, Type declaredType);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="JsonConverter"/> can read JSON.

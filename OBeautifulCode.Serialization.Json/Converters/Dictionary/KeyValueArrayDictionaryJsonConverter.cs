@@ -36,7 +36,8 @@ namespace OBeautifulCode.Serialization.Json
         public override void WriteJson(
             JsonWriter writer,
             object value,
-            JsonSerializer serializer)
+            JsonSerializer serializer,
+            Type declaredType)
         {
             var valueAsEnumerable = (IEnumerable)value;
 

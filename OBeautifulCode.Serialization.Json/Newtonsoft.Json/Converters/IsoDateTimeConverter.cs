@@ -80,7 +80,12 @@ namespace NewtonsoftFork.Json.Converters
         /// <param name="writer">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        /// <param name="declaredType">The member's declared type.</param>
+        public override void WriteJson(
+            JsonWriter writer,
+            object value,
+            JsonSerializer serializer,
+            Type declaredType)
         {
             string text;
 

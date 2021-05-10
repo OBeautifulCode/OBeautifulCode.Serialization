@@ -65,7 +65,8 @@ namespace OBeautifulCode.Serialization.Json
         public override void WriteJson(
             JsonWriter writer,
             object value,
-            JsonSerializer serializer)
+            JsonSerializer serializer,
+            Type declaredType)
         {
             if (writer == null)
             {
@@ -103,7 +104,8 @@ namespace OBeautifulCode.Serialization.Json
 
         /// <inheritdoc />
         public override bool CanConvert(
-            Type objectType)
+            Type objectType,
+            Type declaredType)
         {
             if (objectType == null)
             {
