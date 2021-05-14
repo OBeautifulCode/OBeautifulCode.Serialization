@@ -23,13 +23,13 @@ namespace OBeautifulCode.Serialization.Json
     /// </summary>
     public abstract partial class JsonSerializationConfigurationBase : SerializationConfigurationBase
     {
-        private readonly Dictionary<Type, object> typesWithConverters = new Dictionary<Type, object>();
+        private readonly ConcurrentDictionary<Type, object> typesWithConverters = new ConcurrentDictionary<Type, object>();
 
         private readonly Dictionary<Type, IStringSerializeAndDeserialize> typeToKeyInDictionaryStringSerializerMap = new Dictionary<Type, IStringSerializeAndDeserialize>();
 
         private readonly IList<JsonConverterBuilder> jsonConverterBuilders = new List<JsonConverterBuilder>();
 
-        private readonly ConcurrentDictionary<Type, object> hierarchyParticipatingTypes = new ConcurrentDictionary<Type, object>();
+        private readonly ConcurrentDictionary<Type, object> nonAbstractBaseClassTypes = new ConcurrentDictionary<Type, object>();
 
         /// <summary>
         /// Build <see cref="JsonSerializerSettings" /> to use for serialization using Newtonsoft.
@@ -65,8 +65,8 @@ namespace OBeautifulCode.Serialization.Json
 
             // Newtonsoft uses the converters in the order they are provided, so specifiedConverters will have priority because they come first
             var converters = new JsonConverter[0]
-                .Concat(specifiedConverters)
                 .Concat(defaultConverters)
+                .Concat(specifiedConverters)
                 .ToList();
 
             result.Converters = converters;
@@ -97,7 +97,7 @@ namespace OBeautifulCode.Serialization.Json
 
             if (jsonConverterBuilder != null)
             {
-                this.typesWithConverters.Add(type, null);
+                this.typesWithConverters.TryAdd(type, null);
 
                 if (this.jsonConverterBuilders.All(_ => _.Id != jsonConverterBuilder.Id))
                 {
@@ -141,7 +141,7 @@ namespace OBeautifulCode.Serialization.Json
                     })
                 .Concat(((formattingKind == JsonFormattingKind.Minimal) || (formattingKind == JsonFormattingKind.Concise))
                     ? new JsonConverter[0]
-                    : new[] { new InheritedTypeWriterJsonConverter(() => this.hierarchyParticipatingTypes) })
+                    : new[] { new InheritedTypeWriterJsonConverter(() => this.nonAbstractBaseClassTypes, () => this.typesWithConverters) })
                 .Concat(
                     new JsonConverter[]
                     {
@@ -161,7 +161,7 @@ namespace OBeautifulCode.Serialization.Json
                     new JsonConverter[]
                     {
                         new StringEnumConverter { CamelCaseText = true },
-                        new InheritedTypeReaderJsonConverter(() => this.hierarchyParticipatingTypes, this),
+                        new InheritedTypeReaderJsonConverter(() => this.nonAbstractBaseClassTypes, () => this.typesWithConverters, this),
                         new StringKeysAsPropertiesDictionaryJsonConverter(this.typeToKeyInDictionaryStringSerializerMap),
                         new KeyValueArrayDictionaryJsonConverter(this.typeToKeyInDictionaryStringSerializerMap.Keys.ToList()),
                     })

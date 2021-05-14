@@ -529,21 +529,6 @@ namespace NewtonsoftFork.Json
         }
 
         /// <summary>
-        /// Serializes the specified object to a JSON string using a collection of <see cref="JsonConverter"/>.
-        /// </summary>
-        /// <param name="value">The object to serialize.</param>
-        /// <param name="converters">A collection converters used while serializing.</param>
-        /// <returns>A JSON string representation of the object.</returns>
-        public static string SerializeObject(object value, params JsonConverter[] converters)
-        {
-            JsonSerializerSettings settings = (converters != null && converters.Length > 0)
-                ? new JsonSerializerSettings { Converters = converters }
-                : null;
-
-            return SerializeObject(value, null, settings);
-        }
-
-        /// <summary>
         /// Serializes the specified object to a JSON string using formatting and a collection of <see cref="JsonConverter"/>.
         /// </summary>
         /// <param name="value">The object to serialize.</param>

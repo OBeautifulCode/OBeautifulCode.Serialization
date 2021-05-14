@@ -31,257 +31,103 @@ namespace OBeautifulCode.Serialization.Test
 
     using static global::System.FormattableString;
 
-    public static partial class BinaryDescribedSerializationTest
+    public static partial class ObjectWrapperTTest
     {
-        private static readonly StringRepresentationTestScenarios<BinaryDescribedSerialization> StringRepresentationTestScenarios = new StringRepresentationTestScenarios<BinaryDescribedSerialization>()
+        private static readonly StringRepresentationTestScenarios<ObjectWrapper<Version>> StringRepresentationTestScenarios = new StringRepresentationTestScenarios<ObjectWrapper<Version>>()
             .AddScenario(() =>
-                new StringRepresentationTestScenario<BinaryDescribedSerialization>
+                new StringRepresentationTestScenario<ObjectWrapper<Version>>
                 {
                     Name = "Default Code Generated Scenario",
                     SystemUnderTestExpectedStringRepresentationFunc = () =>
                     {
-                        var systemUnderTest = A.Dummy<BinaryDescribedSerialization>();
+                        var systemUnderTest = A.Dummy<ObjectWrapper<Version>>();
 
-                        var result = new SystemUnderTestExpectedStringRepresentation<BinaryDescribedSerialization>
+                        var result = new SystemUnderTestExpectedStringRepresentation<ObjectWrapper<Version>>
                         {
                             SystemUnderTest = systemUnderTest,
-                            ExpectedStringRepresentation = Invariant($"OBeautifulCode.Serialization.BinaryDescribedSerialization: PayloadTypeRepresentation = {systemUnderTest.PayloadTypeRepresentation?.ToString() ?? "<null>"}, SerializerRepresentation = {systemUnderTest.SerializerRepresentation?.ToString() ?? "<null>"}, SerializedPayload = {systemUnderTest.SerializedPayload?.ToString() ?? "<null>"}."),
+                            ExpectedStringRepresentation = Invariant($"OBeautifulCode.Serialization.ObjectWrapper<Version>: V = {systemUnderTest.V?.ToString() ?? "<null>"}."),
                         };
 
                         return result;
                     },
                 });
 
-        private static readonly ConstructorArgumentValidationTestScenarios<BinaryDescribedSerialization> ConstructorArgumentValidationTestScenarios = new ConstructorArgumentValidationTestScenarios<BinaryDescribedSerialization>()
+        private static readonly ConstructorArgumentValidationTestScenarios<ObjectWrapper<Version>> ConstructorArgumentValidationTestScenarios = new ConstructorArgumentValidationTestScenarios<ObjectWrapper<Version>>()
             .AddScenario(() =>
-                new ConstructorArgumentValidationTestScenario<BinaryDescribedSerialization>
+                new ConstructorArgumentValidationTestScenario<ObjectWrapper<Version>>
                 {
-                    Name = "constructor should throw ArgumentNullException when parameter 'payloadTypeRepresentation' is null scenario",
+                    Name = "constructor should throw ArgumentNullException when parameter 'v' is null scenario",
                     ConstructionFunc = () =>
                     {
-                        var referenceObject = A.Dummy<BinaryDescribedSerialization>();
-
-                        var result = new BinaryDescribedSerialization(
-                                             null,
-                                             referenceObject.SerializerRepresentation,
-                                             referenceObject.SerializedPayload);
-
-                        return result;
-                    },
-                    ExpectedExceptionType = typeof(ArgumentNullException),
-                    ExpectedExceptionMessageContains = new[] { "payloadTypeRepresentation", },
-                })
-            .AddScenario(() =>
-                new ConstructorArgumentValidationTestScenario<BinaryDescribedSerialization>
-                {
-                    Name = "constructor should throw ArgumentNullException when parameter 'serializerRepresentation' is null scenario",
-                    ConstructionFunc = () =>
-                    {
-                        var referenceObject = A.Dummy<BinaryDescribedSerialization>();
-
-                        var result = new BinaryDescribedSerialization(
-                                             referenceObject.PayloadTypeRepresentation,
-                                             null,
-                                             referenceObject.SerializedPayload);
-
-                        return result;
-                    },
-                    ExpectedExceptionType = typeof(ArgumentNullException),
-                    ExpectedExceptionMessageContains = new[] { "serializerRepresentation", },
-                })
-            .AddScenario(() =>
-                new ConstructorArgumentValidationTestScenario<BinaryDescribedSerialization>
-                {
-                    Name = "constructor should throw ArgumentNullException when parameter 'serializedPayload' is null scenario",
-                    ConstructionFunc = () =>
-                    {
-                        var referenceObject = A.Dummy<BinaryDescribedSerialization>();
-
-                        var result = new BinaryDescribedSerialization(
-                                             referenceObject.PayloadTypeRepresentation,
-                                             referenceObject.SerializerRepresentation,
+                        var result = new ObjectWrapper<Version>(
                                              null);
 
                         return result;
                     },
                     ExpectedExceptionType = typeof(ArgumentNullException),
-                    ExpectedExceptionMessageContains = new[] { "serializedPayload", },
-                })
-            .AddScenario(() =>
-                new ConstructorArgumentValidationTestScenario<BinaryDescribedSerialization>
-                {
-                    Name = "constructor should throw ArgumentException when parameter 'serializedPayload' is an empty enumerable scenario",
-                    ConstructionFunc = () =>
-                    {
-                        var referenceObject = A.Dummy<BinaryDescribedSerialization>();
-
-                        var result = new BinaryDescribedSerialization(
-                                             referenceObject.PayloadTypeRepresentation,
-                                             referenceObject.SerializerRepresentation,
-                                             new byte[0]);
-
-                        return result;
-                    },
-                    ExpectedExceptionType = typeof(ArgumentException),
-                    ExpectedExceptionMessageContains = new[] { "serializedPayload", "is an empty enumerable", },
+                    ExpectedExceptionMessageContains = new[] { "v", },
                 });
 
-        private static readonly ConstructorPropertyAssignmentTestScenarios<BinaryDescribedSerialization> ConstructorPropertyAssignmentTestScenarios = new ConstructorPropertyAssignmentTestScenarios<BinaryDescribedSerialization>()
+        private static readonly ConstructorPropertyAssignmentTestScenarios<ObjectWrapper<Version>> ConstructorPropertyAssignmentTestScenarios = new ConstructorPropertyAssignmentTestScenarios<ObjectWrapper<Version>>()
             .AddScenario(() =>
-                new ConstructorPropertyAssignmentTestScenario<BinaryDescribedSerialization>
+                new ConstructorPropertyAssignmentTestScenario<ObjectWrapper<Version>>
                 {
-                    Name = "PayloadTypeRepresentation should return same 'payloadTypeRepresentation' parameter passed to constructor when getting",
+                    Name = "V should return same 'v' parameter passed to constructor when getting",
                     SystemUnderTestExpectedPropertyValueFunc = () =>
                     {
-                        var referenceObject = A.Dummy<BinaryDescribedSerialization>();
+                        var referenceObject = A.Dummy<ObjectWrapper<Version>>();
 
-                        var result = new SystemUnderTestExpectedPropertyValue<BinaryDescribedSerialization>
+                        var result = new SystemUnderTestExpectedPropertyValue<ObjectWrapper<Version>>
                         {
-                            SystemUnderTest = new BinaryDescribedSerialization(
-                                                      referenceObject.PayloadTypeRepresentation,
-                                                      referenceObject.SerializerRepresentation,
-                                                      referenceObject.SerializedPayload),
-                            ExpectedPropertyValue = referenceObject.PayloadTypeRepresentation,
+                            SystemUnderTest = new ObjectWrapper<Version>(
+                                                      referenceObject.V),
+                            ExpectedPropertyValue = referenceObject.V,
                         };
 
                         return result;
                     },
-                    PropertyName = "PayloadTypeRepresentation",
-                })
-            .AddScenario(() =>
-                new ConstructorPropertyAssignmentTestScenario<BinaryDescribedSerialization>
-                {
-                    Name = "SerializerRepresentation should return same 'serializerRepresentation' parameter passed to constructor when getting",
-                    SystemUnderTestExpectedPropertyValueFunc = () =>
-                    {
-                        var referenceObject = A.Dummy<BinaryDescribedSerialization>();
-
-                        var result = new SystemUnderTestExpectedPropertyValue<BinaryDescribedSerialization>
-                        {
-                            SystemUnderTest = new BinaryDescribedSerialization(
-                                                      referenceObject.PayloadTypeRepresentation,
-                                                      referenceObject.SerializerRepresentation,
-                                                      referenceObject.SerializedPayload),
-                            ExpectedPropertyValue = referenceObject.SerializerRepresentation,
-                        };
-
-                        return result;
-                    },
-                    PropertyName = "SerializerRepresentation",
-                })
-            .AddScenario(() =>
-                new ConstructorPropertyAssignmentTestScenario<BinaryDescribedSerialization>
-                {
-                    Name = "SerializedPayload should return same 'serializedPayload' parameter passed to constructor when getting",
-                    SystemUnderTestExpectedPropertyValueFunc = () =>
-                    {
-                        var referenceObject = A.Dummy<BinaryDescribedSerialization>();
-
-                        var result = new SystemUnderTestExpectedPropertyValue<BinaryDescribedSerialization>
-                        {
-                            SystemUnderTest = new BinaryDescribedSerialization(
-                                                      referenceObject.PayloadTypeRepresentation,
-                                                      referenceObject.SerializerRepresentation,
-                                                      referenceObject.SerializedPayload),
-                            ExpectedPropertyValue = referenceObject.SerializedPayload,
-                        };
-
-                        return result;
-                    },
-                    PropertyName = "SerializedPayload",
+                    PropertyName = "V",
                 });
 
-        private static readonly DeepCloneWithTestScenarios<BinaryDescribedSerialization> DeepCloneWithTestScenarios = new DeepCloneWithTestScenarios<BinaryDescribedSerialization>()
+        private static readonly DeepCloneWithTestScenarios<ObjectWrapper<Version>> DeepCloneWithTestScenarios = new DeepCloneWithTestScenarios<ObjectWrapper<Version>>()
             .AddScenario(() =>
-                new DeepCloneWithTestScenario<BinaryDescribedSerialization>
+                new DeepCloneWithTestScenario<ObjectWrapper<Version>>
                 {
-                    Name = "DeepCloneWithPayloadTypeRepresentation should deep clone object and replace PayloadTypeRepresentation with the provided payloadTypeRepresentation",
-                    WithPropertyName = "PayloadTypeRepresentation",
+                    Name = "DeepCloneWithV should deep clone object and replace V with the provided v",
+                    WithPropertyName = "V",
                     SystemUnderTestDeepCloneWithValueFunc = () =>
                     {
-                        var systemUnderTest = A.Dummy<BinaryDescribedSerialization>();
+                        var systemUnderTest = A.Dummy<ObjectWrapper<Version>>();
 
-                        var referenceObject = A.Dummy<BinaryDescribedSerialization>().ThatIs(_ => !systemUnderTest.PayloadTypeRepresentation.IsEqualTo(_.PayloadTypeRepresentation));
+                        var referenceObject = A.Dummy<ObjectWrapper<Version>>().ThatIs(_ => !systemUnderTest.V.IsEqualTo(_.V));
 
-                        var result = new SystemUnderTestDeepCloneWithValue<BinaryDescribedSerialization>
+                        var result = new SystemUnderTestDeepCloneWithValue<ObjectWrapper<Version>>
                         {
                             SystemUnderTest = systemUnderTest,
-                            DeepCloneWithValue = referenceObject.PayloadTypeRepresentation,
-                        };
-
-                        return result;
-                    },
-                })
-            .AddScenario(() =>
-                new DeepCloneWithTestScenario<BinaryDescribedSerialization>
-                {
-                    Name = "DeepCloneWithSerializerRepresentation should deep clone object and replace SerializerRepresentation with the provided serializerRepresentation",
-                    WithPropertyName = "SerializerRepresentation",
-                    SystemUnderTestDeepCloneWithValueFunc = () =>
-                    {
-                        var systemUnderTest = A.Dummy<BinaryDescribedSerialization>();
-
-                        var referenceObject = A.Dummy<BinaryDescribedSerialization>().ThatIs(_ => !systemUnderTest.SerializerRepresentation.IsEqualTo(_.SerializerRepresentation));
-
-                        var result = new SystemUnderTestDeepCloneWithValue<BinaryDescribedSerialization>
-                        {
-                            SystemUnderTest = systemUnderTest,
-                            DeepCloneWithValue = referenceObject.SerializerRepresentation,
-                        };
-
-                        return result;
-                    },
-                })
-            .AddScenario(() =>
-                new DeepCloneWithTestScenario<BinaryDescribedSerialization>
-                {
-                    Name = "DeepCloneWithSerializedPayload should deep clone object and replace SerializedPayload with the provided serializedPayload",
-                    WithPropertyName = "SerializedPayload",
-                    SystemUnderTestDeepCloneWithValueFunc = () =>
-                    {
-                        var systemUnderTest = A.Dummy<BinaryDescribedSerialization>();
-
-                        var referenceObject = A.Dummy<BinaryDescribedSerialization>().ThatIs(_ => !systemUnderTest.SerializedPayload.IsEqualTo(_.SerializedPayload));
-
-                        var result = new SystemUnderTestDeepCloneWithValue<BinaryDescribedSerialization>
-                        {
-                            SystemUnderTest = systemUnderTest,
-                            DeepCloneWithValue = referenceObject.SerializedPayload,
+                            DeepCloneWithValue = referenceObject.V,
                         };
 
                         return result;
                     },
                 });
 
-        private static readonly BinaryDescribedSerialization ReferenceObjectForEquatableTestScenarios = A.Dummy<BinaryDescribedSerialization>();
+        private static readonly ObjectWrapper<Version> ReferenceObjectForEquatableTestScenarios = A.Dummy<ObjectWrapper<Version>>();
 
-        private static readonly EquatableTestScenarios<BinaryDescribedSerialization> EquatableTestScenarios = new EquatableTestScenarios<BinaryDescribedSerialization>()
+        private static readonly EquatableTestScenarios<ObjectWrapper<Version>> EquatableTestScenarios = new EquatableTestScenarios<ObjectWrapper<Version>>()
             .AddScenario(() =>
-                new EquatableTestScenario<BinaryDescribedSerialization>
+                new EquatableTestScenario<ObjectWrapper<Version>>
                 {
                     Name = "Default Code Generated Scenario",
                     ReferenceObject = ReferenceObjectForEquatableTestScenarios,
-                    ObjectsThatAreEqualToButNotTheSameAsReferenceObject = new BinaryDescribedSerialization[]
+                    ObjectsThatAreEqualToButNotTheSameAsReferenceObject = new ObjectWrapper<Version>[]
                     {
-                        new BinaryDescribedSerialization(
-                                ReferenceObjectForEquatableTestScenarios.PayloadTypeRepresentation,
-                                ReferenceObjectForEquatableTestScenarios.SerializerRepresentation,
-                                ReferenceObjectForEquatableTestScenarios.SerializedPayload),
+                        new ObjectWrapper<Version>(
+                                ReferenceObjectForEquatableTestScenarios.V),
                     },
-                    ObjectsThatAreNotEqualToReferenceObject = new BinaryDescribedSerialization[]
+                    ObjectsThatAreNotEqualToReferenceObject = new ObjectWrapper<Version>[]
                     {
-                        new BinaryDescribedSerialization(
-                                A.Dummy<BinaryDescribedSerialization>().Whose(_ => !_.PayloadTypeRepresentation.IsEqualTo(ReferenceObjectForEquatableTestScenarios.PayloadTypeRepresentation)).PayloadTypeRepresentation,
-                                ReferenceObjectForEquatableTestScenarios.SerializerRepresentation,
-                                ReferenceObjectForEquatableTestScenarios.SerializedPayload),
-                        new BinaryDescribedSerialization(
-                                ReferenceObjectForEquatableTestScenarios.PayloadTypeRepresentation,
-                                A.Dummy<BinaryDescribedSerialization>().Whose(_ => !_.SerializerRepresentation.IsEqualTo(ReferenceObjectForEquatableTestScenarios.SerializerRepresentation)).SerializerRepresentation,
-                                ReferenceObjectForEquatableTestScenarios.SerializedPayload),
-                        new BinaryDescribedSerialization(
-                                ReferenceObjectForEquatableTestScenarios.PayloadTypeRepresentation,
-                                ReferenceObjectForEquatableTestScenarios.SerializerRepresentation,
-                                A.Dummy<BinaryDescribedSerialization>().Whose(_ => !_.SerializedPayload.IsEqualTo(ReferenceObjectForEquatableTestScenarios.SerializedPayload)).SerializedPayload),
+                        new ObjectWrapper<Version>(
+                                A.Dummy<ObjectWrapper<Version>>().Whose(_ => !_.V.IsEqualTo(ReferenceObjectForEquatableTestScenarios.V)).V),
                     },
                     ObjectsThatAreNotOfTheSameTypeAsReferenceObject = new object[]
                     {
@@ -290,7 +136,6 @@ namespace OBeautifulCode.Serialization.Test
                         A.Dummy<int>(),
                         A.Dummy<int?>(),
                         A.Dummy<Guid>(),
-                        A.Dummy<StringDescribedSerialization>(),
                     },
                 });
 
@@ -312,12 +157,12 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void BinaryDescribedSerialization___Should_implement_IModel_of_BinaryDescribedSerialization___When_reflecting()
+            public static void ObjectWrapper___Should_implement_IModel_of_ObjectWrapper___When_reflecting()
             {
                 // Arrange
-                var type = typeof(BinaryDescribedSerialization);
+                var type = typeof(ObjectWrapper<Version>);
 
-                var expectedModelMethods = typeof(IModel<BinaryDescribedSerialization>).GetInterfaceDeclaredAndImplementedMethods();
+                var expectedModelMethods = typeof(IModel<ObjectWrapper<Version>>).GetInterfaceDeclaredAndImplementedMethods();
 
                 var expectedModelMethodHashes = expectedModelMethods.Select(_ => _.GetSignatureHash());
 
@@ -327,7 +172,7 @@ namespace OBeautifulCode.Serialization.Test
                 var actualModelMethodHashes = actualModelMethods.Select(_ => _.GetSignatureHash());
 
                 // Assert
-                actualInterfaces.AsTest().Must().ContainElement(typeof(IModel<BinaryDescribedSerialization>));
+                actualInterfaces.AsTest().Must().ContainElement(typeof(IModel<ObjectWrapper<Version>>));
                 expectedModelMethodHashes.Except(actualModelMethodHashes).AsTest().Must().BeEmptyEnumerable();
             }
 
@@ -345,10 +190,10 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void BinaryDescribedSerialization___Should_be_attributed_with_Serializable____When_reflecting()
+            public static void ObjectWrapper___Should_be_attributed_with_Serializable____When_reflecting()
             {
                 // Arrange
-                var type = typeof(BinaryDescribedSerialization);
+                var type = typeof(ObjectWrapper<Version>);
 
                 // Act
                 var actualAttributes = type.GetCustomAttributes(typeof(SerializableAttribute), false);
@@ -421,7 +266,7 @@ namespace OBeautifulCode.Serialization.Test
                     // Assert
                     actual.AsTest().Must().BeOfType(scenario.ExpectedExceptionType, because: scenario.Id);
 
-                    foreach(var expected in scenario.ExpectedExceptionMessageContains ?? new List<string>())
+                    foreach (var expected in scenario.ExpectedExceptionMessageContains ?? new List<string>())
                     {
                         actual.Message.AsTest().Must().ContainString(expected, because: scenario.Id);
                     }
@@ -521,10 +366,10 @@ namespace OBeautifulCode.Serialization.Test
             public static void Clone___Should_clone_object___When_called()
             {
                 // Arrange
-                var systemUnderTest = A.Dummy<BinaryDescribedSerialization>();
+                var systemUnderTest = A.Dummy<ObjectWrapper<Version>>();
 
                 // Act
-                var actual = (BinaryDescribedSerialization)systemUnderTest.Clone();
+                var actual = (ObjectWrapper<Version>)systemUnderTest.Clone();
 
                 // Assert
                 actual.AsTest().Must().BeEqualTo(systemUnderTest);
@@ -548,7 +393,7 @@ namespace OBeautifulCode.Serialization.Test
             public static void DeepClone___Should_deep_clone_object___When_called()
             {
                 // Arrange
-                var systemUnderTest = A.Dummy<BinaryDescribedSerialization>();
+                var systemUnderTest = A.Dummy<ObjectWrapper<Version>>();
 
                 // Act
                 var actual = systemUnderTest.DeepClone();
@@ -557,31 +402,13 @@ namespace OBeautifulCode.Serialization.Test
                 actual.AsTest().Must().BeEqualTo(systemUnderTest);
                 actual.AsTest().Must().NotBeSameReferenceAs(systemUnderTest);
 
-                if (systemUnderTest.PayloadTypeRepresentation == null)
+                if (systemUnderTest.V == null)
                 {
-                    actual.PayloadTypeRepresentation.AsTest().Must().BeNull();
+                    actual.V.AsTest().Must().BeNull();
                 }
                 else
                 {
-                    actual.PayloadTypeRepresentation.AsTest().Must().NotBeSameReferenceAs(systemUnderTest.PayloadTypeRepresentation);
-                }
-
-                if (systemUnderTest.SerializerRepresentation == null)
-                {
-                    actual.SerializerRepresentation.AsTest().Must().BeNull();
-                }
-                else
-                {
-                    actual.SerializerRepresentation.AsTest().Must().NotBeSameReferenceAs(systemUnderTest.SerializerRepresentation);
-                }
-
-                if (systemUnderTest.SerializedPayload == null)
-                {
-                    actual.SerializedPayload.AsTest().Must().BeNull();
-                }
-                else
-                {
-                    actual.SerializedPayload.AsTest().Must().NotBeSameReferenceAs(systemUnderTest.SerializedPayload);
+                    actual.V.AsTest().Must().NotBeSameReferenceAs(systemUnderTest.V);
                 }
             }
 
@@ -601,7 +428,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
             public static void DeepCloneWith___Should_deep_clone_object_and_replace_the_associated_property_with_the_provided_value___When_called()
             {
-                var propertyNames = new string[] { "PayloadTypeRepresentation", "SerializerRepresentation", "SerializedPayload" };
+                var propertyNames = new string[] { "V" };
 
                 var scenarios = DeepCloneWithTestScenarios.ValidateAndPrepareForTesting();
 
@@ -618,12 +445,12 @@ namespace OBeautifulCode.Serialization.Test
                     }
 
                     // Act
-                    var actual = (BinaryDescribedSerialization)scenario.DeepCloneWithMethod.Invoke(scenario.SystemUnderTest, new[] { scenario.WithValue });
+                    var actual = (ObjectWrapper<Version>)scenario.DeepCloneWithMethod.Invoke(scenario.SystemUnderTest, new[] { scenario.WithValue });
 
                     // Assert
-                    foreach(var propertyName in propertyNames)
+                    foreach (var propertyName in propertyNames)
                     {
-                        var propertyInfo = typeof(BinaryDescribedSerialization).GetPropertyFiltered(propertyName, MemberRelationships.DeclaredOrInherited, MemberOwners.Instance, MemberAccessModifiers.Public);
+                        var propertyInfo = typeof(ObjectWrapper<Version>).GetPropertyFiltered(propertyName, MemberRelationships.DeclaredOrInherited, MemberOwners.Instance, MemberAccessModifiers.Public);
 
                         var propertyType = propertyInfo.PropertyType;
 
@@ -691,8 +518,8 @@ namespace OBeautifulCode.Serialization.Test
             public static void EqualsOperator___Should_return_true___When_both_sides_of_operator_are_null()
             {
                 // Arrange
-                BinaryDescribedSerialization systemUnderTest1 = null;
-                BinaryDescribedSerialization systemUnderTest2 = null;
+                ObjectWrapper<Version> systemUnderTest1 = null;
+                ObjectWrapper<Version> systemUnderTest2 = null;
 
                 // Act
                 var actual = systemUnderTest1 == systemUnderTest2;
@@ -722,7 +549,7 @@ namespace OBeautifulCode.Serialization.Test
                 foreach (var scenario in scenarios)
                 {
                     // Arrange
-                    BinaryDescribedSerialization systemUnderTest = null;
+                    ObjectWrapper<Version> systemUnderTest = null;
 
                     // Act
                     var actual1 = systemUnderTest == scenario.ReferenceObject;
@@ -755,9 +582,9 @@ namespace OBeautifulCode.Serialization.Test
                 foreach (var scenario in scenarios)
                 {
                     // Arrange, Act
-                    #pragma warning disable CS1718 // Comparison made to same variable
+#pragma warning disable CS1718 // Comparison made to same variable
                     var actual = scenario.ReferenceObject == scenario.ReferenceObject;
-                    #pragma warning restore CS1718 // Comparison made to same variable
+#pragma warning restore CS1718 // Comparison made to same variable
 
                     // Assert
                     actual.AsTest().Must().BeTrue(because: scenario.Id);
@@ -871,8 +698,8 @@ namespace OBeautifulCode.Serialization.Test
             public static void NotEqualsOperator___Should_return_false___When_both_sides_of_operator_are_null()
             {
                 // Arrange
-                BinaryDescribedSerialization systemUnderTest1 = null;
-                BinaryDescribedSerialization systemUnderTest2 = null;
+                ObjectWrapper<Version> systemUnderTest1 = null;
+                ObjectWrapper<Version> systemUnderTest2 = null;
 
                 // Act
                 var actual = systemUnderTest1 != systemUnderTest2;
@@ -902,7 +729,7 @@ namespace OBeautifulCode.Serialization.Test
                 foreach (var scenario in scenarios)
                 {
                     // Arrange
-                    BinaryDescribedSerialization systemUnderTest = null;
+                    ObjectWrapper<Version> systemUnderTest = null;
 
                     // Act
                     var actual1 = systemUnderTest != scenario.ReferenceObject;
@@ -935,9 +762,9 @@ namespace OBeautifulCode.Serialization.Test
                 foreach (var scenario in scenarios)
                 {
                     // Arrange, Act
-                    #pragma warning disable CS1718 // Comparison made to same variable
+#pragma warning disable CS1718 // Comparison made to same variable
                     var actual = scenario.ReferenceObject != scenario.ReferenceObject;
-                    #pragma warning restore CS1718 // Comparison made to same variable
+#pragma warning restore CS1718 // Comparison made to same variable
 
                     // Assert
                     actual.AsTest().Must().BeFalse(because: scenario.Id);
@@ -1048,157 +875,14 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_DescribedSerializationBase___Should_return_false___When_parameter_other_is_null()
+            public static void Equals_with_ObjectWrapper___Should_return_false___When_parameter_other_is_null()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 
                 foreach (var scenario in scenarios)
                 {
                     // Arrange
-                    DescribedSerializationBase systemUnderTest = null;
-
-                    // Act
-                    var actual = scenario.ReferenceObject.Equals((DescribedSerializationBase)systemUnderTest);
-
-                    // Assert
-                    actual.AsTest().Must().BeFalse(because: scenario.Id);
-                }
-            }
-
-            [Fact]
-            [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-            [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
-            [SuppressMessage("Microsoft.Naming", "CA1715:IdentifiersShouldHaveCorrectPrefix")]
-            [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords")]
-            [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames")]
-            [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames")]
-            [SuppressMessage("Microsoft.Naming", "CA1722:IdentifiersShouldNotHaveIncorrectPrefix")]
-            [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
-            [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
-            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_DescribedSerializationBase___Should_return_true___When_parameter_other_is_same_object()
-            {
-                var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
-
-                foreach (var scenario in scenarios)
-                {
-                    // Arrange, Act
-                    var actual = scenario.ReferenceObject.Equals((DescribedSerializationBase)scenario.ReferenceObject);
-
-                    // Assert
-                    actual.AsTest().Must().BeTrue(because: scenario.Id);
-                }
-            }
-
-            [Fact]
-            [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-            [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
-            [SuppressMessage("Microsoft.Naming", "CA1715:IdentifiersShouldHaveCorrectPrefix")]
-            [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords")]
-            [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames")]
-            [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames")]
-            [SuppressMessage("Microsoft.Naming", "CA1722:IdentifiersShouldNotHaveIncorrectPrefix")]
-            [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
-            [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
-            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_DescribedSerializationBase___Should_return_false___When_parameter_other_is_derived_from_the_same_type_but_is_not_of_the_same_type_as_this_object()
-            {
-                var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
-
-                foreach (var scenario in scenarios)
-                {
-                    // Arrange, Act
-                    var actuals = scenario.ObjectsThatDeriveFromScenarioTypeButAreNotOfTheSameTypeAsReferenceObject.Select(_ => scenario.ReferenceObject.Equals((DescribedSerializationBase)_)).ToList();
-
-                    // Assert
-                    actuals.AsTest().Must().Each().BeFalse(because: scenario.Id);
-                }
-            }
-
-            [Fact]
-            [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-            [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
-            [SuppressMessage("Microsoft.Naming", "CA1715:IdentifiersShouldHaveCorrectPrefix")]
-            [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords")]
-            [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames")]
-            [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames")]
-            [SuppressMessage("Microsoft.Naming", "CA1722:IdentifiersShouldNotHaveIncorrectPrefix")]
-            [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
-            [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
-            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_DescribedSerializationBase___Should_return_false___When_objects_being_compared_have_different_property_values()
-            {
-                var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
-
-                foreach (var scenario in scenarios)
-                {
-                    // Arrange, Act
-                    var actuals = scenario.ObjectsThatAreNotEqualToReferenceObject.Select(_ => scenario.ReferenceObject.Equals((DescribedSerializationBase)_)).ToList();
-
-                    // Assert
-                    actuals.AsTest().Must().Each().BeFalse(because: scenario.Id);
-                }
-            }
-
-            [Fact]
-            [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-            [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
-            [SuppressMessage("Microsoft.Naming", "CA1715:IdentifiersShouldHaveCorrectPrefix")]
-            [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords")]
-            [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames")]
-            [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames")]
-            [SuppressMessage("Microsoft.Naming", "CA1722:IdentifiersShouldNotHaveIncorrectPrefix")]
-            [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
-            [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
-            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_DescribedSerializationBase___Should_return_true___When_objects_being_compared_have_same_property_values()
-            {
-                var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
-
-                foreach (var scenario in scenarios)
-                {
-                    // Arrange, Act
-                    var actuals = scenario.ObjectsThatAreEqualToButNotTheSameAsReferenceObject.Select(_ => scenario.ReferenceObject.Equals((DescribedSerializationBase)_)).ToList();
-
-                    // Assert
-                    actuals.AsTest().Must().Each().BeTrue(because: scenario.Id);
-                }
-            }
-
-            [Fact]
-            [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly")]
-            [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
-            [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
-            [SuppressMessage("Microsoft.Naming", "CA1715:IdentifiersShouldHaveCorrectPrefix")]
-            [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords")]
-            [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames")]
-            [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames")]
-            [SuppressMessage("Microsoft.Naming", "CA1722:IdentifiersShouldNotHaveIncorrectPrefix")]
-            [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
-            [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
-            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_BinaryDescribedSerialization___Should_return_false___When_parameter_other_is_null()
-            {
-                var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
-
-                foreach (var scenario in scenarios)
-                {
-                    // Arrange
-                    BinaryDescribedSerialization systemUnderTest = null;
+                    ObjectWrapper<Version> systemUnderTest = null;
 
                     // Act
                     var actual = scenario.ReferenceObject.Equals(systemUnderTest);
@@ -1222,7 +906,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_BinaryDescribedSerialization___Should_return_true___When_parameter_other_is_same_object()
+            public static void Equals_with_ObjectWrapper___Should_return_true___When_parameter_other_is_same_object()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 
@@ -1250,7 +934,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_BinaryDescribedSerialization___Should_return_false___When_parameter_other_is_derived_from_the_same_type_but_is_not_of_the_same_type_as_this_object()
+            public static void Equals_with_ObjectWrapper___Should_return_false___When_parameter_other_is_derived_from_the_same_type_but_is_not_of_the_same_type_as_this_object()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 
@@ -1278,7 +962,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_BinaryDescribedSerialization___Should_return_false___When_objects_being_compared_have_different_property_values()
+            public static void Equals_with_ObjectWrapper___Should_return_false___When_objects_being_compared_have_different_property_values()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 
@@ -1306,7 +990,7 @@ namespace OBeautifulCode.Serialization.Test
             [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration")]
             [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms")]
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly")]
-            public static void Equals_with_BinaryDescribedSerialization___Should_return_true___When_objects_being_compared_have_same_property_values()
+            public static void Equals_with_ObjectWrapper___Should_return_true___When_objects_being_compared_have_same_property_values()
             {
                 var scenarios = EquatableTestScenarios.ValidateAndPrepareForTesting();
 

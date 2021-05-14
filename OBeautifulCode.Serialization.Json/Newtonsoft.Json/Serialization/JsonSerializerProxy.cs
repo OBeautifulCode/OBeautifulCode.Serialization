@@ -275,7 +275,9 @@ namespace NewtonsoftFork.Json.Serialization
             }
             else
             {
-                _serializer.Serialize(jsonWriter, value);
+                throw new NotSupportedException("OBC: Should not use this code path.");
+
+                ////_serializer.Serialize(jsonWriter, value);
             }
         }
     }

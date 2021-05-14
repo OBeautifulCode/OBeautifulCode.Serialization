@@ -106,7 +106,7 @@ namespace OBeautifulCode.Serialization
                 {
                     var typesToConsiderForThisAssembly = new[] { assemblyToProcess }
                         .GetTypesFromAssemblies()
-                        .Where(_ => !IsRestrictedType(_))
+                        .Where(_ => !_.IsRestrictedType())
                         .ToList();
 
                     foreach (var typeToConsiderForThisAssembly in typesToConsiderForThisAssembly)
@@ -219,7 +219,7 @@ namespace OBeautifulCode.Serialization
             // Short-circuit restricted types.  We will see these types here because we want to explore them in
             // GetMemberTypesToInclude (e.g. List<MyModel>), but we are not interested in their related types
             // (e.g. IEnumerable).
-            if (IsRestrictedType(type))
+            if (type.IsRestrictedType())
             {
                 return new Type[0];
             }
@@ -344,7 +344,7 @@ namespace OBeautifulCode.Serialization
             // We want to pull generic arguments and array elements from restricted types (e.g. List<MyModel>)
             // but otherwise we are not interested in the fields and properties of those types, which will
             // contain a bunch of other System and .NET internal types.
-            if (!IsRestrictedType(type))
+            if (!type.IsRestrictedType())
             {
                 var fieldAndPropertyTypes = type
                     .GetMembersFiltered(MemberRelationships.DeclaredInType, MemberOwners.Instance, MemberAccessModifiers.All, MemberKinds.Field | MemberKinds.Property)
@@ -456,7 +456,7 @@ namespace OBeautifulCode.Serialization
 
                 foreach (var ancestorType in ancestorTypes)
                 {
-                    if (IsRestrictedType(ancestorType))
+                    if (ancestorType.IsRestrictedType())
                     {
                         continue;
                     }
@@ -526,44 +526,12 @@ namespace OBeautifulCode.Serialization
                 }
             }
 
-            if (IsRestrictedType(type))
+            if (type.IsRestrictedType())
             {
                 return false;
             }
 
             return true;
-        }
-
-        private static bool IsRestrictedType(
-            Type type)
-        {
-            if (type.IsGenericParameter)
-            {
-                return true;
-            }
-
-            if (type.IsSystemType())
-            {
-                return true;
-            }
-
-            if (type.Namespace == null || // anonymous types
-                type.Namespace.StartsWith("Windows", StringComparison.Ordinal) ||
-                type.Namespace.StartsWith("Microsoft", StringComparison.Ordinal) ||
-                type.Namespace.StartsWith("JetBrains", StringComparison.Ordinal) ||
-                type.Namespace.StartsWith("MS", StringComparison.Ordinal) ||
-                type.Namespace.StartsWith("Internal", StringComparison.Ordinal) ||
-                type.Namespace.StartsWith("FakeItEasy", StringComparison.Ordinal) ||
-                type.Namespace.StartsWith("Newtonsoft", StringComparison.Ordinal) ||
-                type.Namespace.StartsWith("MongoDB", StringComparison.Ordinal) ||
-                type.Namespace.StartsWith("Xunit", StringComparison.Ordinal) ||
-                type.Namespace.StartsWith("Its.Validation", StringComparison.Ordinal) ||
-                type.Name.StartsWith("<>c", StringComparison.Ordinal))
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }

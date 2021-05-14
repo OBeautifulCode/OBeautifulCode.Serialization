@@ -64,7 +64,9 @@ namespace OBeautifulCode.Serialization.Json
 
             var valueAsDictionary = (IDictionary)value;
 
-            var keyType = value.GetType().GetClosedDictionaryKeyType();
+            var keyType = declaredType.GetClosedDictionaryKeyType();
+
+            var valueType = declaredType.GetClosedDictionaryValueType();
 
             var objectToWrite = new JObject();
 
@@ -83,11 +85,8 @@ namespace OBeautifulCode.Serialization.Json
                     }
                     else
                     {
-                        // this covers typeof(string) and value types
-
-                        // Send the Key back through the front-door to get picked-up
-                        // by a registered converter or Newtonsoft if there is no registered
-                        // converter for the Key Type.
+                        // This covers typeof(string) and value types
+                        // Send the Key back through the front-door to get picked-up by Newtonsoft
                         serializer.Serialize(keyWriter, key, keyType);
 
                         // The resulting string is in JSON, so it's surrounded by double quotes
@@ -105,7 +104,7 @@ namespace OBeautifulCode.Serialization.Json
                     throw new InvalidOperationException(Invariant($"Key in dictionary serializes to a null or white space string.  Key type is {keyType.ToStringReadable()}."));
                 }
 
-                var jsonProperty = new JProperty(keyProperty, keyValuePair.Value == null ? JValue.CreateNull() : JToken.FromObject(keyValuePair.Value, serializer));
+                var jsonProperty = new JProperty(keyProperty, keyValuePair.Value == null ? JValue.CreateNull() : JToken.FromObject(keyValuePair.Value, serializer, valueType));
 
                 objectToWrite.Add(jsonProperty);
             }

@@ -1669,6 +1669,22 @@ namespace NewtonsoftFork.Json.Linq
             return token;
         }
 
+        internal static JToken FromObjectInternal(object o, JsonSerializer jsonSerializer, Type objectType)
+        {
+            ValidationUtils.ArgumentNotNull(o, nameof(o));
+            ValidationUtils.ArgumentNotNull(jsonSerializer, nameof(jsonSerializer));
+            ValidationUtils.ArgumentNotNull(objectType, nameof(objectType));
+
+            JToken token;
+            using (JTokenWriter jsonWriter = new JTokenWriter())
+            {
+                jsonSerializer.Serialize(jsonWriter, o, objectType);
+                token = jsonWriter.Token;
+            }
+
+            return token;
+        }
+
         /// <summary>
         /// Creates a <see cref="JToken"/> from an object.
         /// </summary>
@@ -1688,6 +1704,18 @@ namespace NewtonsoftFork.Json.Linq
         public static JToken FromObject(object o, JsonSerializer jsonSerializer)
         {
             return FromObjectInternal(o, jsonSerializer);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="JToken"/> from an object using the specified <see cref="JsonSerializer"/>.
+        /// </summary>
+        /// <param name="o">The object that will be used to create <see cref="JToken"/>.</param>
+        /// <param name="jsonSerializer">The <see cref="JsonSerializer"/> that will be used when reading the object.</param>
+        /// <param name="declaredType">The declared type of the object.</param>
+        /// <returns>A <see cref="JToken"/> with the value of the specified object</returns>
+        public static JToken FromObject(object o, JsonSerializer jsonSerializer, Type declaredType)
+        {
+            return FromObjectInternal(o, jsonSerializer, declaredType);
         }
 
         /// <summary>

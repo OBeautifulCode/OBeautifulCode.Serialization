@@ -461,6 +461,25 @@ namespace NewtonsoftFork.Json.Linq
         }
 
         /// <summary>
+        /// Creates a <see cref="JObject"/> from an object.
+        /// </summary>
+        /// <param name="o">The object that will be used to create <see cref="JObject"/>.</param>
+        /// <param name="jsonSerializer">The <see cref="JsonSerializer"/> that will be used to read the object.</param>
+        /// <param name="objectType">The object type.</param>
+        /// <returns>A <see cref="JObject"/> with the values of the specified object</returns>
+        public static new JObject FromObject(object o, JsonSerializer jsonSerializer, Type objectType)
+        {
+            JToken token = FromObjectInternal(o, jsonSerializer, objectType);
+
+            if (token != null && token.Type != JTokenType.Object)
+            {
+                throw new ArgumentException("Object serialized to {0}. JObject instance expected.".FormatWith(CultureInfo.InvariantCulture, token.Type));
+            }
+
+            return (JObject)token;
+        }
+
+        /// <summary>
         /// Writes this token to a <see cref="JsonWriter"/>.
         /// </summary>
         /// <param name="writer">A <see cref="JsonWriter"/> into which this method will write.</param>

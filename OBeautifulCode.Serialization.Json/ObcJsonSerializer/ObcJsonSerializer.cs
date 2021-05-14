@@ -132,7 +132,7 @@ namespace OBeautifulCode.Serialization.Json
 
             var jsonSerializerSettings = this.jsonSerializationConfiguration.BuildJsonSerializerSettings(SerializationDirection.Serialize, this.jsonSerializationConfiguration);
 
-            var result = JsonConvert.SerializeObject(objectToSerialize, jsonSerializerSettings);
+            var result = JsonConvert.SerializeObject(objectToSerialize, objectToSerialize?.GetType(), jsonSerializerSettings);
 
             return result;
         }

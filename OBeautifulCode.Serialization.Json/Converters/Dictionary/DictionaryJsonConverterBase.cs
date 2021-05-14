@@ -53,9 +53,9 @@ namespace OBeautifulCode.Serialization.Json
                 // Note that we are NOT checking whether the type is assignable to a dictionary type,
                 // we are specifically checking that the type is a System dictionary type.
                 // If the consumer is deriving from a dictionary type, they should create a custom converter.
-                if (objectType.IsClosedSystemDictionaryType())
+                if (declaredType.IsClosedSystemDictionaryType())
                 {
-                    var keyType = objectType.GetClosedSystemDictionaryKeyType();
+                    var keyType = declaredType.GetClosedSystemDictionaryKeyType();
 
                     result = this.ShouldHandleKeyType(keyType);
                 }

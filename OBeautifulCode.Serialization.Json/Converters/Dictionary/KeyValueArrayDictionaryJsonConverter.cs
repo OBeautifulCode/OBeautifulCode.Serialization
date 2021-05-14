@@ -15,6 +15,7 @@ namespace OBeautifulCode.Serialization.Json
     using NewtonsoftFork.Json.Linq;
 
     using OBeautifulCode.Reflection.Recipes;
+    using OBeautifulCode.Type.Recipes;
 
     /// <summary>
     /// Serializes a dictionary to an array of key/value pairs.
@@ -43,9 +44,15 @@ namespace OBeautifulCode.Serialization.Json
 
             var elementsToWrite = new List<object>();
 
+            var keyType = declaredType.GetClosedSystemDictionaryKeyType();
+
+            var valueType = declaredType.GetClosedSystemDictionaryValueType();
+
+            var keyValuePairType = typeof(KeyValuePair<,>).MakeGenericType(keyType, valueType);
+
             foreach (var element in valueAsEnumerable)
             {
-                var jo = JObject.FromObject(element, serializer);
+                var jo = JObject.FromObject(element, serializer, keyValuePairType);
 
                 elementsToWrite.Add(jo);
             }

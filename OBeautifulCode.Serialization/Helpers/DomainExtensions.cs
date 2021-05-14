@@ -270,22 +270,51 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(type));
             }
 
-            RelatedTypesToInclude result;
-
-            if (type.IsInterface)
-            {
-                result = RelatedTypesToInclude.Descendants;
-            }
-            else if (type.IsAbstract)
-            {
-                result = RelatedTypesToInclude.Descendants;
-            }
-            else
-            {
-                result = RelatedTypesToInclude.None;
-            }
+            // Is an abstract class or an interface (IsAbstract returns true for interfaces)
+            var result = type.IsAbstract
+                ? RelatedTypesToInclude.Descendants
+                : RelatedTypesToInclude.None;
 
             return result;
+        }
+
+        /// <summary>
+        /// Determines if the specified type is a restricted type.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>
+        /// true if the type is restricted; otherwise false.
+        /// </returns>
+        public static bool IsRestrictedType(
+            this Type type)
+        {
+            if (type.IsGenericParameter)
+            {
+                return true;
+            }
+
+            if (type.IsSystemType())
+            {
+                return true;
+            }
+
+            if (type.Namespace == null || // anonymous types
+                type.Namespace.StartsWith("Windows", StringComparison.Ordinal) ||
+                type.Namespace.StartsWith("Microsoft", StringComparison.Ordinal) ||
+                type.Namespace.StartsWith("JetBrains", StringComparison.Ordinal) ||
+                type.Namespace.StartsWith("MS", StringComparison.Ordinal) ||
+                type.Namespace.StartsWith("Internal", StringComparison.Ordinal) ||
+                type.Namespace.StartsWith("FakeItEasy", StringComparison.Ordinal) ||
+                type.Namespace.StartsWith("Newtonsoft", StringComparison.Ordinal) ||
+                type.Namespace.StartsWith("MongoDB", StringComparison.Ordinal) ||
+                type.Namespace.StartsWith("Xunit", StringComparison.Ordinal) ||
+                type.Namespace.StartsWith("Its.Validation", StringComparison.Ordinal) ||
+                type.Name.StartsWith("<>c", StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -114,7 +114,7 @@ namespace OBeautifulCode.Serialization.Json
                 {
                     var createdType = Nullable.GetUnderlyingType(objectType) ?? objectType;
 
-                    var isInstantiable = (!createdType.IsInterface) && (!createdType.IsAbstract);
+                    var isInstantiable = !createdType.IsAbstract;
 
                     // this is somewhat reverse engineered from DefaultContractResolver.CreateObjectContract
                     // the object must be instantiable, and Newtonsoft did not find a constructor attributed with [JsonConstructor] (OverrideConstructor)
