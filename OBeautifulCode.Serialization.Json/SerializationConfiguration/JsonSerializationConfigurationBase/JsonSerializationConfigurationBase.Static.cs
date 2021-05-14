@@ -128,12 +128,8 @@ namespace OBeautifulCode.Serialization.Json
             Type type,
             IReadOnlyCollection<Type> registeredTypes)
         {
+            // Is interface or abstract class?
             if (type.IsAbstract)
-            {
-                return true;
-            }
-
-            if (type.IsInterface)
             {
                 return true;
             }

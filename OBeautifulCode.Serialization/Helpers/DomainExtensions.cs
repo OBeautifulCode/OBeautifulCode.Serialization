@@ -270,20 +270,10 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(type));
             }
 
-            RelatedTypesToInclude result;
-
-            if (type.IsInterface)
-            {
-                result = RelatedTypesToInclude.Descendants;
-            }
-            else if (type.IsAbstract)
-            {
-                result = RelatedTypesToInclude.Descendants;
-            }
-            else
-            {
-                result = RelatedTypesToInclude.None;
-            }
+            // Is an abstract class or an interface (IsAbstract returns true for interfaces)
+            var result = type.IsAbstract
+                ? RelatedTypesToInclude.Descendants
+                : RelatedTypesToInclude.None;
 
             return result;
         }
