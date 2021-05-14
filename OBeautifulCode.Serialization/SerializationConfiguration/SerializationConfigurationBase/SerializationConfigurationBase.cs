@@ -25,7 +25,7 @@ namespace OBeautifulCode.Serialization
     /// </summary>
     public abstract partial class SerializationConfigurationBase
     {
-        private static readonly ConcurrentDictionary<Type, List<MemberInfo>> TypeToAllFieldsAndPropertiesMemberInfoMap = new ConcurrentDictionary<Type, List<MemberInfo>>();
+        private static readonly ConcurrentDictionary<Type, List<MemberInfo>> CachedTypeToAllFieldsAndPropertiesMemberInfoMap = new ConcurrentDictionary<Type, List<MemberInfo>>();
 
         private readonly ConcurrentDictionary<Type, object> validatedTypes = new ConcurrentDictionary<Type, object>();
 
@@ -569,7 +569,7 @@ namespace OBeautifulCode.Serialization
             object objectToSerialize)
         {
             // get or add members from cache
-            if (!TypeToAllFieldsAndPropertiesMemberInfoMap.ContainsKey(typeToValidate))
+            if (!CachedTypeToAllFieldsAndPropertiesMemberInfoMap.ContainsKey(typeToValidate))
             {
                 // note that there is some overlap between this and GetMemberTypesToInclude()
                 // both are fetching property and field members of a type.  GetMemberTypesToInclude
@@ -581,10 +581,10 @@ namespace OBeautifulCode.Serialization
                     .GetMembersFiltered(MemberRelationships.DeclaredInTypeOrAncestorTypes, MemberOwners.Instance, MemberAccessModifiers.All, MemberKinds.Field | MemberKinds.Property)
                     .ToList();
 
-                TypeToAllFieldsAndPropertiesMemberInfoMap.TryAdd(typeToValidate, memberInfosToAdd);
+                CachedTypeToAllFieldsAndPropertiesMemberInfoMap.TryAdd(typeToValidate, memberInfosToAdd);
             }
 
-            var memberInfos = TypeToAllFieldsAndPropertiesMemberInfoMap[typeToValidate];
+            var memberInfos = CachedTypeToAllFieldsAndPropertiesMemberInfoMap[typeToValidate];
 
             foreach (var memberInfo in memberInfos)
             {

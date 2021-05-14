@@ -27,7 +27,7 @@ namespace OBeautifulCode.Serialization.Json
     {
         private readonly JsonSerializationConfigurationBase jsonSerializationConfiguration;
 
-        private readonly ConcurrentDictionary<Type, IReadOnlyCollection<Type>> assignableTypesCache =
+        private readonly ConcurrentDictionary<Type, IReadOnlyCollection<Type>> cachedAssignableTypes =
             new ConcurrentDictionary<Type, IReadOnlyCollection<Type>>();
 
         private bool readJsonCalled = false;
@@ -312,16 +312,16 @@ namespace OBeautifulCode.Serialization.Json
         {
             var allTypes = AssemblyLoader.GetLoadedAssemblies().GetTypesFromAssemblies();
 
-            if (!this.assignableTypesCache.ContainsKey(type))
+            if (!this.cachedAssignableTypes.ContainsKey(type))
             {
                 var assignableTypes = allTypes
                     .Where(_ => _.IsClosedNonAnonymousClassType() && (_ != type) && _.IsAssignableTo(type))
                     .ToList();
 
-                this.assignableTypesCache.AddOrUpdate(type, assignableTypes, (t, cts) => assignableTypes);
+                this.cachedAssignableTypes.AddOrUpdate(type, assignableTypes, (t, cts) => assignableTypes);
             }
 
-            var result = this.assignableTypesCache[type];
+            var result = this.cachedAssignableTypes[type];
 
             return result;
         }
