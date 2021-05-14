@@ -39,8 +39,7 @@ namespace OBeautifulCode.Serialization.Json
 
         /// <inheritdoc />
         public override bool CanConvert(
-            Type objectType,
-            Type declaredType)
+            Type objectType)
         {
             // objectType will be the runtime type, NOT the declared type.
             // so if you have an abstract Animal and a derived Dog and you have a property of type Animal,
@@ -79,8 +78,7 @@ namespace OBeautifulCode.Serialization.Json
         public override void WriteJson(
             JsonWriter writer,
             object value,
-            JsonSerializer serializer,
-            Type declaredType)
+            JsonSerializer serializer)
         {
             // We write the concrete type regardless of whether the declared type is an interface/base class
             // or a derivative class.  That's because, as noted in CanConvert(), we aren't told what the declared

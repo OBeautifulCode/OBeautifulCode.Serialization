@@ -53,8 +53,7 @@ namespace OBeautifulCode.Serialization.Json
 
         /// <inheritdoc />
         public override bool CanConvert(
-            Type objectType,
-            Type declaredType)
+            Type objectType)
         {
             // ReadJson determines which type (if payload is annotated with a concrete type token) or type(s)
             // (if evaluating candidates) to deserialize into and then attempts to deserialize into those type(s)
@@ -214,8 +213,7 @@ namespace OBeautifulCode.Serialization.Json
         public override void WriteJson(
             JsonWriter writer,
             object value,
-            JsonSerializer serializer,
-            Type declaredType)
+            JsonSerializer serializer)
         {
             throw new NotSupportedException("This is a read-only converter.");
         }

@@ -49,8 +49,7 @@ namespace OBeautifulCode.Serialization.Json
         public override void WriteJson(
             JsonWriter writer,
             object value,
-            JsonSerializer serializer,
-            Type declaredType)
+            JsonSerializer serializer)
         {
             if (value == null)
             {

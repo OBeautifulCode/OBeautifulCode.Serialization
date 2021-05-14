@@ -157,21 +157,17 @@ namespace NewtonsoftFork.Json.Serialization
                 return;
             }
 
-            // OBC: member is null on the top-level object being serialized, in which case declaredType is null,
-            //      otherwise it should be known as we traverse the object's property hierarchy.
-            var declaredType = member?.PropertyType;
-
             JsonConverter converter =
                 ((member != null) ? member.Converter : null) ??
                 ((containerProperty != null) ? containerProperty.ItemConverter : null) ??
                 ((containerContract != null) ? containerContract.ItemConverter : null) ??
                 valueContract.Converter ??
-                Serializer.GetMatchingConverter(valueContract.UnderlyingType, declaredType) ??
+                Serializer.GetMatchingConverter(valueContract.UnderlyingType) ??
                 valueContract.InternalConverter;
 
             if (converter != null && converter.CanWrite)
             {
-                SerializeConvertable(writer, converter, value, valueContract, containerContract, containerProperty, declaredType);
+                SerializeConvertable(writer, converter, value, valueContract, containerContract, containerProperty);
                 return;
             }
 
@@ -637,7 +633,7 @@ namespace NewtonsoftFork.Json.Serialization
             return ((value & flag) == flag);
         }
 
-        private void SerializeConvertable(JsonWriter writer, JsonConverter converter, object value, JsonContract contract, JsonContainerContract collectionContract, JsonProperty containerProperty, Type declaredType)
+        private void SerializeConvertable(JsonWriter writer, JsonConverter converter, object value, JsonContract contract, JsonContainerContract collectionContract, JsonProperty containerProperty)
         {
             if (ShouldWriteReference(value, null, contract, collectionContract, containerProperty))
             {
@@ -657,7 +653,7 @@ namespace NewtonsoftFork.Json.Serialization
                     TraceWriter.Trace(TraceLevel.Info, JsonPosition.FormatMessage(null, writer.Path, "Started serializing {0} with converter {1}.".FormatWith(CultureInfo.InvariantCulture, value.GetType(), converter.GetType())), null);
                 }
 
-                converter.WriteJson(writer, value, GetInternalSerializer(), declaredType);
+                converter.WriteJson(writer, value, GetInternalSerializer());
 
                 if (TraceWriter != null && TraceWriter.LevelFilter >= TraceLevel.Info)
                 {

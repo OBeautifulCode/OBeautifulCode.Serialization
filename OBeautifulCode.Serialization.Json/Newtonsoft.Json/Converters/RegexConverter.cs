@@ -49,12 +49,7 @@ namespace NewtonsoftFork.Json.Converters
         /// <param name="writer">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="value">The value.</param>
         /// <param name="serializer">The calling serializer.</param>
-        /// <param name="declaredType">The member's declared type.</param>
-        public override void WriteJson(
-            JsonWriter writer,
-            object value,
-            JsonSerializer serializer,
-            Type declaredType)
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             Regex regex = (Regex)value;
 
@@ -65,7 +60,7 @@ namespace NewtonsoftFork.Json.Converters
             }
             else
             {
-                WriteJson(writer, regex, serializer, declaredType);
+                WriteJson(writer, regex, serializer);
             }
         }
 
@@ -110,7 +105,7 @@ namespace NewtonsoftFork.Json.Converters
             writer.WriteRegex(regex.ToString(), options);
         }
 
-        private void WriteJson(JsonWriter writer, Regex regex, JsonSerializer serializer, Type declaredType)
+        private void WriteJson(JsonWriter writer, Regex regex, JsonSerializer serializer)
         {
             DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
 
@@ -225,13 +220,10 @@ namespace NewtonsoftFork.Json.Converters
         /// Determines whether this instance can convert the specified object type.
         /// </summary>
         /// <param name="objectType">Type of the object.</param>
-        /// <param name="declaredType">The declared type of the object.</param>
         /// <returns>
         /// 	<c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
         /// </returns>
-        public override bool CanConvert(
-            Type objectType,
-            Type declaredType)
+        public override bool CanConvert(Type objectType)
         {
             return (objectType == typeof(Regex));
         }
