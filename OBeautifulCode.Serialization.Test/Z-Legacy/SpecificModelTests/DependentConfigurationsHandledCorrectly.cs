@@ -117,8 +117,7 @@ namespace OBeautifulCode.Serialization.Test
         public override void WriteJson(
             JsonWriter writer,
             object value,
-            JsonSerializer serializer,
-            Type declaredType)
+            JsonSerializer serializer)
         {
             var payload = ((TestingDependentConfigType)value).SomeValue;
 
@@ -158,8 +157,7 @@ namespace OBeautifulCode.Serialization.Test
 
         /// <inheritdoc />
         public override bool CanConvert(
-            Type objectType,
-            Type declaredType)
+            Type objectType)
         {
             return objectType == typeof(TestingDependentConfigType);
         }
