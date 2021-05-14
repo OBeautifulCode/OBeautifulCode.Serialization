@@ -38,7 +38,6 @@ using System.IO;
 using System.Security;
 using NewtonsoftFork.Json.Linq;
 using NewtonsoftFork.Json.Utilities;
-using OBeautifulCode.Type.Recipes;
 using System.Runtime.Serialization;
 #if NET20
 using NewtonsoftFork.Json.Utilities.LinqBridge;
@@ -82,7 +81,7 @@ namespace NewtonsoftFork.Json.Serialization
                 }
                 else
                 {
-                    SerializeValue(jsonWriter, value, contract, null, null, null, objectType);
+                    SerializeValue(jsonWriter, value, contract, null, null, null);
                 }
             }
             catch (Exception ex)
@@ -150,7 +149,7 @@ namespace NewtonsoftFork.Json.Serialization
             JsonWriter.WriteValue(writer, contract.TypeCode, value);
         }
 
-        private void SerializeValue(JsonWriter writer, object value, JsonContract valueContract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerProperty, Type declaredTypeOverride = null)
+        private void SerializeValue(JsonWriter writer, object value, JsonContract valueContract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerProperty)
         {
             if (value == null)
             {
@@ -158,8 +157,9 @@ namespace NewtonsoftFork.Json.Serialization
                 return;
             }
 
-            // OBC: member is null on the top-level object being serialized
-            var declaredType = declaredTypeOverride ?? member?.PropertyType;
+            // OBC: member is null on the top-level object being serialized, in which case declaredType is null,
+            //      otherwise it should be known as we traverse the object's property hierarchy.
+            var declaredType = member?.PropertyType;
 
             JsonConverter converter =
                 ((member != null) ? member.Converter : null) ??
@@ -493,37 +493,35 @@ namespace NewtonsoftFork.Json.Serialization
 
             if (contract.ExtensionDataGetter != null)
             {
-                throw new NotSupportedException("OBC: ExtensionDataGetter not supported");
+                IEnumerable<KeyValuePair<object, object>> extensionData = contract.ExtensionDataGetter(value);
+                if (extensionData != null)
+                {
+                    foreach (KeyValuePair<object, object> e in extensionData)
+                    {
+                        JsonContract keyContract = GetContractSafe(e.Key);
+                        JsonContract valueContract = GetContractSafe(e.Value);
 
-                ////IEnumerable<KeyValuePair<object, object>> extensionData = contract.ExtensionDataGetter(value);
-                ////if (extensionData != null)
-                ////{
-                ////    foreach (KeyValuePair<object, object> e in extensionData)
-                ////    {
-                ////        JsonContract keyContract = GetContractSafe(e.Key);
-                ////        JsonContract valueContract = GetContractSafe(e.Value);
+                        bool escape;
+                        string propertyName = GetPropertyName(writer, e.Key, keyContract, out escape);
 
-                ////        bool escape;
-                ////        string propertyName = GetPropertyName(writer, e.Key, keyContract, out escape);
+                        if (ShouldWriteReference(e.Value, null, valueContract, contract, member))
+                        {
+                            writer.WritePropertyName(propertyName);
+                            WriteReference(writer, e.Value);
+                        }
+                        else
+                        {
+                            if (!CheckForCircularReference(writer, e.Value, null, valueContract, contract, member))
+                            {
+                                continue;
+                            }
 
-                ////        if (ShouldWriteReference(e.Value, null, valueContract, contract, member))
-                ////        {
-                ////            writer.WritePropertyName(propertyName);
-                ////            WriteReference(writer, e.Value);
-                ////        }
-                ////        else
-                ////        {
-                ////            if (!CheckForCircularReference(writer, e.Value, null, valueContract, contract, member))
-                ////            {
-                ////                continue;
-                ////            }
+                            writer.WritePropertyName(propertyName);
 
-                ////            writer.WritePropertyName(propertyName);
-
-                ////            SerializeValue(writer, e.Value, valueContract, null, contract, member);
-                ////        }
-                ////    }
-                ////}
+                            SerializeValue(writer, e.Value, valueContract, null, contract, member);
+                        }
+                    }
+                }
             }
 
             writer.WriteEndObject();
@@ -686,13 +684,6 @@ namespace NewtonsoftFork.Json.Serialization
             int initialDepth = writer.Top;
 
             int index = 0;
-
-            var declaredType = member?.PropertyType ?? values.GetType();
-
-            var elementDeclaredType = declaredType.IsClosedSystemCollectionType()
-                ? declaredType.GetClosedSystemCollectionElementType()
-                : declaredType.GetElementType();
-
             // note that an error in the IEnumerable won't be caught
             foreach (object value in values)
             {
@@ -708,7 +699,7 @@ namespace NewtonsoftFork.Json.Serialization
                     {
                         if (CheckForCircularReference(writer, value, null, valueContract, contract, member))
                         {
-                            SerializeValue(writer, value, valueContract, null, contract, member, elementDeclaredType);
+                            SerializeValue(writer, value, valueContract, null, contract, member);
                         }
                     }
                 }
@@ -763,61 +754,59 @@ namespace NewtonsoftFork.Json.Serialization
 
         private void SerializeMultidimensionalArray(JsonWriter writer, Array values, JsonArrayContract contract, JsonProperty member, int initialDepth, int[] indices)
         {
-            throw new NotSupportedException("OBC: Multi-dimensional arrays are not supported");
+            int dimension = indices.Length;
+            int[] newIndices = new int[dimension + 1];
+            for (int i = 0; i < dimension; i++)
+            {
+                newIndices[i] = indices[i];
+            }
 
-            ////int dimension = indices.Length;
-            ////int[] newIndices = new int[dimension + 1];
-            ////for (int i = 0; i < dimension; i++)
-            ////{
-            ////    newIndices[i] = indices[i];
-            ////}
+            writer.WriteStartArray();
 
-            ////writer.WriteStartArray();
+            for (int i = values.GetLowerBound(dimension); i <= values.GetUpperBound(dimension); i++)
+            {
+                newIndices[dimension] = i;
+                bool isTopLevel = (newIndices.Length == values.Rank);
 
-            ////for (int i = values.GetLowerBound(dimension); i <= values.GetUpperBound(dimension); i++)
-            ////{
-            ////    newIndices[dimension] = i;
-            ////    bool isTopLevel = (newIndices.Length == values.Rank);
+                if (isTopLevel)
+                {
+                    object value = values.GetValue(newIndices);
 
-            ////    if (isTopLevel)
-            ////    {
-            ////        object value = values.GetValue(newIndices);
+                    try
+                    {
+                        JsonContract valueContract = contract.FinalItemContract ?? GetContractSafe(value);
 
-            ////        try
-            ////        {
-            ////            JsonContract valueContract = contract.FinalItemContract ?? GetContractSafe(value);
+                        if (ShouldWriteReference(value, null, valueContract, contract, member))
+                        {
+                            WriteReference(writer, value);
+                        }
+                        else
+                        {
+                            if (CheckForCircularReference(writer, value, null, valueContract, contract, member))
+                            {
+                                SerializeValue(writer, value, valueContract, null, contract, member);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (IsErrorHandled(values, contract, i, null, writer.ContainerPath, ex))
+                        {
+                            HandleError(writer, initialDepth + 1);
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                }
+                else
+                {
+                    SerializeMultidimensionalArray(writer, values, contract, member, initialDepth + 1, newIndices);
+                }
+            }
 
-            ////            if (ShouldWriteReference(value, null, valueContract, contract, member))
-            ////            {
-            ////                WriteReference(writer, value);
-            ////            }
-            ////            else
-            ////            {
-            ////                if (CheckForCircularReference(writer, value, null, valueContract, contract, member))
-            ////                {
-            ////                    SerializeValue(writer, value, valueContract, null, contract, member);
-            ////                }
-            ////            }
-            ////        }
-            ////        catch (Exception ex)
-            ////        {
-            ////            if (IsErrorHandled(values, contract, i, null, writer.ContainerPath, ex))
-            ////            {
-            ////                HandleError(writer, initialDepth + 1);
-            ////            }
-            ////            else
-            ////            {
-            ////                throw;
-            ////            }
-            ////        }
-            ////    }
-            ////    else
-            ////    {
-            ////        SerializeMultidimensionalArray(writer, values, contract, member, initialDepth + 1, newIndices);
-            ////    }
-            ////}
-
-            ////writer.WriteEndArray();
+            writer.WriteEndArray();
         }
 
         private bool WriteStartArray(JsonWriter writer, object values, JsonArrayContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerProperty)
@@ -858,45 +847,43 @@ namespace NewtonsoftFork.Json.Serialization
 #endif
         private void SerializeISerializable(JsonWriter writer, ISerializable value, JsonISerializableContract contract, JsonProperty member, JsonContainerContract collectionContract, JsonProperty containerProperty)
         {
-            throw new NotSupportedException("OBC: SerializeISerializeable not supported");
+            if (!JsonTypeReflector.FullyTrusted)
+            {
+                string message = @"Type '{0}' implements ISerializable but cannot be serialized using the ISerializable interface because the current application is not fully trusted and ISerializable can expose secure data." + Environment.NewLine +
+                                 @"To fix this error either change the environment to be fully trusted, change the application to not deserialize the type, add JsonObjectAttribute to the type or change the JsonSerializer setting ContractResolver to use a new DefaultContractResolver with IgnoreSerializableInterface set to true." + Environment.NewLine;
+                message = message.FormatWith(CultureInfo.InvariantCulture, value.GetType());
 
-            ////if (!JsonTypeReflector.FullyTrusted)
-            ////{
-            ////    string message = @"Type '{0}' implements ISerializable but cannot be serialized using the ISerializable interface because the current application is not fully trusted and ISerializable can expose secure data." + Environment.NewLine +
-            ////                     @"To fix this error either change the environment to be fully trusted, change the application to not deserialize the type, add JsonObjectAttribute to the type or change the JsonSerializer setting ContractResolver to use a new DefaultContractResolver with IgnoreSerializableInterface set to true." + Environment.NewLine;
-            ////    message = message.FormatWith(CultureInfo.InvariantCulture, value.GetType());
+                throw JsonSerializationException.Create(null, writer.ContainerPath, message, null);
+            }
 
-            ////    throw JsonSerializationException.Create(null, writer.ContainerPath, message, null);
-            ////}
+            OnSerializing(writer, contract, value);
+            _serializeStack.Add(value);
 
-            ////OnSerializing(writer, contract, value);
-            ////_serializeStack.Add(value);
+            WriteObjectStart(writer, value, contract, member, collectionContract, containerProperty);
 
-            ////WriteObjectStart(writer, value, contract, member, collectionContract, containerProperty);
+            SerializationInfo serializationInfo = new SerializationInfo(contract.UnderlyingType, new FormatterConverter());
+            value.GetObjectData(serializationInfo, Serializer._context);
 
-            ////SerializationInfo serializationInfo = new SerializationInfo(contract.UnderlyingType, new FormatterConverter());
-            ////value.GetObjectData(serializationInfo, Serializer._context);
+            foreach (SerializationEntry serializationEntry in serializationInfo)
+            {
+                JsonContract valueContract = GetContractSafe(serializationEntry.Value);
 
-            ////foreach (SerializationEntry serializationEntry in serializationInfo)
-            ////{
-            ////    JsonContract valueContract = GetContractSafe(serializationEntry.Value);
+                if (ShouldWriteReference(serializationEntry.Value, null, valueContract, contract, member))
+                {
+                    writer.WritePropertyName(serializationEntry.Name);
+                    WriteReference(writer, serializationEntry.Value);
+                }
+                else if (CheckForCircularReference(writer, serializationEntry.Value, null, valueContract, contract, member))
+                {
+                    writer.WritePropertyName(serializationEntry.Name);
+                    SerializeValue(writer, serializationEntry.Value, valueContract, null, contract, member);
+                }
+            }
 
-            ////    if (ShouldWriteReference(serializationEntry.Value, null, valueContract, contract, member))
-            ////    {
-            ////        writer.WritePropertyName(serializationEntry.Name);
-            ////        WriteReference(writer, serializationEntry.Value);
-            ////    }
-            ////    else if (CheckForCircularReference(writer, serializationEntry.Value, null, valueContract, contract, member))
-            ////    {
-            ////        writer.WritePropertyName(serializationEntry.Name);
-            ////        SerializeValue(writer, serializationEntry.Value, valueContract, null, contract, member);
-            ////    }
-            ////}
+            writer.WriteEndObject();
 
-            ////writer.WriteEndObject();
-
-            ////_serializeStack.RemoveAt(_serializeStack.Count - 1);
-            ////OnSerialized(writer, contract, value);
+            _serializeStack.RemoveAt(_serializeStack.Count - 1);
+            OnSerialized(writer, contract, value);
         }
 #endif
 
@@ -1051,88 +1038,86 @@ namespace NewtonsoftFork.Json.Serialization
 
         private void SerializeDictionary(JsonWriter writer, IDictionary values, JsonDictionaryContract contract, JsonProperty member, JsonContainerContract collectionContract, JsonProperty containerProperty)
         {
-            throw new NotSupportedException("OBC: Should not get to SerializeDictionary");
+            IWrappedDictionary wrappedDictionary = values as IWrappedDictionary;
+            object underlyingDictionary = wrappedDictionary != null ? wrappedDictionary.UnderlyingDictionary : values;
 
-            ////IWrappedDictionary wrappedDictionary = values as IWrappedDictionary;
-            ////object underlyingDictionary = wrappedDictionary != null ? wrappedDictionary.UnderlyingDictionary : values;
+            OnSerializing(writer, contract, underlyingDictionary);
+            _serializeStack.Add(underlyingDictionary);
 
-            ////OnSerializing(writer, contract, underlyingDictionary);
-            ////_serializeStack.Add(underlyingDictionary);
+            WriteObjectStart(writer, underlyingDictionary, contract, member, collectionContract, containerProperty);
 
-            ////WriteObjectStart(writer, underlyingDictionary, contract, member, collectionContract, containerProperty);
+            if (contract.ItemContract == null)
+            {
+                contract.ItemContract = Serializer._contractResolver.ResolveContract(contract.DictionaryValueType ?? typeof(object));
+            }
 
-            ////if (contract.ItemContract == null)
-            ////{
-            ////    contract.ItemContract = Serializer._contractResolver.ResolveContract(contract.DictionaryValueType ?? typeof(object));
-            ////}
+            if (contract.KeyContract == null)
+            {
+                contract.KeyContract = Serializer._contractResolver.ResolveContract(contract.DictionaryKeyType ?? typeof(object));
+            }
 
-            ////if (contract.KeyContract == null)
-            ////{
-            ////    contract.KeyContract = Serializer._contractResolver.ResolveContract(contract.DictionaryKeyType ?? typeof(object));
-            ////}
+            int initialDepth = writer.Top;
 
-            ////int initialDepth = writer.Top;
+            // Manual use of IDictionaryEnumerator instead of foreach to avoid DictionaryEntry box allocations.
+            IDictionaryEnumerator e = values.GetEnumerator();
+            try
+            {
+                while (e.MoveNext())
+                {
+                    DictionaryEntry entry = e.Entry;
 
-            ////// Manual use of IDictionaryEnumerator instead of foreach to avoid DictionaryEntry box allocations.
-            ////IDictionaryEnumerator e = values.GetEnumerator();
-            ////try
-            ////{
-            ////    while (e.MoveNext())
-            ////    {
-            ////        DictionaryEntry entry = e.Entry;
+                    bool escape;
+                    string propertyName = GetPropertyName(writer, entry.Key, contract.KeyContract, out escape);
 
-            ////        bool escape;
-            ////        string propertyName = GetPropertyName(writer, entry.Key, contract.KeyContract, out escape);
+                    propertyName = (contract.DictionaryKeyResolver != null)
+                        ? contract.DictionaryKeyResolver(propertyName)
+                        : propertyName;
 
-            ////        propertyName = (contract.DictionaryKeyResolver != null)
-            ////            ? contract.DictionaryKeyResolver(propertyName)
-            ////            : propertyName;
+                    try
+                    {
+                        object value = entry.Value;
+                        JsonContract valueContract = contract.FinalItemContract ?? GetContractSafe(value);
 
-            ////        try
-            ////        {
-            ////            object value = entry.Value;
-            ////            JsonContract valueContract = contract.FinalItemContract ?? GetContractSafe(value);
+                        if (ShouldWriteReference(value, null, valueContract, contract, member))
+                        {
+                            writer.WritePropertyName(propertyName, escape);
+                            WriteReference(writer, value);
+                        }
+                        else
+                        {
+                            if (!CheckForCircularReference(writer, value, null, valueContract, contract, member))
+                            {
+                                continue;
+                            }
 
-            ////            if (ShouldWriteReference(value, null, valueContract, contract, member))
-            ////            {
-            ////                writer.WritePropertyName(propertyName, escape);
-            ////                WriteReference(writer, value);
-            ////            }
-            ////            else
-            ////            {
-            ////                if (!CheckForCircularReference(writer, value, null, valueContract, contract, member))
-            ////                {
-            ////                    continue;
-            ////                }
+                            writer.WritePropertyName(propertyName, escape);
 
-            ////                writer.WritePropertyName(propertyName, escape);
+                            SerializeValue(writer, value, valueContract, null, contract, member);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (IsErrorHandled(underlyingDictionary, contract, propertyName, null, writer.ContainerPath, ex))
+                        {
+                            HandleError(writer, initialDepth);
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                (e as IDisposable)?.Dispose();
+            }
 
-            ////                SerializeValue(writer, value, valueContract, null, contract, member);
-            ////            }
-            ////        }
-            ////        catch (Exception ex)
-            ////        {
-            ////            if (IsErrorHandled(underlyingDictionary, contract, propertyName, null, writer.ContainerPath, ex))
-            ////            {
-            ////                HandleError(writer, initialDepth);
-            ////            }
-            ////            else
-            ////            {
-            ////                throw;
-            ////            }
-            ////        }
-            ////    }
-            ////}
-            ////finally
-            ////{
-            ////    (e as IDisposable)?.Dispose();
-            ////}
+            writer.WriteEndObject();
 
-            ////writer.WriteEndObject();
+            _serializeStack.RemoveAt(_serializeStack.Count - 1);
 
-            ////_serializeStack.RemoveAt(_serializeStack.Count - 1);
-
-            ////OnSerialized(writer, contract, underlyingDictionary);
+            OnSerialized(writer, contract, underlyingDictionary);
         }
 
         private string GetPropertyName(JsonWriter writer, object name, JsonContract contract, out bool escape)

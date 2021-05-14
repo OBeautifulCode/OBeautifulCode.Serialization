@@ -35,17 +35,12 @@ namespace OBeautifulCode.Serialization.Json
         /// <summary>
         /// Initializes a new instance of the <see cref="InheritedTypeReaderJsonConverter"/> class.
         /// </summary>
-        /// <param name="getNonAbstractBaseClassTypesToHandleFunc">
-        /// A func that returns the set non-abstract base class types that, when encountered, should trigger usage of the converter.
-        /// These are the types that the converter cannot programmatically identify as inherited.
-        /// </param>
-        /// <param name="getTypesWithConvertersFunc">A func that returns the set of types having converters.</param>
+        /// <param name="getTypesToHandleFunc">A func that gets the types that, when encountered, should trigger usage of the converter.</param>
         /// <param name="jsonSerializationConfiguration">The serialization configuration in-use.</param>
         public InheritedTypeReaderJsonConverter(
-            Func<ConcurrentDictionary<Type, object>> getNonAbstractBaseClassTypesToHandleFunc,
-            Func<ConcurrentDictionary<Type, object>> getTypesWithConvertersFunc,
+            Func<ConcurrentDictionary<Type, object>> getTypesToHandleFunc,
             JsonSerializationConfigurationBase jsonSerializationConfiguration)
-            : base(getNonAbstractBaseClassTypesToHandleFunc, getTypesWithConvertersFunc)
+            : base(getTypesToHandleFunc)
         {
             this.jsonSerializationConfiguration = jsonSerializationConfiguration;
         }
@@ -151,11 +146,6 @@ namespace OBeautifulCode.Serialization.Json
             if (annotatedConcreteType != null)
             {
                 var annotatedConcreteTypeResult = this.Deserialize(jsonObject, annotatedConcreteType, serializer);
-
-                if (annotatedConcreteType.IsGenericType && (annotatedConcreteType.GetGenericTypeDefinition() == typeof(ObjectWrapper<>)))
-                {
-                    annotatedConcreteTypeResult = annotatedConcreteTypeResult.GetPropertyValue(nameof(ObjectWrapper<object>.V), MemberRelationships.DeclaredInType, MemberOwners.Instance, MemberAccessModifiers.Public);
-                }
 
                 return annotatedConcreteTypeResult;
             }

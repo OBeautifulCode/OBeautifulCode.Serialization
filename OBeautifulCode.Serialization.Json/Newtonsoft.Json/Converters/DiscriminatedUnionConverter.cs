@@ -123,31 +123,30 @@ namespace NewtonsoftFork.Json.Converters
             JsonSerializer serializer,
             Type declaredType)
         {
-            throw new NotSupportedException("OBC: should not be using the DiscriminatedUnionConverter");
-            ////DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
+            DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
 
-            ////Type unionType = UnionTypeLookupCache.Get(value.GetType());
-            ////Union union = UnionCache.Get(unionType);
+            Type unionType = UnionTypeLookupCache.Get(value.GetType());
+            Union union = UnionCache.Get(unionType);
 
-            ////int tag = (int)union.TagReader.Invoke(value);
-            ////UnionCase caseInfo = union.Cases.Single(c => c.Tag == tag);
+            int tag = (int)union.TagReader.Invoke(value);
+            UnionCase caseInfo = union.Cases.Single(c => c.Tag == tag);
 
-            ////writer.WriteStartObject();
-            ////writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(CasePropertyName) : CasePropertyName);
-            ////writer.WriteValue(caseInfo.Name);
-            ////if (caseInfo.Fields != null && caseInfo.Fields.Length > 0)
-            ////{
-            ////    object[] fields = (object[])caseInfo.FieldReader.Invoke(value);
+            writer.WriteStartObject();
+            writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(CasePropertyName) : CasePropertyName);
+            writer.WriteValue(caseInfo.Name);
+            if (caseInfo.Fields != null && caseInfo.Fields.Length > 0)
+            {
+                object[] fields = (object[])caseInfo.FieldReader.Invoke(value);
 
-            ////    writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(FieldsPropertyName) : FieldsPropertyName);
-            ////    writer.WriteStartArray();
-            ////    foreach (object field in fields)
-            ////    {
-            ////        serializer.Serialize(writer, field);
-            ////    }
-            ////    writer.WriteEndArray();
-            ////}
-            ////writer.WriteEndObject();
+                writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(FieldsPropertyName) : FieldsPropertyName);
+                writer.WriteStartArray();
+                foreach (object field in fields)
+                {
+                    serializer.Serialize(writer, field);
+                }
+                writer.WriteEndArray();
+            }
+            writer.WriteEndObject();
         }
 
         /// <summary>

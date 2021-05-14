@@ -421,7 +421,7 @@ namespace OBeautifulCode.Serialization
             // ancestors.
             // Note that ValidateMembersAreRegistered() will look for declared and non-declared members,
             // which is why we don't need to call ValidateTypeIsRegistered() on the ancestor types.
-            var typeToValidateIncludingAncestors = typeToValidate.IsRestrictedType()
+            var typeToValidateIncludingAncestors = IsRestrictedType(typeToValidate)
                 ? new[] { typeToValidate }
                 : new[] { typeToValidate }.Concat(typeToValidate.GetInheritancePath()).Except(new[] { typeof(object) }).ToArray();
 
@@ -440,7 +440,7 @@ namespace OBeautifulCode.Serialization
             // dictionary keys/values and validate them.  On serialization, objects having array/collection/dictionary
             // properties will have those enumerables iterated and their runtime types checked in ValidateMembersAreRegistered().
             // So if we get there with a restricted type, there's nothing to do.
-            if (!typeToValidate.IsRestrictedType())
+            if (!IsRestrictedType(typeToValidate))
             {
                 if (!this.TypesPermittedToHaveUnregisteredMembers.ContainsKey(typeToValidate))
                 {
@@ -470,7 +470,7 @@ namespace OBeautifulCode.Serialization
                         this.ValidateTypeIsRegistered(originalType, genericArgumentType);
                     }
 
-                    if (!typeToValidate.IsRestrictedType())
+                    if (!IsRestrictedType(typeToValidate))
                     {
                         // For non-restricted generic types that are not registered, the generic type definition should be registered.
                         var genericTypeDefinition = typeToValidate.GetGenericTypeDefinition();
@@ -488,7 +488,7 @@ namespace OBeautifulCode.Serialization
                     }
                 }
             }
-            else if (typeToValidate.IsRestrictedType())
+            else if (IsRestrictedType(typeToValidate))
             {
                 // do nothing for non-generic restricted types (e.g. bool, int, DateTime, Guid)
             }

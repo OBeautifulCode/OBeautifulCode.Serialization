@@ -124,22 +124,31 @@ namespace OBeautifulCode.Serialization.Json
 
         private static readonly JsonSerializerSettingsBuilder MinimalSerializingSettingsBuilder = MinimalDeserializingSettingsBuilder;
 
-        private static bool IsNonAbstractBaseClassType(
+        private static bool ParticipatesInHierarchy(
             Type type,
             IReadOnlyCollection<Type> registeredTypes)
         {
-            if (!type.IsClass)
-            {
-                return false;
-            }
-
             if (type.IsAbstract)
             {
-                return false;
+                return true;
             }
 
-            // not abstract, but is the base class of some other registered class
-            if (registeredTypes.Any(registeredType => (type != registeredType) && type.IsAssignableFrom(registeredType)))
+            if (type.IsInterface)
+            {
+                return true;
+            }
+
+            // has a base class
+            var baseType = type.BaseType;
+            if ((baseType != null) && (baseType != typeof(object)) && (!type.IsValueType))
+            {
+                return true;
+            }
+
+            // not abstract, but:
+            // - is the base class of some other registered class OR
+            // - implements a registered interface
+            if (registeredTypes.Any(registeredType => (type != registeredType) && (type.IsAssignableFrom(registeredType) || registeredType.IsAssignableFrom(type))))
             {
                 return true;
             }

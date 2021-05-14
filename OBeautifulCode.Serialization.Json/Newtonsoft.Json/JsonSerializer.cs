@@ -950,14 +950,9 @@ namespace NewtonsoftFork.Json
         /// </summary>
         /// <param name="textWriter">The <see cref="TextWriter"/> used to write the JSON structure.</param>
         /// <param name="value">The <see cref="Object"/> to serialize.</param>
-        /// <param name="objectType">
-        /// The type of the value being serialized.
-        /// This parameter is used when <see cref="TypeNameHandling"/> is Auto to write out the type name if the type of the value does not match.
-        /// Specifing the type is optional.
-        /// </param>
-        public void Serialize(TextWriter textWriter, object value, Type objectType)
+        public void Serialize(TextWriter textWriter, object value)
         {
-            Serialize(new JsonTextWriter(textWriter), value, objectType);
+            Serialize(new JsonTextWriter(textWriter), value);
         }
 
         /// <summary>
@@ -974,6 +969,22 @@ namespace NewtonsoftFork.Json
         public void Serialize(JsonWriter jsonWriter, object value, Type objectType)
         {
             SerializeInternal(jsonWriter, value, objectType);
+        }
+
+        /// <summary>
+        /// Serializes the specified <see cref="Object"/> and writes the JSON structure
+        /// to a <c>Stream</c> using the specified <see cref="TextWriter"/>. 
+        /// </summary>
+        /// <param name="textWriter">The <see cref="TextWriter"/> used to write the JSON structure.</param>
+        /// <param name="value">The <see cref="Object"/> to serialize.</param>
+        /// <param name="objectType">
+        /// The type of the value being serialized.
+        /// This parameter is used when <see cref="TypeNameHandling"/> is Auto to write out the type name if the type of the value does not match.
+        /// Specifing the type is optional.
+        /// </param>
+        public void Serialize(TextWriter textWriter, object value, Type objectType)
+        {
+            Serialize(new JsonTextWriter(textWriter), value, objectType);
         }
 
         /// <summary>

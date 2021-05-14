@@ -86,18 +86,19 @@ namespace OBeautifulCode.Serialization.Json
             {
                 this.ProcessTypeToRegisterForJson(typeToRegisterForJson);
 
-                // During initialization, we wait until FinalizeInitialization() so that we have ALL of
-                // the registered types on hand to determine which ones are non-abstract base classes
-                // (which is rare/a design smell).  The only way to make this determination is to isolate the
-                // non-abstract classes and test whether any other registered type is assignable to those classes.
-                // Post-initialization, we are looking at a closed generic type and should make the same determination.
-                // There is potentially the case where a non-abstract closed generic class shows up first,
-                // we determine it is not a base class because it has no inheritors,
-                // and subsequently another closed generic class shows up that inherits from the first type.
-                // Should be rare; cross that bridge when we get there.
+                // During initialization, we wait until FinalizeInitialization() so that we have ALL
+                // of the registered types on hand, to determine which ones participate in a hierarchy.
+                // This is required because ParticipatesInHierarchy() requires the whole set of registered
+                // types (and specifically to look for a non-abstract class that has inheritors, which
+                // is rare/a design smell).  Post-initialization, we are looking at a closed generic type
+                // and should determine if it participates in a hierarchy.  There is potentially the case
+                // where a non-abstract closed generic class shows up first, we determine it does not
+                // participate in a hierarchy because it has no inheritors, and subsequently another
+                // closed generic class shows up that inherits from the first type.  Should be rare;
+                // cross that bridge when we get there.
                 if (registrationTime == RegistrationTime.PostInitialization)
                 {
-                    this.AddNonAbstractBaseClassTypes(new[] { registrationDetails.TypeToRegister.Type });
+                    this.AddHierarchyParticipatingTypes(new[] { registrationDetails.TypeToRegister.Type });
                 }
             }
             else
@@ -111,23 +112,23 @@ namespace OBeautifulCode.Serialization.Json
         {
             var registeredTypes = this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList();
 
-            // See note in ProcessRegistrationDetailsPriorToRegistration()
-            this.AddNonAbstractBaseClassTypes(registeredTypes);
+            this.AddHierarchyParticipatingTypes(registeredTypes);
         }
 
-        private void AddNonAbstractBaseClassTypes(
+        private void AddHierarchyParticipatingTypes(
             IReadOnlyCollection<Type> typesToInspect)
         {
             var registeredTypes = this.RegisteredTypeToRegistrationDetailsMap.Keys.ToList();
 
-            var identifiedNonAbstractBaseClassTypes =
+            var hierarchyTypes =
                 typesToInspect
-                    .Where(_ => IsNonAbstractBaseClassType(_, registeredTypes))
+                    .Except(this.typesWithConverters.Keys)
+                    .Where(_ => ParticipatesInHierarchy(_, registeredTypes))
                     .ToList();
 
-            foreach (var identifiedNonAbstractBaseClassType in identifiedNonAbstractBaseClassTypes)
+            foreach (var hierarchyType in hierarchyTypes)
             {
-                this.nonAbstractBaseClassTypes.TryAdd(identifiedNonAbstractBaseClassType, null);
+                this.hierarchyParticipatingTypes.TryAdd(hierarchyType, null);
             }
         }
     }

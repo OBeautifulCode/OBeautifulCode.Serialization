@@ -112,15 +112,14 @@ namespace NewtonsoftFork.Json.Converters
 
         private void WriteJson(JsonWriter writer, Regex regex, JsonSerializer serializer, Type declaredType)
         {
-            throw new NotSupportedException("OBC: Should not be using the RegexConverter");
-            ////DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
+            DefaultContractResolver resolver = serializer.ContractResolver as DefaultContractResolver;
 
-            ////writer.WriteStartObject();
-            ////writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(PatternName) : PatternName);
-            ////writer.WriteValue(regex.ToString());
-            ////writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(OptionsName) : OptionsName);
-            ////serializer.Serialize(writer, regex.Options);
-            ////writer.WriteEndObject();
+            writer.WriteStartObject();
+            writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(PatternName) : PatternName);
+            writer.WriteValue(regex.ToString());
+            writer.WritePropertyName((resolver != null) ? resolver.GetResolvedPropertyName(OptionsName) : OptionsName);
+            serializer.Serialize(writer, regex.Options);
+            writer.WriteEndObject();
         }
 
         /// <summary>

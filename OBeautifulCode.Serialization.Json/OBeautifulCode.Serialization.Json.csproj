@@ -286,9 +286,9 @@
     <Compile Include="SerializationConfiguration\Delegates.cs" />
     <Compile Include="Converters\Dictionary\StringKeysAsPropertiesDictionaryJsonConverter.cs" />
     <Compile Include="Converters\Dictionary\DictionaryJsonConverterBase.cs" />
-    <Compile Include="Converters\InheritedType\InheritedTypeJsonConverterBase.cs" />
-    <Compile Include="Converters\InheritedType\InheritedTypeReaderJsonConverter.cs" />
-    <Compile Include="Converters\InheritedType\InheritedTypeWriterJsonConverter.cs" />
+    <Compile Include="Converters\InheritedTypeJsonConverterBase.cs" />
+    <Compile Include="Converters\InheritedTypeReaderJsonConverter.cs" />
+    <Compile Include="Converters\InheritedTypeWriterJsonConverter.cs" />
     <Compile Include="Converters\Dictionary\KeyValueArrayDictionaryJsonConverter.cs" />
     <Compile Include="ObcJsonSerializer\ObcJsonSerializer{TJsonSerializationConfiguration}.cs" />
     <Compile Include="SerializationConfiguration\JsonSerializationConfigurationBase\JsonSerializationConfigurationBase.cs" />
@@ -335,7 +335,6 @@
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\OBeautifulCode.Build.Analyzers.1.1.136\build\OBeautifulCode.Build.Analyzers.targets" Condition="Exists('..\packages\OBeautifulCode.Build.Analyzers.1.1.136\build\OBeautifulCode.Build.Analyzers.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
