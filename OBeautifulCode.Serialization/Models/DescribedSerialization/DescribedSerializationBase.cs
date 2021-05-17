@@ -23,7 +23,7 @@ namespace OBeautifulCode.Serialization
     /// enabling a consumer having the object and the serializer loaded,
     /// to deserialize the object.
     /// </remarks>
-    public abstract partial class DescribedSerializationBase : IModelViaCodeGen
+    public abstract partial class DescribedSerializationBase : IHaveSerializerRepresentation, IModelViaCodeGen
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DescribedSerializationBase"/> class.
