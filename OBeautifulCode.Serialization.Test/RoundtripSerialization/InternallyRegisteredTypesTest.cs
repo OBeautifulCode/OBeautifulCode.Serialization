@@ -34,16 +34,18 @@ namespace OBeautifulCode.Serialization.Test
             var closedGenericTypes = new[]
             {
                 // from OBC.Type
-                typeof(ExecuteOpRequestedEvent<Version, NullVoidOp>),
-                typeof(ExecuteOpRequestedEvent<NullReturningOp<Version>>),
+                typeof(ExecuteOpRequestedEvent<Version, GetProtocolOp>),
+                typeof(ExecuteOpRequestedEvent<GetProtocolOp>),
                 typeof(NullEvent),
                 typeof(NullEvent<Version>),
                 typeof(EventBase<Version>),
                 typeof(NullReturningOp<Version>),
                 typeof(ThrowOpExecutionAbortedExceptionOp<Version>),
                 typeof(ReturningOperationBase<Version>),
-                typeof(FakeModel<Version>),
                 typeof(NamedValue<Version>),
+
+                // Purposefully not testing this; many of the methods needed to test roundtrip serialization (like equality) throw NotImplementedException.
+                // typeof(FakeModel<Version>),
 
                 // from OBC.Representation
                 typeof(ConstantExpressionRepresentation<string>),
