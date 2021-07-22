@@ -33,6 +33,19 @@ namespace OBeautifulCode.Serialization.Test
             // this is not something we can automate
             var closedGenericTypes = new[]
             {
+                // from OBC.Type
+                typeof(ExecuteOpRequestedEvent<Version, NullVoidOp>),
+                typeof(ExecuteOpRequestedEvent<NullReturningOp<Version>>),
+                typeof(NullEvent),
+                typeof(NullEvent<Version>),
+                typeof(EventBase<Version>),
+                typeof(NullReturningOp<Version>),
+                typeof(ThrowOpExecutionAbortedExceptionOp<Version>),
+                typeof(ReturningOperationBase<Version>),
+                typeof(FakeModel<Version>),
+                typeof(NamedValue<Version>),
+
+                // from OBC.Representation
                 typeof(ConstantExpressionRepresentation<string>),
                 typeof(ConstantExpressionRepresentation<DateTime>),
             };

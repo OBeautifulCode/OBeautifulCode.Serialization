@@ -9,7 +9,7 @@ namespace OBeautifulCode.Serialization
     using System;
 
     using OBeautifulCode.Compression;
-    using OBeautifulCode.Representation.System;
+    using OBeautifulCode.Type;
 
     using static System.FormattableString;
 
@@ -36,7 +36,7 @@ namespace OBeautifulCode.Serialization
         /// <inheritdoc />
         public abstract ISerializer BuildSerializer(
             SerializerRepresentation serializerRepresentation,
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion);
+            VersionMatchStrategy assemblyVersionMatchStrategy = VersionMatchStrategy.AnySingleVersion);
 
         /// <summary>
         /// Wraps the specified serializer in a <see cref="ObcCompressingSerializer"/> if appropriate.

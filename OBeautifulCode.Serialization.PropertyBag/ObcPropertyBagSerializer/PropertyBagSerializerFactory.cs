@@ -10,6 +10,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
     using OBeautifulCode.Compression;
     using OBeautifulCode.Representation.System;
+    using OBeautifulCode.Type;
 
     using static System.FormattableString;
 
@@ -31,7 +32,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// <inheritdoc />
         public override ISerializer BuildSerializer(
             SerializerRepresentation serializerRepresentation,
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
+            VersionMatchStrategy assemblyVersionMatchStrategy = VersionMatchStrategy.AnySingleVersion)
         {
             if (serializerRepresentation == null)
             {
@@ -39,7 +40,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
             }
 
             // ReSharper disable once RedundantArgumentDefaultValue
-            var configurationType = serializerRepresentation.SerializationConfigType?.ResolveFromLoadedTypes(assemblyMatchStrategy, throwIfCannotResolve: true);
+            var configurationType = serializerRepresentation.SerializationConfigType?.ResolveFromLoadedTypes(assemblyVersionMatchStrategy, throwIfCannotResolve: true);
 
             ISerializer serializer;
 

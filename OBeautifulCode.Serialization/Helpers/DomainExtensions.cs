@@ -11,6 +11,7 @@ namespace OBeautifulCode.Serialization
 
     using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Representation.System;
+    using OBeautifulCode.Type;
     using OBeautifulCode.Type.Recipes;
 
     using static System.FormattableString;
@@ -48,7 +49,7 @@ namespace OBeautifulCode.Serialization
         /// <param name="serializerRepresentation">Representation of the serializer to use.</param>
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
         /// <param name="serializationFormat">The serialization format to use.</param>
-        /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
+        /// <param name="assemblyVersionMatchStrategy">Optional assembly version match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="VersionMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
         /// Self described serialization.
         /// </returns>
@@ -58,7 +59,7 @@ namespace OBeautifulCode.Serialization
             SerializerRepresentation serializerRepresentation,
             ISerializerFactory serializerFactory,
             SerializationFormat serializationFormat,
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
+            VersionMatchStrategy assemblyVersionMatchStrategy = VersionMatchStrategy.AnySingleVersion)
         {
             if (serializerRepresentation == null)
             {
@@ -75,7 +76,7 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' == '{SerializationFormat.Invalid}'"), (Exception)null);
             }
 
-            var serializer = serializerFactory.BuildSerializer(serializerRepresentation, assemblyMatchStrategy);
+            var serializer = serializerFactory.BuildSerializer(serializerRepresentation, assemblyVersionMatchStrategy);
 
             var ret = objectToPackageIntoDescribedSerializationBase.ToDescribedSerializationUsingSpecificSerializer(serializer, serializationFormat);
 
@@ -137,16 +138,16 @@ namespace OBeautifulCode.Serialization
         /// <typeparam name="T">Expected return type.</typeparam>
         /// <param name="describedSerializationBase">Self described serialized object.</param>
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
-        /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
+        /// <param name="assemblyVersionMatchStrategy">Optional assembly version match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="VersionMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
         /// Originally serialized object.
         /// </returns>
         public static T DeserializePayloadUsingSpecificFactory<T>(
             this DescribedSerializationBase describedSerializationBase,
             ISerializerFactory serializerFactory,
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
+            VersionMatchStrategy assemblyVersionMatchStrategy = VersionMatchStrategy.AnySingleVersion)
         {
-            var result = (T)DeserializePayloadUsingSpecificFactory(describedSerializationBase, serializerFactory, assemblyMatchStrategy);
+            var result = (T)DeserializePayloadUsingSpecificFactory(describedSerializationBase, serializerFactory, assemblyVersionMatchStrategy);
 
             return result;
         }
@@ -156,14 +157,14 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="describedSerializationBase">Self described serialized object.</param>
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
-        /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
+        /// <param name="assemblyVersionMatchStrategy">Optional assembly version match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="VersionMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
         /// Originally serialized object.
         /// </returns>
         public static object DeserializePayloadUsingSpecificFactory(
             this DescribedSerializationBase describedSerializationBase,
             ISerializerFactory serializerFactory,
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
+            VersionMatchStrategy assemblyVersionMatchStrategy = VersionMatchStrategy.AnySingleVersion)
         {
             if (describedSerializationBase == null)
             {
@@ -175,9 +176,9 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(serializerFactory));
             }
 
-            var serializer = serializerFactory.BuildSerializer(describedSerializationBase.SerializerRepresentation, assemblyMatchStrategy);
+            var serializer = serializerFactory.BuildSerializer(describedSerializationBase.SerializerRepresentation, assemblyVersionMatchStrategy);
 
-            var result = describedSerializationBase.DeserializePayloadUsingSpecificSerializer(serializer, assemblyMatchStrategy);
+            var result = describedSerializationBase.DeserializePayloadUsingSpecificSerializer(serializer, assemblyVersionMatchStrategy);
 
             return result;
         }
@@ -188,7 +189,7 @@ namespace OBeautifulCode.Serialization
         /// <typeparam name="T">Expected return type.</typeparam>
         /// <param name="describedSerializationBase">Self described serialized object.</param>
         /// <param name="deserializer">Deserializer to use.</param>
-        /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
+        /// <param name="assemblyVersionMatchStrategy">Optional assembly version match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="VersionMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
         /// Originally serialized object.
         /// </returns>
@@ -196,9 +197,9 @@ namespace OBeautifulCode.Serialization
         public static T DeserializePayloadUsingSpecificSerializer<T>(
             this DescribedSerializationBase describedSerializationBase,
             IDeserialize deserializer,
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
+            VersionMatchStrategy assemblyVersionMatchStrategy = VersionMatchStrategy.AnySingleVersion)
         {
-            var result = (T)DeserializePayloadUsingSpecificSerializer(describedSerializationBase, deserializer, assemblyMatchStrategy);
+            var result = (T)DeserializePayloadUsingSpecificSerializer(describedSerializationBase, deserializer, assemblyVersionMatchStrategy);
 
             return result;
         }
@@ -208,7 +209,7 @@ namespace OBeautifulCode.Serialization
         /// </summary>
         /// <param name="describedSerializationBase">Self described serialized object.</param>
         /// <param name="deserializer">Deserializer to use.</param>
-        /// <param name="assemblyMatchStrategy">Optional assembly match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="AssemblyMatchStrategy.AnySingleVersion" />.</param>
+        /// <param name="assemblyVersionMatchStrategy">Optional assembly version match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="VersionMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
         /// Originally serialized object.
         /// </returns>
@@ -216,7 +217,7 @@ namespace OBeautifulCode.Serialization
         public static object DeserializePayloadUsingSpecificSerializer(
             this DescribedSerializationBase describedSerializationBase,
             IDeserialize deserializer,
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
+            VersionMatchStrategy assemblyVersionMatchStrategy = VersionMatchStrategy.AnySingleVersion)
         {
             if (describedSerializationBase == null)
             {
@@ -228,7 +229,7 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(deserializer));
             }
 
-            var targetType = describedSerializationBase.PayloadTypeRepresentation.ResolveFromLoadedTypes(assemblyMatchStrategy);
+            var targetType = describedSerializationBase.PayloadTypeRepresentation.ResolveFromLoadedTypes(assemblyVersionMatchStrategy);
 
             object result;
 

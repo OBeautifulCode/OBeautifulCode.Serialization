@@ -11,10 +11,10 @@ namespace OBeautifulCode.Serialization.Test
     using FakeItEasy;
 
     using OBeautifulCode.Assertion.Recipes;
-    using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
     using OBeautifulCode.Serialization.Recipes;
+    using OBeautifulCode.Type;
 
     using Xunit;
 
@@ -24,8 +24,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_InitializedNoConstructor___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedNoConstructor, AssemblyMatchStrategy>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedNoConstructor, AssemblyMatchStrategy>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedNoConstructor, VersionMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedNoConstructor, VersionMatchStrategy>);
 
             var expected = A.Dummy<InitializedNoConstructor>();
 
@@ -46,8 +46,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_ExpressionBodyNoConstructor___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodyNoConstructor, AssemblyMatchStrategy>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodyNoConstructor, AssemblyMatchStrategy>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodyNoConstructor, VersionMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodyNoConstructor, VersionMatchStrategy>);
 
             var expected = A.Dummy<ExpressionBodyNoConstructor>();
 
@@ -68,8 +68,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_InitializedSingleParameterizedConstructor___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedSingleParameterizedConstructor, AssemblyMatchStrategy>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedSingleParameterizedConstructor, AssemblyMatchStrategy>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedSingleParameterizedConstructor, VersionMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedSingleParameterizedConstructor, VersionMatchStrategy>);
 
             var expected = A.Dummy<InitializedSingleParameterizedConstructor>();
 
@@ -92,8 +92,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_ExpressionBodySingleParameterizedConstructor___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodySingleParameterizedConstructor, AssemblyMatchStrategy>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodySingleParameterizedConstructor, AssemblyMatchStrategy>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodySingleParameterizedConstructor, VersionMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodySingleParameterizedConstructor, VersionMatchStrategy>);
 
             var expected = A.Dummy<ExpressionBodySingleParameterizedConstructor>();
 
@@ -116,8 +116,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_InitializedMultipleConstructorsWithDefault___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedMultipleConstructorsWithDefault, AssemblyMatchStrategy>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedMultipleConstructorsWithDefault, AssemblyMatchStrategy>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedMultipleConstructorsWithDefault, VersionMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedMultipleConstructorsWithDefault, VersionMatchStrategy>);
 
             var expected = A.Dummy<InitializedMultipleConstructorsWithDefault>();
 
@@ -140,8 +140,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_ExpressionBodyMultipleConstructorsWithDefault___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithDefault, AssemblyMatchStrategy>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithDefault, AssemblyMatchStrategy>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithDefault, VersionMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithDefault, VersionMatchStrategy>);
 
             var expected = A.Dummy<ExpressionBodyMultipleConstructorsWithDefault>();
 
@@ -164,8 +164,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_InitializedMultipleConstructorsWithoutDefault___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedMultipleConstructorsWithoutDefault, AssemblyMatchStrategy>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedMultipleConstructorsWithoutDefault, AssemblyMatchStrategy>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<InitializedMultipleConstructorsWithoutDefault, VersionMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<InitializedMultipleConstructorsWithoutDefault, VersionMatchStrategy>);
 
             var expected = A.Dummy<InitializedMultipleConstructorsWithoutDefault>();
 
@@ -188,8 +188,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void Deserialize___Should_roundtrip_a_serialized_ExpressionBodyMultipleConstructorsWithoutDefault___When_called()
         {
             // Arrange
-            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithoutDefault, AssemblyMatchStrategy>);
-            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithoutDefault, AssemblyMatchStrategy>);
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithoutDefault, VersionMatchStrategy>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ExpressionBodyMultipleConstructorsWithoutDefault, VersionMatchStrategy>);
 
             var expected = A.Dummy<ExpressionBodyMultipleConstructorsWithoutDefault>();
 
@@ -214,7 +214,7 @@ namespace OBeautifulCode.Serialization.Test
     {
         public string OtherProperty { get; set; }
 
-        public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
+        public Enum Trigger { get; } = VersionMatchStrategy.AnySingleVersion;
     }
 
     [Serializable]
@@ -222,7 +222,7 @@ namespace OBeautifulCode.Serialization.Test
     {
         public string OtherProperty { get; set; }
 
-        public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
+        public Enum Trigger => VersionMatchStrategy.AnySingleVersion;
     }
 
     [Serializable]
@@ -238,7 +238,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string OtherProperty2 { get; private set; }
 
-        public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
+        public Enum Trigger { get; } = VersionMatchStrategy.AnySingleVersion;
     }
 
     [Serializable]
@@ -254,7 +254,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string OtherProperty2 { get; private set; }
 
-        public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
+        public Enum Trigger => VersionMatchStrategy.AnySingleVersion;
     }
 
     [Serializable]
@@ -276,7 +276,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string OtherProperty2 { get; private set; }
 
-        public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
+        public Enum Trigger { get; } = VersionMatchStrategy.AnySingleVersion;
     }
 
     [Serializable]
@@ -298,7 +298,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string OtherProperty2 { get; private set; }
 
-        public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
+        public Enum Trigger => VersionMatchStrategy.AnySingleVersion;
     }
 
     [Serializable]
@@ -322,7 +322,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string OtherProperty2 { get; private set; }
 
-        public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
+        public Enum Trigger { get; } = VersionMatchStrategy.AnySingleVersion;
     }
 
     [Serializable]
@@ -346,7 +346,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string OtherProperty2 { get; private set; }
 
-        public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
+        public Enum Trigger => VersionMatchStrategy.AnySingleVersion;
     }
 
     [Serializable]
@@ -366,7 +366,7 @@ namespace OBeautifulCode.Serialization.Test
 
         public string PublicSet { get; set; }
 
-        public Enum Trigger { get; } = AssemblyMatchStrategy.AnySingleVersion;
+        public Enum Trigger { get; } = VersionMatchStrategy.AnySingleVersion;
     }
 
     [Serializable]
@@ -392,6 +392,6 @@ namespace OBeautifulCode.Serialization.Test
 
         public string PublicSet { get; set; }
 
-        public Enum Trigger => AssemblyMatchStrategy.AnySingleVersion;
+        public Enum Trigger => VersionMatchStrategy.AnySingleVersion;
     }
 }

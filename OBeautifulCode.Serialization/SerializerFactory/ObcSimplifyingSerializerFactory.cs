@@ -6,7 +6,7 @@
 
 namespace OBeautifulCode.Serialization
 {
-    using OBeautifulCode.Representation.System;
+    using OBeautifulCode.Type;
 
     /// <summary>
     /// A serializer factory that wraps the serializers built by a backing factory with an <see cref="ObcSimplifyingSerializer"/>.
@@ -31,9 +31,9 @@ namespace OBeautifulCode.Serialization
         /// <inheritdoc />
         public ISerializer BuildSerializer(
             SerializerRepresentation serializerRepresentation,
-            AssemblyMatchStrategy assemblyMatchStrategy = AssemblyMatchStrategy.AnySingleVersion)
+            VersionMatchStrategy assemblyVersionMatchStrategy = VersionMatchStrategy.AnySingleVersion)
         {
-            var fallbackSerializer = this.BackingSerializerFactory.BuildSerializer(serializerRepresentation, assemblyMatchStrategy);
+            var fallbackSerializer = this.BackingSerializerFactory.BuildSerializer(serializerRepresentation, assemblyVersionMatchStrategy);
 
             var result = new ObcSimplifyingSerializer(fallbackSerializer);
 
