@@ -33,7 +33,7 @@ namespace OBeautifulCode.Serialization.Bson
     public class DictionaryBsonSerializer<TDictionary, TKey, TValue> : SerializerBase<TDictionary>
         where TDictionary : class, IEnumerable<KeyValuePair<TKey, TValue>>
     {
-        private readonly DictionaryInterfaceImplementerSerializer<Dictionary<TKey, TValue>> underlyingSerializer;
+        private readonly ForkedDictionaryInterfaceImplementerSerializer<Dictionary<TKey, TValue>, TKey, TValue> underlyingSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DictionaryBsonSerializer{TDictionary,TKey,TValue}"/> class.
@@ -43,15 +43,15 @@ namespace OBeautifulCode.Serialization.Bson
         /// <param name="valueSerializer">The value serializer.</param>
         public DictionaryBsonSerializer(
             DictionaryRepresentation dictionaryRepresentation,
-            IBsonSerializer keySerializer,
-            IBsonSerializer valueSerializer)
+            IBsonSerializer<TKey> keySerializer,
+            IBsonSerializer<TValue> valueSerializer)
         {
             if (!typeof(TDictionary).IsClosedSystemDictionaryType())
             {
                 throw new ArgumentException("'typeof(TDictionary).IsSystemDictionaryType()' is false");
             }
 
-            this.underlyingSerializer = new DictionaryInterfaceImplementerSerializer<Dictionary<TKey, TValue>>(dictionaryRepresentation, keySerializer, valueSerializer);
+            this.underlyingSerializer = new ForkedDictionaryInterfaceImplementerSerializer<Dictionary<TKey, TValue>, TKey, TValue>(dictionaryRepresentation, keySerializer, valueSerializer);
         }
 
         /// <inheritdoc />

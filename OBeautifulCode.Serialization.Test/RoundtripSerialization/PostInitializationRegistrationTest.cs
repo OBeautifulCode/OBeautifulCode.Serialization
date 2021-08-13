@@ -58,6 +58,82 @@ namespace OBeautifulCode.Serialization.Test
             expected.RoundtripSerializeViaBsonWithBeEqualToAssertion(typeof(PostInitializationRegistrationBsonConfiguration));
         }
 
+        [Fact]
+        public static void RoundtripSerialize___Should_activate_post_initialization_registration___When_type_contains_dictionary_whose_values_are_declared_as_a_generic_concrete_type()
+        {
+            var expected = new ModelPrivateSetGenericParentGenericChild<string, ModelPublicSetNonGenericParentGenericChild<Version>>(
+                new Dictionary<string, ModelPublicSetNonGenericParentGenericChild<Version>>
+                {
+                    { "abc", new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "abc-details" } },
+                    { "def", new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "def-details" } },
+                },
+                new Dictionary<string, ModelPublicSetNonGenericParentGenericChild<Version>>
+                {
+                    { "abc", new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "abc-details" } },
+                    { "def", new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "def-details" } },
+                });
+
+            expected.RoundtripSerializeViaJsonWithBeEqualToAssertion(typeof(PostInitializationRegistrationJsonConfiguration));
+            expected.RoundtripSerializeViaBsonWithBeEqualToAssertion(typeof(PostInitializationRegistrationBsonConfiguration));
+        }
+
+        [Fact]
+        public static void RoundtripSerialize___Should_activate_post_initialization_registration___When_type_contains_dictionary_whose_keys_are_declared_as_a_generic_concrete_type()
+        {
+            var expected = new ModelPrivateSetGenericParentGenericChild<ModelPublicSetNonGenericParentGenericChild<Version>, string>(
+                new Dictionary<ModelPublicSetNonGenericParentGenericChild<Version>, string>
+                {
+                    { new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "abc-details" }, "abc" },
+                    { new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "def-details" }, "def" },
+                },
+                new Dictionary<ModelPublicSetNonGenericParentGenericChild<Version>, string>
+                {
+                    { new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "abc-details" }, "abc" },
+                    { new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "def-details" }, "def" },
+                });
+
+            expected.RoundtripSerializeViaJsonWithBeEqualToAssertion(typeof(PostInitializationRegistrationJsonConfiguration));
+            expected.RoundtripSerializeViaBsonWithBeEqualToAssertion(typeof(PostInitializationRegistrationBsonConfiguration));
+        }
+
+        [Fact]
+        public static void RoundtripSerialize___Should_activate_post_initialization_registration___When_type_contains_dictionary_whose_value_is_declared_as_non_generic_base_class_having_generic_inheritors()
+        {
+            var expected = new ModelPrivateSetGenericParentGenericChild<string, ModelPublicSetNonGenericParent>(
+                new Dictionary<string, ModelPublicSetNonGenericParent>
+                {
+                    { "abc", new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "abc-details" } },
+                    { "def", new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "def-details" } },
+                },
+                new Dictionary<string, ModelPublicSetNonGenericParent>
+                {
+                    { "abc", new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "abc-details" } },
+                    { "def", new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "def-details" } },
+                });
+
+            expected.RoundtripSerializeViaJsonWithBeEqualToAssertion(typeof(PostInitializationRegistrationJsonConfiguration));
+            expected.RoundtripSerializeViaBsonWithBeEqualToAssertion(typeof(PostInitializationRegistrationBsonConfiguration));
+        }
+
+        [Fact]
+        public static void RoundtripSerialize___Should_activate_post_initialization_registration___When_type_contains_dictionary_whose_key_is_declared_as_non_generic_base_class_having_generic_inheritors()
+        {
+            var expected = new ModelPrivateSetGenericParentGenericChild<ModelPublicSetNonGenericParent, string>(
+                new Dictionary<ModelPublicSetNonGenericParent, string>
+                {
+                    { new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "abc-details" }, "abc" },
+                    { new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "def-details" }, "def" },
+                },
+                new Dictionary<ModelPublicSetNonGenericParent, string>
+                {
+                    { new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "abc-details" }, "abc" },
+                    { new ModelPublicSetNonGenericParentGenericChild<Version> { Detail = "def-details" }, "def" },
+                });
+
+            expected.RoundtripSerializeViaJsonWithBeEqualToAssertion(typeof(PostInitializationRegistrationJsonConfiguration));
+            expected.RoundtripSerializeViaBsonWithBeEqualToAssertion(typeof(PostInitializationRegistrationBsonConfiguration));
+        }
+
         [Serializable]
         [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public class Wrapper<TFirst, TSecond>
@@ -125,7 +201,6 @@ namespace OBeautifulCode.Serialization.Test
         [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public abstract class ModelPrivateSetGenericParent<TFirst, TSecond>
             : IEquatable<ModelPrivateSetGenericParent<TFirst, TSecond>>
-            where TSecond : struct
         {
             [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddedToIdentifierForTestsWhereTypeIsPrimaryConcern)]
             protected ModelPrivateSetGenericParent(
@@ -167,7 +242,6 @@ namespace OBeautifulCode.Serialization.Test
         [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
         public partial class ModelPrivateSetGenericParentGenericChild<TFirst, TSecond>
             : ModelPrivateSetGenericParent<TFirst, TSecond>, IEquatable<ModelPrivateSetGenericParentGenericChild<TFirst, TSecond>>
-            where TSecond : struct
         {
             [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", Justification = ObcSuppressBecause.CA1720_IdentifiersShouldNotContainTypeNames_TypeNameAddedToIdentifierForTestsWhereTypeIsPrimaryConcern)]
             public ModelPrivateSetGenericParentGenericChild(
@@ -224,6 +298,84 @@ namespace OBeautifulCode.Serialization.Test
             public override int GetHashCode() => throw new NotImplementedException("should not get used");
         }
 
+        [Serializable]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
+        public abstract class ModelPublicSetNonGenericParent : IEquatable<ModelPublicSetNonGenericParent>
+        {
+            public static bool operator ==(ModelPublicSetNonGenericParent left, ModelPublicSetNonGenericParent right)
+            {
+                if (ReferenceEquals(left, right))
+                {
+                    return true;
+                }
+
+                if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+                {
+                    return false;
+                }
+
+                var result = left.Equals((object)right);
+
+                return result;
+            }
+
+            public static bool operator !=(ModelPublicSetNonGenericParent left, ModelPublicSetNonGenericParent right) => !(left == right);
+
+            public bool Equals(ModelPublicSetNonGenericParent other) => this == other;
+
+            public abstract override bool Equals(object obj);
+
+            public abstract override int GetHashCode();
+        }
+
+        [Serializable]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = ObcSuppressBecause.CA1034_NestedTypesShouldNotBeVisible_VisibleNestedTypeRequiredForTesting)]
+        public class ModelPublicSetNonGenericParentGenericChild<T> : ModelPublicSetNonGenericParent, IEquatable<ModelPublicSetNonGenericParentGenericChild<T>>
+        {
+            public string Detail { get; set; }
+
+            public static bool operator ==(ModelPublicSetNonGenericParentGenericChild<T> left, ModelPublicSetNonGenericParentGenericChild<T> right)
+            {
+                if (ReferenceEquals(left, right))
+                {
+                    return true;
+                }
+
+                if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+                {
+                    return false;
+                }
+
+                var result = left.Equals(right);
+
+                return result;
+            }
+
+            public static bool operator !=(ModelPublicSetNonGenericParentGenericChild<T> left, ModelPublicSetNonGenericParentGenericChild<T> right) => !(left == right);
+
+            public bool Equals(ModelPublicSetNonGenericParentGenericChild<T> other)
+            {
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                if (ReferenceEquals(other, null))
+                {
+                    return false;
+                }
+
+                var result = this.Detail.IsEqualTo(other.Detail);
+
+                return result;
+            }
+
+            public override bool Equals(object obj) => this == (obj as ModelPublicSetNonGenericParentGenericChild<T>);
+
+            [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = ObcSuppressBecause.CA1065_DoNotRaiseExceptionsInUnexpectedLocations_ThrowNotImplementedExceptionWhenForcedToSpecifyMemberThatWillNeverBeUsedInTesting)]
+            public override int GetHashCode() => this.Detail.GetHashCode();
+        }
+
         private class PostInitializationRegistrationBsonConfiguration : BsonSerializationConfigurationBase
         {
             protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new[]
@@ -231,6 +383,8 @@ namespace OBeautifulCode.Serialization.Test
                 typeof(Wrapper<,>).ToTypeToRegisterForBson(),
                 typeof(ModelPrivateSetGenericParent<,>).ToTypeToRegisterForBson(),
                 typeof(ModelPrivateSetGenericParentGenericChild<,>).ToTypeToRegisterForBson(),
+                typeof(ModelPublicSetNonGenericParent).ToTypeToRegisterForBson(),
+                typeof(ModelPublicSetNonGenericParentGenericChild<>).ToTypeToRegisterForBson(),
             };
         }
 
@@ -241,6 +395,8 @@ namespace OBeautifulCode.Serialization.Test
                 typeof(Wrapper<,>).ToTypeToRegisterForJson(),
                 typeof(ModelPrivateSetGenericParent<,>).ToTypeToRegisterForJson(),
                 typeof(ModelPrivateSetGenericParentGenericChild<,>).ToTypeToRegisterForJson(),
+                typeof(ModelPublicSetNonGenericParent).ToTypeToRegisterForJson(),
+                typeof(ModelPublicSetNonGenericParentGenericChild<>).ToTypeToRegisterForJson(),
             };
         }
     }

@@ -70,7 +70,7 @@ namespace OBeautifulCode.Serialization.Bson
                     var memberMap = MapMember(result, member);
 
                     // ReSharper disable once ArgumentsStyleLiteral
-                    var serializer = memberType.GetAppropriateSerializer(defaultToObjectSerializer: false);
+                    var serializer = memberType.GetAppropriateSerializer();
 
                     // When null, BSON will just use the class map for the member type, which can be registered anytime after
                     // the class map being built by this method is registered.
