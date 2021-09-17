@@ -7,10 +7,10 @@
     <iconUrl>https://raw.githubusercontent.com/OBeautifulCode/OBeautifulCode.Serialization/master/OBeautifulCode.Serialization.Recipes/nuget-icon.png</iconUrl>
     <dependencies>
       <dependency id="OBeautifulCode.Assertion.Recipes.Must" version="1.0.30" />
-      <dependency id="OBeautifulCode.Serialization.Bson" version="1.0.30" />
-      <dependency id="OBeautifulCode.Serialization.Json" version="1.0.30" />
-      <dependency id="OBeautifulCode.Serialization.PropertyBag" version="1.0.30" />
-      <dependency id="OBeautifulCode.Serialization.Recipes.Factory" version="1.0.30" />
+      <dependency id="OBeautifulCode.Serialization.Bson" version="$version$" />
+      <dependency id="OBeautifulCode.Serialization.Json" version="$version$" />
+      <dependency id="OBeautifulCode.Serialization.PropertyBag" version="$version$" />
+      <dependency id="OBeautifulCode.Serialization.Recipes.Factory" version="$version$" />
       <dependency id="OBeautifulCode.Reflection.Recipes.AppDomainHelper" version="1.0.111" />
       <dependency id="OBeautifulCode.Representation.System" version="1.0.61" />
       <dependency id="OBeautifulCode.Type.Recipes.TypeExtensions" version="1.0.104" />
