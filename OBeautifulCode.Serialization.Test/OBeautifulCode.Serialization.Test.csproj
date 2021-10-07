@@ -193,6 +193,10 @@
     <Compile Include=".recipes\OBeautifulCode.Type\TypeDummyFactory.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeDummyFactory.designer.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="Models\DescribedSerialization\NullDescribedSerializationTest.cs" />
+    <Compile Include="Models\DescribedSerialization\NullDescribedSerializationTest.designer.cs">
+      <DependentUpon>NullDescribedSerializationTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\DescribedSerialization\BinaryDescribedSerializationTest.cs" />
     <Compile Include="Models\DescribedSerialization\BinaryDescribedSerializationTest.designer.cs">
       <DependentUpon>BinaryDescribedSerializationTest.cs</DependentUpon>

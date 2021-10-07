@@ -25,5 +25,10 @@ namespace OBeautifulCode.Serialization
         /// Binary format.
         /// </summary>
         Binary,
+
+        /// <summary>
+        /// Null format.
+        /// </summary>
+        Null,
     }
 }

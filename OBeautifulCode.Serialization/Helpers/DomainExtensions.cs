@@ -71,9 +71,9 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(serializerFactory));
             }
 
-            if (serializationFormat == SerializationFormat.Invalid)
+            if ((serializationFormat == SerializationFormat.Invalid) || (serializationFormat == SerializationFormat.Null))
             {
-                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' == '{SerializationFormat.Invalid}'"), (Exception)null);
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' == '{serializationFormat}'"), (Exception)null);
             }
 
             var serializer = serializerFactory.BuildSerializer(serializerRepresentation, assemblyVersionMatchStrategy);
@@ -104,9 +104,9 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(serializer));
             }
 
-            if (serializationFormat == SerializationFormat.Invalid)
+            if ((serializationFormat == SerializationFormat.Invalid) || (serializationFormat == SerializationFormat.Null))
             {
-                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' == '{SerializationFormat.Invalid}'"), (Exception)null);
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializationFormat)}' == '{serializationFormat}'"), (Exception)null);
             }
 
             var payloadType = objectToPackageIntoDescribedSerializationBase?.GetType() ?? typeof(T);
@@ -126,7 +126,8 @@ namespace OBeautifulCode.Serialization
                     var serializedString = serializer.SerializeToString(objectToPackageIntoDescribedSerializationBase);
                     result = new StringDescribedSerialization(payloadType.ToRepresentation(), serializer.SerializerRepresentation, serializedString);
                     break;
-                default: throw new NotSupportedException(Invariant($"{nameof(SerializationFormat)} - {serializationFormat} is not supported."));
+                default:
+                    throw new NotSupportedException(Invariant($"{nameof(SerializationFormat)} - {serializationFormat} is not supported."));
             }
 
             return result;
