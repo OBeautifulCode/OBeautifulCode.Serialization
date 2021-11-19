@@ -17,7 +17,7 @@ namespace OBeautifulCode.Serialization
         /// Initializes a new instance of the <see cref="ObcSimplifyingSerializerFactory"/> class.
         /// </summary>
         /// <param name="backingSerializerFactory">The backing serializer factory.</param>
-        protected ObcSimplifyingSerializerFactory(
+        public ObcSimplifyingSerializerFactory(
             ISerializerFactory backingSerializerFactory)
         {
             this.BackingSerializerFactory = backingSerializerFactory;
