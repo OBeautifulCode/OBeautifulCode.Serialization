@@ -225,6 +225,11 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(describedSerializationBase));
             }
 
+            if (describedSerializationBase is NullDescribedSerialization)
+            {
+                throw new ArgumentException(Invariant($"Deserializing a {nameof(NullDescribedSerialization)} is not supported."));
+            }
+
             if (deserializer == null)
             {
                 throw new ArgumentNullException(nameof(deserializer));
