@@ -59,6 +59,7 @@ namespace OBeautifulCode.Serialization
             .Concat(OBeautifulCode.Type.ProjectInfo.Assembly.GetPublicEnumTypes())
             .Concat(OBeautifulCode.Compression.ProjectInfo.Assembly.GetPublicEnumTypes())
             .Concat(OBeautifulCode.Representation.System.ProjectInfo.Assembly.GetPublicEnumTypes())
+            .Concat(OBeautifulCode.Serialization.ProjectInfo.Assembly.GetPublicEnumTypes())
             .ToList();
 
         /// <summary>
