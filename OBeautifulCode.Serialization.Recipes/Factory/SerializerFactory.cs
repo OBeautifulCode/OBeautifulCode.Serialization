@@ -13,7 +13,6 @@ namespace OBeautifulCode.Serialization.Recipes
     using global::System.Collections.Concurrent;
 
     using OBeautifulCode.Compression;
-    using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
     using OBeautifulCode.Serialization.PropertyBag;
