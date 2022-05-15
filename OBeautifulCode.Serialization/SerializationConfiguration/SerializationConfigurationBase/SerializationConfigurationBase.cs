@@ -682,13 +682,21 @@ namespace OBeautifulCode.Serialization
             {
                 var enumerableObject = (IEnumerable)memberObject;
 
+                var validatedElementTypes = new HashSet<Type>();
+
                 foreach (var elementObject in enumerableObject)
                 {
                     if (elementObject != null)
                     {
                         var elementObjectType = elementObject.GetType();
 
-                        this.InternalThrowOnUnregisteredTypeIfAppropriate(originalType, elementObjectType, serializationDirection, elementObject);
+                        // Performance optimization - for a large enumerable, skip element types we've already seen.
+                        if (!validatedElementTypes.Contains(elementObjectType))
+                        {
+                            this.InternalThrowOnUnregisteredTypeIfAppropriate(originalType, elementObjectType, serializationDirection, elementObject);
+                        }
+
+                        validatedElementTypes.Add(elementObjectType);
                     }
                 }
             }
@@ -696,13 +704,23 @@ namespace OBeautifulCode.Serialization
             {
                 var dictionaryObject = (IDictionary)memberObject;
 
+                var validatedKeyTypes = new HashSet<Type>();
+
+                var validatedValueTypes = new HashSet<Type>();
+
                 foreach (var keyObject in dictionaryObject.Keys)
                 {
                     if (keyObject != null)
                     {
                         var keyObjectType = keyObject.GetType();
 
-                        this.InternalThrowOnUnregisteredTypeIfAppropriate(originalType, keyObjectType, serializationDirection, keyObject);
+                        // Performance optimization - for a large dictionary, skip Key types we've already seen.
+                        if (!validatedKeyTypes.Contains(keyObjectType))
+                        {
+                            this.InternalThrowOnUnregisteredTypeIfAppropriate(originalType, keyObjectType, serializationDirection, keyObject);
+                        }
+
+                        validatedKeyTypes.Add(keyObjectType);
                     }
                 }
 
@@ -712,7 +730,13 @@ namespace OBeautifulCode.Serialization
                     {
                         var valueObjectType = valueObject.GetType();
 
-                        this.InternalThrowOnUnregisteredTypeIfAppropriate(originalType, valueObjectType, serializationDirection, valueObject);
+                        // Performance optimization - for a large dictionary, skip Value types we've already seen.
+                        if (!validatedValueTypes.Contains(valueObjectType))
+                        {
+                            this.InternalThrowOnUnregisteredTypeIfAppropriate(originalType, valueObjectType, serializationDirection, valueObject);
+                        }
+
+                        validatedValueTypes.Add(valueObjectType);
                     }
                 }
             }
