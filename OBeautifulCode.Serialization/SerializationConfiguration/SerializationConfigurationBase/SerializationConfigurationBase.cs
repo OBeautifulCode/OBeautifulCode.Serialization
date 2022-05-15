@@ -27,7 +27,7 @@ namespace OBeautifulCode.Serialization
     {
         private static readonly ConcurrentDictionary<Type, List<MemberInfo>> CachedTypeToAllFieldsAndPropertiesMemberInfoMap = new ConcurrentDictionary<Type, List<MemberInfo>>();
 
-        private readonly ConcurrentDictionary<Type, object> validatedTypes = new ConcurrentDictionary<Type, object>();
+        private readonly ConcurrentDictionary<SerializationDirection, ConcurrentDictionary<Type, object>> validatedTypes = new ConcurrentDictionary<SerializationDirection, ConcurrentDictionary<Type, object>>();
 
         private readonly object syncConfigure = new object();
 
