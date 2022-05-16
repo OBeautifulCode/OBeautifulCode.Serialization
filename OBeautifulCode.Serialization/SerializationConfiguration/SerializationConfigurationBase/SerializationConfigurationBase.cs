@@ -432,6 +432,12 @@ namespace OBeautifulCode.Serialization
             Type typeToValidate,
             SerializationDirection serializationDirection)
         {
+            // Prevents StackOverflowException when you have a type such as MyType : MyGeneric<MyType>
+            if (this.validatedTypes.TryGetValue(serializationDirection, out var validatedTypeToNothingMap) && validatedTypeToNothingMap.ContainsKey(typeToValidate))
+            {
+                return;
+            }
+
             // For non-restricted types we need to validate the type itself as well as all ancestors.
             // This protects against the scenario where a derived type is registered, but it's
             // ancestor isn't.  In BSON, for example, the class map only covers the members
@@ -448,12 +454,7 @@ namespace OBeautifulCode.Serialization
 
             foreach (var localTypeToValidate in typeToValidateIncludingAncestors)
             {
-                if (!this.validatedTypes.ContainsKey(localTypeToValidate))
-                {
-                    this.ValidateTypeIsRegistered(originalType, localTypeToValidate, serializationDirection);
-
-                    this.validatedTypes.TryAdd(localTypeToValidate, null);
-                }
+                this.ValidateTypeIsRegistered(originalType, localTypeToValidate, serializationDirection);
             }
         }
 
@@ -462,6 +463,11 @@ namespace OBeautifulCode.Serialization
             Type typeToValidate,
             SerializationDirection serializationDirection)
         {
+            if (this.validatedTypes.TryGetValue(serializationDirection, out var validatedTypeToNothingMap) && validatedTypeToNothingMap.ContainsKey(typeToValidate))
+            {
+                return;
+            }
+
             if (typeToValidate.IsArray)
             {
                 // Some unit tests throw reflection exceptions when we use the "front-door" when serializing.
@@ -530,6 +536,16 @@ namespace OBeautifulCode.Serialization
             {
                 this.ThrowIfTypeIsNotRegistered(originalType, typeToValidate);
             }
+
+            // We need to validate based on SerializationDirection because the logic for exploring types differs
+            // by SerializationDirection.  We have found cases where serializing marks a type as validated,
+            // but then hinders the exploration of that type on deserializing and types are missed.
+            if (!this.validatedTypes.ContainsKey(serializationDirection))
+            {
+                this.validatedTypes.TryAdd(serializationDirection, new ConcurrentDictionary<Type, object>());
+            }
+
+            this.validatedTypes[serializationDirection].TryAdd(typeToValidate, null);
         }
 
         private void ThrowIfTypeIsNotRegistered(
