@@ -470,24 +470,14 @@ namespace OBeautifulCode.Serialization
 
             if (typeToValidate.IsArray)
             {
-                // Some unit tests throw reflection exceptions when we use the "front-door" when serializing.
-                // We are not 100% sure why and didn't have the time to fully dig-in.
-                // Anyways, upon serialization we will inspect all runtime types whereas in deserialization we
-                // only have declared types to check and we found a situation where we were not performing a post-initialization
-                // registration for a declared generic type.  In this particular case, the object being deserialized had a property
-                // whose type was an IReadOnlyCollection<CustomBaseType>.  CustomBaseType's inheritance path included OBC.Type.EventBase<string>.
+                // We found a situation where we were not performing a post-initialization registration for a declared generic type.
+                // In this particular case, the object had a property whose type was an IReadOnlyCollection<CustomBaseType>.
+                // CustomBaseType's inheritance path included OBC.Type.EventBase<string>.
                 // We were previously just checking CustomBaseType's registration and not walking the inheritance path.
-                // This resulted in a BsonException.  BSON, on deserialization, was taking the liberty to register a class map for EventBase<string>
+                // This resulted in a BsonException.  BSON was taking the liberty to register a class map for EventBase<string>
                 // because one didn't exist, but then it's call to ObcBsonDiscriminatorConvention, triggered a call to ThrowOnUnregisteredTypeIfAppropriate
                 // which ultimately attempted a post-initialization registration that attempted to add the same class map.
-                if (serializationDirection == SerializationDirection.Deserialize)
-                {
-                    this.ValidateTypeAndInheritancePathIsRegistered(originalType, typeToValidate.GetElementType(), serializationDirection);
-                }
-                else
-                {
-                    this.ValidateTypeIsRegistered(originalType, typeToValidate.GetElementType(), serializationDirection);
-                }
+                this.ValidateTypeAndInheritancePathIsRegistered(originalType, typeToValidate.GetElementType(), serializationDirection);
             }
             else if (typeToValidate.IsGenericType)
             {
@@ -499,15 +489,8 @@ namespace OBeautifulCode.Serialization
                     // will also check the arguments of custom generic types
                     foreach (var genericArgumentType in typeToValidate.GenericTypeArguments)
                     {
-                        // See note above in branch for IsArray about why we need branch logic SerializationDirection.
-                        if (serializationDirection == SerializationDirection.Deserialize)
-                        {
-                            this.ValidateTypeAndInheritancePathIsRegistered(originalType, genericArgumentType, serializationDirection);
-                        }
-                        else
-                        {
-                            this.ValidateTypeIsRegistered(originalType, genericArgumentType, serializationDirection);
-                        }
+                        // See note above in IsArray section
+                        this.ValidateTypeAndInheritancePathIsRegistered(originalType, genericArgumentType, serializationDirection);
                     }
 
                     if (!IsRestrictedType(typeToValidate))
