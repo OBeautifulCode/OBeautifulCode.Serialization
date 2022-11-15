@@ -9,6 +9,7 @@
 
 namespace OBeautifulCode.Serialization.Test
 {
+    using FakeItEasy;
     using OBeautifulCode.AutoFakeItEasy;
 
     using OBeautifulCode.Serialization;
@@ -34,6 +35,9 @@ namespace OBeautifulCode.Serialization.Test
             AutoFixtureBackedDummyFactory.UseRandomConcreteSubclassForDummy<KeyOrValueObjectHierarchyBase>();
             AutoFixtureBackedDummyFactory.UseRandomConcreteSubclassForDummy<TestBase>();
             #endif
+
+            AutoFixtureBackedDummyFactory.AddDummyCreator(()=> new TestEvent1(A.Dummy<short>(), A.Dummy<UtcDateTime>()));
+            AutoFixtureBackedDummyFactory.AddDummyCreator(()=> new TestEvent2(A.Dummy<short>(), A.Dummy<UtcDateTime>()));
         }
     }
 }
