@@ -35,6 +35,8 @@ namespace OBeautifulCode.Serialization
 
         private readonly ConcurrentDictionary<Type, RegistrationDetails> registeredTypeToRegistrationDetailsMap = new ConcurrentDictionary<Type, RegistrationDetails>();
 
+        private readonly ConcurrentDictionary<Type, RegistrationTime> registeredTypeToRegistrationTimeMap = new ConcurrentDictionary<Type, RegistrationTime>();
+
         private readonly HashSet<string> visitedTypesToRegisterIds = new HashSet<string>();
 
         // ReSharper disable once CollectionNeverQueried.Local
@@ -401,6 +403,8 @@ namespace OBeautifulCode.Serialization
             }
 
             this.ProcessRegistrationDetailsPriorToRegistration(registrationDetails, registrationTime);
+
+            this.registeredTypeToRegistrationTimeMap.TryAdd(type, registrationTime);
 
             this.registeredTypeToRegistrationDetailsMap.TryAdd(type, registrationDetails);
         }
