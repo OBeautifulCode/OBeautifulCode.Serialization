@@ -234,6 +234,35 @@ namespace OBeautifulCode.Serialization
 
                 foreach (var registrationDetails in registrationDetailsForDirectlyRegisteredTypes)
                 {
+                    var type = registrationDetails.TypeToRegister.Type;
+
+                    var registrationTime = descendantSerializationConfiguration.registeredTypeToRegistrationTimeMap[type];
+
+                    // It is possible that two descendants have the same type registered.
+                    // This can happen with a post-initialization registration of a closed generic type.
+                    // We first discovered it with two dependent types having EventBase<string> registered.
+                    // In that situation, a high level ancestor config was used to serialize a type that derived from EventBase<string>
+                    // causing a post-initialization registration.  Then a low level descendant config was used to serialize a type that
+                    // also derived from EventBase<string>.  That resulted in a post-initialization registration with the low level descendant
+                    // config.  It further bubbled-up the type and registered it with all ancestors.  When it reached the high level ancestor
+                    // config, the type was already registered so it just skipped the type.  Finally, we created a serializer with a wrapping
+                    // config type (e.g. MinimalFormatJsonSerializationConfiguration<High Level Ancestor>).  Now we had the problem where
+                    // EventBase<string> was registered with two of it's descendants, the low and high level configs and we were throwing.
+                    // This was a pretty complicated scenario and a simpler one is easy to construct: two sibling configs are used to serialize
+                    // types that derive from EventBase<string>.  Both now contain a post-initialization registration.
+                    // Then another config is declared with the sibling configs as its descendants.  The code would throw when that config is initialized.
+                    // While we think it's also possible with initialization-time registrations, the configs would have to
+                    // cast a wide net (registering types out of namespace of the domain) which is a bad practice.
+                    // We want to throw in that case so we can at least investigate where this is happening.
+                    // NOTE we really should be checking RegistrationDetails.TypeToRegister is the same in both descendant configs,
+                    // but that would be a cumbersome fix.  This ensures that one of the registrations doesn't have a custom serializer or
+                    // some other customization that the other registration doesn't have.  Here we are just blindly saying that the first registration
+                    // "wins".
+                    if (this.registeredTypeToRegistrationDetailsMap.ContainsKey(type) && (registrationTime == RegistrationTime.PostInitialization))
+                    {
+                        continue;
+                    }
+
                     this.RegisterType(registrationDetails, RegistrationTime.Initialization);
                 }
 

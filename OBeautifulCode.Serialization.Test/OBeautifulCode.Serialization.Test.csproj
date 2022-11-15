@@ -214,6 +214,7 @@
     <Compile Include="Models\DescribedSerialization\StringDescribedSerializationTest.designer.cs">
       <DependentUpon>StringDescribedSerializationTest.cs</DependentUpon>
     </Compile>
+    <Compile Include="SerializationConfiguration\SerializationConfigurationBase\SerializationConfigurationBaseTest.cs" />
     <Compile Include="Z-Legacy\SerializationConfiguration\SerializationConfigurationManagerTest.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.designer.cs">
@@ -296,6 +297,7 @@
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
