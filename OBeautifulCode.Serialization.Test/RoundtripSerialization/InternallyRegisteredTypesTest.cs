@@ -63,8 +63,6 @@ namespace OBeautifulCode.Serialization.Test
                 .Concat(closedGenericTypes)
                 .ToList();
 
-            var test = modelTypes.Where(_ => _.Namespace.Contains("OBeautifulCode.Serialization.Test")).ToList();
-
             // Act, Assert
             foreach (var modelType in modelTypes)
             {
