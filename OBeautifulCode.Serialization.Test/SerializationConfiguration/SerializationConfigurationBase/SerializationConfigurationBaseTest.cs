@@ -51,6 +51,7 @@ namespace OBeautifulCode.Serialization.Test
         };
     }
 
+    [Serializable]
     public class TestEvent1 : EventBase<short>
     {
         public TestEvent1(short id, DateTime timestampUtc)
@@ -59,6 +60,7 @@ namespace OBeautifulCode.Serialization.Test
         }
     }
 
+    [Serializable]
     public class TestEvent2 : EventBase<short>
     {
         public TestEvent2(short id, DateTime timestampUtc)
