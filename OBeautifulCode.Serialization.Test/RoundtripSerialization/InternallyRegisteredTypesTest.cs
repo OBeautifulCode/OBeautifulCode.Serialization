@@ -59,8 +59,11 @@ namespace OBeautifulCode.Serialization.Test
                 .Where(_ => _.IsAssignableTo(typeof(IModel)))
                 .Where(_ => _ != typeof(IModel))
                 .Where(_ => _ != typeof(DynamicTypePlaceholder))
+                .Where(_ => _.Namespace != typeof(InternallyRegisteredTypesTest).Namespace)
                 .Concat(closedGenericTypes)
                 .ToList();
+
+            var test = modelTypes.Where(_ => _.Namespace.Contains("OBeautifulCode.Serialization.Test")).ToList();
 
             // Act, Assert
             foreach (var modelType in modelTypes)
