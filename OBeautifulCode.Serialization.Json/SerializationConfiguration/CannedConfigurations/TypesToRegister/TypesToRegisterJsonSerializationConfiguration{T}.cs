@@ -15,9 +15,15 @@ namespace OBeautifulCode.Serialization.Json
     public sealed class TypesToRegisterJsonSerializationConfiguration<T> : JsonSerializationConfigurationBase
     {
         /// <inheritdoc />
-        protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[] { typeof(T).ToTypeToRegisterForJson() };
+        protected override IReadOnlyCollection<TypeToRegisterForJson> TypesToRegisterForJson => new[]
+        {
+            typeof(T).ToTypeToRegisterForJson(),
+        };
 
         /// <inheritdoc />
-        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => new[] { typeof(T).Namespace };
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => new[]
+        {
+            typeof(T).Namespace,
+        };
     }
 }

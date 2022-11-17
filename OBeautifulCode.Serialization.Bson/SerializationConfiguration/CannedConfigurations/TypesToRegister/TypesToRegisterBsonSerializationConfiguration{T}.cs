@@ -15,9 +15,15 @@ namespace OBeautifulCode.Serialization.Bson
     public sealed class TypesToRegisterBsonSerializationConfiguration<T> : BsonSerializationConfigurationBase
     {
         /// <inheritdoc />
-        protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new[] { typeof(T).ToTypeToRegisterForBson() };
+        protected override IReadOnlyCollection<TypeToRegisterForBson> TypesToRegisterForBson => new[]
+        {
+            typeof(T).ToTypeToRegisterForBson(),
+        };
 
         /// <inheritdoc />
-        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => new[] { typeof(T).Namespace };
+        protected override IReadOnlyCollection<string> TypeToRegisterNamespacePrefixFilters => new[]
+        {
+            typeof(T).Namespace,
+        };
     }
 }

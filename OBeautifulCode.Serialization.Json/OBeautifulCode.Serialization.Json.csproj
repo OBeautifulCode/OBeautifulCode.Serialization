@@ -285,11 +285,15 @@
     <Compile Include="Newtonsoft.Json\Utilities\ValidationUtils.cs" />
     <Compile Include="Newtonsoft.Json\WriteState.cs" />
     <Compile Include="Properties\ProjectInfo.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\Dependency\DependencyOnlyJsonSerializationConfiguration{T1,T2,T3,T4}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\Dependency\DependencyOnlyJsonSerializationConfiguration{T1,T2,T3}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\ConciseFormatJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\DefaultFormatJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\MinimalFormatJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\JsonFormat\CompactFormatJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegister\TypesToRegisterJsonSerializationConfiguration.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegister\TypesToRegisterJsonSerializationConfiguration{T1,T2,T3,T4}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegister\TypesToRegisterJsonSerializationConfiguration{T1,T2,T3}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\ThrowOnUnregisteredTypeJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\AttemptOnUnregisteredTypeJsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\Delegates.cs" />

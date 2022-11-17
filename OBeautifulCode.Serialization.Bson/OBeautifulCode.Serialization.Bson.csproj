@@ -116,7 +116,11 @@
     <Compile Include="SerializationConfiguration\BsonSerializationConfigurationBase\BsonSerializationConfigurationBase.cs" />
     <Compile Include="Exceptions\BsonSerializationConfigurationException.cs" />
     <Compile Include="ObcBsonSerializer\BsonSerializerFactory.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\Dependency\DependencyOnlyBsonSerializationConfiguration{T1,T2,T3,T4}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\Dependency\DependencyOnlyBsonSerializationConfiguration{T1,T2,T3}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegister\TypesToRegisterBsonSerializationConfiguration.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegister\TypesToRegisterBsonSerializationConfiguration{T1,T2,T3,T4}.cs" />
+    <Compile Include="SerializationConfiguration\CannedConfigurations\TypesToRegister\TypesToRegisterBsonSerializationConfiguration{T1,T2,T3}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\ThrowOnUnregisteredTypeBsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\UnregisteredType\AttemptOnUnregisteredTypeBsonSerializationConfiguration{T}.cs" />
     <Compile Include="SerializationConfiguration\CannedConfigurations\NetDrawingBsonSerializationConfiguration.cs" />
