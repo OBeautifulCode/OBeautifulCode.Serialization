@@ -310,10 +310,10 @@ namespace OBeautifulCode.Serialization.Json
         private IReadOnlyCollection<Type> GetAssignableTypes(
             Type type)
         {
-            var allTypes = AssemblyLoader.GetLoadedAssemblies().GetTypesFromAssemblies();
-
             if (!this.cachedAssignableTypes.ContainsKey(type))
             {
+                var allTypes = AssemblyLoader.GetLoadedAssemblies().GetTypesFromAssemblies();
+
                 var assignableTypes = allTypes
                     .Where(_ => _.IsClosedNonAnonymousClassType() && (_ != type) && _.IsAssignableTo(type))
                     .ToList();
