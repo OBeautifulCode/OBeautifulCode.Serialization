@@ -12,8 +12,8 @@
       <dependency id="OBeautifulCode.Serialization.PropertyBag" version="$version$" />
       <dependency id="OBeautifulCode.Serialization.Recipes.Factory" version="$version$" />
       <dependency id="OBeautifulCode.Reflection.Recipes.AppDomainHelper" version="1.0.111" />
-      <dependency id="OBeautifulCode.Representation.System" version="1.0.65" />
-      <dependency id="OBeautifulCode.Type.Recipes.TypeExtensions" version="1.0.134" />
+      <dependency id="OBeautifulCode.Representation.System" version="1.0.66" />
+      <dependency id="OBeautifulCode.Type.Recipes.TypeExtensions" version="1.0.135" />
       <dependency id="OBeautifulCode.CodeAnalysis.Recipes.SuppressBecause" version="1.0.19" />
     </dependencies>
   </metadata>
