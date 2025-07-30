@@ -216,6 +216,10 @@
       <DependentUpon>StringDescribedSerializationTest.cs</DependentUpon>
     </Compile>
     <Compile Include="SerializationConfiguration\SerializationConfigurationBase\SerializationConfigurationBaseTest.cs" />
+    <Compile Include="SerializerFactory\SimplifyingSerializerFactoryTest.cs" />
+    <Compile Include="SerializerFactory\CompressIfConfiguredSerializerFactoryTest.cs" />
+    <Compile Include="SerializerFactory\TestSerializerFactory.cs" />
+    <Compile Include="SerializerFactory\CachingSerializerFactoryTest.cs" />
     <Compile Include="Z-Legacy\SerializationConfiguration\SerializationConfigurationManagerTest.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.cs" />
     <Compile Include="Models\DynamicTypePlaceholderTest.designer.cs">

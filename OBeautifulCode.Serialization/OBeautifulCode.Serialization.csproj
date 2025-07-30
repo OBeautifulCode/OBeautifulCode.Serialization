@@ -57,9 +57,6 @@
     <Compile Include=".recipes\OBeautifulCode.CodeAnalysis\ObcSuppressBecause.cs" />
     <Compile Include=".recipes\OBeautifulCode.Collection\CollectionExtensions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Collection\EnumerableExtensions.cs" />
-    <Compile Include=".recipes\OBeautifulCode.Compression\CompressorFactory.cs" />
-    <Compile Include=".recipes\OBeautifulCode.Compression\DotNetZipCompressor.cs" />
-    <Compile Include=".recipes\OBeautifulCode.Compression\NullCompressor.cs" />
     <Compile Include=".recipes\OBeautifulCode.Enum\EnumExtensions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Equality\ByteArrayEqualityComparer.cs" />
     <Compile Include=".recipes\OBeautifulCode.Equality\ColorEqualityComparer.cs" />
@@ -140,7 +137,9 @@
     <Compile Include="ObcSerializer\ObcLambdaBackedStringSerializer.cs" />
     <Compile Include="ObcSerializer\ObcStringSerializerBackedSerializer.cs" />
     <Compile Include="Properties\ProjectInfo.cs" />
-    <Compile Include="SerializerFactory\ObcSimplifyingSerializerFactory.cs" />
+    <Compile Include="SerializerFactory\CachingSerializerFactory.cs" />
+    <Compile Include="SerializerFactory\CompressIfConfiguredSerializerFactory.cs" />
+    <Compile Include="SerializerFactory\SimplifyingSerializerFactory.cs" />
     <Compile Include="SerializerFactory\SerializerFactoryBase.cs" />
     <Compile Include="ObcSerializer\ObcCompressingSerializer.cs" />
     <Compile Include="SerializationConfiguration\IIgnoreDefaultDependencies.cs" />

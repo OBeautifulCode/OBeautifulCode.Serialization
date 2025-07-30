@@ -16,7 +16,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="Factory\FactoryExtensions.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\FactoryExtensions.cs" />
-    <file src="Factory\SerializerFactory.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SerializerFactory.cs" />
+    <file src="Factory\SerializerFactories.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SerializerFactories.cs" />
+    <file src="Factory\SerializationKindResolvingSerializerFactory.cs" target="content\net462\.recipes\OBeautifulCode.Serialization\SerializationKindResolvingSerializerFactory.cs" />
   </files>
 </package>

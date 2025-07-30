@@ -7,27 +7,27 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
-
     using OBeautifulCode.Compression;
     using OBeautifulCode.Representation.System;
 
     /// <summary>
-    /// A serializer that compresses after serialization and decompresses before de-serialization.
+    /// A serializer that compresses after serialization with a backing serializer
+    /// and decompresses before de-serialization using a backing serializer.
     /// </summary>
     public class ObcCompressingSerializer : ISerializer
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ObcCompressingSerializer"/> class.
         /// </summary>
-        /// <param name="serializer">The underlying serializer to use.</param>
+        /// <param name="backingSerializer">The backing serializer to use.</param>
         /// <param name="compressor">The compressor to use.</param>
         public ObcCompressingSerializer(
-            ISerializer serializer,
+            ISerializer backingSerializer,
             ICompressor compressor)
         {
-            if (serializer == null)
+            if (backingSerializer == null)
             {
-                throw new ArgumentNullException(nameof(serializer));
+                throw new ArgumentNullException(nameof(backingSerializer));
             }
 
             if (compressor == null)
@@ -35,15 +35,15 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(compressor));
             }
 
-            this.Serializer = serializer;
+            this.BackingSerializer = backingSerializer;
             this.Compressor = compressor;
-            this.SerializerRepresentation = new SerializerRepresentation(serializer.SerializationKind, serializer.SerializationConfigurationType?.ConcreteSerializationConfigurationDerivativeType.ToRepresentation(), compressor.CompressionKind);
+            this.SerializerRepresentation = new SerializerRepresentation(backingSerializer.SerializationKind, backingSerializer.SerializationConfigurationType?.ConcreteSerializationConfigurationDerivativeType.ToRepresentation(), compressor.CompressionKind);
         }
 
         /// <summary>
-        /// Gets the underlying serializer to use.
+        /// Gets the backing serializer to use.
         /// </summary>
-        public ISerializer Serializer { get; }
+        public ISerializer BackingSerializer { get; }
 
         /// <summary>
         /// Gets the compressor to use.
@@ -51,10 +51,10 @@ namespace OBeautifulCode.Serialization
         public ICompressor Compressor { get; }
 
         /// <inheritdoc />
-        public SerializationConfigurationType SerializationConfigurationType => this.Serializer.SerializationConfigurationType;
+        public SerializationConfigurationType SerializationConfigurationType => this.BackingSerializer.SerializationConfigurationType;
 
         /// <inheritdoc />
-        public SerializationKind SerializationKind => this.Serializer.SerializationKind;
+        public SerializationKind SerializationKind => this.BackingSerializer.SerializationKind;
 
         /// <inheritdoc />
         public SerializerRepresentation SerializerRepresentation { get; }
@@ -63,7 +63,7 @@ namespace OBeautifulCode.Serialization
         public byte[] SerializeToBytes(
             object objectToSerialize)
         {
-            var bytes = this.Serializer.SerializeToBytes(objectToSerialize);
+            var bytes = this.BackingSerializer.SerializeToBytes(objectToSerialize);
 
             var result = this.Compressor.CompressBytes(bytes);
 
@@ -110,7 +110,7 @@ namespace OBeautifulCode.Serialization
         {
             var bytes = this.Compressor.DecompressBytes(serializedBytes);
 
-            var result = this.Serializer.Deserialize<T>(bytes);
+            var result = this.BackingSerializer.Deserialize<T>(bytes);
 
             return result;
         }
@@ -122,7 +122,7 @@ namespace OBeautifulCode.Serialization
         {
             var bytes = this.Compressor.DecompressBytes(serializedBytes);
 
-            var result = this.Serializer.Deserialize(bytes, type);
+            var result = this.BackingSerializer.Deserialize(bytes, type);
 
             return result;
         }

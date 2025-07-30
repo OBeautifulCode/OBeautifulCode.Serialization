@@ -25,10 +25,9 @@ namespace OBeautifulCode.Serialization.Test
         public static void ToDescribedSerializationWithSpecificFactory___Null_serializer_representation___Throws()
         {
             // Arrange
-            Action action = () => DomainExtensions.ToDescribedSerializationUsingSpecificFactory(
-                A.Dummy<string>(),
+            Action action = () => A.Dummy<string>().ToDescribedSerializationUsingSpecificFactory(
                 null,
-                SerializerFactory.Instance,
+                SerializerFactories.Standard,
                 A.Dummy<SerializationFormat>());
 
             // Act
@@ -44,8 +43,7 @@ namespace OBeautifulCode.Serialization.Test
         public static void ToDescribedSerializationUsingSpecificFactory___Null_serializer_factory___Throws()
         {
             // Arrange
-            Action action = () => DomainExtensions.ToDescribedSerializationUsingSpecificFactory(
-                A.Dummy<string>(),
+            Action action = () => A.Dummy<string>().ToDescribedSerializationUsingSpecificFactory(
                 A.Dummy<SerializerRepresentation>(),
                 null,
                 A.Dummy<SerializationFormat>());
@@ -69,7 +67,7 @@ namespace OBeautifulCode.Serialization.Test
             // Act
             var describedSerialization = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificFactory(
                 serializerRepresentation,
-                SerializerFactory.Instance,
+                SerializerFactories.Standard,
                 SerializationFormat.String);
 
             // Assert
@@ -90,7 +88,7 @@ namespace OBeautifulCode.Serialization.Test
             // Act
             var describedSerialization = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificFactory(
                 serializerRepresentation,
-                SerializerFactory.Instance,
+                SerializerFactories.Standard,
                 SerializationFormat.String);
 
             // Assert
@@ -109,10 +107,9 @@ namespace OBeautifulCode.Serialization.Test
             var serializerRepresentation = new SerializerRepresentation(SerializationKind.Json, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
 
             // Act
-            var describedSerialization = DomainExtensions.ToDescribedSerializationUsingSpecificFactory(
-                objectToPackageIntoDescribedSerialization,
+            var describedSerialization = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificFactory(
                 serializerRepresentation,
-                SerializerFactory.Instance,
+                SerializerFactories.Standard,
                 SerializationFormat.String);
 
             // Assert
@@ -136,9 +133,7 @@ namespace OBeautifulCode.Serialization.Test
                 payload);
 
             // Act
-            var actual = DomainExtensions.DeserializePayloadUsingSpecificFactory(
-                describedSerialization,
-                SerializerFactory.Instance);
+            var actual = describedSerialization.DeserializePayloadUsingSpecificFactory(SerializerFactories.Standard);
 
             // Assert
             actual.Should().Be(expected);
@@ -157,9 +152,7 @@ namespace OBeautifulCode.Serialization.Test
                 payload);
 
             // Act
-            var actual = DomainExtensions.DeserializePayloadUsingSpecificFactory(
-                describedSerialization,
-                SerializerFactory.Instance);
+            var actual = describedSerialization.DeserializePayloadUsingSpecificFactory(SerializerFactories.Standard);
 
             // Assert
             actual.Should().NotBeNull();

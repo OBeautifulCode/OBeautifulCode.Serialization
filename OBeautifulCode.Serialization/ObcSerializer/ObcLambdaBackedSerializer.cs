@@ -27,7 +27,7 @@ namespace OBeautifulCode.Serialization
         /// <param name="deserializeString">Deserialize object from string.</param>
         /// <param name="serializeBytes">Serialize object to bytes.</param>
         /// <param name="deserializeBytes">Deserialize object from bytes.</param>
-        /// <param name="id">Optional identifier to be stored in metadata of <see cref="SerializerRepresentation"/>.  DEFAULT is null.</param>
+        /// <param name="id">OPTIONAL identifier to be stored in metadata of <see cref="SerializerRepresentation"/>.  DEFAULT is null.</param>
         public ObcLambdaBackedSerializer(
             Func<object, string> serializeString,
             Func<string, Type, object> deserializeString,

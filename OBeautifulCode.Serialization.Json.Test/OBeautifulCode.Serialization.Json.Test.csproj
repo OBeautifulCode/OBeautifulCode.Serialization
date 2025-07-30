@@ -143,6 +143,7 @@
     <Compile Include="Converters\SystemCollectionTest.cs" />
     <Compile Include="Converters\TypeToRegisterForJsonTest.cs" />
     <Compile Include="ObcJsonSerializer\AnonymousObjectsTest.cs" />
+    <Compile Include="ObcJsonSerializer\JsonSerializerFactoryTest.cs" />
     <Compile Include="Properties\ProjectInfo.cs" />
     <Compile Include="Z-Legacy\Animal.cs" />
     <Compile Include="Z-Legacy\CollectionsWorkDirectlyWithRegistrationOfGenericTypes.cs" />

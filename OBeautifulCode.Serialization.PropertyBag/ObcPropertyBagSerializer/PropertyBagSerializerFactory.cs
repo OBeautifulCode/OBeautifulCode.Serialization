@@ -7,11 +7,9 @@
 namespace OBeautifulCode.Serialization.PropertyBag
 {
     using System;
-
     using OBeautifulCode.Compression;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Type;
-
     using static System.FormattableString;
 
     /// <summary>
@@ -19,16 +17,6 @@ namespace OBeautifulCode.Serialization.PropertyBag
     /// </summary>
     public sealed class PropertyBagSerializerFactory : SerializerFactoryBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PropertyBagSerializerFactory"/> class.
-        /// </summary>
-        /// <param name="compressorFactory">Optional compressor factory to use.  DEFAULT is to use OBeautifulCode.Compression.Recipes.CompressorFactory.Instance.</param>
-        public PropertyBagSerializerFactory(
-            ICompressorFactory compressorFactory = null)
-            : base(compressorFactory)
-        {
-        }
-
         /// <inheritdoc />
         public override ISerializer BuildSerializer(
             SerializerRepresentation serializerRepresentation,
@@ -39,21 +27,24 @@ namespace OBeautifulCode.Serialization.PropertyBag
                 throw new ArgumentNullException(nameof(serializerRepresentation));
             }
 
+            if (serializerRepresentation.CompressionKind != CompressionKind.None)
+            {
+                throw new ArgumentOutOfRangeException(nameof(serializerRepresentation), Invariant($"{nameof(serializerRepresentation)}.{nameof(SerializerRepresentation.CompressionKind)} is not {nameof(CompressionKind)}.{nameof(CompressionKind.None)}.  Consider wrapping this factory in a {nameof(CompressIfConfiguredSerializerFactory)} if compression is required."));
+            }
+
             // ReSharper disable once RedundantArgumentDefaultValue
             var configurationType = serializerRepresentation.SerializationConfigType?.ResolveFromLoadedTypes(assemblyVersionMatchStrategy, throwIfCannotResolve: true);
 
-            ISerializer serializer;
+            ISerializer result;
 
             switch (serializerRepresentation.SerializationKind)
             {
                 case SerializationKind.PropertyBag:
-                    serializer = new ObcPropertyBagSerializer(configurationType?.ToPropertyBagSerializationConfigurationType());
+                    result = new ObcPropertyBagSerializer(configurationType?.ToPropertyBagSerializationConfigurationType());
                     break;
                 default:
                     throw new NotSupportedException(Invariant($"{nameof(serializerRepresentation)} from enumeration {nameof(SerializationKind)} of {serializerRepresentation.SerializationKind} is not supported."));
             }
-
-            var result = this.WrapInCompressingSerializerIfAppropriate(serializer, serializerRepresentation.CompressionKind);
 
             return result;
         }

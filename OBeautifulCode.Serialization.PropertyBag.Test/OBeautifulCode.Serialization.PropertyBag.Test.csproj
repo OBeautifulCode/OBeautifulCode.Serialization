@@ -138,6 +138,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringReadableOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringXmlDocOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
+    <Compile Include="ObcPropertyBagSerializer\PropertyBagSerializerFactoryTest.cs" />
     <Compile Include="Properties\ProjectInfo.cs" />
     <Compile Include="Z-Legacy\ObcPropertyBagSerializerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -176,6 +177,7 @@
   <ItemGroup>
     <Content Include=".analyzers\dictionary.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

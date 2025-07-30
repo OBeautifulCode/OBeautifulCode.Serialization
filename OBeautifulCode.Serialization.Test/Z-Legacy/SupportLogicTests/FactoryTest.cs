@@ -27,8 +27,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void BuildSerializer___Null_description___Throws()
         {
             // Arrange
-            Action action = () => SerializerFactory.Instance.BuildSerializer(null);
-            Action jsonAction = () => new JsonSerializerFactory(CompressorFactory.Instance).BuildSerializer(null);
+            Action action = () => SerializerFactories.Standard.BuildSerializer(null);
+            Action jsonAction = () => new JsonSerializerFactory().BuildSerializer(null);
 
             // Act
             var exception = Record.Exception(action);
@@ -53,8 +53,8 @@ namespace OBeautifulCode.Serialization.Test
                 CompressionKind.None);
 
             // Act
-            var serializer = SerializerFactory.Instance.BuildSerializer(serializerRepresentation);
-            var jsonSerializer = new JsonSerializerFactory(CompressorFactory.Instance).BuildSerializer(serializerRepresentation);
+            var serializer = SerializerFactories.Standard.BuildSerializer(serializerRepresentation);
+            var jsonSerializer = new JsonSerializerFactory().BuildSerializer(serializerRepresentation);
 
             // Assert
             serializer.Should().NotBeNull();
@@ -67,8 +67,8 @@ namespace OBeautifulCode.Serialization.Test
         public static void BuildSerializer___Bson___Null_description___Throws()
         {
             // Arrange
-            Action action = () => SerializerFactory.Instance.BuildSerializer(null);
-            Action bsonAction = () => new BsonSerializerFactory(CompressorFactory.Instance).BuildSerializer(null);
+            Action action = () => SerializerFactories.Standard.BuildSerializer(null);
+            Action bsonAction = () => new BsonSerializerFactory().BuildSerializer(null);
 
             // Act
             var exception = Record.Exception(action);
@@ -94,8 +94,8 @@ namespace OBeautifulCode.Serialization.Test
                 expectedConfigType.ToRepresentation());
 
             // Act
-            var serializer = SerializerFactory.Instance.BuildSerializer(serializerRepresentation);
-            var bsonSerializer = new BsonSerializerFactory(CompressorFactory.Instance).BuildSerializer(serializerRepresentation);
+            var serializer = SerializerFactories.Standard.BuildSerializer(serializerRepresentation);
+            var bsonSerializer = new BsonSerializerFactory().BuildSerializer(serializerRepresentation);
 
             // Assert
             serializer.Should().NotBeNull();
@@ -117,7 +117,7 @@ namespace OBeautifulCode.Serialization.Test
             var serializerRepresentation = new SerializerRepresentation(SerializationKind.Json, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
 
             // Act
-            var describedSerialization = objectToPackageIntoDescribedSerialization.ToDescribedSerialization(serializerRepresentation, SerializationFormat.String);
+            var describedSerialization = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificFactory(serializerRepresentation, SerializerFactories.Standard, SerializationFormat.String);
 
             // Assert
             describedSerialization.Should().NotBeNull();
@@ -140,7 +140,7 @@ namespace OBeautifulCode.Serialization.Test
                 payload);
 
             // Act
-            var actual = describedSerialization.DeserializePayload();
+            var actual = describedSerialization.DeserializePayloadUsingSpecificFactory(SerializerFactories.Standard);
 
             // Assert
             actual.Should().NotBeNull();
@@ -160,7 +160,7 @@ namespace OBeautifulCode.Serialization.Test
                 payload);
 
             // Act
-            var actual = describedSerialization.DeserializePayload<string>();
+            var actual = describedSerialization.DeserializePayloadUsingSpecificFactory<string>(SerializerFactories.Standard);
 
             // Assert
             actual.Should().NotBeNull();
@@ -176,11 +176,11 @@ namespace OBeautifulCode.Serialization.Test
             var serializerRepresentationBson = new SerializerRepresentation(SerializationKind.Bson);
 
             // Act
-            var serializedJson = input.ToDescribedSerialization(serializerRepresentationJson, SerializationFormat.String);
-            dynamic deserializedJson = serializedJson.DeserializePayload();
+            var serializedJson = input.ToDescribedSerializationUsingSpecificFactory(serializerRepresentationJson, SerializerFactories.Standard, SerializationFormat.String);
+            dynamic deserializedJson = serializedJson.DeserializePayloadUsingSpecificFactory(SerializerFactories.Standard);
 
-            var serializedBson = input.ToDescribedSerialization(serializerRepresentationBson, SerializationFormat.String);
-            dynamic deserializedBson = serializedBson.DeserializePayload();
+            var serializedBson = input.ToDescribedSerializationUsingSpecificFactory(serializerRepresentationBson, SerializerFactories.Standard, SerializationFormat.String);
+            dynamic deserializedBson = serializedBson.DeserializePayloadUsingSpecificFactory(SerializerFactories.Standard);
 
             // Assert
             ((string)deserializedJson.item).Should().Be(input.Item);

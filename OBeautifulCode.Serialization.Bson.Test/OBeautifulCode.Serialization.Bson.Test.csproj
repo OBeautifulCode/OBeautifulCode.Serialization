@@ -141,6 +141,7 @@
     <Compile Include=".recipes\OBeautifulCode.Type\ToStringXmlDocOptions.cs" />
     <Compile Include=".recipes\OBeautifulCode.Type\TypeExtensions.cs" />
     <Compile Include="BsonSerializers\NullableBsonSerializerTest.cs" />
+    <Compile Include="ObcBsonSerializer\BsonSerializerFactoryTest.cs" />
     <Compile Include="ObcBsonSerializer\ObcBsonSerializerTest.cs" />
     <Compile Include="Properties\ProjectInfo.cs" />
     <Compile Include="SerializationConfiguration\ObcBsonDiscriminatorConventionTest.cs" />
