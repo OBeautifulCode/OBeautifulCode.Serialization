@@ -138,6 +138,8 @@
     <Compile Include="ObcSerializer\ObcLambdaBackedStringSerializer.cs" />
     <Compile Include="ObcSerializer\ObcStringSerializerBackedSerializer.cs" />
     <Compile Include="Properties\ProjectInfo.cs" />
+    <Compile Include="SerializerFactory\NullSerializerFactory.cs" />
+    <Compile Include="SerializerFactory\AlwaysThrowingSerializerFactory.cs" />
     <Compile Include="SerializerFactory\CachingSerializerFactory.cs" />
     <Compile Include="SerializerFactory\CompressIfConfiguredSerializerFactory.cs" />
     <Compile Include="SerializerFactory\SimplifyingSerializerFactory.cs" />

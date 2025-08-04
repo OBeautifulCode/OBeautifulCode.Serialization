@@ -216,6 +216,8 @@
       <DependentUpon>StringDescribedSerializationTest.cs</DependentUpon>
     </Compile>
     <Compile Include="SerializationConfiguration\SerializationConfigurationBase\SerializationConfigurationBaseTest.cs" />
+    <Compile Include="SerializerFactory\NullSerializerFactoryTest.cs" />
+    <Compile Include="SerializerFactory\AlwaysThrowingSerializerFactoryTest.cs" />
     <Compile Include="SerializerFactory\SimplifyingSerializerFactoryTest.cs" />
     <Compile Include="SerializerFactory\CompressIfConfiguredSerializerFactoryTest.cs" />
     <Compile Include="SerializerFactory\TestSerializerFactory.cs" />
