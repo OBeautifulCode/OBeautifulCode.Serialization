@@ -107,6 +107,7 @@
     <Compile Include="Models\DescribedSerialization\NullDescribedSerialization.designer.cs">
       <DependentUpon>NullDescribedSerialization.cs</DependentUpon>
     </Compile>
+    <Compile Include="ObcSerializer\ObcNullSerializer.cs" />
     <Compile Include="ObcSerializer\ObcAlwaysThrowingSerializer.cs" />
     <Compile Include="ObcSerializer\ObcSimplifyingSerializer.cs" />
     <Compile Include="CustomSerializers\ObcVersionStringSerializer.cs" />
