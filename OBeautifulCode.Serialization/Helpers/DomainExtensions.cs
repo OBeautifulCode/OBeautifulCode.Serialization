@@ -47,9 +47,14 @@ namespace OBeautifulCode.Serialization
         /// <typeparam name="T">Type of object to serialize.</typeparam>
         /// <param name="objectToPackageIntoDescribedSerializationBase">Object to serialize.</param>
         /// <param name="serializerRepresentation">Representation of the serializer to use.</param>
+        /// <param name="serializerRepresentationSelectionStrategy">
+        /// The strategy to use to select the <see cref="SerializerRepresentation"/> for the result.
+        /// In practice the specified representation and the representation of the serializer built by the factory
+        /// are often the same.
+        /// </param>
         /// <param name="serializerFactory">Implementation of <see cref="ISerializerFactory" /> that can resolve the serializer.</param>
         /// <param name="serializationFormat">The serialization format to use.</param>
-        /// <param name="assemblyVersionMatchStrategy">Optional assembly version match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="VersionMatchStrategy.AnySingleVersion" />.</param>
+        /// <param name="assemblyVersionMatchStrategy">OPTIONAL assembly version match strategy for resolving the type of object as well as the configuration type if any; DEFAULT is <see cref="VersionMatchStrategy.AnySingleVersion" />.</param>
         /// <returns>
         /// Self described serialization.
         /// </returns>
@@ -57,6 +62,7 @@ namespace OBeautifulCode.Serialization
         public static DescribedSerializationBase ToDescribedSerializationUsingSpecificFactory<T>(
             this T objectToPackageIntoDescribedSerializationBase,
             SerializerRepresentation serializerRepresentation,
+            SerializerRepresentationSelectionStrategy serializerRepresentationSelectionStrategy,
             ISerializerFactory serializerFactory,
             SerializationFormat serializationFormat,
             VersionMatchStrategy assemblyVersionMatchStrategy = VersionMatchStrategy.AnySingleVersion)
@@ -64,6 +70,11 @@ namespace OBeautifulCode.Serialization
             if (serializerRepresentation == null)
             {
                 throw new ArgumentNullException(nameof(serializerRepresentation));
+            }
+
+            if (serializerRepresentationSelectionStrategy == SerializerRepresentationSelectionStrategy.Unknown)
+            {
+                throw new ArgumentOutOfRangeException(Invariant($"'{nameof(serializerRepresentationSelectionStrategy)}' == '{serializerRepresentationSelectionStrategy}'"), (Exception)null);
             }
 
             if (serializerFactory == null)
@@ -78,9 +89,22 @@ namespace OBeautifulCode.Serialization
 
             var serializer = serializerFactory.BuildSerializer(serializerRepresentation, assemblyVersionMatchStrategy);
 
-            var ret = objectToPackageIntoDescribedSerializationBase.ToDescribedSerializationUsingSpecificSerializer(serializer, serializationFormat);
+            var result = objectToPackageIntoDescribedSerializationBase.ToDescribedSerializationUsingSpecificSerializer(serializer, serializationFormat);
 
-            return ret;
+            if (serializerRepresentationSelectionStrategy == SerializerRepresentationSelectionStrategy.UseRepresentationOfSerializerBuiltByFactory)
+            {
+                // no-op
+            }
+            else if (serializerRepresentationSelectionStrategy == SerializerRepresentationSelectionStrategy.UseSpecifiedRepresentation)
+            {
+                result = result.DeepCloneWithSerializerRepresentation(serializerRepresentation);
+            }
+            else
+            {
+                throw new NotSupportedException(Invariant($"This {nameof(SerializerRepresentationSelectionStrategy)} is not supported: {serializerRepresentationSelectionStrategy}."));
+            }
+
+            return result;
         }
 
         /// <summary>

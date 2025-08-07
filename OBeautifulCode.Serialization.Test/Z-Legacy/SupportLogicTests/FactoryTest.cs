@@ -117,7 +117,11 @@ namespace OBeautifulCode.Serialization.Test
             var serializerRepresentation = new SerializerRepresentation(SerializationKind.Json, typeof(NullJsonSerializationConfiguration).ToRepresentation(), CompressionKind.None);
 
             // Act
-            var describedSerialization = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificFactory(serializerRepresentation, SerializerFactories.Standard, SerializationFormat.String);
+            var describedSerialization = objectToPackageIntoDescribedSerialization.ToDescribedSerializationUsingSpecificFactory(
+                serializerRepresentation,
+                A.Dummy<SerializerRepresentationSelectionStrategy>(),
+                SerializerFactories.Standard,
+                SerializationFormat.String);
 
             // Assert
             describedSerialization.Should().NotBeNull();
@@ -176,10 +180,18 @@ namespace OBeautifulCode.Serialization.Test
             var serializerRepresentationBson = new SerializerRepresentation(SerializationKind.Bson);
 
             // Act
-            var serializedJson = input.ToDescribedSerializationUsingSpecificFactory(serializerRepresentationJson, SerializerFactories.Standard, SerializationFormat.String);
+            var serializedJson = input.ToDescribedSerializationUsingSpecificFactory(
+                serializerRepresentationJson,
+                A.Dummy<SerializerRepresentationSelectionStrategy>(),
+                SerializerFactories.Standard,
+                SerializationFormat.String);
             dynamic deserializedJson = serializedJson.DeserializePayloadUsingSpecificFactory(SerializerFactories.Standard);
 
-            var serializedBson = input.ToDescribedSerializationUsingSpecificFactory(serializerRepresentationBson, SerializerFactories.Standard, SerializationFormat.String);
+            var serializedBson = input.ToDescribedSerializationUsingSpecificFactory(
+                serializerRepresentationBson,
+                A.Dummy<SerializerRepresentationSelectionStrategy>(),
+                SerializerFactories.Standard,
+                SerializationFormat.String);
             dynamic deserializedBson = serializedBson.DeserializePayloadUsingSpecificFactory(SerializerFactories.Standard);
 
             // Assert
