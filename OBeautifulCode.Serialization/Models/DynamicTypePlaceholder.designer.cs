@@ -101,5 +101,73 @@ namespace OBeautifulCode.Serialization
 
             return result;
         }
+
+        /// <inheritdoc />
+        public IReadOnlyList<ValidationFailure> GetValidationFailures(ValidationOptions options = null, PropertyPathTracker propertyPathTracker = null)
+        {
+            options = options ?? new ValidationOptions();
+            propertyPathTracker = propertyPathTracker ?? new PropertyPathTracker();
+
+            switch (options.ValidateUntil)
+            {
+                case ValidateUntil.FullyTraversed:
+                case ValidateUntil.FirstInvalidObject:
+                    break;
+                default:
+                    throw new NotSupportedException(Invariant($"This {nameof(ValidateUntil)} is not supported: {options.ValidateUntil}."));
+            }
+
+            switch (options.ValidationScope)
+            {
+                case ValidationScope.SelfAndProperties:
+                case ValidationScope.SelfOnly:
+                    break;
+                default:
+                    throw new NotSupportedException(Invariant($"This {nameof(ValidationScope)} is not supported: {options.ValidationScope}."));
+            }
+
+            var result = new List<ValidationFailure>();
+
+            void ValidateSelf()
+            {
+                var segmentSeparator = propertyPathTracker.HasSegments ? propertyPathTracker.SegmentSeparator : string.Empty;
+
+                var selfValidationFailures = (this.GetSelfValidationFailures() ?? new SelfValidationFailure[0])
+                    .Where(_ => _ != null)
+                    .Select(_ =>
+                    {
+                        var propertyNames = _.PropertyNames.Count > 1
+                            ? Invariant($"({string.Join("|", _.PropertyNames)})")
+                            : _.PropertyNames.Single();
+
+                        return new ValidationFailure(
+                            this.GetType().ToStringReadable(),
+                            Invariant($"{propertyPathTracker.FullPath}{segmentSeparator}{propertyNames}"),
+                            _.Message);
+                    })
+                    .ToList();
+
+                result.AddRange(selfValidationFailures);
+            }
+
+            if ((options.ValidationOrder == ValidationOrder.PropertiesThenSelf) || (options.ValidationOrder == ValidationOrder.SelfThenProperties))
+            {
+                ValidateSelf();
+            }
+            else
+            {
+                throw new NotSupportedException(Invariant($"This {nameof(ValidationOrder)} is not supported: {options.ValidationOrder}."));
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<SelfValidationFailure> GetSelfValidationFailures()
+        {
+            var result = new SelfValidationFailure[0];
+
+            return result;
+        }
     }
 }

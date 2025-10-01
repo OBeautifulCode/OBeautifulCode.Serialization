@@ -8,11 +8,9 @@ namespace OBeautifulCode.Serialization
 {
     using System;
     using System.Collections.Generic;
-
     using OBeautifulCode.Compression;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Type;
-
     using static System.FormattableString;
 
     /// <summary>

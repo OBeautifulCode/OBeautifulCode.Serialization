@@ -46,10 +46,6 @@ namespace OBeautifulCode.Serialization.Test
 
                 // Purposefully not testing this; many of the methods needed to test roundtrip serialization (like equality) throw NotImplementedException.
                 // typeof(FakeModel<Version>),
-
-                // from OBC.Representation
-                typeof(ConstantExpressionRepresentation<string>),
-                typeof(ConstantExpressionRepresentation<DateTime>),
             };
 
             var modelTypes = AssemblyLoader
