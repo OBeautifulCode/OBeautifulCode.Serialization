@@ -86,7 +86,7 @@ namespace OBeautifulCode.Serialization
         /// <see cref="BinaryDescribedSerialization"/> will pass-through the payload.
         /// </remarks>
         /// <returns>
-        /// The serialized payload encoded as a string.
+        /// The serialized payload encoded as a byte array.
         /// </returns>
         public abstract byte[] GetSerializedPayloadAsEncodedBytes();
     }

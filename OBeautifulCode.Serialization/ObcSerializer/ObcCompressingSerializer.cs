@@ -37,7 +37,10 @@ namespace OBeautifulCode.Serialization
 
             this.BackingSerializer = backingSerializer;
             this.Compressor = compressor;
-            this.SerializerRepresentation = new SerializerRepresentation(backingSerializer.SerializationKind, backingSerializer.SerializationConfigurationType?.ConcreteSerializationConfigurationDerivativeType.ToRepresentation(), compressor.CompressionKind);
+            this.SerializerRepresentation = new SerializerRepresentation(
+                backingSerializer.SerializationKind,
+                backingSerializer.SerializationConfigurationType?.ConcreteSerializationConfigurationDerivativeType.ToRepresentation(),
+                compressor.CompressionKind);
         }
 
         /// <summary>
