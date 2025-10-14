@@ -103,30 +103,44 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<ValidationFailure> GetValidationFailures(ValidationOptions options = null, PropertyPathTracker propertyPathTracker = null)
+        public IReadOnlyList<ValidationFailure> GetValidationFailures(
+            ValidationOptions options = null,
+            PropertyPathTracker propertyPathTracker = null)
         {
             options = options ?? new ValidationOptions();
             propertyPathTracker = propertyPathTracker ?? new PropertyPathTracker();
 
+            bool stopOnFirstObjectWithFailures;
             switch (options.ValidateUntil)
             {
                 case ValidateUntil.FullyTraversed:
+                    stopOnFirstObjectWithFailures = false;
+                    break;
                 case ValidateUntil.FirstInvalidObject:
+                    stopOnFirstObjectWithFailures = true;
                     break;
                 default:
                     throw new NotSupportedException(Invariant($"This {nameof(ValidateUntil)} is not supported: {options.ValidateUntil}."));
             }
 
+            bool validateProperties;
             switch (options.ValidationScope)
             {
                 case ValidationScope.SelfAndProperties:
+                    validateProperties = true;
+                    break;
                 case ValidationScope.SelfOnly:
+                    validateProperties = false;
                     break;
                 default:
                     throw new NotSupportedException(Invariant($"This {nameof(ValidationScope)} is not supported: {options.ValidationScope}."));
             }
 
             var result = new List<ValidationFailure>();
+
+            void ValidateProperties()
+            {
+            }
 
             void ValidateSelf()
             {
@@ -150,9 +164,33 @@ namespace OBeautifulCode.Serialization
                 result.AddRange(selfValidationFailures);
             }
 
-            if ((options.ValidationOrder == ValidationOrder.PropertiesThenSelf) || (options.ValidationOrder == ValidationOrder.SelfThenProperties))
+            if (options.ValidationOrder == ValidationOrder.PropertiesThenSelf)
+            {
+                if (validateProperties)
+                {
+                    ValidateProperties();
+                }
+
+                if (stopOnFirstObjectWithFailures && result.Any())
+                {
+                    return result;
+                }
+
+                ValidateSelf();
+            }
+            else if (options.ValidationOrder == ValidationOrder.SelfThenProperties)
             {
                 ValidateSelf();
+
+                if (stopOnFirstObjectWithFailures && result.Any())
+                {
+                    return result;
+                }
+
+                if (validateProperties)
+                {
+                    ValidateProperties();
+                }
             }
             else
             {

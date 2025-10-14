@@ -247,7 +247,9 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<ValidationFailure> GetValidationFailures(ValidationOptions options = null, PropertyPathTracker propertyPathTracker = null)
+        public IReadOnlyList<ValidationFailure> GetValidationFailures(
+            ValidationOptions options = null,
+            PropertyPathTracker propertyPathTracker = null)
         {
             options = options ?? new ValidationOptions();
             propertyPathTracker = propertyPathTracker ?? new PropertyPathTracker();
@@ -282,22 +284,34 @@ namespace OBeautifulCode.Serialization
 
             void ValidateProperties()
             {
-                if (this.SerializationConfigType != null)
+                IReadOnlyList<ValidationFailure> localValidationFailures;
+
+                localValidationFailures = ValidatableExtensions.GetValidationFailures(this.SerializationKind, options, propertyPathTracker, nameof(this.SerializationKind));
+                result.AddRange(localValidationFailures);
+                if (stopOnFirstObjectWithFailures && result.Any())
                 {
-                    if ((object)this.SerializationConfigType is IValidatable validatable)
-                    {
-                        using (propertyPathTracker.Push(nameof(this.SerializationConfigType)))
-                        {
-                            var thisPropertyFailures = validatable.GetValidationFailures(options, propertyPathTracker);
+                    return;
+                }
 
-                            result.AddRange(thisPropertyFailures);
-                        }
+                localValidationFailures = ValidatableExtensions.GetValidationFailures(this.SerializationConfigType, options, propertyPathTracker, nameof(this.SerializationConfigType));
+                result.AddRange(localValidationFailures);
+                if (stopOnFirstObjectWithFailures && result.Any())
+                {
+                    return;
+                }
 
-                        if (stopOnFirstObjectWithFailures && result.Any())
-                        {
-                            return;
-                        }
-                    }
+                localValidationFailures = ValidatableExtensions.GetValidationFailures(this.CompressionKind, options, propertyPathTracker, nameof(this.CompressionKind));
+                result.AddRange(localValidationFailures);
+                if (stopOnFirstObjectWithFailures && result.Any())
+                {
+                    return;
+                }
+
+                localValidationFailures = ValidatableExtensions.GetValidationFailures(this.Metadata, options, propertyPathTracker, nameof(this.Metadata));
+                result.AddRange(localValidationFailures);
+                if (stopOnFirstObjectWithFailures && result.Any())
+                {
+                    return;
                 }
             }
 

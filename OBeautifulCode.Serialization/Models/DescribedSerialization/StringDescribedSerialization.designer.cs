@@ -200,7 +200,9 @@ namespace OBeautifulCode.Serialization
         }
 
         /// <inheritdoc />
-        public override IReadOnlyList<ValidationFailure> GetValidationFailures(ValidationOptions options = null, PropertyPathTracker propertyPathTracker = null)
+        public override IReadOnlyList<ValidationFailure> GetValidationFailures(
+            ValidationOptions options = null,
+            PropertyPathTracker propertyPathTracker = null)
         {
             options = options ?? new ValidationOptions();
             propertyPathTracker = propertyPathTracker ?? new PropertyPathTracker();
@@ -235,40 +237,27 @@ namespace OBeautifulCode.Serialization
 
             void ValidateProperties()
             {
-                if (this.PayloadTypeRepresentation != null)
+                IReadOnlyList<ValidationFailure> localValidationFailures;
+
+                localValidationFailures = ValidatableExtensions.GetValidationFailures(this.PayloadTypeRepresentation, options, propertyPathTracker, nameof(this.PayloadTypeRepresentation));
+                result.AddRange(localValidationFailures);
+                if (stopOnFirstObjectWithFailures && result.Any())
                 {
-                    if ((object)this.PayloadTypeRepresentation is IValidatable validatable)
-                    {
-                        using (propertyPathTracker.Push(nameof(this.PayloadTypeRepresentation)))
-                        {
-                            var thisPropertyFailures = validatable.GetValidationFailures(options, propertyPathTracker);
-
-                            result.AddRange(thisPropertyFailures);
-                        }
-
-                        if (stopOnFirstObjectWithFailures && result.Any())
-                        {
-                            return;
-                        }
-                    }
+                    return;
                 }
 
-                if (this.SerializerRepresentation != null)
+                localValidationFailures = ValidatableExtensions.GetValidationFailures(this.SerializerRepresentation, options, propertyPathTracker, nameof(this.SerializerRepresentation));
+                result.AddRange(localValidationFailures);
+                if (stopOnFirstObjectWithFailures && result.Any())
                 {
-                    if ((object)this.SerializerRepresentation is IValidatable validatable)
-                    {
-                        using (propertyPathTracker.Push(nameof(this.SerializerRepresentation)))
-                        {
-                            var thisPropertyFailures = validatable.GetValidationFailures(options, propertyPathTracker);
+                    return;
+                }
 
-                            result.AddRange(thisPropertyFailures);
-                        }
-
-                        if (stopOnFirstObjectWithFailures && result.Any())
-                        {
-                            return;
-                        }
-                    }
+                localValidationFailures = ValidatableExtensions.GetValidationFailures(this.SerializedPayload, options, propertyPathTracker, nameof(this.SerializedPayload));
+                result.AddRange(localValidationFailures);
+                if (stopOnFirstObjectWithFailures && result.Any())
+                {
+                    return;
                 }
             }
 
