@@ -245,6 +245,7 @@
     <Compile Include="Z-Legacy\ObcSerializer\ObcLambdaBackedSerializerTest.cs" />
     <Compile Include="SharedExtensions.cs" />
     <Compile Include="Z-Legacy\SpecificModels\ITopInterface.cs" />
+    <Compile Include="Z-Legacy\SpecificModels\ModelWithEnumerableOfEnumerableInterfaces.cs" />
     <Compile Include="Z-Legacy\SpecificModels\ModelWithNullableProperties.cs" />
     <Compile Include="Z-Legacy\SpecificModels\TestMapping.cs" />
     <Compile Include="Z-Legacy\SpecificModelTests\CannotBeDeserializedGetterOnlyPropertyTest.cs" />

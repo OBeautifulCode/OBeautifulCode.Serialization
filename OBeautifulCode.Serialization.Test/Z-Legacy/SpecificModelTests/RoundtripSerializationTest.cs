@@ -10,15 +10,13 @@ namespace OBeautifulCode.Serialization.Test
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-
     using FakeItEasy;
-
     using FluentAssertions;
-
+    using OBeautifulCode.Equality.Recipes;
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
     using OBeautifulCode.Serialization.Recipes;
-
+    using OBeautifulCode.Type;
     using Xunit;
 
     public static class RoundtripSerializationTest
@@ -500,6 +498,44 @@ namespace OBeautifulCode.Serialization.Test
                 deserialized.NullableDateTime.Should().Be(expected.NullableDateTime);
                 deserialized.NullableGuid.Should().Be(expected.NullableGuid);
                 deserialized.NullableInt.Should().Be(expected.NullableInt);
+            }
+
+            // Act & Assert
+            expected.RoundtripSerializeWithCallbackVerification(ThrowIfObjectsDiffer, bsonConfigType, jsonConfigType);
+        }
+
+        [Fact]
+        public static void RoundtripSerializeDeserialize___Using_ModelWithEnumerableOfEnumerableInterfaces___Works()
+        {
+            // Arrange
+            var bsonConfigType = typeof(TypesToRegisterBsonSerializationConfiguration<ModelWithEnumerableOfEnumerableInterfaces>);
+            var jsonConfigType = typeof(TypesToRegisterJsonSerializationConfiguration<ModelWithEnumerableOfEnumerableInterfaces>);
+
+            var expected = new ModelWithEnumerableOfEnumerableInterfaces
+            {
+                StringToValueCollectionMap = new Dictionary<string, IReadOnlyCollection<IValue>>
+                {
+                    { "some-string-1", new List<IValue> { new SimpleValue<Version>(new Version(1, 2)) } },
+                },
+                ValueCollectionToStringMap = new Dictionary<IReadOnlyCollection<IValue>, string>
+                {
+                    { new List<IValue> { new SimpleValue<decimal>(5) }, "some-string-2"  },
+                },
+                ValueCollectionCollection = new List<IReadOnlyCollection<IValue>>
+                {
+                    new List<IValue>
+                    {
+                        new SimpleValue<string>("some-string-3"),
+                    },
+                },
+            };
+
+            void ThrowIfObjectsDiffer(DescribedSerializationBase describedSerialization, ModelWithEnumerableOfEnumerableInterfaces deserialized)
+            {
+                deserialized.Should().NotBeNull();
+                deserialized.StringToValueCollectionMap.IsReadOnlyDictionaryEqualTo(expected.StringToValueCollectionMap);
+                deserialized.ValueCollectionToStringMap.IsReadOnlyDictionaryEqualTo(expected.ValueCollectionToStringMap);
+                deserialized.ValueCollectionCollection.IsSequenceEqualTo(expected.ValueCollectionCollection);
             }
 
             // Act & Assert

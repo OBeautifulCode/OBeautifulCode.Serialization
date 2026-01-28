@@ -726,6 +726,9 @@ namespace OBeautifulCode.Serialization
                         var elementObjectType = elementObject.GetType();
 
                         this.InternalThrowOnUnregisteredTypeIfAppropriate(originalType, elementObjectType, serializationDirection, elementObject);
+
+                        // The value could itself be enumerable (e.g. IReadOnlyCollection<IReadOnlyCollection<SomeType>>)
+                        this.ValidateEnumerableElementsAreRegisteredIfApplicable(originalType, serializationDirection, elementObjectType, elementObject);
                     }
                 }
             }
@@ -740,6 +743,9 @@ namespace OBeautifulCode.Serialization
                         var keyObjectType = keyObject.GetType();
 
                         this.InternalThrowOnUnregisteredTypeIfAppropriate(originalType, keyObjectType, serializationDirection, keyObject);
+
+                        // The key could itself be enumerable (e.g. IReadOnlyDictionary<IReadOnlyCollection<SomeType>, string>)
+                        this.ValidateEnumerableElementsAreRegisteredIfApplicable(originalType, serializationDirection, keyObjectType, keyObject);
                     }
                 }
 
@@ -750,6 +756,9 @@ namespace OBeautifulCode.Serialization
                         var valueObjectType = valueObject.GetType();
 
                         this.InternalThrowOnUnregisteredTypeIfAppropriate(originalType, valueObjectType, serializationDirection, valueObject);
+
+                        // The value could itself be enumerable (e.g. IReadOnlyDictionary<string, IReadOnlyCollection<SomeType>>)
+                        this.ValidateEnumerableElementsAreRegisteredIfApplicable(originalType, serializationDirection, valueObjectType, valueObject);
                     }
                 }
             }
