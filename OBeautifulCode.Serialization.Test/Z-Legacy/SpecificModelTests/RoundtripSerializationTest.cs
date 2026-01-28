@@ -515,7 +515,7 @@ namespace OBeautifulCode.Serialization.Test
             {
                 StringToValueCollectionMap = new Dictionary<string, IReadOnlyCollection<IValue>>
                 {
-                    { "some-string-1", new List<IValue> { new SimpleValue<Version>(new Version(1, 2)) } },
+                    { "some-string-1", new List<IValue> { new SimpleValue<int>(3) } },
                 },
                 ValueCollectionToStringMap = new Dictionary<IReadOnlyCollection<IValue>, string>
                 {

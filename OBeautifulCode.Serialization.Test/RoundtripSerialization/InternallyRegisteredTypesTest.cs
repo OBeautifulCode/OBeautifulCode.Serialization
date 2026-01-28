@@ -8,16 +8,13 @@ namespace OBeautifulCode.Serialization.Test
 {
     using System;
     using System.Linq;
-
     using OBeautifulCode.AutoFakeItEasy;
     using OBeautifulCode.Reflection.Recipes;
-    using OBeautifulCode.Representation.System;
     using OBeautifulCode.Serialization.Bson;
     using OBeautifulCode.Serialization.Json;
     using OBeautifulCode.Serialization.Recipes;
     using OBeautifulCode.Type;
     using OBeautifulCode.Type.Recipes;
-
     using Xunit;
 
     public static class InternallyRegisteredTypesTest
@@ -40,9 +37,11 @@ namespace OBeautifulCode.Serialization.Test
                 typeof(NullEvent<Version>),
                 typeof(EventBase<Version>),
                 typeof(NullReturningOp<Version>),
-                typeof(ThrowOpExecutionAbortedExceptionOp<Version>),
+                typeof(TestReturningOp<Version>),
                 typeof(ReturningOperationBase<Version>),
                 typeof(NamedValue<Version>),
+                typeof(Range<Version>),
+                typeof(SimpleValue<Version>),
 
                 // Purposefully not testing this; many of the methods needed to test roundtrip serialization (like equality) throw NotImplementedException.
                 // typeof(FakeModel<Version>),
