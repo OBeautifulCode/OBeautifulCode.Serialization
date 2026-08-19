@@ -263,6 +263,8 @@ namespace OBeautifulCode.Serialization
                         continue;
                     }
 
+                    // From the perspective of THIS serialization configuration, the registration details are added at Initialization time.
+                    // But the descendant serialization configuration could have registered it PostInitialization.
                     this.RegisterType(registrationDetails, RegistrationTime.Initialization);
                 }
 
