@@ -9,9 +9,7 @@ namespace OBeautifulCode.Serialization.Bson
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
     using MongoDB.Bson.Serialization;
-
     using static System.FormattableString;
 
     /// <summary>
@@ -33,7 +31,7 @@ namespace OBeautifulCode.Serialization.Bson
             RelatedTypesToInclude relatedTypesToInclude,
             BsonSerializerBuilder bsonSerializerBuilder,
             IReadOnlyCollection<string> propertyNameWhitelist)
-            : this(type, type, type, memberTypesToInclude, relatedTypesToInclude, bsonSerializerBuilder, propertyNameWhitelist)
+            : this(type, new[] { type }, type, memberTypesToInclude, relatedTypesToInclude, bsonSerializerBuilder, propertyNameWhitelist)
         {
         }
 
@@ -41,7 +39,7 @@ namespace OBeautifulCode.Serialization.Bson
         /// Initializes a new instance of the <see cref="TypeToRegisterForBson"/> class, specifying the origin types.
         /// </summary>
         /// <param name="type">The type to register.</param>
-        /// <param name="recursiveOriginType">The type whose recursive processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> resulted in the creation of this <see cref="TypeToRegisterForBson"/>.</param>
+        /// <param name="recursiveOriginTypes">The types whose recursive processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> resulted in the creation of this <see cref="TypeToRegisterForBson"/>.</param>
         /// <param name="directOriginType">The type whose processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> directly resulted in the creation of this <see cref="TypeToRegisterForBson"/>.</param>
         /// <param name="memberTypesToInclude">Specifies which member types of <paramref name="type"/> that should also be registered.</param>
         /// <param name="relatedTypesToInclude">Specifies which types related to <paramref name="type"/> that should also be registered.</param>
@@ -49,22 +47,32 @@ namespace OBeautifulCode.Serialization.Bson
         /// <param name="propertyNameWhitelist">The names of the properties to constrain the registration to.</param>
         public TypeToRegisterForBson(
             Type type,
-            Type recursiveOriginType,
+            IReadOnlyList<Type> recursiveOriginTypes,
             Type directOriginType,
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude,
             BsonSerializerBuilder bsonSerializerBuilder,
             IReadOnlyCollection<string> propertyNameWhitelist)
-            : base(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude)
+            : base(type, recursiveOriginTypes, directOriginType, memberTypesToInclude, relatedTypesToInclude)
         {
             if (type == null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (recursiveOriginType == null)
+            if (recursiveOriginTypes == null)
             {
-                throw new ArgumentNullException(nameof(recursiveOriginType));
+                throw new ArgumentNullException(nameof(recursiveOriginTypes));
+            }
+
+            if (recursiveOriginTypes.Count == 0)
+            {
+                throw new ArgumentException(Invariant($"{nameof(recursiveOriginTypes)} is empty"));
+            }
+
+            if (recursiveOriginTypes.Any(_ => _ == null))
+            {
+                throw new ArgumentException(Invariant($"{nameof(recursiveOriginTypes)} contains a null element"));
             }
 
             if (directOriginType == null)
@@ -137,7 +145,7 @@ namespace OBeautifulCode.Serialization.Bson
             Type type,
             TypeToIncludeOrigin typeToIncludeOrigin)
         {
-            var result = new TypeToRegisterForBson(type, this.RecursiveOriginType, this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.BsonSerializerBuilder, this.PropertyNameWhitelist);
+            var result = new TypeToRegisterForBson(type, this.RecursiveOriginTypes.Concat(new[] { type }).ToList(), this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.BsonSerializerBuilder, this.PropertyNameWhitelist);
 
             return result;
         }

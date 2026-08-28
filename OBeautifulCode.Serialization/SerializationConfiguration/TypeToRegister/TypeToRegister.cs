@@ -7,9 +7,11 @@
 namespace OBeautifulCode.Serialization
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-
+    using System.Linq;
     using OBeautifulCode.Type.Recipes;
+    using static System.FormattableString;
 
     /// <summary>
     /// Specifies a type to register.
@@ -26,7 +28,7 @@ namespace OBeautifulCode.Serialization
             Type type,
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude)
-            : this(type, type, type, memberTypesToInclude, relatedTypesToInclude)
+            : this(type, new[] { type }, type, memberTypesToInclude, relatedTypesToInclude)
         {
         }
 
@@ -34,13 +36,13 @@ namespace OBeautifulCode.Serialization
         /// Initializes a new instance of the <see cref="TypeToRegister"/> class, specifying the origin types.
         /// </summary>
         /// <param name="type">The type to register.</param>
-        /// <param name="recursiveOriginType">The type whose recursive processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> resulted in the creation of this <see cref="TypeToRegister"/>.</param>
+        /// <param name="recursiveOriginTypes">The type whose recursive processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> resulted in the creation of this <see cref="TypeToRegister"/>.</param>
         /// <param name="directOriginType">The type whose processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> directly resulted in the creation of this <see cref="TypeToRegister"/>.</param>
         /// <param name="memberTypesToInclude">Specifies which member types of <paramref name="type"/> that should also be registered.</param>
         /// <param name="relatedTypesToInclude">Specifies which types related to <paramref name="type"/> that should also be registered.</param>
         protected TypeToRegister(
             Type type,
-            Type recursiveOriginType,
+            IReadOnlyList<Type> recursiveOriginTypes,
             Type directOriginType,
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude)
@@ -50,9 +52,19 @@ namespace OBeautifulCode.Serialization
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (recursiveOriginType == null)
+            if (recursiveOriginTypes == null)
             {
-                throw new ArgumentNullException(nameof(recursiveOriginType));
+                throw new ArgumentNullException(nameof(recursiveOriginTypes));
+            }
+
+            if (recursiveOriginTypes.Count == 0)
+            {
+                throw new ArgumentException(Invariant($"{nameof(recursiveOriginTypes)} is empty"));
+            }
+
+            if (recursiveOriginTypes.Any(_ => _ == null))
+            {
+                throw new ArgumentException(Invariant($"{nameof(recursiveOriginTypes)} contains a null element"));
             }
 
             if (directOriginType == null)
@@ -61,7 +73,7 @@ namespace OBeautifulCode.Serialization
             }
 
             this.Type = type;
-            this.RecursiveOriginType = recursiveOriginType;
+            this.RecursiveOriginTypes = recursiveOriginTypes;
             this.DirectOriginType = directOriginType;
             this.MemberTypesToInclude = memberTypesToInclude;
             this.RelatedTypesToInclude = relatedTypesToInclude;
@@ -74,9 +86,9 @@ namespace OBeautifulCode.Serialization
         public Type Type { get; }
 
         /// <summary>
-        /// Gets the type whose recursive processing of <see cref="MemberTypesToInclude"/> and <see cref="RelatedTypesToInclude"/> resulted in the creation of this <see cref="TypeToRegister"/>.
+        /// Gets the types whose recursive processing of <see cref="MemberTypesToInclude"/> and <see cref="RelatedTypesToInclude"/> resulted in the creation of this <see cref="TypeToRegister"/>.
         /// </summary>
-        public Type RecursiveOriginType { get; }
+        public IReadOnlyList<Type> RecursiveOriginTypes { get; }
 
         /// <summary>
         /// Gets the type whose processing of <see cref="MemberTypesToInclude"/> and <see cref="RelatedTypesToInclude"/> directly resulted in the creation of this <see cref="TypeToRegister"/>.
@@ -96,7 +108,7 @@ namespace OBeautifulCode.Serialization
         /// <summary>
         /// Gets a value indicating whether this <see cref="TypeToRegister"/> is it's own origin (was not spawned from some other <see cref="TypeToRegister"/>.
         /// </summary>
-        public bool IsOriginatingType => (this.Type == this.RecursiveOriginType) && (this.Type == this.DirectOriginType);
+        public bool IsOriginatingType => (this.Type == this.RecursiveOriginTypes.First()) && (this.Type == this.DirectOriginType);
 
         /// <summary>
         /// Creates a <see cref="TypeToRegister"/> that is spawned in processing the <see cref="MemberTypesToInclude"/> and <see cref="RelatedTypesToInclude"/> of this instance.

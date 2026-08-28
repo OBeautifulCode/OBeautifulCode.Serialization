@@ -66,7 +66,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
 
             var genericTypeDefinitionTypeToRegister = (TypeToRegisterForPropertyBag)this.RegisteredTypeToRegistrationDetailsMap[genericTypeDefinition].TypeToRegister;
 
-            var result = new TypeToRegisterForPropertyBag(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude, genericTypeDefinitionTypeToRegister.StringSerializerBuilderFunc);
+            var result = new TypeToRegisterForPropertyBag(type, new[] { recursiveOriginType }, directOriginType, memberTypesToInclude, relatedTypesToInclude, genericTypeDefinitionTypeToRegister.StringSerializerBuilderFunc);
 
             return result;
         }

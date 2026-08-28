@@ -7,7 +7,8 @@
 namespace OBeautifulCode.Serialization.PropertyBag
 {
     using System;
-
+    using System.Collections.Generic;
+    using System.Linq;
     using static System.FormattableString;
 
     /// <summary>
@@ -27,7 +28,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude,
             Func<IStringSerializeAndDeserialize> stringSerializerBuilderFunc)
-            : this(type, type, type, memberTypesToInclude, relatedTypesToInclude, stringSerializerBuilderFunc)
+            : this(type, new[] { type }, type, memberTypesToInclude, relatedTypesToInclude, stringSerializerBuilderFunc)
         {
         }
 
@@ -35,28 +36,38 @@ namespace OBeautifulCode.Serialization.PropertyBag
         /// Initializes a new instance of the <see cref="TypeToRegisterForPropertyBag"/> class, specifying the origin types.
         /// </summary>
         /// <param name="type">The type to register.</param>
-        /// <param name="recursiveOriginType">The type whose recursive processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> resulted in the creation of this <see cref="TypeToRegisterForPropertyBag"/>.</param>
+        /// <param name="recursiveOriginTypes">The type whose recursive processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> resulted in the creation of this <see cref="TypeToRegisterForPropertyBag"/>.</param>
         /// <param name="directOriginType">The type whose processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> directly resulted in the creation of this <see cref="TypeToRegisterForPropertyBag"/>.</param>
         /// <param name="memberTypesToInclude">Specifies which member types of <paramref name="type"/> that should also be registered.</param>
         /// <param name="relatedTypesToInclude">Specifies which types related to <paramref name="type"/> that should also be registered.</param>
         /// <param name="stringSerializerBuilderFunc">A func that builds the <see cref="IStringSerializeAndDeserialize"/>.</param>
         public TypeToRegisterForPropertyBag(
             Type type,
-            Type recursiveOriginType,
+            IReadOnlyList<Type> recursiveOriginTypes,
             Type directOriginType,
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude,
             Func<IStringSerializeAndDeserialize> stringSerializerBuilderFunc)
-            : base(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude)
+            : base(type, recursiveOriginTypes, directOriginType, memberTypesToInclude, relatedTypesToInclude)
         {
             if (type == null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (recursiveOriginType == null)
+            if (recursiveOriginTypes == null)
             {
-                throw new ArgumentNullException(nameof(recursiveOriginType));
+                throw new ArgumentNullException(nameof(recursiveOriginTypes));
+            }
+
+            if (recursiveOriginTypes.Count == 0)
+            {
+                throw new ArgumentException(Invariant($"{nameof(recursiveOriginTypes)} is empty"));
+            }
+
+            if (recursiveOriginTypes.Any(_ => _ == null))
+            {
+                throw new ArgumentException(Invariant($"{nameof(recursiveOriginTypes)} contains a null element"));
             }
 
             if (directOriginType == null)
@@ -90,7 +101,7 @@ namespace OBeautifulCode.Serialization.PropertyBag
             Type type,
             TypeToIncludeOrigin typeToIncludeOrigin)
         {
-            var result = new TypeToRegisterForPropertyBag(type, this.RecursiveOriginType, this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.StringSerializerBuilderFunc);
+            var result = new TypeToRegisterForPropertyBag(type, this.RecursiveOriginTypes.Concat(new[] { type }).ToList(), this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.StringSerializerBuilderFunc);
 
             return result;
         }

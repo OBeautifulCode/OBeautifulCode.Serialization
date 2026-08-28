@@ -7,9 +7,9 @@
 namespace OBeautifulCode.Serialization.Json
 {
     using System;
-
+    using System.Collections.Generic;
+    using System.Linq;
     using NewtonsoftFork.Json;
-
     using static System.FormattableString;
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace OBeautifulCode.Serialization.Json
             RelatedTypesToInclude relatedTypesToInclude,
             JsonConverterBuilder jsonConverterBuilder,
             IStringSerializeAndDeserialize keyInDictionaryStringSerializer)
-            : this(type, type, type, memberTypesToInclude, relatedTypesToInclude, jsonConverterBuilder, keyInDictionaryStringSerializer)
+            : this(type, new[] { type }, type, memberTypesToInclude, relatedTypesToInclude, jsonConverterBuilder, keyInDictionaryStringSerializer)
         {
         }
 
@@ -39,7 +39,7 @@ namespace OBeautifulCode.Serialization.Json
         /// Initializes a new instance of the <see cref="TypeToRegisterForJson"/> class, specifying the origin types.
         /// </summary>
         /// <param name="type">The type to register.</param>
-        /// <param name="recursiveOriginType">The type whose recursive processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> resulted in the creation of this <see cref="TypeToRegisterForJson"/>.</param>
+        /// <param name="recursiveOriginTypes">The types whose recursive processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> resulted in the creation of this <see cref="TypeToRegisterForJson"/>.</param>
         /// <param name="directOriginType">The type whose processing of <paramref name="memberTypesToInclude"/> and <paramref name="relatedTypesToInclude"/> directly resulted in the creation of this <see cref="TypeToRegisterForJson"/>.</param>
         /// <param name="memberTypesToInclude">Specifies which member types of <paramref name="type"/> that should also be registered.</param>
         /// <param name="relatedTypesToInclude">Specifies which types related to <paramref name="type"/> that should also be registered.</param>
@@ -47,22 +47,32 @@ namespace OBeautifulCode.Serialization.Json
         /// <param name="keyInDictionaryStringSerializer">The serializer to use when dictionaries are keyed on <paramref name="type"/> and the keys should be written-to/read-from a string.</param>
         public TypeToRegisterForJson(
             Type type,
-            Type recursiveOriginType,
+            IReadOnlyList<Type> recursiveOriginTypes,
             Type directOriginType,
             MemberTypesToInclude memberTypesToInclude,
             RelatedTypesToInclude relatedTypesToInclude,
             JsonConverterBuilder jsonConverterBuilder,
             IStringSerializeAndDeserialize keyInDictionaryStringSerializer)
-            : base(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude)
+            : base(type, recursiveOriginTypes, directOriginType, memberTypesToInclude, relatedTypesToInclude)
         {
             if (type == null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (recursiveOriginType == null)
+            if (recursiveOriginTypes == null)
             {
-                throw new ArgumentNullException(nameof(recursiveOriginType));
+                throw new ArgumentNullException(nameof(recursiveOriginTypes));
+            }
+
+            if (recursiveOriginTypes.Count == 0)
+            {
+                throw new ArgumentException(Invariant($"{nameof(recursiveOriginTypes)} is empty"));
+            }
+
+            if (recursiveOriginTypes.Any(_ => _ == null))
+            {
+                throw new ArgumentException(Invariant($"{nameof(recursiveOriginTypes)} contains a null element"));
             }
 
             if (directOriginType == null)
@@ -128,7 +138,7 @@ namespace OBeautifulCode.Serialization.Json
                 keyInDictionaryStringSerializer = null;
             }
 
-            var result = new TypeToRegisterForJson(type, this.RecursiveOriginType, this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.JsonConverterBuilder, keyInDictionaryStringSerializer);
+            var result = new TypeToRegisterForJson(type, this.RecursiveOriginTypes.Concat(new[] { type }).ToList(), this.Type, this.MemberTypesToInclude, this.RelatedTypesToInclude, this.JsonConverterBuilder, keyInDictionaryStringSerializer);
 
             return result;
         }

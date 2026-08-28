@@ -67,7 +67,7 @@ namespace OBeautifulCode.Serialization.Bson
 
             var genericTypeDefinitionTypeToRegister = (TypeToRegisterForBson)this.RegisteredTypeToRegistrationDetailsMap[genericTypeDefinition].TypeToRegister;
 
-            var result = new TypeToRegisterForBson(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude, genericTypeDefinitionTypeToRegister.BsonSerializerBuilder, genericTypeDefinitionTypeToRegister.PropertyNameWhitelist);
+            var result = new TypeToRegisterForBson(type, new[] { recursiveOriginType }, directOriginType, memberTypesToInclude, relatedTypesToInclude, genericTypeDefinitionTypeToRegister.BsonSerializerBuilder, genericTypeDefinitionTypeToRegister.PropertyNameWhitelist);
 
             return result;
         }

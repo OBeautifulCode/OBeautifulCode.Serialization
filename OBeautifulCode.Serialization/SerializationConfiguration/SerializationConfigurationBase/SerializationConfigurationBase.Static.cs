@@ -12,14 +12,12 @@ namespace OBeautifulCode.Serialization
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
-
     using OBeautifulCode.CodeAnalysis.Recipes;
     using OBeautifulCode.Collection.Recipes;
     using OBeautifulCode.Reflection.Recipes;
     using OBeautifulCode.Representation.System;
     using OBeautifulCode.Type;
     using OBeautifulCode.Type.Recipes;
-
     using static System.FormattableString;
 
     public abstract partial class SerializationConfigurationBase

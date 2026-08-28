@@ -67,7 +67,7 @@ namespace OBeautifulCode.Serialization.Json
 
             var genericTypeDefinitionTypeToRegister = (TypeToRegisterForJson)this.RegisteredTypeToRegistrationDetailsMap[genericTypeDefinition].TypeToRegister;
 
-            var result = new TypeToRegisterForJson(type, recursiveOriginType, directOriginType, memberTypesToInclude, relatedTypesToInclude, genericTypeDefinitionTypeToRegister.JsonConverterBuilder, genericTypeDefinitionTypeToRegister.KeyInDictionaryStringSerializer);
+            var result = new TypeToRegisterForJson(type, new[] { recursiveOriginType }, directOriginType, memberTypesToInclude, relatedTypesToInclude, genericTypeDefinitionTypeToRegister.JsonConverterBuilder, genericTypeDefinitionTypeToRegister.KeyInDictionaryStringSerializer);
 
             return result;
         }
