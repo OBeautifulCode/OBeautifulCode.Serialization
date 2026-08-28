@@ -72,6 +72,7 @@ namespace OBeautifulCode.Serialization
                 OBeautifulCode.Serialization.ProjectInfo.Namespace,
             };
 
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "assemblyName", Justification = ObcSuppressBecause.CA1804_RemoveUnusedLocals_UsedAsWorkaroundForConditionalBreakpointThatCannotBeSet)]
         private static void SeedAncestorsAndDescendants(
             SerializationConfigurationType serializationConfigurationType)
         {
@@ -103,6 +104,9 @@ namespace OBeautifulCode.Serialization
                 // add types in assemblies that we haven't processed yet
                 if (!AssembliesThatHaveBeenProcessedForRelatedTypes.Contains(assemblyToProcess))
                 {
+                    // This is here for debugging purposes (can be used for conditional breakpoint).
+                    var assemblyName = assemblyToProcess.FullName;
+
                     var typesToConsiderForThisAssembly = new[] { assemblyToProcess }
                         .GetTypesFromAssemblies()
                         .Where(_ => !IsRestrictedType(_))
